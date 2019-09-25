@@ -1,4 +1,4 @@
-import {logger as Logger} from "./../../config/logger.config";
+import {logger as Logger} from "../config/logger.config";
 import * as Notifier from "node-notifier";
 import * as Boom from "boom";
 import * as JSONAPISerializer from "json-api-serializer";

@@ -1,7 +1,7 @@
 import {Request} from "express";
 import * as JSONAPISerializer from "json-api-serializer";
 import {ISerialize} from "../interfaces/ISerialize.interface";
-import {api, url} from "../../config/environment.config";
+import {api, url} from "../config/environment.config";
 import {SerializerParams} from "./serializerParams";
 import { plural } from "pluralize";
 
