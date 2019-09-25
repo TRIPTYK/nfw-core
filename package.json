@@ -9,7 +9,8 @@
     "Antoine Sam"
   ],
   "license": "ISC",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
   "dependencies": {
     "@hapi/boom": "^7.4.10",
     "@hapi/joi": "^16.1.4",
