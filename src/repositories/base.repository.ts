@@ -198,7 +198,7 @@ class BaseRepository<T> extends Repository<T> implements JsonApiRepositoryInterf
         if (!type[relation]) throw Boom.notFound('Relation not found');
         type = type[relation]['type'];
 
-        let serializerImport = await import(`../serializers`);
+        let serializerImport = await import(`../serializers/${type}.serializer`);
         serializerImport = Object.values(serializerImport)[0];
 
         const rel = await this.findOne(id,{relations : [relation]});
