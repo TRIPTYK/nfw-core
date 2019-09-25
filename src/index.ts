@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // config 
+=======
+// config
+>>>>>>> 907eb29151aaa2b5afd5e47be7cbc69416a48c78
 export * from "./config/environment.config";
 export * from "./config/logger.config";
 
@@ -32,5 +36,9 @@ export * from "./utils/string.utils";
 
 //validation
 export * from "./validation/document.validation";
+<<<<<<< HEAD
 export * from "./validation/global.validation"; 
 
+=======
+export * from "./validation/global.validation";
+>>>>>>> 907eb29151aaa2b5afd5e47be7cbc69416a48c78
