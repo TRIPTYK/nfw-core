@@ -1,0 +1,35 @@
+{
+  "name": "nfw-core",
+  "version": "0.0.1",
+  "description": "core",
+  "dependencies": {
+    "base64-stream": "^1.0.0",
+    "axios": "^0.19.0",
+    "boom": "^7.3.0",
+    "dashify": "^2.0.0",
+    "express-validator": "^6.2.0",
+    "express": "^4.17.1",
+    "json-api-serializer": "^2.1.0",
+    "mailgun-js": "^0.22.0",
+    "node-notifier": "^6.0.0",
+    "pluralize": "^8.0.0",
+    "sqlstring": "^2.3.1",
+    "typeorm": "^0.2.19",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TRIPTYK/nfw-core.git"
+  },
+  "author": "TRIPTYK SPRL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TRIPTYK/nfw-core/issues"
+  }
+}
