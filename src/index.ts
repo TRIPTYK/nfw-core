@@ -2,10 +2,6 @@
 export * from "./config/environment.config";
 export * from "./config/logger.config";
 
-// enum 
-export * from "./enums/document-type.enum";
-export * from "./enums/mime-type.enum"; 
-
 // interface
 export * from "./interfaces/IController.interface";
 export * from "./interfaces/IMiddleware.interface";
@@ -31,5 +27,4 @@ export * from "./utils/pdf.util";
 export * from "./utils/string.utils"; 
 
 //validation
-export * from "./validation/document.validation";
 export * from "./validation/global.validation";
