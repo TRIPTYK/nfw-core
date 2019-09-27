@@ -14,7 +14,8 @@ export * from "./serializers/serializerParams";
 
 // services
 export * from "./services/auth-providers.service"; 
-export * from "./services/mail-sender.service" ; 
+export * from "./services/mail-sender.service" ;
+export * from "./services/cache.services";
 
 // utils
 export * from "./utils/log.util"; 
@@ -23,3 +24,8 @@ export * from "./utils/string.utils";
 
 //validation
 export * from "./validation/global.validation";
+export * from "./validation/document.validation"; 
+
+// enum
+export * from "./enums/document-type.enum" ; 
+export * from "./enums/mime-type.enum"; 
