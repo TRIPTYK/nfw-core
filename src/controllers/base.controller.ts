@@ -1,20 +1,9 @@
 import {Connection, getConnection, getCustomRepository} from "typeorm";
-import {cache, cleanupRouteCache} from "../services/cache.services";
-//import {caching_enabled, typeorm as TypeORM} from ;
 import {BaseRepository} from "../repositories/base.repository";
+import {cache, cleanupRouteCache} from "../services/cache.services";
 import {IController} from "../interfaces/IController.interface";
 
-// const venant du fichier environnement.config.ts
-const TypeORM = {
-    type: process.env.TYPEORM_TYPE,
-    name: process.env.TYPEORM_NAME,
-    port: process.env.TYPEORM_PORT,
-    host: process.env.TYPEORM_HOST,
-    database: process.env.TYPEORM_DB,
-    user: process.env.TYPEORM_USER,
-    pwd: process.env.TYPEORM_PWD
-};
-const caching_enabled = parseInt(process.env.REQUEST_CACHING);
+
 /**
  * Main controller contains properties/methods
  * @abstract
@@ -34,14 +23,14 @@ abstract class BaseController implements IController {
      * @constructor
      */
     constructor() {
-        this.connection = getConnection(TypeORM.name);
+        this.connection = getConnection(process.env.TYPEORM_NAME);
     }
 
     public method = (method) => async (req, res, next) => {
         try {
             this.beforeMethod();
 
-            if (caching_enabled && req.method === "GET") {
+            if (process.env.REQUEST_CACHING && req.method === "GET") {
                 const cached = cache.get(req.originalUrl);
                 if (cached !== undefined) {
                     res.json(cached);
@@ -51,7 +40,7 @@ abstract class BaseController implements IController {
 
             const extracted = await this[method](req, res, next);
 
-            if (caching_enabled) {
+            if (process.env.REQUEST_CACHING) {
                 if (['PATCH', 'DELETE', 'PUT', 'POST'].includes(req.method)) {
                     let routeType = req.originalUrl.split('?')[0]
                         .replace(/\/api\/v1\/(?:admin\/)?/, '');
