@@ -1,7 +1,3 @@
-// config
-export * from "./config/environment.config";
-export * from "./config/logger.config";
-
 // interface
 export * from "./interfaces/IController.interface";
 export * from "./interfaces/IMiddleware.interface";
@@ -18,7 +14,6 @@ export * from "./serializers/serializerParams";
 
 // services
 export * from "./services/auth-providers.service"; 
-export * from "./services/error-handler.service"; 
 export * from "./services/mail-sender.service" ; 
 
 // utils
