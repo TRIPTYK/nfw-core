@@ -1,9 +1,9 @@
 import {Connection, getConnection, getCustomRepository} from "typeorm";
-import {cache, cleanupRouteCache} from "../services/cache.services";
-//import {caching_enabled, typeorm as TypeORM} from ;
 import {BaseRepository} from "../repositories/base.repository";
+import {cache, cleanupRouteCache} from "../services/cache.services";
 import {IController} from "../interfaces/IController.interface";
 
+<<<<<<< HEAD
 // const venant du fichier environnement.config.ts
 /*const TypeORM = {
     type: process.env.TYPEORM_TYPE,
@@ -15,6 +15,9 @@ import {IController} from "../interfaces/IController.interface";
     pwd: process.env.TYPEORM_PWD
 };*/
 //const caching_enabled = parseInt(process.env.REQUEST_CACHING);
+=======
+
+>>>>>>> bce28676af1baab5c9e3a2195b2d4aff257cacf8
 /**
  * Main controller contains properties/methods
  * @abstract

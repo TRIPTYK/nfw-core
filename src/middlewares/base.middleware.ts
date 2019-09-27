@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
+import {BaseSerializer} from "../serializers/base.serializer";
 
+import Boom from "@hapi/boom";
 import {checkSchema, Location, Schema, ValidationChain} from "express-validator";
 import {getRepository} from "typeorm";
 import {IMiddleware} from "../interfaces/IMiddleware.interface";
-import {BaseSerializer} from "../serializers/base.serializer";
-import Boom from "@hapi/boom"
 
 export abstract class BaseMiddleware implements IMiddleware {
 

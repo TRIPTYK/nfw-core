@@ -1,4 +1,3 @@
-
 import {IModelize} from "../interfaces/IModelize.interface";
 
 export abstract class BaseModel implements IModelize {

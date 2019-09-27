@@ -1,13 +1,9 @@
 import {Request} from "express";
 import * as JSONAPISerializer from "json-api-serializer";
 import {ISerialize} from "../interfaces/ISerialize.interface";
-//import {api, url} from "../config/environment.config";
+//import {api, url} from "../../config/environment.config";
 import {SerializerParams} from "./serializerParams";
 import { plural } from "pluralize";
-
-
-// cst venant du fichier de config
-const api = process.env.API_VERSION;
 
 abstract class BaseSerializer implements ISerialize {
 
@@ -78,7 +74,7 @@ abstract class BaseSerializer implements ISerialize {
             const {total, request} = serializerParams.getPaginationData();
             const page = parseInt(request.query.page.number);
             const size = request.query.page.size;
-            const baseUrl = `/api/${api}`;
+            const baseUrl = `/api/${process.env.API_VERSION}`;
             const max = Math.ceil(total / size);
 
             data["topLevelLinks"] = {
@@ -93,7 +89,7 @@ abstract class BaseSerializer implements ISerialize {
         // link for entity
         data['links'] = {
             self: (data) => {
-                return `/api/${api}/${this.type}s/${data.id}`;
+                return `/api/${process.env.API_VERSION}/${this.type}s/${data.id}`;
             }
         };
 
@@ -102,10 +98,10 @@ abstract class BaseSerializer implements ISerialize {
         {
             data['relationships'][key]['links'] = {
                 self: (data) => {
-                    return `/api/${api}/${plural(this.type)}/${data.id}/relationships/${key}`;
+                    return `/api/${process.env.API_VERSION}/${plural(this.type)}/${data.id}/relationships/${key}`;
                 },
                 related: (data) => {
-                    return `/api/${api}/${plural(this.type)}/${data.id}/${key}`;
+                    return `/api/${process.env.API_VERSION}/${plural(this.type)}/${data.id}/${key}`;
                 }
             }
         }

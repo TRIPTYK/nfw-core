@@ -1,7 +1,7 @@
-import {sendmail} from "../services/mail-sender.service";
+import {sendmail} from "./../services/mail-sender.service";
 import {Request, Response} from "express";
-import Boom from "@hapi/boom"
 
+import Boom from "@hapi/boom";
 
 /**
  *
