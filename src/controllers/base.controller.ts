@@ -1,7 +1,7 @@
 import {Connection, getConnection, getCustomRepository} from "typeorm";
-import {BaseRepository} from "../repositories/base.repository";
 import {cache, cleanupRouteCache} from "../services/cache.services";
 import {IController} from "../interfaces/IController.interface";
+import {JsonApiRepositoryInterface} from "..";
 
 
 /**
@@ -15,14 +15,14 @@ abstract class BaseController implements IController {
      * @property Connection
      */
     protected connection: Connection;
-    protected repository: BaseRepository<any>;
+    protected repository: JsonApiRepositoryInterface<any>;
 
     /**
      * Super constructor
      * Retrieve database connection, and store it into connection
      * @constructor
      */
-    constructor() {
+    protected constructor() {
         this.connection = getConnection(process.env.TYPEORM_NAME);
     }
 

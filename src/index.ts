@@ -5,9 +5,6 @@ export * from "./interfaces/IModelize.interface";
 export * from "./interfaces/ISerialize.interface";
 export * from "./interfaces/JsonApiRepository.interface";
 
-// repositories 
-export * from "./repositories/base.repository" ; 
-
 // serializers 
 export * from "./serializers/base.serializer"; 
 export * from "./serializers/serializerParams"; 

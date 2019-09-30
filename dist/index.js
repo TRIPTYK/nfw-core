@@ -3,8 +3,6 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-// repositories 
-__export(require("./repositories/base.repository"));
 // serializers 
 __export(require("./serializers/base.serializer"));
 __export(require("./serializers/serializerParams"));
