@@ -1,6 +1,6 @@
 import {SelectQueryBuilder} from "typeorm";
-import {BaseSerializer} from "../serializers/base.serializer";
 import {Request} from "express";
+import { ISerialize } from "./ISerialize.interface";
 
 interface JsonApiRepositoryInterface<T> {
     /**
@@ -27,7 +27,7 @@ interface JsonApiRepositoryInterface<T> {
      * @param req
      * @param serializer
      */
-    fetchRelated(req : Request,serializer : BaseSerializer);
+    fetchRelated(req : Request,serializer : ISerialize);
 
     /**
      *
@@ -52,7 +52,7 @@ interface JsonApiRepositoryInterface<T> {
      * @param req
      * @param serializer
      */
-    fetchRelationshipsFromRequest(req: Request,serializer : BaseSerializer);
+    fetchRelationshipsFromRequest(req: Request,serializer : ISerialize);
 }
 
 export {JsonApiRepositoryInterface};
