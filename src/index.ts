@@ -6,7 +6,6 @@ export * from "./interfaces/ISerialize.interface";
 export * from "./interfaces/JsonApiRepository.interface";
 
 // serializers 
-export * from "./serializers/base.serializer"; 
 export * from "./serializers/serializerParams"; 
 
 // services
@@ -21,4 +20,7 @@ export * from "./utils/string.utils";
 
 //validation
 export * from "./validation/global.validation";
+
+//decorators
+export * from "./decorators/controller.decorator";
 
