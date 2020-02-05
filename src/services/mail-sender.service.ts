@@ -138,7 +138,7 @@ const sendmailGun = async (req : Request, gunData, type) => {
 
 
     let data = {
-        from : "Mailgun Sandbox <postmaster@sandboxcd6790cbfc4b402ba15d6eb8d92b8a9d.mailgun.org>",
+        from : gunData.from,
         to : gunData.to,
         subject : gunData.subject,
         text : gunData.text,
