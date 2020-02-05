@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const boom_1 = require("@hapi/boom");
+const Boom = require("@hapi/boom");
 const axios_1 = require("axios");
 const Mailgun = require("mailgun-js");
 const _getError = (error) => {
@@ -25,10 +25,10 @@ const _getError = (error) => {
 const sendmail = async (req) => {
     const data = req.body;
     if (!data) {
-        return boom_1.default.badRequest('Payload cannot be empty');
+        return Boom.badRequest('Payload cannot be empty');
     }
     if (!data.mail_type) {
-        return boom_1.default.badRequest('Payload type value is required');
+        return Boom.badRequest('Payload type value is required');
     }
     data.api_id = process.env.MAIL_API_ID;
     const api = `${process.env.MAIL_API_ROUTE}${data.mail_type}`;
@@ -120,10 +120,10 @@ const sendmailGun = async (req, gunData, type) => {
         timeout: 2000
     });
     if (!gunData) {
-        return boom_1.default.badRequest('Payload cannot be empty');
+        return Boom.badRequest('Payload cannot be empty');
     }
     let data = {
-        from: "Mailgun Sandbox <postmaster@sandboxcd6790cbfc4b402ba15d6eb8d92b8a9d.mailgun.org>",
+        from: gunData.from,
         to: gunData.to,
         subject: gunData.subject,
         text: gunData.text,
