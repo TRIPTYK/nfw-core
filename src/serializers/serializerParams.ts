@@ -57,7 +57,7 @@ export class SerializerParams {
      * Check if pagination data has been set
      */
     public hasPaginationEnabled(): boolean {
-        if (this.paginationData && this.paginationData.total && this.paginationData.request && this.paginationData.request.query.page && this.paginationData.request.query.page.number && this.paginationData.request.query.page.size)
+        if (this.paginationData && this.paginationData.total && this.paginationData.request && this.paginationData.request.query.page && (this.paginationData.request.query.page as any).number && (this.paginationData.request.query.page as any).size)
             return true;
         else
             return false;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Controller = void 0;
 const typeorm_1 = require("typeorm");
 function Controller({ repository }) {
     return function (constructor) {

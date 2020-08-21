@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendmailGun = exports.sendmail = void 0;
 const Boom = require("@hapi/boom");
 const axios_1 = require("axios");
 const Mailgun = require("mailgun-js");

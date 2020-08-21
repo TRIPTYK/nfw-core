@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MailMiddleware = void 0;
 const mail_sender_service_1 = require("./../services/mail-sender.service");
 const boom_1 = require("@hapi/boom");
 /**

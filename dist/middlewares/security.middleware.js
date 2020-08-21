@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SecurityMiddleware = void 0;
 const XSS = require("xss");
 const boom_1 = require("@hapi/boom");
 class SecurityMiddleware {

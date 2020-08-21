@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.google = exports.facebook = void 0;
 /* eslint-disable camelcase */
 const axios_1 = require("axios");
 const facebook = async (access_token, refreshToken, profile) => {

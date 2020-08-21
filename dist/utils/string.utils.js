@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.splitListingParts = void 0;
 /**
  * Split old listing specialities format
  *

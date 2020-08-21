@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.pdfToBase64 = void 0;
 const base64_stream_1 = require("base64-stream");
 exports.pdfToBase64 = (pdfDoc) => {
     let base64stream = pdfDoc.pipe(new base64_stream_1.Base64Encode());
