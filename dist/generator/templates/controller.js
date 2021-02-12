@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createControllerTemplate = void 0;
 const project_1 = require("../utils/project");
 /**
  *
@@ -8,36 +9,35 @@ const project_1 = require("../utils/project");
  * @param options
  * @param classPrefixName
  */
-function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName }) {
+function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
-        overwrite: true
+        overwrite: true,
     });
     file.addImportDeclaration({
         namedImports: [classPrefixName],
-        moduleSpecifier: `../models/${filePrefixName}.model`
+        moduleSpecifier: `../models/${filePrefixName}.model`,
     });
     const controllerClass = file.addClass({
-        name: `${classPrefixName}Controller`
+        name: `${classPrefixName}Controller`,
     });
     controllerClass.setIsDefaultExport(true);
     controllerClass
         .addDecorator({
         name: "JsonApiController",
-        arguments: [`${classPrefixName}`]
+        arguments: [`${classPrefixName}`],
     })
         .setIsDecoratorFactory(true);
     controllerClass
         .addDecorator({
-        name: "singleton"
+        name: "singleton",
     })
         .setIsDecoratorFactory(true);
     controllerClass
         .addDecorator({
-        name: "autoInjectable"
+        name: "autoInjectable",
     })
         .setIsDecoratorFactory(true);
     controllerClass.setExtends(`BaseJsonApiController<${classPrefixName}>`);
     return file;
 }
-exports.default = createControllerTemplate;
-//# sourceMappingURL=controller.js.map
+exports.createControllerTemplate = createControllerTemplate;

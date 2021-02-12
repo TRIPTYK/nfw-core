@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseService = void 0;
 class BaseService {
 }
-exports.default = BaseService;
-//# sourceMappingURL=base.service.js.map
+exports.BaseService = BaseService;

@@ -1,3 +1,3 @@
-export default abstract class BaseService {
-    public abstract init();
+export abstract class BaseService {
+  public abstract init();
 }

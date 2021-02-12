@@ -6,7 +6,7 @@ exports.GlobalMiddleware = exports.RegisterApplication = void 0;
  *
  * @param routeName
  */
-function RegisterApplication({ controllers, services }) {
+function RegisterApplication({ controllers, services, }) {
     return function (target) {
         Reflect.defineMetadata("controllers", controllers, target);
         Reflect.defineMetadata("services", services, target);
@@ -25,4 +25,3 @@ function GlobalMiddleware(middleware, args, order = "before") {
     };
 }
 exports.GlobalMiddleware = GlobalMiddleware;
-//# sourceMappingURL=application.decorator.js.map

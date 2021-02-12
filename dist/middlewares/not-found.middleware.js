@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotFoundMiddleware = void 0;
 const JSONAPISerializer = require("json-api-serializer");
 const tsyringe_1 = require("tsyringe");
 const base_middleware_1 = require("./base.middleware");
@@ -18,12 +19,11 @@ let NotFoundMiddleware = class NotFoundMiddleware extends base_middleware_1.Base
         res.status(404);
         res.json(this.serializer.serializeError({
             detail: "Not found",
-            status: "404"
+            status: "404",
         }));
     }
 };
 NotFoundMiddleware = __decorate([
     tsyringe_1.singleton()
 ], NotFoundMiddleware);
-exports.default = NotFoundMiddleware;
-//# sourceMappingURL=not-found.middleware.js.map
+exports.NotFoundMiddleware = NotFoundMiddleware;

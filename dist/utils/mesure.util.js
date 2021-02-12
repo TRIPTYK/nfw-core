@@ -7,4 +7,3 @@ async function mesure(expression) {
     return Date.now() - startTime;
 }
 exports.mesure = mesure;
-//# sourceMappingURL=mesure.util.js.map

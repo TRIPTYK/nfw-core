@@ -89,4 +89,3 @@ function buildValidationArgumentsFromObject(dbColumnaData) {
     return validationArguments;
 }
 exports.buildValidationArgumentsFromObject = buildValidationArgumentsFromObject;
-//# sourceMappingURL=template.js.map

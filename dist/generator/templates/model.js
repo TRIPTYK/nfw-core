@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createModelTemplate = void 0;
 const pluralize = require("pluralize");
 const project_1 = require("../utils/project");
 /**
@@ -9,20 +10,22 @@ const project_1 = require("../utils/project");
  * @param {array} entities
  * @return {SourceFile}
  */
-function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName }) {
+function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
-        overwrite: true
+        overwrite: true,
     });
     const interfaceNameForModel = `${classPrefixName}Interface`;
-    file.addInterface({
-        name: interfaceNameForModel
-    }).setIsExported(true);
+    file
+        .addInterface({
+        name: interfaceNameForModel,
+    })
+        .setIsExported(true);
     file.addImportDeclaration({
         moduleSpecifier: `../validations/${filePrefixName}.validation`,
-        defaultImport: `* as ${classPrefixName}Validator`
+        defaultImport: `* as ${classPrefixName}Validator`,
     });
     const modelClass = file.addClass({
-        name: classPrefixName
+        name: classPrefixName,
     });
     modelClass.setExtends(`JsonApiModel<${classPrefixName}>`);
     modelClass.addImplements(interfaceNameForModel);
@@ -38,12 +41,11 @@ function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, fil
                     writer.writeLine(`repository: ${classPrefixName}Repository,`);
                     writer.writeLine(`validator: ${classPrefixName}Validator`);
                 });
-            }
-        ]
+            },
+        ],
     })
         .setIsDecoratorFactory(true);
     modelClass.setIsExported(true);
     return file;
 }
-exports.default = createModelTemplate;
-//# sourceMappingURL=model.js.map
+exports.createModelTemplate = createModelTemplate;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseApplication = void 0;
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable complexity */
 const Express = require("express");
@@ -73,8 +74,7 @@ class BaseApplication {
             const routes = Reflect.getMetadata("routes", controller);
             const middlewaresForController = Reflect.getMetadata("middlewares", controller) ?? [];
             const router = Express.Router();
-            if (middlewaresForController &&
-                middlewaresForController.length > 0) {
+            if (middlewaresForController && middlewaresForController.length > 0) {
                 middlewaresForController.reverse();
             }
             const jsonApiEntity = Reflect.getMetadata("entity", instanceController);
@@ -89,67 +89,67 @@ class BaseApplication {
                         path: "/:id",
                         methodType: "get",
                         method: "get",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/",
                         methodType: "get",
                         method: "list",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/",
                         methodType: "post",
                         method: "create",
-                        middlewares: ["deserialize", "validation"]
+                        middlewares: ["deserialize", "validation"],
                     },
                     {
                         path: "/:id",
                         methodType: "patch",
                         method: "update",
-                        middlewares: ["deserialize", "validation"]
+                        middlewares: ["deserialize", "validation"],
                     },
                     {
                         path: "/:id",
                         methodType: "delete",
                         method: "remove",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/:id/:relation",
                         methodType: "get",
                         method: "fetchRelated",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/:id/relationships/:relation",
                         methodType: "get",
                         method: "fetchRelationships",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/:id/relationships/:relation",
                         methodType: "post",
                         method: "addRelationships",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/:id/relationships/:relation",
                         methodType: "patch",
                         method: "updateRelationships",
-                        middlewares: ["validation"]
+                        middlewares: ["validation"],
                     },
                     {
                         path: "/:id/relationships/:relation",
                         methodType: "delete",
                         method: "removeRelationships",
-                        middlewares: ["validation"]
-                    }
+                        middlewares: ["validation"],
+                    },
                 ];
                 for (const route of routes) {
                     const routeContext = {
                         routeDefinition: route,
-                        controllerInstance: instanceController
+                        controllerInstance: instanceController,
                     };
                     let middlewaresWithArgs = Reflect.getMetadata("middlewares", controller, route.methodName);
                     if (!middlewaresWithArgs) {
@@ -169,9 +169,9 @@ class BaseApplication {
                         routeDefinition: {
                             path,
                             requestMethod: methodType,
-                            methodName: method
+                            methodName: method,
                         },
-                        controllerInstance: instanceController
+                        controllerInstance: instanceController,
                     };
                     const applyMiddlewares = [];
                     const middlewaresWithArgs = Reflect.getMetadata("middlewares", controller, method) ?? [];
@@ -183,7 +183,7 @@ class BaseApplication {
                         afterDeserialization: [],
                         beforeDeserialization: [],
                         beforeAll: [],
-                        afterAll: []
+                        afterAll: [],
                     };
                     for (const middleware of middlewaresWithArgs) {
                         middlewaresByOrder[middleware.order ?? "afterAll"].push(middleware);
@@ -200,9 +200,9 @@ class BaseApplication {
                                 ? serializerOverride
                                 : "default";
                             if (serializerOverride !== null) {
-                                applyMiddlewares.push(this.useMiddleware(deserialize_middleware_1.default, {
+                                applyMiddlewares.push(this.useMiddleware(deserialize_middleware_1.DeserializeMiddleware, {
                                     serializer,
-                                    schema
+                                    schema,
                                 }, routeContext));
                             }
                             for (const afterDeserializationMiddleware of middlewaresByOrder.afterDeserialization.reverse()) {
@@ -217,9 +217,9 @@ class BaseApplication {
                                 ? validatorOverride
                                 : validation[method] ?? BaseValidation[method];
                             if (validatorOverride !== null) {
-                                applyMiddlewares.push(this.useMiddleware(validation_middleware_1.default, {
+                                applyMiddlewares.push(this.useMiddleware(validation_middleware_1.ValidationMiddleware, {
                                     serializer,
-                                    schema: validationSchema
+                                    schema: validationSchema,
                                 }, routeContext));
                             }
                             for (const afterValidationMiddleware of middlewaresByOrder.afterValidation.reverse()) {
@@ -240,7 +240,7 @@ class BaseApplication {
                 for (const route of routes) {
                     const routeContext = {
                         routeDefinition: route,
-                        controllerInstance: instanceController
+                        controllerInstance: instanceController,
                     };
                     let middlewaresWithArgs = Reflect.getMetadata("middlewares", controller, route.methodName);
                     if (!middlewaresWithArgs) {
@@ -259,5 +259,4 @@ class BaseApplication {
         }
     }
 }
-exports.default = BaseApplication;
-//# sourceMappingURL=base.application.js.map
+exports.BaseApplication = BaseApplication;

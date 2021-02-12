@@ -13,4 +13,3 @@ function parseBool(string) {
     return exports.booleanMap[string] === undefined ? false : exports.booleanMap[string];
 }
 exports.parseBool = parseBool;
-//# sourceMappingURL=string-parse.util.js.map

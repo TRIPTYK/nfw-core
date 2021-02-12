@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseController = void 0;
 const registry_application_1 = require("../application/registry.application");
 class BaseController {
     constructor() {
@@ -25,5 +26,4 @@ class BaseController {
         return;
     }
 }
-exports.default = BaseController;
-//# sourceMappingURL=base.controller.js.map
+exports.BaseController = BaseController;

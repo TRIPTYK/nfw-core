@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TypeORMService = void 0;
 require("reflect-metadata");
 const tsyringe_1 = require("tsyringe");
 const typeorm_1 = require("typeorm");
@@ -19,7 +20,7 @@ const configuration_service_1 = require("./configuration.service");
  *
  * @inheritdoc https://http://typeorm.io
  */
-let TypeORMService = class TypeORMService extends base_service_1.default {
+let TypeORMService = class TypeORMService extends base_service_1.BaseService {
     constructor(configurationService) {
         super();
         this.configurationService = configurationService;
@@ -56,7 +57,6 @@ let TypeORMService = class TypeORMService extends base_service_1.default {
 TypeORMService = __decorate([
     tsyringe_1.singleton(),
     tsyringe_1.autoInjectable(),
-    __metadata("design:paramtypes", [configuration_service_1.default])
+    __metadata("design:paramtypes", [configuration_service_1.ConfigurationService])
 ], TypeORMService);
-exports.default = TypeORMService;
-//# sourceMappingURL=typeorm.service.js.map
+exports.TypeORMService = TypeORMService;

@@ -1,4 +1,5 @@
 // created from 'create-ts-index'
+import "reflect-metadata";
 
 export * from "./application";
 export * from "./controllers";
@@ -14,3 +15,5 @@ export * from "./serializers";
 export * from "./services";
 export * from "./utils";
 export * from "./validation";
+export * from "./types";
+export * from "typeorm";

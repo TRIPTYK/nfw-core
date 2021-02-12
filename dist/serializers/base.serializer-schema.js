@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseSerializerSchema = void 0;
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const tsyringe_1 = require("tsyringe");
 const configuration_service_1 = require("../services/configuration.service");
@@ -11,7 +12,7 @@ class BaseSerializerSchema {
         this.replacePage = (url, newPage) => decodeURIComponent(url.replace(/(.*page(?:\[|%5B)number(?:]|%5D)=)(?<pageNumber>[0-9]+)(.*)/i, `$1${newPage}$3`));
     }
     get baseUrl() {
-        const configurationService = tsyringe_1.container.resolve(configuration_service_1.default);
+        const configurationService = tsyringe_1.container.resolve(configuration_service_1.ConfigurationService);
         return `/api/${configurationService.config.api.version}`;
     }
     topLevelLinks(data, extraData, type) {
@@ -22,22 +23,22 @@ class BaseSerializerSchema {
                 last: `${this.baseUrl}/${type}${this.replacePage(extraData.url, max)}`,
                 prev: `${this.baseUrl}/${type}${this.replacePage(extraData.url, extraData.page - 1 < 1 ? extraData.page : extraData.page - 1)}`,
                 next: `${this.baseUrl}/${type}${this.replacePage(extraData.url, extraData.page - 1 < 1 ? extraData.page : extraData.page - 1)}`,
-                self: `${this.baseUrl}/${type}${extraData.url}`
+                self: `${this.baseUrl}/${type}${extraData.url}`,
             };
         }
         return {
-            self: `${this.baseUrl}/${type}${extraData.url}`
+            self: `${this.baseUrl}/${type}${extraData.url}`,
         };
     }
     links(data, extraData, type) {
         return {
-            self: `${this.baseUrl}/${type}/${data.id}`
+            self: `${this.baseUrl}/${type}/${data.id}`,
         };
     }
     relationshipLinks(data, extraData, type, relationshipName) {
         return {
             self: `${this.baseUrl}/${type}/${data.id}/relationships/${relationshipName}`,
-            related: `${this.baseUrl}/${type}/${data.id}/${relationshipName}`
+            related: `${this.baseUrl}/${type}/${data.id}/${relationshipName}`,
         };
     }
     meta(data, extraData, type) {
@@ -47,5 +48,4 @@ class BaseSerializerSchema {
         // nothing to do
     }
 }
-exports.default = BaseSerializerSchema;
-//# sourceMappingURL=base.serializer-schema.js.map
+exports.BaseSerializerSchema = BaseSerializerSchema;

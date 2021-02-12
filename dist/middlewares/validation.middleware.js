@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidationMiddleware = void 0;
 const express_validator_1 = require("express-validator");
 const tsyringe_1 = require("tsyringe");
 const base_middleware_1 = require("./base.middleware");
@@ -29,5 +30,4 @@ let ValidationMiddleware = class ValidationMiddleware extends base_middleware_1.
 ValidationMiddleware = __decorate([
     tsyringe_1.singleton()
 ], ValidationMiddleware);
-exports.default = ValidationMiddleware;
-//# sourceMappingURL=validation.middleware.js.map
+exports.ValidationMiddleware = ValidationMiddleware;

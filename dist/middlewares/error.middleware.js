@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ErrorMiddleware = void 0;
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const Boom = require("@hapi/boom");
 const JSONAPISerializer = require("json-api-serializer");
@@ -30,9 +31,9 @@ let ErrorMiddleware = class ErrorMiddleware extends base_error_middleware_1.Base
                         meta: {
                             param: case_util_1.toCamelCase(suberror.param),
                             msg: suberror.msg,
-                            location: suberror.location
+                            location: suberror.location,
                         },
-                        status: "400"
+                        status: "400",
                     };
                     if (["query", "params"].includes(suberror.location)) {
                         err.source.parameter = case_util_1.toCamelCase(suberror.param);
@@ -53,12 +54,11 @@ let ErrorMiddleware = class ErrorMiddleware extends base_error_middleware_1.Base
         res.status(error.output.statusCode);
         res.json(this.serializer.serializeError({
             detail: error.message,
-            status: error.output.statusCode
+            status: error.output.statusCode,
         }));
     }
 };
 ErrorMiddleware = __decorate([
     tsyringe_1.singleton()
 ], ErrorMiddleware);
-exports.default = ErrorMiddleware;
-//# sourceMappingURL=error.middleware.js.map
+exports.ErrorMiddleware = ErrorMiddleware;

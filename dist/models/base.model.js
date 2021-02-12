@@ -19,9 +19,8 @@ __decorate([
 ], BaseModel.prototype, "created_at", void 0);
 __decorate([
     typeorm_1.UpdateDateColumn({
-        nullable: true
+        nullable: true,
     }),
     __metadata("design:type", Date)
 ], BaseModel.prototype, "updated_at", void 0);
 exports.BaseModel = BaseModel;
-//# sourceMappingURL=base.model.js.map

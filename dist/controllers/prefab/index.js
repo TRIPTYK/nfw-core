@@ -13,4 +13,3 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./generator.controller"), exports);
 __exportStar(require("./metadata.controller"), exports);
-//# sourceMappingURL=index.js.map

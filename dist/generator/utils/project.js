@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tsMorph = require("ts-morph");
 let isInitialised = false;
 const project = new tsMorph.Project({
-    tsConfigFilePath: "tsconfig.json"
+    tsConfigFilePath: "tsconfig.json",
 });
 /**
  * @return Project
@@ -16,4 +16,3 @@ exports.default = (() => {
     }
     return project;
 })();
-//# sourceMappingURL=project.js.map

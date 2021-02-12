@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteJsonApiEntity = void 0;
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
@@ -9,7 +10,7 @@ async function deleteJsonApiEntity(modelName) {
     }
     const files = [];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(modelName);
-    for (const file of resources_1.default(filePrefixName)) {
+    for (const file of resources_1.resources(filePrefixName)) {
         const fileObj = project_1.default.getSourceFile(`${file.path}/${file.name}`);
         if (!fileObj) {
             throw new Error(`Entity file ${file.name} does not seems to exists`);
@@ -35,5 +36,4 @@ async function deleteJsonApiEntity(modelName) {
     controllersArray.removeElement(exists);
     applicationFile.fixUnusedIdentifiers();
 }
-exports.default = deleteJsonApiEntity;
-//# sourceMappingURL=delete-entity.js.map
+exports.deleteJsonApiEntity = deleteJsonApiEntity;

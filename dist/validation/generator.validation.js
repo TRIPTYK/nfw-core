@@ -6,229 +6,228 @@ const typeorm_service_1 = require("../services/typeorm.service");
 exports.createEntity = {
     columns: {
         exists: true,
-        isArray: true
+        isArray: true,
     },
     "columns.*.name": {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     "columns.*.type": {
         exists: true,
         isString: true,
         custom: {
             options: (value) => {
-                const suported = tsyringe_1.container.resolve(typeorm_service_1.default).connection
-                    .driver.supportedDataTypes;
+                const suported = tsyringe_1.container.resolve(typeorm_service_1.TypeORMService).connection.driver
+                    .supportedDataTypes;
                 if (!Object.values(suported).includes(value)) {
                     throw new Error("unsupported value");
                 }
                 return true;
-            }
-        }
+            },
+        },
     },
     "columns.*.default": {
-        optional: true
+        optional: true,
     },
     "columns.*.length": {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     "columns.*.width": {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     "columns.*.precision": {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     "columns.*.scale": {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     "columns.*.isUnique": {
         optional: true,
         isBoolean: true,
-        toBoolean: true
+        toBoolean: true,
     },
     "columns.*.isNullable": {
         exists: true,
         isBoolean: true,
-        toBoolean: true
+        toBoolean: true,
     },
     relations: {
         exists: true,
-        isArray: true
+        isArray: true,
     },
     "relations.*.name": {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     "relations.*.target": {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     "relations.*.type": {
         exists: true,
         isIn: {
-            options: [["many-to-many", "one-to-many", "one-to-one"]]
-        }
+            options: [["many-to-many", "one-to-many", "one-to-one"]],
+        },
     },
     "relations.*.inverseRelationName": {
         optional: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
-    }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
+    },
 };
 exports.createRelation = {
     name: {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     target: {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     type: {
         exists: true,
         isIn: {
-            options: [["many-to-many", "one-to-many", "one-to-one"]]
-        }
+            options: [["many-to-many", "one-to-many", "one-to-one"]],
+        },
     },
     inverseRelationName: {
         optional: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     isNullable: {
         optional: true,
         isBoolean: true,
-        toBoolean: true
-    }
+        toBoolean: true,
+    },
 };
 exports.createColumn = {
     name: {
         exists: true,
         isString: true,
         matches: {
-            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
-        }
+            options: /^[a-zA-Z_$][0-9a-zA-Z_$]*$/,
+        },
     },
     type: {
         exists: true,
         isString: true,
         custom: {
             options: (value) => {
-                const suported = tsyringe_1.container.resolve(typeorm_service_1.default).connection
-                    .driver.supportedDataTypes;
+                const suported = tsyringe_1.container.resolve(typeorm_service_1.TypeORMService).connection.driver
+                    .supportedDataTypes;
                 if (!Object.values(suported).includes(value)) {
                     throw new Error("unsupported value");
                 }
                 return true;
-            }
-        }
+            },
+        },
     },
     default: {
-        optional: true
+        optional: true,
     },
     length: {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     width: {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     precision: {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     scale: {
         optional: {
             options: {
-                checkFalsy: true
-            }
+                checkFalsy: true,
+            },
         },
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     isUnique: {
         exists: true,
         isBoolean: true,
-        toBoolean: true
+        toBoolean: true,
     },
     isNullable: {
         exists: true,
         isBoolean: true,
-        toBoolean: true
-    }
+        toBoolean: true,
+    },
 };
 exports.columnsActions = {
     ...exports.createEntity,
     "columns.*.action": {
         exists: true,
         isIn: {
-            options: [["ADD", "REMOVE"]]
-        }
+            options: [["ADD", "REMOVE"]],
+        },
     },
     "relations.*.action": {
         exists: true,
         isIn: {
-            options: [["ADD", "REMOVE"]]
-        }
-    }
+            options: [["ADD", "REMOVE"]],
+        },
+    },
 };
-//# sourceMappingURL=generator.validation.js.map

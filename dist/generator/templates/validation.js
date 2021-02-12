@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createValidationTemplate = void 0;
 const project_1 = require("../utils/project");
 const TsMorph = require("ts-morph");
 const stringifyObject = require("stringify-object");
-function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName }) {
+function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
-        overwrite: true
+        overwrite: true,
     });
     file.addStatements((writer) => writer.writeLine('import * as Joi from "joi";'));
     file.addStatements((writer) => writer.writeLine('import Boom from "@hapi/boom";'));
@@ -23,11 +24,11 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
                         in: ["params"],
                         errorMessage: "Please provide a valid id",
                         isInt: true,
-                        toInt: true
-                    }
-                }, { singleQuotes: false })
-            }
-        ]
+                        toInt: true,
+                    },
+                }, { singleQuotes: false }),
+            },
+        ],
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
@@ -36,9 +37,9 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
             {
                 name: "list",
                 type: `ValidationSchema<${classPrefixName}>`,
-                initializer: "{}"
-            }
-        ]
+                initializer: "{}",
+            },
+        ],
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
@@ -47,9 +48,9 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
             {
                 name: "create",
                 type: `ValidationSchema<${classPrefixName}>`,
-                initializer: "{}"
-            }
-        ]
+                initializer: "{}",
+            },
+        ],
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
@@ -63,9 +64,9 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
                         writer.writeLine("...exports.get,");
                         writer.write("...{}");
                     });
-                }
-            }
-        ]
+                },
+            },
+        ],
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
@@ -74,12 +75,11 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
             {
                 name: "remove",
                 type: `ValidationSchema<${classPrefixName}>`,
-                initializer: "{}"
-            }
-        ]
+                initializer: "{}",
+            },
+        ],
     });
     variableStatement.setIsExported(true);
     return file;
 }
-exports.default = createValidationTemplate;
-//# sourceMappingURL=validation.js.map
+exports.createValidationTemplate = createValidationTemplate;

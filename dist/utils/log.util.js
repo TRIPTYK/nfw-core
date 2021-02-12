@@ -11,4 +11,3 @@ const fullLog = (element) => console.log(NodeUtil.inspect(element, {
 exports.fullLog = fullLog;
 const shadowLog = (element) => console.log(NodeUtil.inspect(element, { showHidden: true, depth: 1, colors: true }));
 exports.shadowLog = shadowLog;
-//# sourceMappingURL=log.util.js.map

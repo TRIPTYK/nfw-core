@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addRelation = void 0;
 const pascalcase = require("pascalcase");
 const pluralize = require("pluralize");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function addRelation(entity, relation) {
-    const model = resources_1.default(entity).find((r) => r.template === "model");
+    const model = resources_1.resources(entity).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const naming = resources_1.getEntityNaming(entity);
     if (!modelFile) {
@@ -18,7 +19,7 @@ async function addRelation(entity, relation) {
     if (entityClass.getInstanceProperty(relation.name)) {
         throw new Error("Relation property already exists");
     }
-    const inverseModel = resources_1.default(relation.target).find((r) => r.template === "model");
+    const inverseModel = resources_1.resources(relation.target).find((r) => r.template === "model");
     const inversemodelFile = project_1.default.getSourceFile(`${inverseModel.path}/${inverseModel.name}`);
     if (!inversemodelFile) {
         throw new Error("Entity does not exists");
@@ -30,11 +31,11 @@ async function addRelation(entity, relation) {
     }
     modelFile.addImportDeclaration({
         namedImports: [inverseNaming.classPrefixName],
-        moduleSpecifier: `../models/${inverseNaming.filePrefixName}.model`
+        moduleSpecifier: `../models/${inverseNaming.filePrefixName}.model`,
     });
     inversemodelFile.addImportDeclaration({
         namedImports: [naming.classPrefixName],
-        moduleSpecifier: `../models/${naming.filePrefixName}.model`
+        moduleSpecifier: `../models/${naming.filePrefixName}.model`,
     });
     const existing = entityClass.getProperty(relation.name);
     if (existing) {
@@ -67,7 +68,7 @@ async function addRelation(entity, relation) {
     const inverseEntityInterface = inversemodelFile.getInterface(`${inverseNaming.classPrefixName}Interface`);
     if (inverseEntityInterface) {
         inverseEntityInterface.addProperty({
-            name: relation.inverseRelationName
+            name: relation.inverseRelationName,
         });
     }
     mainRelationProperty
@@ -75,21 +76,21 @@ async function addRelation(entity, relation) {
         name: decoratorName,
         arguments: [
             `() => ${inverseNaming.classPrefixName}`,
-            `(inverseRelation) => inverseRelation.${relation.inverseRelationName}`
-        ]
+            `(inverseRelation) => inverseRelation.${relation.inverseRelationName}`,
+        ],
     })
         .setIsDecoratorFactory(true);
     if (relation.type === "one-to-one") {
         mainRelationProperty
             .addDecorator({
-            name: "JoinColumn"
+            name: "JoinColumn",
         })
             .setIsDecoratorFactory(true);
     }
     if (relation.type === "many-to-many") {
         mainRelationProperty
             .addDecorator({
-            name: "JoinTable"
+            name: "JoinTable",
         })
             .setIsDecoratorFactory(true);
     }
@@ -105,15 +106,15 @@ async function addRelation(entity, relation) {
         name: inverseDecoratorName,
         arguments: [
             `() => ${naming.classPrefixName}`,
-            `(inverseRelation) => inverseRelation.${relation.name}`
-        ]
+            `(inverseRelation) => inverseRelation.${relation.name}`,
+        ],
     })
         .setIsDecoratorFactory(true);
     inversemodelFile.fixMissingImports();
     modelFile.fixMissingImports();
     inversemodelFile.organizeImports();
     modelFile.organizeImports();
-    const serializer = resources_1.default(entity).find((r) => r.template === "serializer-schema");
+    const serializer = resources_1.resources(entity).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);
     const serializerClass = serializerFile.getClass(`${naming.classPrefixName}SerializerSchema`);
     const serializerPropertyExists = serializerClass.getProperty(relation.name);
@@ -125,9 +126,9 @@ async function addRelation(entity, relation) {
         .toggleModifier("public");
     serializerProperty.addDecorator({
         name: "Relation",
-        arguments: [`() => ${inverseNaming.classPrefixName}SerializerSchema`]
+        arguments: [`() => ${inverseNaming.classPrefixName}SerializerSchema`],
     });
-    const inverseSerializer = resources_1.default(relation.target).find((r) => r.template === "serializer-schema");
+    const inverseSerializer = resources_1.resources(relation.target).find((r) => r.template === "serializer-schema");
     const inverseSerializerFile = project_1.default.getSourceFile(`${inverseSerializer.path}/${inverseSerializer.name}`);
     const inverseSerializerClass = inverseSerializerFile.getClass(`${inverseNaming.classPrefixName}SerializerSchema`);
     const inverseSerializerPropertyExists = inverseSerializerClass.getProperty(relation.name);
@@ -139,10 +140,9 @@ async function addRelation(entity, relation) {
         .toggleModifier("public");
     inverseSerializerProperty.addDecorator({
         name: "Relation",
-        arguments: [`() => ${naming.classPrefixName}SerializerSchema`]
+        arguments: [`() => ${naming.classPrefixName}SerializerSchema`],
     });
     inverseSerializerFile.fixMissingImports();
     serializerFile.fixMissingImports();
 }
-exports.default = addRelation;
-//# sourceMappingURL=add-relation.js.map
+exports.addRelation = addRelation;

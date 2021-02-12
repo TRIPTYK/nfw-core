@@ -6,8 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "outDir": "./dist/",
+    "declaration": true,
+    "outDir": "./dist",
     "forceConsistentCasingInFileNames": true
   },
   "exclude": ["**/**/node_modules", "node_modules"]

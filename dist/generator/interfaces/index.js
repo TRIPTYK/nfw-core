@@ -12,4 +12,3 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./generator.interface"), exports);
-//# sourceMappingURL=index.js.map

@@ -1,0 +1,13 @@
+import { Schema } from "express-validator";
+import { ValidationSchema } from "../types/validation";
+export declare const jsonApiQuery: Schema;
+export declare const get: ValidationSchema<any>;
+export declare const list: ValidationSchema<any>;
+export declare const create: ValidationSchema<any>;
+export declare const remove: ValidationSchema<any>;
+export declare const fetchRelated: ValidationSchema<any>;
+export declare const fetchRelationships: ValidationSchema<any>;
+export declare const addRelationships: ValidationSchema<any>;
+export declare const updateRelationships: ValidationSchema<any>;
+export declare const removeRelationships: ValidationSchema<any>;
+export declare const update: ValidationSchema<any>;

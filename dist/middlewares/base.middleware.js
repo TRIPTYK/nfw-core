@@ -7,4 +7,3 @@ class BaseMiddleware {
     }
 }
 exports.BaseMiddleware = BaseMiddleware;
-//# sourceMappingURL=base.middleware.js.map

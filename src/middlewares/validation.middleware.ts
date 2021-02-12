@@ -14,7 +14,7 @@ export type ValidationMiddlewareArgs = {
 };
 
 @singleton()
-export default class ValidationMiddleware extends BaseMiddleware {
+export class ValidationMiddleware extends BaseMiddleware {
   public async use(
     req: Request,
     response: Response,

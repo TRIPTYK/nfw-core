@@ -1,5 +1,5 @@
-export default class RelationshipNotFoundError extends Error {
-    constructor(message: string) {
-        super(message);
-    }
+export class RelationshipNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
 }

@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MetadataController = void 0;
 const tsyringe_1 = require("tsyringe");
 const typeorm_1 = require("typeorm");
 const registry_application_1 = require("../../application/registry.application");
@@ -18,7 +19,7 @@ const base_controller_1 = require("../base.controller");
 /**
  * Use or inherit this controller in your app if you want to get api metadata
  */
-let MetadataController = class MetadataController extends base_controller_1.default {
+let MetadataController = class MetadataController extends base_controller_1.BaseController {
     constructor(typeormConnection) {
         super();
         this.typeormConnection = typeormConnection;
@@ -31,7 +32,7 @@ let MetadataController = class MetadataController extends base_controller_1.defa
         const { entity } = req.params;
         const entityTarget = this.findEntityMetadataByName(entity);
         return {
-            count: await typeorm_1.getRepository(entityTarget.target).count()
+            count: await typeorm_1.getRepository(entityTarget.target).count(),
         };
     }
     getEntityMeta(req, res) {
@@ -63,7 +64,7 @@ let MetadataController = class MetadataController extends base_controller_1.defa
                     length: column.length,
                     isPrimary: column.isPrimary,
                     isNullable: column.isNullable,
-                    enumValues: column.enum
+                    enumValues: column.enum,
                 };
             }),
             relations: table.ownRelations.map((rel) => {
@@ -72,9 +73,9 @@ let MetadataController = class MetadataController extends base_controller_1.defa
                     inverseEntityName: rel.inverseEntityMetadata.name,
                     inversePropertyName: rel.inverseRelation.propertyName,
                     relationType: rel.relationType,
-                    isNullable: rel.isNullable
+                    isNullable: rel.isNullable,
                 };
-            })
+            }),
         };
     }
 };
@@ -105,7 +106,6 @@ __decorate([
 MetadataController = __decorate([
     controller_decorator_1.Controller("meta"),
     tsyringe_1.singleton(),
-    __metadata("design:paramtypes", [typeorm_service_1.default])
+    __metadata("design:paramtypes", [typeorm_service_1.TypeORMService])
 ], MetadataController);
-exports.default = MetadataController;
-//# sourceMappingURL=metadata.controller.js.map
+exports.MetadataController = MetadataController;

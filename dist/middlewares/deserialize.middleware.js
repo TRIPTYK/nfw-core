@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeserializeMiddleware = void 0;
 const tsyringe_1 = require("tsyringe");
 const base_middleware_1 = require("./base.middleware");
 let DeserializeMiddleware = class DeserializeMiddleware extends base_middleware_1.BaseMiddleware {
@@ -31,5 +32,4 @@ let DeserializeMiddleware = class DeserializeMiddleware extends base_middleware_
 DeserializeMiddleware = __decorate([
     tsyringe_1.singleton()
 ], DeserializeMiddleware);
-exports.default = DeserializeMiddleware;
-//# sourceMappingURL=deserialize.middleware.js.map
+exports.DeserializeMiddleware = DeserializeMiddleware;

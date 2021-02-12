@@ -7,4 +7,3 @@ class BaseErrorMiddleware {
     }
 }
 exports.BaseErrorMiddleware = BaseErrorMiddleware;
-//# sourceMappingURL=base.error-middleware.js.map

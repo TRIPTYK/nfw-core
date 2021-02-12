@@ -1,49 +1,45 @@
 import { ObjectLiteralExpression, SourceFile, SyntaxKind } from "ts-morph";
-import resources, { getEntityNaming } from "../static/resources";
+import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 
-export default async function deleteJsonApiEntity(
-    modelName: string
-): Promise<void> {
-    if (!modelName.length) {
-        return;
+export async function deleteJsonApiEntity(modelName: string): Promise<void> {
+  if (!modelName.length) {
+    return;
+  }
+
+  const files: SourceFile[] = [];
+  const { filePrefixName, classPrefixName } = getEntityNaming(modelName);
+
+  for (const file of resources(filePrefixName)) {
+    const fileObj = project.getSourceFile(`${file.path}/${file.name}`);
+    if (!fileObj) {
+      throw new Error(`Entity file ${file.name} does not seems to exists`);
     }
+    files.push(fileObj);
+  }
 
-    const files: SourceFile[] = [];
-    const { filePrefixName, classPrefixName } = getEntityNaming(modelName);
+  // do something
 
-    for (const file of resources(filePrefixName)) {
-        const fileObj = project.getSourceFile(`${file.path}/${file.name}`);
-        if (!fileObj) {
-            throw new Error(
-                `Entity file ${file.name} does not seems to exists`
-            );
-        }
-        files.push(fileObj);
-    }
+  for (const file of files) {
+    file?.delete();
+  }
 
-    // do something
+  const applicationFile = project.getSourceFile("src/api/application.ts");
 
-    for (const file of files) {
-        file?.delete();
-    }
+  const applicationClass = applicationFile.getClasses()[0];
+  const importControllerName = `${classPrefixName}Controller`;
 
-    const applicationFile = project.getSourceFile("src/api/application.ts");
+  const objectArgs = applicationClass
+    .getDecorator("RegisterApplication")
+    .getArguments()[0] as ObjectLiteralExpression;
+  const controllersArray = objectArgs
+    .getProperty("controllers")
+    .getFirstChildByKind(SyntaxKind.ArrayLiteralExpression);
+  const exists = controllersArray
+    .getElements()
+    .find((elem) => elem.getText() === importControllerName);
 
-    const applicationClass = applicationFile.getClasses()[0];
-    const importControllerName = `${classPrefixName}Controller`;
+  controllersArray.removeElement(exists);
 
-    const objectArgs = applicationClass
-        .getDecorator("RegisterApplication")
-        .getArguments()[0] as ObjectLiteralExpression;
-    const controllersArray = objectArgs
-        .getProperty("controllers")
-        .getFirstChildByKind(SyntaxKind.ArrayLiteralExpression);
-    const exists = controllersArray
-        .getElements()
-        .find((elem) => elem.getText() === importControllerName);
-
-    controllersArray.removeElement(exists);
-
-    applicationFile.fixUnusedIdentifiers();
+  applicationFile.fixUnusedIdentifiers();
 }

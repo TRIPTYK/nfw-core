@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateJsonApiEntity = void 0;
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
@@ -11,18 +12,18 @@ async function generateJsonApiEntity(modelName, data) {
     }
     const tableColumns = data ?? {
         columns: [],
-        relations: []
+        relations: [],
     };
     const files = [];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(modelName);
-    for (const file of resources_1.default(filePrefixName)) {
+    for (const file of resources_1.resources(filePrefixName)) {
         const { default: generator } = await Promise.resolve().then(() => require(`../templates/${file.template}`));
         const createdFile = await generator({
             modelName,
             classPrefixName,
             filePrefixName,
             fileTemplateInfo: file,
-            tableColumns
+            tableColumns,
         });
         files.push(createdFile);
     }
@@ -42,15 +43,14 @@ async function generateJsonApiEntity(modelName, data) {
         controllersArray.addElement(importControllerName);
     }
     for (const column of tableColumns.columns) {
-        await add_column_1.default(modelName, column);
+        await add_column_1.addColumn(modelName, column);
     }
     for (const relation of tableColumns.relations) {
-        await add_relation_1.default(modelName, relation);
+        await add_relation_1.addRelation(modelName, relation);
     }
     // auto generate imports
     for (const file of files.concat(applicationFile)) {
         file.fixMissingImports();
     }
 }
-exports.default = generateJsonApiEntity;
-//# sourceMappingURL=generate-entity.js.map
+exports.generateJsonApiEntity = generateJsonApiEntity;

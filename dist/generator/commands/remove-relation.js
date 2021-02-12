@@ -5,7 +5,7 @@ const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function removeRelation(entity, relationName) {
-    const model = resources_1.default(entity).find((r) => r.template === "model");
+    const model = resources_1.resources(entity).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const naming = resources_1.getEntityNaming(entity);
     relationName =
@@ -37,10 +37,10 @@ async function removeRelation(entity, relationName) {
     const inverseClass = inverseDefinitionFile.getClass(inverseModelIdentifier.getText());
     const modelInterface = modelFile.getInterface(`${naming.classPrefixName}Interface`);
     const inverseInterface = inverseDefinitionFile.getInterface(`${inverseModelIdentifier.getText()}Interface`);
-    const serializer = resources_1.default(entity).find((r) => r.template === "serializer-schema");
+    const serializer = resources_1.resources(entity).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);
     const serializerClass = serializerFile.getClass(`${naming.classPrefixName}SerializerSchema`);
-    const inverseSerializer = resources_1.default(inverseClass.getName().toLowerCase()).find((r) => r.template === "serializer-schema");
+    const inverseSerializer = resources_1.resources(inverseClass.getName().toLowerCase()).find((r) => r.template === "serializer-schema");
     const inverseSerializerFile = project_1.default.getSourceFile(`${inverseSerializer.path}/${inverseSerializer.name}`);
     const inverseSerializerClass = inverseSerializerFile.getClass(`${inverseClass.getName()}SerializerSchema`);
     property.remove();
@@ -51,4 +51,3 @@ async function removeRelation(entity, relationName) {
     inverseSerializerClass.getProperty(inverseProperty)?.remove();
 }
 exports.removeRelation = removeRelation;
-//# sourceMappingURL=remove-relation.js.map

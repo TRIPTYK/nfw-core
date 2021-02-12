@@ -16,4 +16,3 @@ __exportStar(require("./interfaces"), exports);
 __exportStar(require("./static"), exports);
 __exportStar(require("./templates"), exports);
 __exportStar(require("./utils"), exports);
-//# sourceMappingURL=index.js.map

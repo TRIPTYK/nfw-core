@@ -34,7 +34,7 @@ function Relation(type) {
         const relations = Reflect.getMetadata("relations", target);
         relations.push({
             type,
-            property: propertyKey
+            property: propertyKey,
         });
     };
 }
@@ -57,4 +57,3 @@ function SerializerSchema(name = "default") {
     };
 }
 exports.SerializerSchema = SerializerSchema;
-//# sourceMappingURL=serializer.decorator.js.map

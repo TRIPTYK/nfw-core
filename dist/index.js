@@ -1,5 +1,4 @@
 "use strict";
-// created from 'create-ts-index'
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -11,6 +10,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// created from 'create-ts-index'
+require("reflect-metadata");
 __exportStar(require("./application"), exports);
 __exportStar(require("./controllers"), exports);
 __exportStar(require("./decorators"), exports);
@@ -25,4 +26,5 @@ __exportStar(require("./serializers"), exports);
 __exportStar(require("./services"), exports);
 __exportStar(require("./utils"), exports);
 __exportStar(require("./validation"), exports);
-//# sourceMappingURL=index.js.map
+__exportStar(require("./types"), exports);
+__exportStar(require("typeorm"), exports);

@@ -8,9 +8,13 @@
     "Deflorenne Amaury",
     "Antoine Sam"
   ],
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
   "license": "ISC",
   "main": "dist/index.js",
-  "types": "src/index.ts",
+  "types": "index.d.ts",
   "dependencies": {
     "@hapi/boom": "^8.0.1",
     "@queso/kebab-case": "^1.1.0",
@@ -36,10 +40,12 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "rollup-plugin-dts": "^2.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "prepublishOnly": "tsc && rollup -c"
   },
   "repository": {
     "type": "git",

@@ -1,23 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createSerializer = void 0;
 const pluralize = require("pluralize");
 const project_1 = require("../utils/project");
-function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName }) {
+function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
-        overwrite: true
+        overwrite: true,
     });
     file.addImportDeclaration({
         namedImports: [classPrefixName],
-        moduleSpecifier: `../models/${filePrefixName}.model`
+        moduleSpecifier: `../models/${filePrefixName}.model`,
     });
     const serializerClass = file.addClass({
-        name: `${classPrefixName}Serializer`
+        name: `${classPrefixName}Serializer`,
     });
     serializerClass.setIsExported(true);
     serializerClass.setExtends(`BaseJsonApiSerializer<${classPrefixName}>`);
     serializerClass.addDecorator({
         name: "singleton",
-        arguments: []
+        arguments: [],
     });
     serializerClass.addDecorator({
         name: "JsonApiSerializer",
@@ -28,10 +29,9 @@ function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePr
                     writer.writeLine(`type : "${pluralize(modelName)}",`);
                     writer.writeLine(`schemas : () => [${classPrefixName}SerializerSchema]`);
                 });
-            }
-        ]
+            },
+        ],
     });
     return file;
 }
-exports.default = createSerializer;
-//# sourceMappingURL=serializer.js.map
+exports.createSerializer = createSerializer;

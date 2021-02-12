@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { autoInjectable, singleton } from "tsyringe";
 import { Connection, ConnectionOptions, createConnection } from "typeorm";
-import BaseService from "./base.service";
-import ConfigurationService from "./configuration.service";
+import { BaseService } from "./base.service";
+import { ConfigurationService } from "./configuration.service";
 
 /**
  * Define TypeORM default configuration
@@ -11,7 +11,7 @@ import ConfigurationService from "./configuration.service";
  */
 @singleton()
 @autoInjectable()
-export default class TypeORMService extends BaseService {
+export class TypeORMService extends BaseService {
   private _connection: Connection;
 
   public constructor(private configurationService: ConfigurationService) {

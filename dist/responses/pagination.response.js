@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaginationResponse = void 0;
 const response_response_1 = require("./response.response");
-class PaginationResponse extends response_response_1.default {
+class PaginationResponse extends response_response_1.Response {
     constructor(body, paginationData, { status, type } = {
         status: 200,
-        type: "application/vnd.api+json"
+        type: "application/vnd.api+json",
     }) {
         super(body, { status, type });
         this.body = body;
@@ -13,5 +14,4 @@ class PaginationResponse extends response_response_1.default {
         this.paginationData = paginationData;
     }
 }
-exports.default = PaginationResponse;
-//# sourceMappingURL=pagination.response.js.map
+exports.PaginationResponse = PaginationResponse;

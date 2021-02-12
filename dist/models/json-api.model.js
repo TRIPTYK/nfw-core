@@ -23,4 +23,3 @@ __decorate([
     __metadata("design:type", Number)
 ], JsonApiModel.prototype, "id", void 0);
 exports.JsonApiModel = JsonApiModel;
-//# sourceMappingURL=json-api.model.js.map

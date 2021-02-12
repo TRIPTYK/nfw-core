@@ -7,7 +7,7 @@ class BaseJsonApiSerializer {
     constructor() {
         this.serializer = new JSONAPISerializer({
             convertCase: "camelCase",
-            unconvertCase: "snake_case"
+            unconvertCase: "snake_case",
         });
         const schemasData = Reflect.getMetadata("schemas", this);
         for (const schema of schemasData.schemas()) {
@@ -26,9 +26,9 @@ class BaseJsonApiSerializer {
             topLevelLinks: (data, extraData) => {
                 return {
                     self: `/${extraData.thisType}/${extraData.id}/relationships/${extraData.relationName}`,
-                    related: `/${extraData.thisType}/${extraData.id}/${extraData.relationName}`
+                    related: `/${extraData.thisType}/${extraData.id}/${extraData.relationName}`,
                 };
-            }
+            },
         });
     }
     serialize(payload, schema, extraData) {
@@ -63,8 +63,7 @@ class BaseJsonApiSerializer {
     convertSerializerSchemaToObjectSchema(schema, rootSchema, schemaName, passedBy) {
         const serialize = (Reflect.getMetadata("serialize", schema.prototype) ??
             []);
-        const deserialize = this.applyDeserializeCase((Reflect.getMetadata("deserialize", schema.prototype) ??
-            []));
+        const deserialize = this.applyDeserializeCase((Reflect.getMetadata("deserialize", schema.prototype) ?? []));
         const relations = (Reflect.getMetadata("relations", schema.prototype) ??
             []);
         const schemaType = Reflect.getMetadata("type", schema);
@@ -84,7 +83,7 @@ class BaseJsonApiSerializer {
                 type: relationType,
                 links: (data, extraData) => {
                     return schemaInstance.relationshipLinks(data, extraData, this.type, property);
-                }
+                },
             };
             this.convertSerializerSchemaToObjectSchema(schemaTypeRelation, rootSchema, schemaName, passedBy);
         }
@@ -100,10 +99,9 @@ class BaseJsonApiSerializer {
             },
             meta: (data, extraData) => {
                 return schemaInstance.meta(data, extraData, this.type);
-            }
+            },
         });
     }
 }
 exports.BaseJsonApiSerializer = BaseJsonApiSerializer;
 BaseJsonApiSerializer.whitelist = [];
-//# sourceMappingURL=base.serializer.js.map

@@ -9,8 +9,7 @@ const registry_application_1 = require("../application/registry.application");
  * Database schema will be created for all classes decorated with it, and Repository can be retrieved and used for it.
  */
 function JsonApiEntity(nameOrOptions, maybeOptions) {
-    const options = (typeof nameOrOptions === "object" ? nameOrOptions : maybeOptions) ||
-        {};
+    const options = (typeof nameOrOptions === "object" ? nameOrOptions : maybeOptions) || {};
     const name = typeof nameOrOptions === "string" ? nameOrOptions : options.name;
     return function (target) {
         typeorm_1.getMetadataArgsStorage().tables.push({
@@ -22,7 +21,7 @@ function JsonApiEntity(nameOrOptions, maybeOptions) {
             database: options.database ? options.database : undefined,
             schema: options.schema ? options.schema : undefined,
             synchronize: options.synchronize,
-            withoutRowid: options.withoutRowid
+            withoutRowid: options.withoutRowid,
         });
         if (!options.repository || !options.serializer || !options.validator) {
             throw new Error("Please provide arguments for json-api entity");
@@ -33,7 +32,7 @@ function JsonApiEntity(nameOrOptions, maybeOptions) {
         Reflect.defineMetadata("validator", options.validator, target);
         typeorm_1.getMetadataArgsStorage().entityRepositories.push({
             target: options.repository,
-            entity: target
+            entity: target,
         });
         registry_application_1.ApplicationRegistry.registerEntity(target);
         registry_application_1.ApplicationRegistry.registerCustomRepositoryFor(target, options.repository);
@@ -41,4 +40,3 @@ function JsonApiEntity(nameOrOptions, maybeOptions) {
     };
 }
 exports.JsonApiEntity = JsonApiEntity;
-//# sourceMappingURL=model.decorator.js.map

@@ -2,7 +2,7 @@ import tsMorph = require("ts-morph");
 
 let isInitialised = false;
 const project = new tsMorph.Project({
-    tsConfigFilePath: "tsconfig.json"
+  tsConfigFilePath: "tsconfig.json",
 });
 
 /**
@@ -10,10 +10,10 @@ const project = new tsMorph.Project({
  * @description Singleton like method
  */
 export default (() => {
-    if (!isInitialised) {
-        project.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
-        isInitialised = true;
-    }
+  if (!isInitialised) {
+    project.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
+    isInitialised = true;
+  }
 
-    return project;
+  return project;
 })();

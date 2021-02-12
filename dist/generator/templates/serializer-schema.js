@@ -1,36 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createSerializerSchema = void 0;
 const project_1 = require("../utils/project");
-function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName }) {
+function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
-        overwrite: true
+        overwrite: true,
     });
     const addedClass = file.addClass({
         name: `${classPrefixName}SerializerSchema`,
-        isDefaultExport: true
+        isDefaultExport: true,
     });
     file.addImportDeclaration({
         namedImports: [`${classPrefixName}Interface`],
-        moduleSpecifier: `../../models/${filePrefixName}.model`
+        moduleSpecifier: `../../models/${filePrefixName}.model`,
     });
     file.addImportDeclaration({
-        namedImports: [
-            "Serialize",
-            "Deserialize",
-            "SerializerSchema",
-            "Relation"
-        ],
-        moduleSpecifier: "../../../core/decorators/serializer.decorator"
+        namedImports: ["Serialize", "Deserialize", "SerializerSchema", "Relation"],
+        moduleSpecifier: "../../../core/decorators/serializer.decorator",
     });
     addedClass.setExtends(`BaseSerializerSchema<${classPrefixName}Interface>`);
     addedClass.addImplements(`${classPrefixName}Interface`);
     addedClass
         .addDecorator({
         name: "SerializerSchema",
-        arguments: []
+        arguments: [],
     })
         .setIsDecoratorFactory(true);
     return file;
 }
-exports.default = createSerializerSchema;
-//# sourceMappingURL=serializer-schema.js.map
+exports.createSerializerSchema = createSerializerSchema;

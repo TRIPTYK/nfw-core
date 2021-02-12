@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseJsonApiRepository = void 0;
 const Boom = require("@hapi/boom");
 const dashify = require("dashify");
 const Sqlstring = require("sqlstring");
@@ -14,7 +15,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
      * <br> You can filter the features you want to use by using the named parameters.
      *
      */
-    jsonApiRequest(params, { allowIncludes = true, allowSorting = true, allowPagination = true, allowFields = true, allowFilters = true } = {}, parentQueryBuilder) {
+    jsonApiRequest(params, { allowIncludes = true, allowSorting = true, allowPagination = true, allowFields = true, allowFilters = true, } = {}, parentQueryBuilder) {
         const currentTable = this.metadata.tableName;
         const queryBuilder = parentQueryBuilder
             ? parentQueryBuilder
@@ -51,7 +52,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         if (allowPagination && params.page) {
             this.handlePagination(queryBuilder, {
                 number: params.page.number,
-                size: params.page.size
+                size: params.page.size,
             });
         }
         if (allowFilters && params.filter) {
@@ -87,8 +88,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         `${alias}.${thisRelation.inverseSidePropertyPath}`, aliasRelation)
             .where(`${aliasRelation}.id = :id`, { id });
         otherRepo.jsonApiRequest(params, {}, resultQb);
-        const result = await (thisRelation.isManyToOne ||
-            thisRelation.isOneToOne
+        const result = await (thisRelation.isManyToOne || thisRelation.isOneToOne
             ? resultQb.getOne()
             : resultQb.getMany());
         return result;
@@ -354,12 +354,10 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
             .leftJoin(`${alias}.${thisRelation.inverseSidePropertyPath}`, aliasRelation)
             .where(`${aliasRelation}.id = :id`, { id });
         otherRepo.jsonApiRequest(params, {}, resultQb);
-        const result = await (thisRelation.isManyToOne ||
-            thisRelation.isOneToOne
+        const result = await (thisRelation.isManyToOne || thisRelation.isOneToOne
             ? resultQb.getOne()
             : resultQb.getMany());
         return result;
     }
 }
-exports.default = BaseJsonApiRepository;
-//# sourceMappingURL=base.repository.js.map
+exports.BaseJsonApiRepository = BaseJsonApiRepository;

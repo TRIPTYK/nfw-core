@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.removeColumn = void 0;
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function removeColumn(modelName, column) {
-    const model = resources_1.default(modelName).find((r) => r.template === "model");
+    const model = resources_1.resources(modelName).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const columnName = typeof column === "string" ? column : column.name;
     const { classPrefixName } = resources_1.getEntityNaming(modelName);
@@ -24,17 +25,16 @@ async function removeColumn(modelName, column) {
         entityInterface.getProperty(columnName)?.remove();
     }
     columnProperty.remove();
-    const serializer = resources_1.default(modelName).find((r) => r.template === "serializer-schema");
+    const serializer = resources_1.resources(modelName).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);
     const serializerClass = serializerFile.getClass(`${classPrefixName}SerializerSchema`);
     serializerClass.getInstanceProperty(columnName).remove();
-    const validation = resources_1.default(modelName).find((r) => r.template === "validation");
+    const validation = resources_1.resources(modelName).find((r) => r.template === "validation");
     const validationFile = project_1.default.getSourceFile(`${validation.path}/${validation.name}`);
     const validations = validationFile
         .getChildrenOfKind(ts_morph_1.SyntaxKind.VariableStatement)
         .filter((declaration) => declaration.hasExportKeyword() &&
-        declaration.getDeclarationKind() ===
-            ts_morph_1.VariableDeclarationKind.Const);
+        declaration.getDeclarationKind() === ts_morph_1.VariableDeclarationKind.Const);
     for (const validationStatement of validations) {
         const initializer = validationStatement
             .getDeclarations()[0]
@@ -47,5 +47,4 @@ async function removeColumn(modelName, column) {
         }
     }
 }
-exports.default = removeColumn;
-//# sourceMappingURL=remove-column.js.map
+exports.removeColumn = removeColumn;

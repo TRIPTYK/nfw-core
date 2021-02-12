@@ -105,4 +105,3 @@ ApplicationRegistry.controllers = [];
 ApplicationRegistry.status = ApplicationStatus.None;
 ApplicationRegistry.guid = uuid_1.v4();
 ApplicationRegistry.eventEmitter = new events_1.EventEmitter();
-//# sourceMappingURL=registry.application.js.map

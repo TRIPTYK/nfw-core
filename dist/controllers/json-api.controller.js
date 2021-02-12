@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseJsonApiController = void 0;
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const Boom = require("@hapi/boom");
 const HttpStatus = require("http-status");
@@ -7,7 +8,7 @@ const registry_application_1 = require("../application/registry.application");
 const pagination_response_1 = require("../responses/pagination.response");
 const response_response_1 = require("../responses/response.response");
 const base_controller_1 = require("./base.controller");
-class BaseJsonApiController extends base_controller_1.default {
+class BaseJsonApiController extends base_controller_1.BaseController {
     constructor() {
         super();
         this.entity = Reflect.getMetadata("entity", this);
@@ -20,17 +21,16 @@ class BaseJsonApiController extends base_controller_1.default {
             try {
                 const response = await this[methodName](req, res);
                 if (!res.headersSent) {
-                    const useSchema = Reflect.getMetadata("schema-use", this, methodName) ??
-                        "default";
-                    if (response instanceof pagination_response_1.default) {
+                    const useSchema = Reflect.getMetadata("schema-use", this, methodName) ?? "default";
+                    if (response instanceof pagination_response_1.PaginationResponse) {
                         const serialized = await this.serializer.serialize(response.body, useSchema, response.paginationData);
                         res.status(response.status);
                         res.type(response.type);
                         res.send(serialized);
                     }
-                    else if (response instanceof response_response_1.default) {
+                    else if (response instanceof response_response_1.Response) {
                         const serialized = await this.serializer.serialize(response.body, useSchema, {
-                            url: req.url
+                            url: req.url,
                         });
                         res.status(response.status);
                         res.type(response.type);
@@ -38,7 +38,7 @@ class BaseJsonApiController extends base_controller_1.default {
                     }
                     else {
                         const serialized = await this.serializer.serialize(response, useSchema, {
-                            url: req.url
+                            url: req.url,
                         });
                         res.status(200);
                         res.type("application/vnd.api+json");
@@ -57,11 +57,11 @@ class BaseJsonApiController extends base_controller_1.default {
             .jsonApiRequest(params)
             .getManyAndCount();
         return req.query.page
-            ? new pagination_response_1.default(entities, {
+            ? new pagination_response_1.PaginationResponse(entities, {
                 total: count,
                 page: params.page.number,
                 size: params.page.size,
-                url: req.url
+                url: req.url,
             })
             : entities;
     }
@@ -70,7 +70,7 @@ class BaseJsonApiController extends base_controller_1.default {
         const entity = await this.repository
             .jsonApiRequest(params)
             .andWhere(`${this.repository.metadata.tableName}.id = :id`, {
-            id: req.params.id
+            id: req.params.id,
         })
             .getOne();
         if (!entity) {
@@ -81,15 +81,15 @@ class BaseJsonApiController extends base_controller_1.default {
     async create(req, _res) {
         const entity = this.repository.create(req.body);
         const saved = await this.repository.save(entity);
-        return new response_response_1.default(saved, {
+        return new response_response_1.Response(saved, {
             status: 201,
-            type: "application/vnd.api+json"
+            type: "application/vnd.api+json",
         });
     }
     async update(req, _res) {
         let saved = await this.repository.preload({
             ...req.body,
-            ...{ id: req.params.id }
+            ...{ id: req.params.id },
         });
         if (saved === undefined) {
             throw Boom.notFound();
@@ -117,7 +117,7 @@ class BaseJsonApiController extends base_controller_1.default {
             id: req.params.id,
             thisType: this.name,
             relationName: relation,
-            url: req.url
+            url: req.url,
         }));
     }
     async fetchRelated(req, res) {
@@ -126,11 +126,10 @@ class BaseJsonApiController extends base_controller_1.default {
         if (!otherEntityMetadata) {
             throw Boom.notFound();
         }
-        const useSchema = Reflect.getMetadata("schema-use", this, "fetchRelated") ??
-            "default";
+        const useSchema = Reflect.getMetadata("schema-use", this, "fetchRelated") ?? "default";
         res.type("application/vnd.api+json");
         return res.json(await registry_application_1.ApplicationRegistry.serializerFor(otherEntityMetadata.target).serialize(await this.repository.fetchRelated(relation, req.params.id, this.parseJsonApiQueryParams(req.query)), useSchema, {
-            url: req.url
+            url: req.url,
         }));
     }
     async addRelationships(req, res) {
@@ -150,15 +149,12 @@ class BaseJsonApiController extends base_controller_1.default {
     }
     parseJsonApiQueryParams(query) {
         return {
-            includes: query.include
-                ? query.include.split(",")
-                : null,
+            includes: query.include ? query.include.split(",") : null,
             sort: query.sort ? query.sort.split(",") : null,
             fields: query.fields ?? null,
             page: query.page ?? null,
-            filter: query.filter ?? null
+            filter: query.filter ?? null,
         };
     }
 }
-exports.default = BaseJsonApiController;
-//# sourceMappingURL=json-api.controller.js.map
+exports.BaseJsonApiController = BaseJsonApiController;

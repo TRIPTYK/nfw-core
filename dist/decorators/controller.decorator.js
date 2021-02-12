@@ -110,4 +110,3 @@ function Delete(path = null) {
     return registerMethod(path, "delete");
 }
 exports.Delete = Delete;
-//# sourceMappingURL=controller.decorator.js.map
