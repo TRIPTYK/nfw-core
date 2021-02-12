@@ -22,3 +22,4 @@ function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     return file;
 }
 exports.default = createRepositoryTemplate;
+//# sourceMappingURL=repository.js.map

@@ -94,9 +94,8 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         return result;
     }
     applyConditionBlock(block, we) {
-        var _a, _b;
-        (_a = block.conjunction) !== null && _a !== void 0 ? _a : (block.conjunction = "and");
-        (_b = block.operator) !== null && _b !== void 0 ? _b : (block.operator = "eq");
+        block.conjunction ?? (block.conjunction = "and");
+        block.operator ?? (block.operator = "eq");
         let queryString = "";
         let queryParams = {};
         const varName = `${block.operator}${block.value}`;
@@ -149,8 +148,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         }
     }
     applyFilter(queryBlock, we) {
-        var _a;
-        const conjunction = (_a = queryBlock["conjunction"]) !== null && _a !== void 0 ? _a : "and";
+        const conjunction = queryBlock["conjunction"] ?? "and";
         const brackets = new typeorm_1.Brackets((qb) => {
             let blocks;
             if (Array.isArray(queryBlock)) {
@@ -364,3 +362,4 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
     }
 }
 exports.default = BaseJsonApiRepository;
+//# sourceMappingURL=base.repository.js.map

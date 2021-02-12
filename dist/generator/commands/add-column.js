@@ -69,3 +69,4 @@ async function addColumn(entity, column) {
     modelFile.fixMissingImports();
 }
 exports.default = addColumn;
+//# sourceMappingURL=add-column.js.map

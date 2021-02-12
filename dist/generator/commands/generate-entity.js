@@ -9,7 +9,7 @@ async function generateJsonApiEntity(modelName, data) {
     if (!modelName.length) {
         return;
     }
-    const tableColumns = data !== null && data !== void 0 ? data : {
+    const tableColumns = data ?? {
         columns: [],
         relations: []
     };
@@ -53,3 +53,4 @@ async function generateJsonApiEntity(modelName, data) {
     }
 }
 exports.default = generateJsonApiEntity;
+//# sourceMappingURL=generate-entity.js.map

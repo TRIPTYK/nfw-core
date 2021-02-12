@@ -46,3 +46,4 @@ function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, fil
     return file;
 }
 exports.default = createModelTemplate;
+//# sourceMappingURL=model.js.map

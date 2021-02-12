@@ -16,3 +16,4 @@ __exportStar(require("./controller.interface"), exports);
 __exportStar(require("./middleware.interface"), exports);
 __exportStar(require("./model.interface"), exports);
 __exportStar(require("./serializer.interface"), exports);
+//# sourceMappingURL=index.js.map

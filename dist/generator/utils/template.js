@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildValidationArgumentsFromObject = exports.buildModelColumnArgumentsFromObject = void 0;
 function buildModelColumnArgumentsFromObject(dbColumnaData) {
-    var _a;
     const columnArgument = {};
     columnArgument.type = dbColumnaData.type;
     if (dbColumnaData.default !== undefined) {
@@ -24,7 +23,7 @@ function buildModelColumnArgumentsFromObject(dbColumnaData) {
     }
     // handle nullable
     if (!dbColumnaData.isUnique && !dbColumnaData.isPrimary) {
-        (_a = columnArgument.nullable) !== null && _a !== void 0 ? _a : (columnArgument.nullable = dbColumnaData.isNullable);
+        columnArgument.nullable ?? (columnArgument.nullable = dbColumnaData.isNullable);
     }
     else if (dbColumnaData.isUnique) {
         columnArgument.unique = true;
@@ -90,3 +89,4 @@ function buildValidationArgumentsFromObject(dbColumnaData) {
     return validationArguments;
 }
 exports.buildValidationArgumentsFromObject = buildValidationArgumentsFromObject;
+//# sourceMappingURL=template.js.map

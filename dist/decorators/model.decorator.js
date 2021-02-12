@@ -41,3 +41,4 @@ function JsonApiEntity(nameOrOptions, maybeOptions) {
     };
 }
 exports.JsonApiEntity = JsonApiEntity;
+//# sourceMappingURL=model.decorator.js.map

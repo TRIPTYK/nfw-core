@@ -57,3 +57,4 @@ function SerializerSchema(name = "default") {
     };
 }
 exports.SerializerSchema = SerializerSchema;
+//# sourceMappingURL=serializer.decorator.js.map

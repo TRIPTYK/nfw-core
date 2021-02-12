@@ -23,12 +23,11 @@ class ApplicationRegistry {
         ApplicationRegistry.eventEmitter.on(event, callback);
     }
     static async registerApplication(app) {
-        var _a;
         ApplicationRegistry.eventEmitter.emit(ApplicationLifeCycleEvent.Boot);
         ApplicationRegistry.status = ApplicationStatus.Booting;
         const services = Reflect.getMetadata("services", app);
         const controllers = Reflect.getMetadata("controllers", app);
-        const middlewares = (_a = Reflect.getMetadata("middlewares", app)) !== null && _a !== void 0 ? _a : [];
+        const middlewares = Reflect.getMetadata("middlewares", app) ?? [];
         const startTime = Date.now();
         // services before all
         let time = await mesure_util_1.mesure(async () => {
@@ -106,3 +105,4 @@ ApplicationRegistry.controllers = [];
 ApplicationRegistry.status = ApplicationStatus.None;
 ApplicationRegistry.guid = uuid_1.v4();
 ApplicationRegistry.eventEmitter = new events_1.EventEmitter();
+//# sourceMappingURL=registry.application.js.map

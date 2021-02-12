@@ -4,7 +4,6 @@ const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function removeColumn(modelName, column) {
-    var _a;
     const model = resources_1.default(modelName).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const columnName = typeof column === "string" ? column : column.name;
@@ -22,7 +21,7 @@ async function removeColumn(modelName, column) {
     }
     const entityInterface = modelFile.getInterface(`${classPrefixName}Interface`);
     if (entityInterface) {
-        (_a = entityInterface.getProperty(columnName)) === null || _a === void 0 ? void 0 : _a.remove();
+        entityInterface.getProperty(columnName)?.remove();
     }
     columnProperty.remove();
     const serializer = resources_1.default(modelName).find((r) => r.template === "serializer-schema");
@@ -49,3 +48,4 @@ async function removeColumn(modelName, column) {
     }
 }
 exports.default = removeColumn;
+//# sourceMappingURL=remove-column.js.map

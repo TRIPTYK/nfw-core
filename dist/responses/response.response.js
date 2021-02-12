@@ -11,3 +11,4 @@ class Response {
     }
 }
 exports.default = Response;
+//# sourceMappingURL=response.response.js.map

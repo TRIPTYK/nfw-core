@@ -33,3 +33,4 @@ function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixN
     return file;
 }
 exports.default = createSerializerSchema;
+//# sourceMappingURL=serializer-schema.js.map

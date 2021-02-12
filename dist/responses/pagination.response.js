@@ -14,3 +14,4 @@ class PaginationResponse extends response_response_1.default {
     }
 }
 exports.default = PaginationResponse;
+//# sourceMappingURL=pagination.response.js.map

@@ -32,3 +32,4 @@ DeserializeMiddleware = __decorate([
     tsyringe_1.singleton()
 ], DeserializeMiddleware);
 exports.default = DeserializeMiddleware;
+//# sourceMappingURL=deserialize.middleware.js.map

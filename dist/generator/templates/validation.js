@@ -82,3 +82,4 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     return file;
 }
 exports.default = createValidationTemplate;
+//# sourceMappingURL=validation.js.map

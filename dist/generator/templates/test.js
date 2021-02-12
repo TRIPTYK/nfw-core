@@ -13,3 +13,4 @@ function createTestTemplate({ fileTemplateInfo }) {
     return file;
 }
 exports.default = createTestTemplate;
+//# sourceMappingURL=test.js.map

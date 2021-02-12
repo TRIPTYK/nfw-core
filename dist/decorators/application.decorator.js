@@ -25,3 +25,4 @@ function GlobalMiddleware(middleware, args, order = "before") {
     };
 }
 exports.GlobalMiddleware = GlobalMiddleware;
+//# sourceMappingURL=application.decorator.js.map

@@ -15,3 +15,4 @@ __exportStar(require("./application.decorator"), exports);
 __exportStar(require("./controller.decorator"), exports);
 __exportStar(require("./model.decorator"), exports);
 __exportStar(require("./serializer.decorator"), exports);
+//# sourceMappingURL=index.js.map

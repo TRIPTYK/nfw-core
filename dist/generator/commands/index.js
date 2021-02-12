@@ -17,3 +17,4 @@ __exportStar(require("./delete-entity"), exports);
 __exportStar(require("./generate-entity"), exports);
 __exportStar(require("./remove-column"), exports);
 __exportStar(require("./remove-relation"), exports);
+//# sourceMappingURL=index.js.map

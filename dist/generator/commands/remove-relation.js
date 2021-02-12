@@ -5,7 +5,6 @@ const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function removeRelation(entity, relationName) {
-    var _a, _b, _c, _d, _e;
     const model = resources_1.default(entity).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const naming = resources_1.getEntityNaming(entity);
@@ -45,10 +44,11 @@ async function removeRelation(entity, relationName) {
     const inverseSerializerFile = project_1.default.getSourceFile(`${inverseSerializer.path}/${inverseSerializer.name}`);
     const inverseSerializerClass = inverseSerializerFile.getClass(`${inverseClass.getName()}SerializerSchema`);
     property.remove();
-    (_a = inverseClass.getProperty(inverseProperty)) === null || _a === void 0 ? void 0 : _a.remove();
-    (_b = modelInterface.getProperty(relationName)) === null || _b === void 0 ? void 0 : _b.remove();
-    (_c = inverseInterface.getProperty(inverseProperty)) === null || _c === void 0 ? void 0 : _c.remove();
-    (_d = serializerClass.getProperty(relationName)) === null || _d === void 0 ? void 0 : _d.remove();
-    (_e = inverseSerializerClass.getProperty(inverseProperty)) === null || _e === void 0 ? void 0 : _e.remove();
+    inverseClass.getProperty(inverseProperty)?.remove();
+    modelInterface.getProperty(relationName)?.remove();
+    inverseInterface.getProperty(inverseProperty)?.remove();
+    serializerClass.getProperty(relationName)?.remove();
+    inverseSerializerClass.getProperty(inverseProperty)?.remove();
 }
 exports.removeRelation = removeRelation;
+//# sourceMappingURL=remove-relation.js.map

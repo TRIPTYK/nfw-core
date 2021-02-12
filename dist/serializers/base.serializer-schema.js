@@ -48,3 +48,4 @@ class BaseSerializerSchema {
     }
 }
 exports.default = BaseSerializerSchema;
+//# sourceMappingURL=base.serializer-schema.js.map

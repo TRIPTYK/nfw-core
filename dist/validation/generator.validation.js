@@ -216,14 +216,19 @@ exports.createColumn = {
         toBoolean: true
     }
 };
-exports.columnsActions = Object.assign(Object.assign({}, exports.createEntity), { "columns.*.action": {
+exports.columnsActions = {
+    ...exports.createEntity,
+    "columns.*.action": {
         exists: true,
         isIn: {
             options: [["ADD", "REMOVE"]]
         }
-    }, "relations.*.action": {
+    },
+    "relations.*.action": {
         exists: true,
         isIn: {
             options: [["ADD", "REMOVE"]]
         }
-    } });
+    }
+};
+//# sourceMappingURL=generator.validation.js.map

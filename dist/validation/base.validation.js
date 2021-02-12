@@ -38,13 +38,18 @@ exports.jsonApiQuery = {
         }
     }
 };
-exports.get = Object.assign(Object.assign({}, exports.jsonApiQuery), { id: {
+exports.get = {
+    ...exports.jsonApiQuery,
+    id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
         toInt: true
-    } });
-exports.list = Object.assign({}, exports.jsonApiQuery);
+    }
+};
+exports.list = {
+    ...exports.jsonApiQuery
+};
 exports.create = {};
 exports.remove = {
     id: {
@@ -125,3 +130,4 @@ exports.update = {
         toInt: true
     }
 };
+//# sourceMappingURL=base.validation.js.map

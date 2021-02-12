@@ -61,3 +61,4 @@ ErrorMiddleware = __decorate([
     tsyringe_1.singleton()
 ], ErrorMiddleware);
 exports.default = ErrorMiddleware;
+//# sourceMappingURL=error.middleware.js.map

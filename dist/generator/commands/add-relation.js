@@ -5,7 +5,6 @@ const pluralize = require("pluralize");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function addRelation(entity, relation) {
-    var _a;
     const model = resources_1.default(entity).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const naming = resources_1.getEntityNaming(entity);
@@ -44,7 +43,7 @@ async function addRelation(entity, relation) {
     const mainRelationProperty = entityClass
         .addProperty({ name: relation.name })
         .toggleModifier("public");
-    (_a = relation.inverseRelationName) !== null && _a !== void 0 ? _a : (relation.inverseRelationName = relation.type === "many-to-many"
+    relation.inverseRelationName ?? (relation.inverseRelationName = relation.type === "many-to-many"
         ? pluralize(relation.target)
         : relation.target);
     const decoratorName = pascalcase(relation.type);
@@ -146,3 +145,4 @@ async function addRelation(entity, relation) {
     serializerFile.fixMissingImports();
 }
 exports.default = addRelation;
+//# sourceMappingURL=add-relation.js.map

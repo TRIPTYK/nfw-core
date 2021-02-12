@@ -47,3 +47,4 @@ exports.default = (entity) => {
         }
     ];
 };
+//# sourceMappingURL=resources.js.map

@@ -40,3 +40,4 @@ function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     return file;
 }
 exports.default = createControllerTemplate;
+//# sourceMappingURL=controller.js.map

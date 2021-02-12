@@ -108,3 +108,4 @@ MetadataController = __decorate([
     __metadata("design:paramtypes", [typeorm_service_1.default])
 ], MetadataController);
 exports.default = MetadataController;
+//# sourceMappingURL=metadata.controller.js.map

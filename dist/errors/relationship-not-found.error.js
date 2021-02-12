@@ -6,3 +6,4 @@ class RelationshipNotFoundError extends Error {
     }
 }
 exports.default = RelationshipNotFoundError;
+//# sourceMappingURL=relationship-not-found.error.js.map

@@ -18,7 +18,7 @@ async function deleteJsonApiEntity(modelName) {
     }
     // do something
     for (const file of files) {
-        file === null || file === void 0 ? void 0 : file.delete();
+        file?.delete();
     }
     const applicationFile = project_1.default.getSourceFile("src/api/application.ts");
     const applicationClass = applicationFile.getClasses()[0];
@@ -36,3 +36,4 @@ async function deleteJsonApiEntity(modelName) {
     applicationFile.fixUnusedIdentifiers();
 }
 exports.default = deleteJsonApiEntity;
+//# sourceMappingURL=delete-entity.js.map

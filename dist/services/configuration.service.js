@@ -23,9 +23,8 @@ let ConfigurationService = class ConfigurationService extends base_service_1.def
         return this._config;
     }
     loadConfiguration() {
-        var _a;
         const { parsed: loaded } = dotenv.config({
-            path: path_1.join(process.cwd(), `${(_a = process.env.NODE_ENV) !== null && _a !== void 0 ? _a : "development"}.env`)
+            path: path_1.join(process.cwd(), `${process.env.NODE_ENV ?? "development"}.env`)
         });
         const applyObj = {};
         applyObj.env = loaded.NODE_ENV;
@@ -111,7 +110,7 @@ let ConfigurationService = class ConfigurationService extends base_service_1.def
             publicKey: loaded.MAILGUN_PUBLIC_KEY
         };
         applyObj.oAuthKey = loaded.OAUTH_KEY;
-        return Object.assign(Object.assign({}, loaded), applyObj);
+        return { ...loaded, ...applyObj };
     }
     getKey(key) {
         return this._config[key];
@@ -126,3 +125,4 @@ ConfigurationService = __decorate([
     __metadata("design:paramtypes", [])
 ], ConfigurationService);
 exports.default = ConfigurationService;
+//# sourceMappingURL=configuration.service.js.map

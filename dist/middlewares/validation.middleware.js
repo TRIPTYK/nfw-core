@@ -30,3 +30,4 @@ ValidationMiddleware = __decorate([
     tsyringe_1.singleton()
 ], ValidationMiddleware);
 exports.default = ValidationMiddleware;
+//# sourceMappingURL=validation.middleware.js.map

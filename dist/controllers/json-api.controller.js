@@ -17,11 +17,11 @@ class BaseJsonApiController extends base_controller_1.default {
     }
     callMethod(methodName) {
         return async (req, res, next) => {
-            var _a;
             try {
                 const response = await this[methodName](req, res);
                 if (!res.headersSent) {
-                    const useSchema = (_a = Reflect.getMetadata("schema-use", this, methodName)) !== null && _a !== void 0 ? _a : "default";
+                    const useSchema = Reflect.getMetadata("schema-use", this, methodName) ??
+                        "default";
                     if (response instanceof pagination_response_1.default) {
                         const serialized = await this.serializer.serialize(response.body, useSchema, response.paginationData);
                         res.status(response.status);
@@ -87,7 +87,10 @@ class BaseJsonApiController extends base_controller_1.default {
         });
     }
     async update(req, _res) {
-        let saved = await this.repository.preload(Object.assign(Object.assign({}, req.body), { id: req.params.id }));
+        let saved = await this.repository.preload({
+            ...req.body,
+            ...{ id: req.params.id }
+        });
         if (saved === undefined) {
             throw Boom.notFound();
         }
@@ -103,9 +106,8 @@ class BaseJsonApiController extends base_controller_1.default {
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     async fetchRelationships(req, res) {
-        var _a;
         const relation = req.params.relation;
-        const otherEntityMetadata = (_a = this.repository.metadata.findRelationWithPropertyPath(relation)) === null || _a === void 0 ? void 0 : _a.inverseEntityMetadata;
+        const otherEntityMetadata = this.repository.metadata.findRelationWithPropertyPath(relation)?.inverseEntityMetadata;
         if (!otherEntityMetadata) {
             throw Boom.notFound();
         }
@@ -119,13 +121,13 @@ class BaseJsonApiController extends base_controller_1.default {
         }));
     }
     async fetchRelated(req, res) {
-        var _a, _b;
         const relation = req.params.relation;
-        const otherEntityMetadata = (_a = this.repository.metadata.findRelationWithPropertyPath(relation)) === null || _a === void 0 ? void 0 : _a.inverseEntityMetadata;
+        const otherEntityMetadata = this.repository.metadata.findRelationWithPropertyPath(relation)?.inverseEntityMetadata;
         if (!otherEntityMetadata) {
             throw Boom.notFound();
         }
-        const useSchema = (_b = Reflect.getMetadata("schema-use", this, "fetchRelated")) !== null && _b !== void 0 ? _b : "default";
+        const useSchema = Reflect.getMetadata("schema-use", this, "fetchRelated") ??
+            "default";
         res.type("application/vnd.api+json");
         return res.json(await registry_application_1.ApplicationRegistry.serializerFor(otherEntityMetadata.target).serialize(await this.repository.fetchRelated(relation, req.params.id, this.parseJsonApiQueryParams(req.query)), useSchema, {
             url: req.url
@@ -147,16 +149,16 @@ class BaseJsonApiController extends base_controller_1.default {
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     parseJsonApiQueryParams(query) {
-        var _a, _b, _c;
         return {
             includes: query.include
                 ? query.include.split(",")
                 : null,
             sort: query.sort ? query.sort.split(",") : null,
-            fields: (_a = query.fields) !== null && _a !== void 0 ? _a : null,
-            page: (_b = query.page) !== null && _b !== void 0 ? _b : null,
-            filter: (_c = query.filter) !== null && _c !== void 0 ? _c : null
+            fields: query.fields ?? null,
+            page: query.page ?? null,
+            filter: query.filter ?? null
         };
     }
 }
 exports.default = BaseJsonApiController;
+//# sourceMappingURL=json-api.controller.js.map

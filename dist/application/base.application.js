@@ -65,14 +65,13 @@ class BaseApplication {
      * Setup controllers routing
      */
     async setupControllers(controllers) {
-        var _a, _b, _c, _d;
         for (const controller of controllers) {
             const instanceController = tsyringe_1.container.resolve(controller);
             // The prefix saved to our controller
             const prefix = Reflect.getMetadata("routeName", controller);
             // Our `routes` array containing all our routes for this controller
             const routes = Reflect.getMetadata("routes", controller);
-            const middlewaresForController = (_a = Reflect.getMetadata("middlewares", controller)) !== null && _a !== void 0 ? _a : [];
+            const middlewaresForController = Reflect.getMetadata("middlewares", controller) ?? [];
             const router = Express.Router();
             if (middlewaresForController &&
                 middlewaresForController.length > 0) {
@@ -175,7 +174,7 @@ class BaseApplication {
                         controllerInstance: instanceController
                     };
                     const applyMiddlewares = [];
-                    const middlewaresWithArgs = (_b = Reflect.getMetadata("middlewares", controller, method)) !== null && _b !== void 0 ? _b : [];
+                    const middlewaresWithArgs = Reflect.getMetadata("middlewares", controller, method) ?? [];
                     const serializerOverride = Reflect.getMetadata("deserializer", controller, method);
                     const validatorOverride = Reflect.getMetadata("validator", controller, method);
                     const middlewaresByOrder = {
@@ -187,7 +186,7 @@ class BaseApplication {
                         afterAll: []
                     };
                     for (const middleware of middlewaresWithArgs) {
-                        middlewaresByOrder[(_c = middleware.order) !== null && _c !== void 0 ? _c : "afterAll"].push(middleware);
+                        middlewaresByOrder[middleware.order ?? "afterAll"].push(middleware);
                     }
                     for (const beforeAllMiddleware of middlewaresByOrder.beforeAll.reverse()) {
                         applyMiddlewares.push(this.useMiddleware(beforeAllMiddleware.middleware, beforeAllMiddleware.args, routeContext));
@@ -216,7 +215,7 @@ class BaseApplication {
                             }
                             const validationSchema = validatorOverride
                                 ? validatorOverride
-                                : (_d = validation[method]) !== null && _d !== void 0 ? _d : BaseValidation[method];
+                                : validation[method] ?? BaseValidation[method];
                             if (validatorOverride !== null) {
                                 applyMiddlewares.push(this.useMiddleware(validation_middleware_1.default, {
                                     serializer,
@@ -261,3 +260,4 @@ class BaseApplication {
     }
 }
 exports.default = BaseApplication;
+//# sourceMappingURL=base.application.js.map

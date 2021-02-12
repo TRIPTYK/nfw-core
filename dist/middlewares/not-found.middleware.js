@@ -26,3 +26,4 @@ NotFoundMiddleware = __decorate([
     tsyringe_1.singleton()
 ], NotFoundMiddleware);
 exports.default = NotFoundMiddleware;
+//# sourceMappingURL=not-found.middleware.js.map

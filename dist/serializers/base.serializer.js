@@ -41,8 +41,7 @@ class BaseJsonApiSerializer {
         return this.serializer.deserializeAsync(this.type, payload);
     }
     applyDeserializeCase(deserializeArray) {
-        var _a;
-        const convertCase = (_a = this.serializer.opts.convertCase) !== null && _a !== void 0 ? _a : "camelCase";
+        const convertCase = this.serializer.opts.convertCase ?? "camelCase";
         switch (convertCase) {
             case "camelCase":
                 return deserializeArray.map((e) => case_util_1.toCamelCase(e));
@@ -62,10 +61,12 @@ class BaseJsonApiSerializer {
             .find((schema) => Reflect.getMetadata("name", schema) === name);
     }
     convertSerializerSchemaToObjectSchema(schema, rootSchema, schemaName, passedBy) {
-        var _a, _b, _c;
-        const serialize = ((_a = Reflect.getMetadata("serialize", schema.prototype)) !== null && _a !== void 0 ? _a : []);
-        const deserialize = this.applyDeserializeCase(((_b = Reflect.getMetadata("deserialize", schema.prototype)) !== null && _b !== void 0 ? _b : []));
-        const relations = ((_c = Reflect.getMetadata("relations", schema.prototype)) !== null && _c !== void 0 ? _c : []);
+        const serialize = (Reflect.getMetadata("serialize", schema.prototype) ??
+            []);
+        const deserialize = this.applyDeserializeCase((Reflect.getMetadata("deserialize", schema.prototype) ??
+            []));
+        const relations = (Reflect.getMetadata("relations", schema.prototype) ??
+            []);
         const schemaType = Reflect.getMetadata("type", schema);
         const schemaInstance = new schema();
         const relationShips = {};
@@ -105,3 +106,4 @@ class BaseJsonApiSerializer {
 }
 exports.BaseJsonApiSerializer = BaseJsonApiSerializer;
 BaseJsonApiSerializer.whitelist = [];
+//# sourceMappingURL=base.serializer.js.map

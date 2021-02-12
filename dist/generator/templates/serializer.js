@@ -34,3 +34,4 @@ function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePr
     return file;
 }
 exports.default = createSerializer;
+//# sourceMappingURL=serializer.js.map
