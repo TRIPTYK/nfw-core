@@ -2,7 +2,6 @@
 import { Router, Request, Response as Response$1, Application, NextFunction } from 'express';
 import { ParamSchema, Location, Schema as Schema$1 } from 'express-validator';
 import { Repository, SelectQueryBuilder, EntityMetadata, DatabaseType, Connection, ConnectionOptions, ColumnType, EntityOptions, ColumnOptions } from 'typeorm';
-export * from 'typeorm';
 import * as JSONAPISerializer from 'json-api-serializer';
 import { RelationType } from 'typeorm/metadata/types/RelationTypes';
 import ts_morph, { SourceFile } from 'ts-morph';

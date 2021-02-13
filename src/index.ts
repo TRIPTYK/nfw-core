@@ -16,4 +16,3 @@ export * from "./services";
 export * from "./utils";
 export * from "./validation";
 export * from "./types";
-export * from "typeorm";

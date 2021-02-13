@@ -7,4 +7,11 @@ export default [
     },
     plugins: [dts()],
   },
+  {
+    input: "dist/typeorm.d.ts",
+    output: {
+      file: "typeorm.d.ts",
+    },
+    plugins: [dts()],
+  },
 ];
