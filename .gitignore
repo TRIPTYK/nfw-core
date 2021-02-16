@@ -1,7 +1,2 @@
-*
-
-!src/
-!*.json
-!rollup.config.js
-!README.md
-!.gitignore
+node_modules/
+*.lock

@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-core",
-  "version": "0.0.8",
+  "version": "1.0.0-beta0",
   "description": "",
   "author": "TRIPTYK SPRL",
   "contributors": [
@@ -47,8 +47,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "build": "rm -rf dist && tsc && rollup -c && cp -r dist/* ./ && rm -rf dist",
-    "prepublishOnly": "rm -rf dist && tsc && rollup -c && cp -r dist/* ./ && rm -rf dist"
+    "build": "rm -rf dist && tsc && rollup -c",
+    "prepublishOnly": "rm -rf dist && tsc && rollup -c"
   },
   "repository": {
     "type": "git",
