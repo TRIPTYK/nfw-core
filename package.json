@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-core",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "description": "",
   "author": "TRIPTYK SPRL",
   "contributors": [
@@ -10,7 +10,8 @@
   ],
   "files": [
     "index.js",
-    "index.d.ts"
+    "index.d.ts",
+    "dist/**/*"
   ],
   "license": "ISC",
   "main": "dist/index.js",
