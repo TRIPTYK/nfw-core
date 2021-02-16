@@ -23,6 +23,7 @@
     "@types/node": "^12.12.11",
     "@types/socket.io-client": "^1.4.35",
     "dashify": "^2.0.0",
+    "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "http-status": "^1.4.1",
     "json-api-serializer": "^2.2.2",
@@ -39,13 +40,15 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@rollup/plugin-multi-entry": "^4.0.0",
     "@types/mocha": "^5.2.7",
     "mocha": "^6.2.2",
     "rollup-plugin-dts": "^2.0.1"
   },
   "scripts": {
     "test": "mocha",
-    "prepublishOnly": "tsc && rollup -c"
+    "build": "rm -rf dist && tsc && rollup -c && cp -r dist/* ./ && rm -rf dist",
+    "prepublishOnly": "rm -rf dist && tsc && rollup -c && cp -r dist/* ./ && rm -rf dist"
   },
   "repository": {
     "type": "git",

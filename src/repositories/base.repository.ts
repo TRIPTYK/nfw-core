@@ -121,8 +121,6 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
       this.applyFilter(params.filter, queryBuilder);
     }
 
-    console.log(queryBuilder.getSql());
-
     return queryBuilder;
   }
 

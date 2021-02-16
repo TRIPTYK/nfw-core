@@ -1,16 +1,14 @@
 import dts from "rollup-plugin-dts";
+
 export default [
   {
-    input: "dist/index.d.ts",
+    input: ["dist/index.d.ts", "dist/typeorm.d.ts"],
     output: {
-      file: "index.d.ts",
-    },
-    plugins: [dts()],
-  },
-  {
-    input: "dist/typeorm.d.ts",
-    output: {
-      file: "typeorm.d.ts",
+      dir: "dist",
+      exports: "auto",
+      preserveModules: true,
+      preserveModulesRoot: "src",
+      sourcemap: true,
     },
     plugins: [dts()],
   },

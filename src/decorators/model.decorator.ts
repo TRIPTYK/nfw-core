@@ -56,10 +56,6 @@ export function JsonApiEntity<T>(
       withoutRowid: options.withoutRowid,
     } as TableMetadataArgs);
 
-    if (!options.repository || !options.serializer || !options.validator) {
-      throw new Error("Please provide arguments for json-api entity");
-    }
-
     Reflect.defineMetadata("name", name, target);
     Reflect.defineMetadata("repository", options.repository, target);
     Reflect.defineMetadata("serializer", options.serializer, target);
@@ -73,7 +69,7 @@ export function JsonApiEntity<T>(
     ApplicationRegistry.registerEntity(target as any);
     ApplicationRegistry.registerCustomRepositoryFor(
       target as any,
-      options.repository
+      options.repository ?? new BaseJsonApiRepository<T>()
     );
     ApplicationRegistry.registerSerializerFor(
       target as any,
