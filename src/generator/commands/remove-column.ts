@@ -1,3 +1,4 @@
+import * as camelcase from "camelcase";
 import { SyntaxKind, VariableDeclarationKind } from "ts-morph";
 import { EntityColumn } from "../interfaces/generator.interface";
 import { resources, getEntityNaming } from "../static/resources";
@@ -34,6 +35,18 @@ export async function removeColumn(
   }
 
   columnProperty.remove();
+
+  const importDeclaration = modelFile.getImportDeclaration(
+    `../enums/${camelcase(columnName)}.enum`
+  );
+  
+  if (importDeclaration) {
+      const enumsFile = project.getSourceFile(
+          `src/api/enums/${camelcase(columnName)}.enum.ts`
+      );
+      importDeclaration.remove();
+      enumsFile.delete();
+  }
 
   const serializer = resources(modelName).find(
     (r) => r.template === "serializer-schema"

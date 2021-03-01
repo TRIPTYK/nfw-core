@@ -14,9 +14,17 @@ import {
 } from "../../decorators/controller.decorator";
 import { addColumn } from "../../generator/commands/add-column";
 import { addRelation } from "../../generator/commands/add-relation";
+import addEndpoint from "../../generator/commands/add-endpoint";
+import addPerms from "../../generator/commands/add-permission";
 import { deleteJsonApiEntity } from "../../generator/commands/delete-entity";
+import addRole from "../../generator/commands/add-role";
+import deleteRole from "../../generator/commands/delete-role";
+import deleteBasicRoute from "../../generator/commands/delete-route";
 import { generateJsonApiEntity } from "../../generator/commands/generate-entity";
+import generateBasicRoute from "../../generator/commands/generate-route";
 import { removeColumn } from "../../generator/commands/remove-column";
+import removeEndpoint from "../../generator/commands/remove-endpoint";
+import removePerms from "../../generator/commands/remove-permissions";
 import { removeRelation } from "../../generator/commands/remove-relation";
 import project from "../../generator/utils/project";
 import { ValidationMiddleware } from "../../middlewares/validation.middleware";
@@ -25,6 +33,8 @@ import {
   createColumn,
   createEntity,
   createRelation,
+  createRoute,
+  createSubRoute
 } from "../../validation/generator.validation";
 import { BaseController } from "../base.controller";
 
@@ -34,6 +44,34 @@ import { BaseController } from "../base.controller";
 @Controller("generate")
 export class GeneratorController extends BaseController {
   public socket: SocketIOClient.Socket = null;
+
+  @Post("/route/:name")
+  @MethodMiddleware(ValidationMiddleware, {
+      schema: createRoute,
+      location: ["body"]
+  })
+  public async generateRoute(req: Request, res: Response) {
+      await generateBasicRoute(req.params.name, req.body.methods);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Post("/route/:name/subroute")
+  @MethodMiddleware(ValidationMiddleware, {
+      schema: createSubRoute,
+      location: ["body"]
+  })
+  public async generateSubRoute(req: Request, res: Response) {
+      await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
 
   @Post("/entity/:name")
   @MethodMiddleware(ValidationMiddleware, {
@@ -50,6 +88,26 @@ export class GeneratorController extends BaseController {
     await project.save();
     await this.sendMessageAndWaitResponse("app-recompile-sync");
     await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Post("/role/:name")
+  public async generateRole(req: Request, res: Response) {
+      await addRole(req.params.name);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Post("/perms/:name")
+  public async addPermissions(req: Request, res: Response) {
+      await addPerms(req.params.name, req.body.role);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
   }
 
   @Post("/entity/:name/relation")
@@ -109,6 +167,26 @@ export class GeneratorController extends BaseController {
     await this.sendMessageAndWaitResponse("app-restart");
   }
 
+  @Delete("/route/:name")
+  public async deleteRoute(req: Request, res: Response) {
+      await deleteBasicRoute(req.params.name);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Delete("/route/:name/subroute/:methodName")
+  public async deleteSubRoute(req: Request, res: Response) {
+      await removeEndpoint(req.params.name, req.params.methodName);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
   @Delete("/entity/:name/:column")
   public async deleteEntityColumn(req: Request, res: Response) {
     await removeColumn(req.params.name, req.params.column);
@@ -137,6 +215,26 @@ export class GeneratorController extends BaseController {
     await project.save();
     await this.sendMessageAndWaitResponse("app-recompile-sync");
     await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Delete("/role/:name")
+  public async deleteRole(req: Request, res: Response) {
+      await deleteRole(req.params.name);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Delete("/perms/:name")
+  public async removePerms(req: Request, res: Response) {
+      await removePerms(req.params.name, req.body.role);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
   }
 
   constructor() {

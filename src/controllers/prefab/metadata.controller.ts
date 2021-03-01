@@ -6,6 +6,8 @@ import { ApplicationRegistry } from "../../application/registry.application";
 import { Controller, Get } from "../../decorators/controller.decorator";
 import { TypeORMService } from "../../services/typeorm.service";
 import { BaseController } from "../base.controller";
+import getPerms from "../../generator/commands/get-perms";
+
 
 /**
  * Use or inherit this controller in your app if you want to get api metadata
@@ -17,11 +19,39 @@ export class MetadataController extends BaseController {
     super();
   }
 
+  @Get("/routes")
+  public getAllRoutes() {
+      return ApplicationRegistry.application.Routes;
+  }
+
   @Get("/types")
   public getSupportedTypes() {
     const connection = this.typeormConnection.connection;
 
     return connection.driver.supportedDataTypes;
+  }
+
+  @Get("/count")
+  public async countAllEntitiesRecords() {
+      return Promise.all(
+          this.getJsonApiEntities().map(async (entity) => {
+              return {
+                  entityName: entity.name,
+                  count: await getRepository(entity.target).count()
+              };
+          })
+      );
+  }
+
+  @Get("/roles")
+  public getRoles(req: Request, res: Response) {
+      //TODO: return all Roles
+      return null;
+  }
+
+  @Get("/perms/:name")
+  public getPerms(req: Request, res: Response) {
+      return this.getAllPerms(req.params.name);
   }
 
   @Get("/:entity/count")
@@ -93,5 +123,9 @@ export class MetadataController extends BaseController {
         };
       }),
     };
+  }
+  
+  protected getAllPerms(name: string) {
+    return getPerms(name);
   }
 }

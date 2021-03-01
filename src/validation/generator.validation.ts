@@ -237,3 +237,65 @@ export const columnsActions: ValidationSchema<any> = {
     },
   },
 };
+
+export const createRoute: ValidationSchema<any> = {
+  methods: {
+      exists: true,
+      isArray: true
+  },
+  "methods.*": {
+      isIn: {
+          options: [
+              [
+                  "GET",
+                  "PUT",
+                  "POST",
+                  "DELETE",
+                  "PATCH",
+                  "COPY",
+                  "HEAD",
+                  "OPTIONS",
+                  "LINK",
+                  "UNLINK",
+                  "PURGE",
+                  "LOCK",
+                  "UNLOCK",
+                  "PROFIND",
+                  "VIEW"
+              ]
+          ]
+      }
+  }
+};
+
+export const createSubRoute: ValidationSchema<any> = {
+  method: {
+      exists: true,
+      isString: true,
+      isIn: {
+          options: [
+              [
+                  "GET",
+                  "PUT",
+                  "POST",
+                  "DELETE",
+                  "PATCH",
+                  "COPY",
+                  "HEAD",
+                  "OPTIONS",
+                  "LINK",
+                  "UNLINK",
+                  "PURGE",
+                  "LOCK",
+                  "UNLOCK",
+                  "PROFIND",
+                  "VIEW"
+              ]
+          ]
+      }
+  },
+  subRoute: {
+      exists: true,
+      isString: true
+  }
+};
