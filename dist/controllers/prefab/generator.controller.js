@@ -16,9 +16,17 @@ const registry_application_1 = require("../../application/registry.application")
 const controller_decorator_1 = require("../../decorators/controller.decorator");
 const add_column_1 = require("../../generator/commands/add-column");
 const add_relation_1 = require("../../generator/commands/add-relation");
+const add_endpoint_1 = require("../../generator/commands/add-endpoint");
+const add_permission_1 = require("../../generator/commands/add-permission");
 const delete_entity_1 = require("../../generator/commands/delete-entity");
+const add_role_1 = require("../../generator/commands/add-role");
+const delete_role_1 = require("../../generator/commands/delete-role");
+const delete_route_1 = require("../../generator/commands/delete-route");
 const generate_entity_1 = require("../../generator/commands/generate-entity");
+const generate_route_1 = require("../../generator/commands/generate-route");
 const remove_column_1 = require("../../generator/commands/remove-column");
+const remove_endpoint_1 = require("../../generator/commands/remove-endpoint");
+const remove_permissions_1 = require("../../generator/commands/remove-permissions");
 const remove_relation_1 = require("../../generator/commands/remove-relation");
 const project_1 = require("../../generator/utils/project");
 const validation_middleware_1 = require("../../middlewares/validation.middleware");
@@ -43,11 +51,43 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
             // removeRelation("user", "documents").then(() => project.save());
         });
     }
+    async generateRoute(req, res) {
+        await generate_route_1.default(req.params.name, req.body.methods);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
+    async generateSubRoute(req, res) {
+        await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
     async generateEntity(req, res) {
         await generate_entity_1.generateJsonApiEntity(req.params.name, {
             columns: req.body.columns,
             relations: req.body.relations,
         });
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
+    async generateRole(req, res) {
+        await add_role_1.default(req.params.name);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
+    async addPermissions(req, res) {
+        await add_permission_1.default(req.params.name, req.body.role);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.sendMessageAndWaitResponse("app-save");
         await project_1.default.save();
@@ -93,6 +133,22 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         await this.sendMessageAndWaitResponse("app-recompile-sync");
         await this.sendMessageAndWaitResponse("app-restart");
     }
+    async deleteRoute(req, res) {
+        await delete_route_1.default(req.params.name);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
+    async deleteSubRoute(req, res) {
+        await remove_endpoint_1.default(req.params.name, req.params.methodName);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
     async deleteEntityColumn(req, res) {
         await remove_column_1.removeColumn(req.params.name, req.params.column);
         res.sendStatus(HttpStatus.ACCEPTED);
@@ -117,6 +173,22 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         await this.sendMessageAndWaitResponse("app-recompile-sync");
         await this.sendMessageAndWaitResponse("app-restart");
     }
+    async deleteRole(req, res) {
+        await delete_role_1.default(req.params.name);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
+    async removePerms(req, res) {
+        await remove_permissions_1.default(req.params.name, req.body.role);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
     sendMessageAndWaitResponse(type, data) {
         return new Promise((resolve, rej) => {
             this.socket.emit(type, data, (response) => {
@@ -131,6 +203,26 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
     }
 };
 __decorate([
+    controller_decorator_1.Post("/route/:name"),
+    controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
+        schema: generator_validation_1.createRoute,
+        location: ["body"]
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "generateRoute", null);
+__decorate([
+    controller_decorator_1.Post("/route/:name/subroute"),
+    controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
+        schema: generator_validation_1.createSubRoute,
+        location: ["body"]
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "generateSubRoute", null);
+__decorate([
     controller_decorator_1.Post("/entity/:name"),
     controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
         schema: generator_validation_1.createEntity,
@@ -140,6 +232,18 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "generateEntity", null);
+__decorate([
+    controller_decorator_1.Post("/role/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "generateRole", null);
+__decorate([
+    controller_decorator_1.Post("/perms/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "addPermissions", null);
 __decorate([
     controller_decorator_1.Post("/entity/:name/relation"),
     controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
@@ -171,6 +275,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "do", null);
 __decorate([
+    controller_decorator_1.Delete("/route/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "deleteRoute", null);
+__decorate([
+    controller_decorator_1.Delete("/route/:name/subroute/:methodName"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "deleteSubRoute", null);
+__decorate([
     controller_decorator_1.Delete("/entity/:name/:column"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
@@ -188,6 +304,18 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "deleteEntity", null);
+__decorate([
+    controller_decorator_1.Delete("/role/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "deleteRole", null);
+__decorate([
+    controller_decorator_1.Delete("/perms/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "removePerms", null);
 GeneratorController = __decorate([
     controller_decorator_1.Controller("generate"),
     __metadata("design:paramtypes", [])

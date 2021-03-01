@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Delete = exports.Put = exports.Patch = exports.Post = exports.Get = exports.OverrideValidator = exports.OverrideSerializer = exports.JsonApiMethodMiddleware = exports.MethodMiddleware = exports.RouteMiddleware = exports.JsonApiController = exports.Controller = void 0;
+exports.Delete = exports.Put = exports.Patch = exports.Post = exports.Get = exports.OverrideValidator = exports.OverrideSerializer = exports.JsonApiMethodMiddleware = exports.MethodMiddleware = exports.RouteMiddleware = exports.JsonApiController = exports.GeneratedController = exports.Controller = void 0;
 /* eslint-disable @typescript-eslint/ban-types */
 const tsyringe_1 = require("tsyringe");
 /**
@@ -20,6 +20,21 @@ exports.Controller = Controller;
 /**
  *
  * @param routeName
+ */
+function GeneratedController(routeName) {
+    return function (target) {
+        tsyringe_1.container.registerSingleton(target);
+        Reflect.defineMetadata("routeName", routeName, target);
+        Reflect.defineMetadata("generated", true, target);
+        if (!Reflect.hasMetadata("routes", target)) {
+            Reflect.defineMetadata("routes", [], target);
+        }
+    };
+}
+exports.GeneratedController = GeneratedController;
+/**
+ *
+ * @param entity
  */
 function JsonApiController(entity) {
     return function (target) {

@@ -25,6 +25,11 @@ export declare function Controller(routeName: string): ClassDecorator;
  *
  * @param routeName
  */
+export declare function GeneratedController(routeName: string): ClassDecorator;
+/**
+ *
+ * @param entity
+ */
 export declare function JsonApiController<T extends JsonApiModel<T>>(entity: Constructor<T>): ClassDecorator;
 export declare function RouteMiddleware<T = any>(middlewareClass: Constructor<BaseMiddleware>, args?: T): ClassDecorator;
 export declare function MethodMiddleware<T = any>(middlewareClass: Constructor<BaseMiddleware>, args?: T): MethodDecorator;

@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addColumn = void 0;
+const camelcase = require("camelcase");
+const pascalcase = require("pascalcase");
 const stringifyObject = require("stringify-object");
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
+const enums_1 = require("../templates/enums");
 const project_1 = require("../utils/project");
 const template_1 = require("../utils/template");
 async function addColumn(entity, column) {
@@ -30,10 +33,25 @@ async function addColumn(entity, column) {
         .addDecorator({
         name: "Column",
         arguments: stringifyObject(template_1.buildModelColumnArgumentsFromObject(column), {
-            singleQuotes: false,
-        }),
+            transform: (tmp, prop, originalResult) => {
+                if (prop === "enum") {
+                    return originalResult.split("'").join("");
+                }
+                return originalResult;
+            },
+            singleQuote: false
+        })
     })
         .setIsDecoratorFactory(true);
+    if (column.enums) {
+        const importDeclaration = modelFile.addImportDeclaration({
+            moduleSpecifier: `../enums/${camelcase(column.name)}.enum`
+        });
+        const namedImport = importDeclaration.addNamedImport({
+            name: pascalcase(column.name)
+        });
+        enums_1.default(column.name, column.enums);
+    }
     const serializer = resources_1.resources(entity).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);
     const serializerClass = serializerFile.getClass(`${classPrefixName}SerializerSchema`);

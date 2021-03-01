@@ -41,6 +41,7 @@ class BaseApplication {
         };
         this.app = Express();
         this.router = Express.Router();
+        this.routes = [];
     }
     async setupMiddlewares(middlewaresForApp) {
         const middlewaresToApply = middlewaresForApp.map((e) => this.useMiddleware(e.middleware, e.args, null));
@@ -55,6 +56,9 @@ class BaseApplication {
     get App() {
         return this.app;
     }
+    get Routes() {
+        return this.routes;
+    }
     listen(port) {
         return new Promise((resolve) => {
             const server = this.app.listen(port, () => {
@@ -65,6 +69,7 @@ class BaseApplication {
     /**
      * Setup controllers routing
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async setupControllers(controllers) {
         for (const controller of controllers) {
             const instanceController = tsyringe_1.container.resolve(controller);
@@ -233,6 +238,20 @@ class BaseApplication {
                     applyMiddlewares.push(instanceController.callMethod(method));
                     router[methodType](path, middlewaresForController.map((mid) => this.useMiddleware(mid.middleware, mid.args, routeContext)), applyMiddlewares);
                 }
+                //push the entities routes to the routes list
+                this.routes.push({
+                    prefix: jsonApiEntityName,
+                    type: "entity",
+                    routes: jsonApiRoutes
+                        .map((route) => {
+                        return {
+                            path: route.path,
+                            requestMethod: route.methodType,
+                            methodName: route.method,
+                        };
+                    })
+                        .concat(routes),
+                });
             }
             else {
                 this.router.use(`/${prefix}`, router);
@@ -255,6 +274,14 @@ class BaseApplication {
                     middlewares.push(instanceController.callMethod(route.methodName));
                     router[route.requestMethod](`${route.path}`, middlewares);
                 }
+                //push basics routes to the routes list
+                this.routes.push({
+                    prefix,
+                    type: Reflect.getMetadata("generated", controller)
+                        ? "generated"
+                        : "basic",
+                    routes,
+                });
             }
         }
     }

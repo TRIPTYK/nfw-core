@@ -1,13 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildValidationArgumentsFromObject = exports.buildModelColumnArgumentsFromObject = void 0;
+const pascalcase = require("pascalcase");
 function buildModelColumnArgumentsFromObject(dbColumnaData) {
     const columnArgument = {};
     columnArgument.type = dbColumnaData.type;
     if (dbColumnaData.default !== undefined) {
-        if (dbColumnaData.isNullable !== false &&
+        if (dbColumnaData.isNullable !== true &&
             dbColumnaData.default !== null) {
             columnArgument.default = dbColumnaData.default;
+        }
+        else if (dbColumnaData.date) {
+            columnArgument.default = dbColumnaData.date;
+        }
+        else if (dbColumnaData.time) {
+            columnArgument.default = dbColumnaData.time;
         }
     }
     if (dbColumnaData.type.includes("int")) {
@@ -20,6 +27,9 @@ function buildModelColumnArgumentsFromObject(dbColumnaData) {
     }
     if (dbColumnaData.precision) {
         columnArgument.precision = dbColumnaData.precision;
+    }
+    if (dbColumnaData.enums) {
+        columnArgument.enum = pascalcase(dbColumnaData.name);
     }
     // handle nullable
     if (!dbColumnaData.isUnique && !dbColumnaData.isPrimary) {

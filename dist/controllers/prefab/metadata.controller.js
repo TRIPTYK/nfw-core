@@ -16,6 +16,7 @@ const registry_application_1 = require("../../application/registry.application")
 const controller_decorator_1 = require("../../decorators/controller.decorator");
 const typeorm_service_1 = require("../../services/typeorm.service");
 const base_controller_1 = require("../base.controller");
+const get_perms_1 = require("../../generator/commands/get-perms");
 /**
  * Use or inherit this controller in your app if you want to get api metadata
  */
@@ -24,9 +25,27 @@ let MetadataController = class MetadataController extends base_controller_1.Base
         super();
         this.typeormConnection = typeormConnection;
     }
+    getAllRoutes() {
+        return registry_application_1.ApplicationRegistry.application.Routes;
+    }
     getSupportedTypes() {
         const connection = this.typeormConnection.connection;
         return connection.driver.supportedDataTypes;
+    }
+    async countAllEntitiesRecords() {
+        return Promise.all(this.getJsonApiEntities().map(async (entity) => {
+            return {
+                entityName: entity.name,
+                count: await typeorm_1.getRepository(entity.target).count()
+            };
+        }));
+    }
+    getRoles(req, res) {
+        //TODO: return all Roles
+        return null;
+    }
+    getPerms(req, res) {
+        return this.getAllPerms(req.params.name);
     }
     async countEntityRecords(req, res) {
         const { entity } = req.params;
@@ -78,13 +97,40 @@ let MetadataController = class MetadataController extends base_controller_1.Base
             }),
         };
     }
+    getAllPerms(name) {
+        return get_perms_1.default(name);
+    }
 };
+__decorate([
+    controller_decorator_1.Get("/routes"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], MetadataController.prototype, "getAllRoutes", null);
 __decorate([
     controller_decorator_1.Get("/types"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MetadataController.prototype, "getSupportedTypes", null);
+__decorate([
+    controller_decorator_1.Get("/count"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], MetadataController.prototype, "countAllEntitiesRecords", null);
+__decorate([
+    controller_decorator_1.Get("/roles"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], MetadataController.prototype, "getRoles", null);
+__decorate([
+    controller_decorator_1.Get("/perms/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], MetadataController.prototype, "getPerms", null);
 __decorate([
     controller_decorator_1.Get("/:entity/count"),
     __metadata("design:type", Function),

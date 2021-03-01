@@ -6,13 +6,21 @@ import { BaseController } from "../base.controller";
  */
 export declare class GeneratorController extends BaseController {
     socket: SocketIOClient.Socket;
+    generateRoute(req: Request, res: Response): Promise<void>;
+    generateSubRoute(req: Request, res: Response): Promise<void>;
     generateEntity(req: Request, res: Response): Promise<void>;
+    generateRole(req: Request, res: Response): Promise<void>;
+    addPermissions(req: Request, res: Response): Promise<void>;
     addEntityRelation(req: Request, res: Response): Promise<void>;
     generateColumn(req: Request, res: Response): Promise<void>;
     do(req: Request, res: Response): Promise<void>;
+    deleteRoute(req: Request, res: Response): Promise<void>;
+    deleteSubRoute(req: Request, res: Response): Promise<void>;
     deleteEntityColumn(req: Request, res: Response): Promise<void>;
     deleteEntityRelation(req: Request, res: Response): Promise<void>;
     deleteEntity(req: Request, res: Response): Promise<void>;
+    deleteRole(req: Request, res: Response): Promise<void>;
+    removePerms(req: Request, res: Response): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
 }

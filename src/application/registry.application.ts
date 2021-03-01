@@ -10,7 +10,7 @@ import { BaseJsonApiSerializer } from "../serializers/base.serializer";
 import { BaseService } from "../services/base.service";
 import { Constructor } from "../types/global";
 import { mesure } from "../utils/mesure.util";
-import BaseApplication from "./base.application";
+import { BaseApplication } from "./base.application";
 
 export enum ApplicationStatus {
   Booting = "BOOTING",

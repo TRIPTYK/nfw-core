@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
+exports.createSubRoute = exports.createRoute = exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
 const tsyringe_1 = require("tsyringe");
 const typeorm_service_1 = require("../services/typeorm.service");
 exports.createEntity = {
@@ -230,4 +230,64 @@ exports.columnsActions = {
             options: [["ADD", "REMOVE"]],
         },
     },
+};
+exports.createRoute = {
+    methods: {
+        exists: true,
+        isArray: true
+    },
+    "methods.*": {
+        isIn: {
+            options: [
+                [
+                    "GET",
+                    "PUT",
+                    "POST",
+                    "DELETE",
+                    "PATCH",
+                    "COPY",
+                    "HEAD",
+                    "OPTIONS",
+                    "LINK",
+                    "UNLINK",
+                    "PURGE",
+                    "LOCK",
+                    "UNLOCK",
+                    "PROFIND",
+                    "VIEW"
+                ]
+            ]
+        }
+    }
+};
+exports.createSubRoute = {
+    method: {
+        exists: true,
+        isString: true,
+        isIn: {
+            options: [
+                [
+                    "GET",
+                    "PUT",
+                    "POST",
+                    "DELETE",
+                    "PATCH",
+                    "COPY",
+                    "HEAD",
+                    "OPTIONS",
+                    "LINK",
+                    "UNLINK",
+                    "PURGE",
+                    "LOCK",
+                    "UNLOCK",
+                    "PROFIND",
+                    "VIEW"
+                ]
+            ]
+        }
+    },
+    subRoute: {
+        exists: true,
+        isString: true
+    }
 };
