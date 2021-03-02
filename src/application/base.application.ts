@@ -11,6 +11,7 @@ import {
   RequestMethods,
   RouteDefinition,
 } from "../decorators/controller.decorator";
+import { jsonApiRoutesStructure } from "../enums/json-api.routes-structure";
 import { ApplicationInterface } from "../interfaces/application.interface";
 import { BaseErrorMiddleware } from "../middlewares/base.error-middleware";
 import { BaseMiddleware } from "../middlewares/base.middleware";
@@ -101,69 +102,6 @@ export abstract class BaseApplication implements ApplicationInterface {
 
         this.router.use(`/${jsonApiEntityName}`, router);
 
-        const jsonApiRoutes = [
-          {
-            path: "/:id",
-            methodType: "get",
-            method: "get",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/",
-            methodType: "get",
-            method: "list",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/",
-            methodType: "post",
-            method: "create",
-            middlewares: ["deserialize", "validation"],
-          },
-          {
-            path: "/:id",
-            methodType: "patch",
-            method: "update",
-            middlewares: ["deserialize", "validation"],
-          },
-          {
-            path: "/:id",
-            methodType: "delete",
-            method: "remove",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/:id/:relation",
-            methodType: "get",
-            method: "fetchRelated",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/:id/relationships/:relation",
-            methodType: "get",
-            method: "fetchRelationships",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/:id/relationships/:relation",
-            methodType: "post",
-            method: "addRelationships",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/:id/relationships/:relation",
-            methodType: "patch",
-            method: "updateRelationships",
-            middlewares: ["validation"],
-          },
-          {
-            path: "/:id/relationships/:relation",
-            methodType: "delete",
-            method: "removeRelationships",
-            middlewares: ["validation"],
-          },
-        ];
-
         for (const route of routes) {
           const routeContext: RouteContext = {
             routeDefinition: route,
@@ -205,7 +143,12 @@ export abstract class BaseApplication implements ApplicationInterface {
           router[route.requestMethod](`${route.path}`, middlewares);
         }
 
-        for (const { path, methodType, method, middlewares } of jsonApiRoutes) {
+        for (const {
+          path,
+          methodType,
+          method,
+          middlewares,
+        } of jsonApiRoutesStructure) {
           const routeContext: RouteContext = {
             routeDefinition: {
               path,
