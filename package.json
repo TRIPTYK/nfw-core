@@ -48,7 +48,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "build": "rm -rf dist && tsc && rollup -c",
+    "build": "rm -rf dist && tsc && npx rollup -c",
     "prepublishOnly": "rm -rf dist && tsc && rollup -c"
   },
   "repository": {

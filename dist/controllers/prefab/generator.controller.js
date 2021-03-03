@@ -189,6 +189,15 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         await this.sendMessageAndWaitResponse("app-recompile-sync");
         await this.sendMessageAndWaitResponse("app-restart");
     }
+    async modSubRoute(req, res) {
+        await remove_endpoint_1.default(req.params.name, req.params.methodName);
+        await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
+        res.sendStatus(HttpStatus.ACCEPTED);
+        await this.sendMessageAndWaitResponse("app-save");
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+    }
     sendMessageAndWaitResponse(type, data) {
         return new Promise((resolve, rej) => {
             this.socket.emit(type, data, (response) => {
@@ -316,6 +325,16 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "removePerms", null);
+__decorate([
+    controller_decorator_1.Patch("/route/:name/subroute/:methodName"),
+    controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
+        schema: generator_validation_1.createSubRoute,
+        location: ["body"]
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], GeneratorController.prototype, "modSubRoute", null);
 GeneratorController = __decorate([
     controller_decorator_1.Controller("generate"),
     __metadata("design:paramtypes", [])

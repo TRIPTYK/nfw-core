@@ -10,6 +10,7 @@ import {
   Controller,
   Delete,
   MethodMiddleware,
+  Patch,
   Post,
 } from "../../decorators/controller.decorator";
 import { addColumn } from "../../generator/commands/add-column";
@@ -230,6 +231,21 @@ export class GeneratorController extends BaseController {
   @Delete("/perms/:name")
   public async removePerms(req: Request, res: Response) {
       await removePerms(req.params.name, req.body.role);
+      res.sendStatus(HttpStatus.ACCEPTED);
+      await this.sendMessageAndWaitResponse("app-save");
+      await project.save();
+      await this.sendMessageAndWaitResponse("app-recompile-sync");
+      await this.sendMessageAndWaitResponse("app-restart");
+  }
+
+  @Patch("/route/:name/subroute/:methodName")
+  @MethodMiddleware(ValidationMiddleware, {
+      schema: createSubRoute,
+      location: ["body"]
+  })
+  public async modSubRoute(req: Request, res: Response) {
+      await removeEndpoint(req.params.name, req.params.methodName);
+      await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
       res.sendStatus(HttpStatus.ACCEPTED);
       await this.sendMessageAndWaitResponse("app-save");
       await project.save();

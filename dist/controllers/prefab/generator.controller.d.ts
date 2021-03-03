@@ -21,6 +21,7 @@ export declare class GeneratorController extends BaseController {
     deleteEntity(req: Request, res: Response): Promise<void>;
     deleteRole(req: Request, res: Response): Promise<void>;
     removePerms(req: Request, res: Response): Promise<void>;
+    modSubRoute(req: Request, res: Response): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
 }

@@ -324,7 +324,7 @@ declare abstract class BaseJsonApiController<T extends JsonApiModel<T>> extends 
     create(req: Request, _res: Response$1): Promise<any>;
     update(req: Request, _res: Response$1): Promise<any>;
     remove(req: Request, res: Response$1): Promise<any>;
-    fetchRelationships(req: Request, res: Response$1): Promise<Response$1<any>>;
+    fetchRelationships(req: Request, res: Response$1): Promise<Response$1<any, Record<string, any>>>;
     fetchRelated(req: Request, res: Response$1): Promise<any>;
     addRelationships(req: Request, res: Response$1): Promise<any>;
     updateRelationships(req: Request, res: Response$1): Promise<any>;
@@ -358,6 +358,7 @@ declare class GeneratorController extends BaseController {
     deleteEntity(req: Request, res: Response$1): Promise<void>;
     deleteRole(req: Request, res: Response$1): Promise<void>;
     removePerms(req: Request, res: Response$1): Promise<void>;
+    modSubRoute(req: Request, res: Response$1): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
 }
