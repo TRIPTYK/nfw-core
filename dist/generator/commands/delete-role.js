@@ -2,9 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pascalcase = require("pascalcase");
 const project_1 = require("../utils/project");
+const resources_1 = require("../static/resources");
 async function deleteRole(roleName) {
-    const file = project_1.default.getSourceFileOrThrow("src/api/enums/role.enum.ts");
-    const enumDeclaration = file.getEnum("Roles");
+    const controller = resources_1.resources("role").find((r) => r.template === "roles");
+    const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);
+    if (!controllerFile) {
+        throw new Error("This controller does not exist.");
+    }
+    const enumDeclaration = controllerFile.getEnum("Roles");
     const tmp = enumDeclaration.getMember(pascalcase(roleName));
     for (const referencedSymbol of tmp.findReferences()) {
         for (const reference of referencedSymbol.getReferences()) {

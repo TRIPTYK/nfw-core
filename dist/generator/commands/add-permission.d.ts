@@ -1,1 +1,1 @@
-export default function addPerms(route: string, role: string): Promise<void>;
+export default function addPerms(element: any): Promise<void>;

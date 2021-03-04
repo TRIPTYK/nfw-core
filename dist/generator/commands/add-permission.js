@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
-async function addPerms(route, role) {
-    const controller = resources_1.resources(route).find((r) => r.template === "controller");
+const pascalcase = require("pascalcase");
+async function addPerms(element) {
+    const controller = resources_1.resources(element.entity).find((r) => r.template === "controller");
     const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);
-    const { classPrefixName } = resources_1.getEntityNaming(route);
+    const { classPrefixName } = resources_1.getEntityNaming(element.entity);
     if (!controllerFile) {
         throw new Error("This controller does not exist.");
     }
@@ -13,58 +15,72 @@ async function addPerms(route, role) {
     if (!controllerClass) {
         throw new Error("This class does not exit");
     }
-    const importAuthMiddleware = controllerFile.getImportDeclaration("../middlewares/auth.middleware");
-    if (!importAuthMiddleware) {
-        const newImport = controllerFile.addImportDeclaration({
-            defaultImport: "AuthMiddleware",
-            namedImports: ["AuthMiddlewareArgs"],
-            moduleSpecifier: "../middlewares/auth.middleware"
-        });
-    }
-    const importRole = controllerFile.getImportDeclaration("../enums/role.enum");
-    if (!importRole) {
-        const newImport = controllerFile.addImportDeclaration({
-            namedImports: ["Roles"],
-            moduleSpecifier: "../enums/role.enum"
-        });
-    }
-    const importRouteMiddleware = controllerFile.getImportDeclaration("../../core/decorators/controller.decorator");
-    if (!importRouteMiddleware) {
-        const newImport = controllerFile.addImportDeclaration({
-            namedImports: ["RouteMiddleware"],
-            moduleSpecifier: "../../core/decorators/controller.decorator"
-        });
-    }
-    else {
-        const namedRouteMiddleware = importRouteMiddleware.getNamedImports();
-        const tmp = [];
-        namedRouteMiddleware.forEach((element) => {
-            tmp.push(element.getName());
-        });
-        if (!tmp.includes("RouteMiddleware")) {
-            importRouteMiddleware.addNamedImport({
-                name: "RouteMiddleware"
-            });
-        }
-    }
-    const decorators = controllerClass.getDecorator("RouteMiddleware");
-    if (!decorators) {
-        controllerClass
-            .addDecorator({
-            name: "RouteMiddleware<AuthMiddlewareArgs>",
-            arguments: ["AuthMiddleware", `[Roles.${role}]`]
-        })
-            .setIsDecoratorFactory(true);
-    }
-    else {
-        const args = decorators.getArguments()[1];
-        for (const e of args.getElements()) {
-            const tmp = e;
-            if (role === tmp.getName()) {
-                throw new Error(`${role} already exist`);
+    if (element.methodName) {
+        const controllerMethod = controllerClass.getMethod(element.methodName);
+        if (controllerMethod) {
+            const decorators = controllerMethod.getDecorator("JsonApiMethodMiddleware");
+            if (!decorators) {
+                controllerMethod
+                    .addDecorator({
+                    name: "JsonApiMethodMiddleware<AuthMiddlewareArgs>",
+                    arguments: ["AuthMiddleware", `[Roles.${element.role}]`],
+                })
+                    .setIsDecoratorFactory(true);
+            }
+            else {
+                const args = decorators.getArguments()[1];
+                for (const e of args.getElements()) {
+                    const tmp = e;
+                    if (element.role === tmp.getName()) {
+                        throw new Error(`${element.role} already exist`);
+                    }
+                }
+                args.addElement(`Roles.${element.role}`);
             }
         }
-        args.addElement(`Roles.${role}`);
+        else {
+            const controllerMethod = controllerClass.addMethod({
+                name: element.methodName,
+                returnType: "any",
+                scope: ts_morph_1.Scope.Public,
+                parameters: [{ name: "req", type: "Request" }, { name: "res" }],
+            });
+            controllerMethod
+                .addDecorator({
+                name: pascalcase(element.requestMethod),
+                arguments: [`"${element.path}"`],
+            })
+                .setIsDecoratorFactory(true);
+            controllerMethod
+                .addDecorator({
+                name: "JsonApiMethodMiddleware<AuthMiddlewareArgs>",
+                arguments: ["AuthMiddleware", `[Roles.${element.role}]`],
+            })
+                .setIsDecoratorFactory(true);
+            controllerMethod.setBodyText((writer) => writer.writeLine(`return super.${element.methodName}(req, res);`));
+        }
     }
+    else {
+        const decorators = controllerClass.getDecorator("RouteMiddleware");
+        if (!decorators) {
+            controllerClass
+                .addDecorator({
+                name: "RouteMiddleware<AuthMiddlewareArgs>",
+                arguments: ["AuthMiddleware", `[Roles.${element.role}]`],
+            })
+                .setIsDecoratorFactory(true);
+        }
+        else {
+            const args = decorators.getArguments()[1];
+            for (const e of args.getElements()) {
+                const tmp = e;
+                if (element.role === tmp.getName()) {
+                    throw new Error(`${element.role} already exist`);
+                }
+            }
+            args.addElement(`Roles.${element.role}`);
+        }
+    }
+    controllerFile.fixMissingImports();
 }
 exports.default = addPerms;

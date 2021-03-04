@@ -357,7 +357,6 @@ declare class GeneratorController extends BaseController {
     deleteEntityRelation(req: Request, res: Response$1): Promise<void>;
     deleteEntity(req: Request, res: Response$1): Promise<void>;
     deleteRole(req: Request, res: Response$1): Promise<void>;
-    removePerms(req: Request, res: Response$1): Promise<void>;
     modSubRoute(req: Request, res: Response$1): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
@@ -482,12 +481,13 @@ declare class MetadataController extends BaseController {
         type: "basic" | "generated" | "entity";
         routes: RouteDefinition[];
     }[];
+    getEntityRoutes(req: Request, res: Response$1): Promise<any>;
     getSupportedTypes(): ColumnType[];
     countAllEntitiesRecords(): Promise<{
         entityName: string;
         count: number;
     }[]>;
-    getRoles(req: Request, res: Response$1): any;
+    getRoles(req: Request, res: Response$1): Promise<String[]>;
     getPerms(req: Request, res: Response$1): Promise<any>;
     countEntityRecords(req: Request, res: Response$1): Promise<{
         count: number;
@@ -560,7 +560,7 @@ declare class MetadataController extends BaseController {
             isNullable: boolean;
         }[];
     };
-    protected getAllPerms(name: string): Promise<any>;
+    protected getRoutes(routes: any, entity: string): any;
 }
 
 declare abstract class BaseErrorMiddleware implements ErrorMiddlewareInterface {

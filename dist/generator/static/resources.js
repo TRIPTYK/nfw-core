@@ -17,7 +17,7 @@ function resources(entity) {
         {
             template: "base-controller",
             path: "src/api/controllers",
-            name: `${filePrefixName}.controller.ts`
+            name: `${filePrefixName}.controller.ts`,
         },
         {
             template: "controller",
@@ -49,6 +49,11 @@ function resources(entity) {
             template: "model",
             path: "src/api/models",
             name: `${filePrefixName}.model.ts`,
+        },
+        {
+            template: "roles",
+            path: "src/api/enums",
+            name: `${filePrefixName}.enum.ts`,
         },
     ];
 }

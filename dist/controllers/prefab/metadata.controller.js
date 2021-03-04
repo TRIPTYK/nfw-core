@@ -17,6 +17,9 @@ const controller_decorator_1 = require("../../decorators/controller.decorator");
 const typeorm_service_1 = require("../../services/typeorm.service");
 const base_controller_1 = require("../base.controller");
 const get_perms_1 = require("../../generator/commands/get-perms");
+const get_roles_1 = require("../../generator/commands/get-roles");
+const get_entityRoutes_1 = require("../../generator/commands/get-entityRoutes");
+const pluralize = require("pluralize");
 /**
  * Use or inherit this controller in your app if you want to get api metadata
  */
@@ -28,6 +31,11 @@ let MetadataController = class MetadataController extends base_controller_1.Base
     getAllRoutes() {
         return registry_application_1.ApplicationRegistry.application.Routes;
     }
+    getEntityRoutes(req, res) {
+        const allRoutes = registry_application_1.ApplicationRegistry.application.Routes;
+        const entityRoutes = this.getRoutes(allRoutes, req.params.name);
+        return get_entityRoutes_1.default(req.params.name, entityRoutes);
+    }
     getSupportedTypes() {
         const connection = this.typeormConnection.connection;
         return connection.driver.supportedDataTypes;
@@ -36,16 +44,15 @@ let MetadataController = class MetadataController extends base_controller_1.Base
         return Promise.all(this.getJsonApiEntities().map(async (entity) => {
             return {
                 entityName: entity.name,
-                count: await typeorm_1.getRepository(entity.target).count()
+                count: await typeorm_1.getRepository(entity.target).count(),
             };
         }));
     }
     getRoles(req, res) {
-        //TODO: return all Roles
-        return null;
+        return get_roles_1.default();
     }
     getPerms(req, res) {
-        return this.getAllPerms(req.params.name);
+        return get_perms_1.default(req.params.name);
     }
     async countEntityRecords(req, res) {
         const { entity } = req.params;
@@ -97,8 +104,12 @@ let MetadataController = class MetadataController extends base_controller_1.Base
             }),
         };
     }
-    getAllPerms(name) {
-        return get_perms_1.default(name);
+    getRoutes(routes, entity) {
+        for (const route of routes) {
+            if (route.prefix === pluralize(entity.toLowerCase()))
+                return route.routes;
+        }
+        return null;
     }
 };
 __decorate([
@@ -107,6 +118,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], MetadataController.prototype, "getAllRoutes", null);
+__decorate([
+    controller_decorator_1.Get("/routes/:name"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], MetadataController.prototype, "getEntityRoutes", null);
 __decorate([
     controller_decorator_1.Get("/types"),
     __metadata("design:type", Function),
