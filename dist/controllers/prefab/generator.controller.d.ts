@@ -20,7 +20,6 @@ export declare class GeneratorController extends BaseController {
     deleteEntityRelation(req: Request, res: Response): Promise<void>;
     deleteEntity(req: Request, res: Response): Promise<void>;
     deleteRole(req: Request, res: Response): Promise<void>;
-    removePerms(req: Request, res: Response): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
 }

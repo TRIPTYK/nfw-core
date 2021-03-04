@@ -15,7 +15,7 @@ export declare abstract class BaseJsonApiController<T extends JsonApiModel<T>> e
     create(req: Request, _res: Response): Promise<any>;
     update(req: Request, _res: Response): Promise<any>;
     remove(req: Request, res: Response): Promise<any>;
-    fetchRelationships(req: Request, res: Response): Promise<Response<any>>;
+    fetchRelationships(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
     fetchRelated(req: Request, res: Response): Promise<any>;
     addRelationships(req: Request, res: Response): Promise<any>;
     updateRelationships(req: Request, res: Response): Promise<any>;

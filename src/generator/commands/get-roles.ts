@@ -1,9 +1,7 @@
-import * as camelcase from "camelcase";
-import * as pascalcase from "pascalcase";
 import project from "../utils/project";
 import { resources } from "../static/resources";
 
-export default async function addRole(roleName: string): Promise<void> {
+export default async function getRoles(): Promise<Array<String>> {
 	const controller = resources("role").find((r) => r.template === "roles");
 
 	const controllerFile = project.getSourceFile(
@@ -16,14 +14,16 @@ export default async function addRole(roleName: string): Promise<void> {
 
 	const enumDeclaration = controllerFile.getEnum("Roles");
 
-	const tmp = enumDeclaration.getMember(pascalcase(roleName));
-
-	if (!tmp) {
-		const member = enumDeclaration.addMember({
-			name: pascalcase(roleName),
-			value: camelcase(roleName),
-		});
-	} else {
-		throw new Error(`${roleName} already exist`);
+	if (!enumDeclaration) {
+		throw new Error("This enums does not exit");
 	}
+
+	const members = enumDeclaration.getMembers();
+
+	const array = [];
+	for (const member of members) {
+		array.push(member.getName());
+	}
+
+	return array;
 }
