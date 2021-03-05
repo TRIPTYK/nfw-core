@@ -21,10 +21,14 @@ async function getEntityRoutes(entity, routes) {
             const decorators = method.getDecorator("JsonApiMethodMiddleware");
             if (decorators) {
                 const args = decorators.getArguments()[1];
-                args.getElements().forEach((e) => {
-                    const tmp = e;
-                    array.push(tmp.getName());
-                });
+                if (decorators.getArguments()[0].getFullText() === "AuthMiddleware") {
+                    if (args) {
+                        args.getElements().forEach((e) => {
+                            const tmp = e;
+                            array.push(tmp.getName());
+                        });
+                    }
+                }
             }
         }
         routeRoleList.push({

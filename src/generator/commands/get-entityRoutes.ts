@@ -27,16 +27,22 @@ export default async function getEntityRoutes(
 	const routeRoleList = [];
 	for (const route of routes) {
 		const method = controllerClass.getMethod(route.methodName);
+
 		const array = [];
 		if (method) {
 			const decorators = method.getDecorator("JsonApiMethodMiddleware");
+
 			if (decorators) {
 				const args = decorators.getArguments()[1] as ArrayLiteralExpression;
-				args.getElements().forEach((e) => {
-					const tmp = e as PropertyAccessExpression;
+				if (decorators.getArguments()[0].getFullText() === "AuthMiddleware") {
+					if (args) {
+						args.getElements().forEach((e) => {
+							const tmp = e as PropertyAccessExpression;
 
-					array.push(tmp.getName());
-				});
+							array.push(tmp.getName());
+						});
+					}
+				}
 			}
 		}
 
@@ -47,5 +53,6 @@ export default async function getEntityRoutes(
 			roles: array,
 		});
 	}
+
 	return routeRoleList;
 }

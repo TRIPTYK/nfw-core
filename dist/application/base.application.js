@@ -239,18 +239,22 @@ class BaseApplication {
                     router[methodType](path, middlewaresForController.map((mid) => this.useMiddleware(mid.middleware, mid.args, routeContext)), applyMiddlewares);
                 }
                 //push the entities routes to the routes list
+                const routeList = jsonApiRoutes.map((route) => {
+                    return {
+                        path: route.path,
+                        requestMethod: route.methodType,
+                        methodName: route.method,
+                    };
+                });
+                for (const i of routes) {
+                    if (!routeList.some((r) => r.path === i.path && r.requestMethod === i.requestMethod)) {
+                        routeList.push(i);
+                    }
+                }
                 this.routes.push({
                     prefix: jsonApiEntityName,
                     type: "entity",
-                    routes: jsonApiRoutes
-                        .map((route) => {
-                        return {
-                            path: route.path,
-                            requestMethod: route.methodType,
-                            methodName: route.method,
-                        };
-                    })
-                        .concat(routes),
+                    routes: routeList,
                 });
             }
             else {
