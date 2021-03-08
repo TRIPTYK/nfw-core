@@ -9,7 +9,6 @@ export declare class GeneratorController extends BaseController {
     generateRoute(req: Request, res: Response): Promise<void>;
     generateSubRoute(req: Request, res: Response): Promise<void>;
     generateEntity(req: Request, res: Response): Promise<void>;
-    generateRole(req: Request, res: Response): Promise<void>;
     addPermissions(req: Request, res: Response): Promise<void>;
     addEntityRelation(req: Request, res: Response): Promise<void>;
     generateColumn(req: Request, res: Response): Promise<void>;
@@ -19,7 +18,6 @@ export declare class GeneratorController extends BaseController {
     deleteEntityColumn(req: Request, res: Response): Promise<void>;
     deleteEntityRelation(req: Request, res: Response): Promise<void>;
     deleteEntity(req: Request, res: Response): Promise<void>;
-    deleteRole(req: Request, res: Response): Promise<void>;
     modSubRoute(req: Request, res: Response): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;

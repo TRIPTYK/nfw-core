@@ -78,21 +78,19 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         await this.sendMessageAndWaitResponse("app-recompile-sync");
         await this.sendMessageAndWaitResponse("app-restart");
     }
-    async generateRole(req, res) {
-        await add_role_1.default(req.params.name);
-        res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
-    }
     async addPermissions(req, res) {
         for (const element of req.body.elements) {
             if (element.type === "ADD") {
                 await add_permission_1.default(element);
             }
-            if (element.type === "DELETE") {
+            if (element.type === "REMOVE") {
                 await remove_permissions_1.default(element);
+            }
+            if (element.type === "CREATE") {
+                await add_role_1.default(element.role);
+            }
+            if (element.type === "DELETE") {
+                await delete_role_1.default(element.role);
             }
         }
         res.sendStatus(HttpStatus.ACCEPTED);
@@ -180,14 +178,6 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         await this.sendMessageAndWaitResponse("app-recompile-sync");
         await this.sendMessageAndWaitResponse("app-restart");
     }
-    async deleteRole(req, res) {
-        await delete_role_1.default(req.params.name);
-        res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
-    }
     async modSubRoute(req, res) {
         await remove_endpoint_1.default(req.params.name, req.params.methodName);
         await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
@@ -241,13 +231,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "generateEntity", null);
 __decorate([
-    controller_decorator_1.Post("/role/:name"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], GeneratorController.prototype, "generateRole", null);
-__decorate([
     controller_decorator_1.Post("/perms/:name"),
+    controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
+        schema: generator_validation_1.addPermissions,
+        location: ["body"],
+    }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
@@ -313,16 +301,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], GeneratorController.prototype, "deleteEntity", null);
 __decorate([
-    controller_decorator_1.Delete("/role/:name"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], GeneratorController.prototype, "deleteRole", null);
-__decorate([
     controller_decorator_1.Patch("/route/:name/subroute/:methodName"),
     controller_decorator_1.MethodMiddleware(validation_middleware_1.ValidationMiddleware, {
         schema: generator_validation_1.createSubRoute,
-        location: ["body"]
+        location: ["body"],
     }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),

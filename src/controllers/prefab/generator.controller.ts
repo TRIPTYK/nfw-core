@@ -7,11 +7,11 @@ import {
 	ApplicationRegistry,
 } from "../../application/registry.application";
 import {
-  Controller,
-  Delete,
-  MethodMiddleware,
-  Patch,
-  Post,
+	Controller,
+	Delete,
+	MethodMiddleware,
+	Patch,
+	Post,
 } from "../../decorators/controller.decorator";
 import { addColumn } from "../../generator/commands/add-column";
 import { addRelation } from "../../generator/commands/add-relation";
@@ -30,6 +30,7 @@ import { removeRelation } from "../../generator/commands/remove-relation";
 import project from "../../generator/utils/project";
 import { ValidationMiddleware } from "../../middlewares/validation.middleware";
 import {
+	addPermissions,
 	columnsActions,
 	createColumn,
 	createEntity,
@@ -91,24 +92,24 @@ export class GeneratorController extends BaseController {
 		await this.sendMessageAndWaitResponse("app-restart");
 	}
 
-	@Post("/role/:name")
-	public async generateRole(req: Request, res: Response) {
-		await addRole(req.params.name);
-		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
-	}
-
 	@Post("/perms/:name")
+	@MethodMiddleware(ValidationMiddleware, {
+		schema: addPermissions,
+		location: ["body"],
+	})
 	public async addPermissions(req: Request, res: Response) {
 		for (const element of req.body.elements) {
 			if (element.type === "ADD") {
 				await addPerms(element);
 			}
-			if (element.type === "DELETE") {
+			if (element.type === "REMOVE") {
 				await removePerms(element);
+			}
+			if (element.type === "CREATE") {
+				await addRole(element.role);
+			}
+			if (element.type === "DELETE") {
+				await deleteRole(element.role);
 			}
 		}
 
@@ -226,9 +227,14 @@ export class GeneratorController extends BaseController {
 		await this.sendMessageAndWaitResponse("app-restart");
 	}
 
-	@Delete("/role/:name")
-	public async deleteRole(req: Request, res: Response) {
-		await deleteRole(req.params.name);
+	@Patch("/route/:name/subroute/:methodName")
+	@MethodMiddleware(ValidationMiddleware, {
+		schema: createSubRoute,
+		location: ["body"],
+	})
+	public async modSubRoute(req: Request, res: Response) {
+		await removeEndpoint(req.params.name, req.params.methodName);
+		await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
 		res.sendStatus(HttpStatus.ACCEPTED);
 		await this.sendMessageAndWaitResponse("app-save");
 		await project.save();
@@ -236,32 +242,17 @@ export class GeneratorController extends BaseController {
 		await this.sendMessageAndWaitResponse("app-restart");
 	}
 
-  @Patch("/route/:name/subroute/:methodName")
-  @MethodMiddleware(ValidationMiddleware, {
-      schema: createSubRoute,
-      location: ["body"]
-  })
-  public async modSubRoute(req: Request, res: Response) {
-      await removeEndpoint(req.params.name, req.params.methodName);
-      await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
-      res.sendStatus(HttpStatus.ACCEPTED);
-      await this.sendMessageAndWaitResponse("app-save");
-      await project.save();
-      await this.sendMessageAndWaitResponse("app-recompile-sync");
-      await this.sendMessageAndWaitResponse("app-restart");
-  }
-
-  constructor() {
-    super();
-    this.socket = SocketIO("http://localhost:3000", {
-      query: {
-        app: false,
-      },
-    });
-    ApplicationRegistry.on(ApplicationLifeCycleEvent.Running, () => {
-      this.socket.on("connect", () => {
-        this.socket.emit("hello");
-      });
+	constructor() {
+		super();
+		this.socket = SocketIO("http://localhost:3000", {
+			query: {
+				app: false,
+			},
+		});
+		ApplicationRegistry.on(ApplicationLifeCycleEvent.Running, () => {
+			this.socket.on("connect", () => {
+				this.socket.emit("hello");
+			});
 
 			// removeRelation("user", "documents").then(() => project.save());
 		});

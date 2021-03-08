@@ -6,3 +6,4 @@ export declare const createColumn: ValidationSchema<EntityColumn>;
 export declare const columnsActions: ValidationSchema<any>;
 export declare const createRoute: ValidationSchema<any>;
 export declare const createSubRoute: ValidationSchema<any>;
+export declare const addPermissions: ValidationSchema<any>;

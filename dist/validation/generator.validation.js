@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createSubRoute = exports.createRoute = exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
+exports.addPermissions = exports.createSubRoute = exports.createRoute = exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
 const tsyringe_1 = require("tsyringe");
 const typeorm_service_1 = require("../services/typeorm.service");
 exports.createEntity = {
@@ -231,63 +231,74 @@ exports.columnsActions = {
         },
     },
 };
+const methods = [
+    "GET",
+    "PUT",
+    "POST",
+    "DELETE",
+    "PATCH",
+    "COPY",
+    "HEAD",
+    "OPTIONS",
+    "LINK",
+    "UNLINK",
+    "PURGE",
+    "LOCK",
+    "UNLOCK",
+    "PROFIND",
+    "VIEW",
+];
 exports.createRoute = {
     methods: {
         exists: true,
-        isArray: true
+        isArray: true,
     },
     "methods.*": {
         isIn: {
-            options: [
-                [
-                    "GET",
-                    "PUT",
-                    "POST",
-                    "DELETE",
-                    "PATCH",
-                    "COPY",
-                    "HEAD",
-                    "OPTIONS",
-                    "LINK",
-                    "UNLINK",
-                    "PURGE",
-                    "LOCK",
-                    "UNLOCK",
-                    "PROFIND",
-                    "VIEW"
-                ]
-            ]
-        }
-    }
+            options: [methods],
+        },
+    },
 };
 exports.createSubRoute = {
     method: {
         exists: true,
         isString: true,
         isIn: {
-            options: [
-                [
-                    "GET",
-                    "PUT",
-                    "POST",
-                    "DELETE",
-                    "PATCH",
-                    "COPY",
-                    "HEAD",
-                    "OPTIONS",
-                    "LINK",
-                    "UNLINK",
-                    "PURGE",
-                    "LOCK",
-                    "UNLOCK",
-                    "PROFIND",
-                    "VIEW"
-                ]
-            ]
-        }
+            options: [methods],
+        },
     },
     subRoute: {
         exists: true,
-        isString: true
-    }
+        isString: true,
+    },
+};
+exports.addPermissions = {
+    elements: {
+        exists: true,
+        isArray: true,
+    },
+    "elements.*.role": {
+        exists: true,
+        isString: true,
+    },
+    "elements.*.type": {
+        exists: true,
+        isString: true,
+    },
+    "elements.*.entity": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.methodName": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.requestMethod": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.path": {
+        isString: true,
+        optional: true,
+    },
 };
