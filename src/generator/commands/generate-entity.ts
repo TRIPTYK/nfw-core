@@ -23,7 +23,6 @@ export async function generateJsonApiEntity(
 
   for (const file of resources(filePrefixName)) {
     if(!["base-controller", "roles"].includes(file.template)) {
-      
       const imported = await import(
         `../templates/${file.template}`
       );
