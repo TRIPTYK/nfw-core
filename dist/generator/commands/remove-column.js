@@ -53,5 +53,6 @@ async function removeColumn(modelName, column) {
             }
         }
     }
+    validationFile.fixUnusedIdentifiers();
 }
 exports.removeColumn = removeColumn;

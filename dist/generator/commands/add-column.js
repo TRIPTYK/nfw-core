@@ -23,9 +23,65 @@ async function addColumn(entity, column) {
     if (entityClass.getInstanceProperty(column.name)) {
         throw new Error("Class property already exists");
     }
+    const arrayOfNumber = [
+        "int",
+        "integer",
+        "tinyint",
+        "smallint",
+        "mediumint",
+        "bigint",
+        "float",
+        "double",
+        "double precision",
+        "real",
+        "decimal",
+        "dec",
+        "numeric",
+        "fixed",
+        "bool",
+        "boolean",
+        "year",
+    ];
+    const arrayOfString = [
+        "char",
+        "nchar",
+        "national char",
+        "varchar",
+        "nvarchar",
+        "national varchar",
+        "blob",
+        "text",
+        "tinyblob",
+        "tinytext",
+        "mediumblob",
+        "mediumtext",
+        "longblob",
+        "longtext",
+    ];
+    const arrayOfDate = ["date", "datetime", "timestamp", "time"];
     const entityInterface = modelFile.getInterface(`${classPrefixName}Interface`);
     if (entityInterface) {
-        entityInterface.addProperty({ name: column.name });
+        if (column.type === "enum" || column.type === "set") {
+            entityInterface.addProperty({
+                name: column.name,
+                type: pascalcase(column.name),
+            });
+        }
+        else if (arrayOfNumber.includes(column.type)) {
+            entityInterface.addProperty({
+                name: column.name,
+                type: "number",
+            });
+        }
+        else if (arrayOfString.includes(column.type)) {
+            entityInterface.addProperty({ name: column.name, type: "string" });
+        }
+        else if (arrayOfDate.includes(column.type)) {
+            entityInterface.addProperty({ name: column.name, type: "Date" });
+        }
+        else {
+            entityInterface.addProperty({ name: column.name });
+        }
     }
     entityClass
         .addProperty({ name: column.name })
@@ -34,21 +90,36 @@ async function addColumn(entity, column) {
         name: "Column",
         arguments: stringifyObject(template_1.buildModelColumnArgumentsFromObject(column), {
             transform: (tmp, prop, originalResult) => {
+                if (prop === "default" &&
+                    (tmp.type === "enum" || tmp.type === "set")) {
+                    const val = `${tmp.enum}.${pascalcase(tmp.default)}`;
+                    return val;
+                }
                 if (prop === "enum") {
                     return originalResult.split("'").join("");
                 }
                 return originalResult;
             },
-            singleQuote: false
-        })
+            singleQuote: false,
+        }),
     })
         .setIsDecoratorFactory(true);
+    if (column.type === "enum" || column.type === "set") {
+        entityClass.getProperty(column.name).setType(pascalcase(column.name));
+    }
+    else if (arrayOfNumber.includes(column.type)) {
+        entityClass.getProperty(column.name).setType("number");
+    }
+    else if (arrayOfString.includes(column.type)) {
+        entityClass.getProperty(column.name).setType("string");
+    }
+    else if (arrayOfDate.includes(column.type)) {
+        entityClass.getProperty(column.name).setType("Date");
+    }
     if (column.enums) {
         const importDeclaration = modelFile.addImportDeclaration({
-            moduleSpecifier: `../enums/${camelcase(column.name)}.enum`
-        });
-        const namedImport = importDeclaration.addNamedImport({
-            name: pascalcase(column.name)
+            moduleSpecifier: `../enums/${camelcase(column.name)}.enum`,
+            namedImports: pascalcase(column.name),
         });
         enums_1.default(column.name, column.enums);
     }
@@ -84,10 +155,17 @@ async function addColumn(entity, column) {
         initializer.addPropertyAssignment({
             name: column.name,
             initializer: stringifyObject(template_1.buildValidationArgumentsFromObject(column), {
+                transform: (tmp, prop, originalResult) => {
+                    if (prop === "options") {
+                        return originalResult.split('"').join("");
+                    }
+                    return originalResult;
+                },
                 singleQuotes: false,
             }),
         });
     }
     modelFile.fixMissingImports();
+    validationFile.fixMissingImports();
 }
 exports.addColumn = addColumn;
