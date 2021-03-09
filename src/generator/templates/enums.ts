@@ -2,7 +2,7 @@ import * as camelcase from "camelcase";
 import * as pascalcase from "pascalcase";
 import project from "../utils/project";
 
-export default function createEnumsTemplate(
+export function createEnumsTemplate(
     name: string,
     enums: Array<string>
 ) {

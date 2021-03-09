@@ -8,7 +8,7 @@ import project from "../utils/project";
  * @param options
  * @param classPrefixName
  */
-export default function createBaseControllerTemplate({
+export function createBaseControllerTemplate({
     fileTemplateInfo,
     classPrefixName,
     filePrefixName
@@ -25,7 +25,7 @@ export default function createBaseControllerTemplate({
         name: `${classPrefixName}Controller`
     });
 
-    controllerClass.setIsDefaultExport(true);
+    controllerClass.setIsExported(true);
 
     controllerClass
         .addDecorator({

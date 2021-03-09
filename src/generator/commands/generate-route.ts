@@ -25,9 +25,10 @@ export default async function generateBasicRoute(
     const file = resources(filePrefixName).find(
         (f) => f.template === "base-controller"
     );
-    const { default: generator } = await import(
+    const imported = await import(
         `../templates/${file.template}`
     );
+    const generator = imported[Object.keys(imported)[0]];
     const createdFile = await generator({
         prefix,
         classPrefixName,

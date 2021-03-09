@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createEnumsTemplate = void 0;
 const camelcase = require("camelcase");
 const pascalcase = require("pascalcase");
 const project_1 = require("../utils/project");
@@ -18,4 +19,4 @@ function createEnumsTemplate(name, enums) {
         });
     });
 }
-exports.default = createEnumsTemplate;
+exports.createEnumsTemplate = createEnumsTemplate;

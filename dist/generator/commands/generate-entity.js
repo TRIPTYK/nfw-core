@@ -17,15 +17,18 @@ async function generateJsonApiEntity(modelName, data) {
     const files = [];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(modelName);
     for (const file of resources_1.resources(filePrefixName)) {
-        const { default: generator } = await Promise.resolve().then(() => require(`../templates/${file.template}`));
-        const createdFile = await generator({
-            modelName,
-            classPrefixName,
-            filePrefixName,
-            fileTemplateInfo: file,
-            tableColumns,
-        });
-        files.push(createdFile);
+        if (!["base-controller", "roles"].includes(file.template)) {
+            const imported = await Promise.resolve().then(() => require(`../templates/${file.template}`));
+            const generator = imported[Object.keys(imported)[0]];
+            const createdFile = await generator({
+                modelName,
+                classPrefixName,
+                filePrefixName,
+                fileTemplateInfo: file,
+                tableColumns,
+            });
+            files.push(createdFile);
+        }
     }
     const applicationFile = project_1.default.getSourceFile("src/api/application.ts");
     const applicationClass = applicationFile.getClasses()[0];
