@@ -11,7 +11,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     file.addStatements((writer) => writer.writeLine('import * as Joi from "joi";'));
     file.addStatements((writer) => writer.writeLine('import Boom from "@hapi/boom";'));
     file.addStatements((writer) => writer.writeLine('import * as Moment from "moment-timezone";'));
-    file.addStatements((writer) => writer.writeLine('import { ValidationSchema } from "../../core/types/validation";'));
+    file.addStatements((writer) => writer.writeLine('import { ValidationSchema } from "@triptyk/nfw-core";'));
     file.addStatements((writer) => writer.writeLine(`import { ${classPrefixName} } from "../models/${filePrefixName}.model";`));
     let variableStatement = file.addVariableStatement({
         declarationKind: TsMorph.VariableDeclarationKind.Const,

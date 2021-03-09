@@ -16,7 +16,7 @@ export function createSerializerSchema({
 
   const addedClass = file.addClass({
     name: `${classPrefixName}SerializerSchema`,
-    isDefaultExport: true,
+    isExported: true,
   });
 
   file.addImportDeclaration({
@@ -26,7 +26,7 @@ export function createSerializerSchema({
 
   file.addImportDeclaration({
     namedImports: ["Serialize", "Deserialize", "SerializerSchema", "Relation"],
-    moduleSpecifier: "../../../core/decorators/serializer.decorator",
+    moduleSpecifier: "@triptyk/nfw-core",
   });
 
   addedClass.setExtends(`BaseSerializerSchema<${classPrefixName}Interface>`);

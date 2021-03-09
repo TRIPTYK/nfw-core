@@ -20,7 +20,7 @@ function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     const controllerClass = file.addClass({
         name: `${classPrefixName}Controller`,
     });
-    controllerClass.setIsDefaultExport(true);
+    controllerClass.setIsExported(true);
     controllerClass
         .addDecorator({
         name: "JsonApiController",

@@ -8,7 +8,7 @@ import {
 } from "ts-morph";
 import { EntityColumn } from "../interfaces/generator.interface";
 import { resources, getEntityNaming } from "../static/resources";
-import enumsTemplate from "../templates/enums";
+import { createEnumsTemplate } from "../templates/enums";
 import project from "../utils/project";
 import {
 	buildModelColumnArgumentsFromObject,
@@ -133,7 +133,7 @@ export async function addColumn(
 			moduleSpecifier: `../enums/${camelcase(column.name)}.enum`,
 			namedImports: pascalcase(column.name),
 		});
-		enumsTemplate(column.name, column.enums);
+		createEnumsTemplate(column.name, column.enums);
 	}
 
 	const serializer = resources(entity).find(

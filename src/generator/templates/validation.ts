@@ -27,7 +27,7 @@ export function createValidationTemplate({
   );
   file.addStatements((writer) =>
     writer.writeLine(
-      'import { ValidationSchema } from "../../core/types/validation";'
+      'import { ValidationSchema } from "@triptyk/nfw-core";'
     )
   );
   file.addStatements((writer) =>

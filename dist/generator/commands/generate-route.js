@@ -17,7 +17,8 @@ async function generateBasicRoute(prefix, methods) {
     methods = methods ?? ["GET"];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(prefix);
     const file = resources_1.resources(filePrefixName).find((f) => f.template === "base-controller");
-    const { default: generator } = await Promise.resolve().then(() => require(`../templates/${file.template}`));
+    const imported = await Promise.resolve().then(() => require(`../templates/${file.template}`));
+    const generator = imported[Object.keys(imported)[0]];
     const createdFile = await generator({
         prefix,
         classPrefixName,

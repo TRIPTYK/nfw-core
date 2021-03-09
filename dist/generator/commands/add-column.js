@@ -121,7 +121,7 @@ async function addColumn(entity, column) {
             moduleSpecifier: `../enums/${camelcase(column.name)}.enum`,
             namedImports: pascalcase(column.name),
         });
-        enums_1.default(column.name, column.enums);
+        enums_1.createEnumsTemplate(column.name, column.enums);
     }
     const serializer = resources_1.resources(entity).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);

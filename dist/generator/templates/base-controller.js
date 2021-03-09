@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createBaseControllerTemplate = void 0;
 const project_1 = require("../utils/project");
 /**
  *
@@ -15,7 +16,7 @@ function createBaseControllerTemplate({ fileTemplateInfo, classPrefixName, fileP
     const controllerClass = file.addClass({
         name: `${classPrefixName}Controller`
     });
-    controllerClass.setIsDefaultExport(true);
+    controllerClass.setIsExported(true);
     controllerClass
         .addDecorator({
         name: "GeneratedController",
@@ -35,4 +36,4 @@ function createBaseControllerTemplate({ fileTemplateInfo, classPrefixName, fileP
     controllerClass.setExtends(`BaseController`);
     return file;
 }
-exports.default = createBaseControllerTemplate;
+exports.createBaseControllerTemplate = createBaseControllerTemplate;

@@ -21,6 +21,11 @@ export function createSerializer({
     moduleSpecifier: `../models/${filePrefixName}.model`,
   });
 
+  file.addImportDeclaration({
+    namedImports: [`${classPrefixName}SerializerSchema`],
+    moduleSpecifier: `./schemas/${filePrefixName}.serializer.schema`,
+  });
+
   const serializerClass = file.addClass({
     name: `${classPrefixName}Serializer`,
   });
@@ -39,9 +44,9 @@ export function createSerializer({
       (writer) => {
         writer.block(() => {
           writer.setIndentationLevel(1);
-          writer.writeLine(`type : "${pluralize(modelName)}",`);
+          writer.writeLine(`type: "${pluralize(modelName)}",`);
           writer.writeLine(
-            `schemas : () => [${classPrefixName}SerializerSchema]`
+            `schemas: () => [${classPrefixName}SerializerSchema]`
           );
         });
       },
