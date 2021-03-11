@@ -5,7 +5,7 @@ const pascalcase = require("pascalcase");
 function buildModelColumnArgumentsFromObject(dbColumnaData) {
     const columnArgument = {};
     columnArgument.type = dbColumnaData.type;
-    if (dbColumnaData.default !== undefined) {
+    if (dbColumnaData.default !== undefined && dbColumnaData.default !== "") {
         if (dbColumnaData.isNullable !== true && dbColumnaData.default !== null) {
             columnArgument.default = dbColumnaData.default;
             /*} else if (dbColumnaData.date) {
@@ -142,7 +142,7 @@ function buildValidationArgumentsFromObject(dbColumnaData) {
     }
     if (dbColumnaData.type === "enum") {
         validationArguments["isIn"] = {
-            options: [pascalcase(dbColumnaData.name)],
+            options: [`Object.values(${pascalcase(dbColumnaData.name)})`],
             errorMessage: "Invalid enum",
         };
     }
