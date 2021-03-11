@@ -1,8 +1,10 @@
 import * as camelcase from "camelcase";
+import { write } from "node:fs";
 import * as pascalcase from "pascalcase";
 import * as stringifyObject from "stringify-object";
 import {
 	ObjectLiteralExpression,
+	PropertyAssignment,
 	SyntaxKind,
 	VariableDeclarationKind,
 } from "ts-morph";
@@ -19,24 +21,6 @@ export async function addColumn(
 	entity: string,
 	column: EntityColumn
 ): Promise<void> {
-	const model = resources(entity).find((r) => r.template === "model");
-	const modelFile = project.getSourceFile(`${model.path}/${model.name}`);
-	const { classPrefixName } = getEntityNaming(entity);
-
-	if (!modelFile) {
-		throw new Error("Entity does not exists");
-	}
-
-	const entityClass = modelFile.getClass(classPrefixName);
-
-	if (!entityClass) {
-		throw new Error("Entity class does not exists");
-	}
-
-	if (entityClass.getInstanceProperty(column.name)) {
-		throw new Error("Class property already exists");
-	}
-
 	const arrayOfNumber = [
 		"int",
 		"integer",
@@ -73,12 +57,36 @@ export async function addColumn(
 		"longtext",
 	];
 	const arrayOfDate = ["date", "datetime", "timestamp", "time"];
+
+	const model = resources(entity).find((r) => r.template === "model");
+	const modelFile = project.getSourceFile(`${model.path}/${model.name}`);
+	const { classPrefixName } = getEntityNaming(entity);
+
+	if (!modelFile) {
+		throw new Error("Entity does not exists");
+	}
+
+	const entityClass = modelFile.getClass(classPrefixName);
+
+	if (!entityClass) {
+		throw new Error("Entity class does not exists");
+	}
+
+	if (entityClass.getInstanceProperty(column.name)) {
+		throw new Error("Class property already exists");
+	}
+
 	const entityInterface = modelFile.getInterface(`${classPrefixName}Interface`);
 	if (entityInterface) {
-		if (column.type === "enum" || column.type === "set") {
+		if (column.type === "enum") {
 			entityInterface.addProperty({
 				name: column.name,
 				type: pascalcase(column.name),
+			});
+		} else if (column.type === "set") {
+			entityInterface.addProperty({
+				name: column.name,
+				type: `${pascalcase(column.name)}[]`,
 			});
 		} else if (arrayOfNumber.includes(column.type)) {
 			entityInterface.addProperty({
@@ -101,12 +109,16 @@ export async function addColumn(
 			name: "Column",
 			arguments: stringifyObject(buildModelColumnArgumentsFromObject(column), {
 				transform: (tmp, prop, originalResult) => {
-					if (
-						prop === "default" &&
-						(tmp.type === "enum" || tmp.type === "set")
-					) {
+					if (prop === "default" && tmp.type === "enum") {
 						const val = `${tmp.enum}.${pascalcase(tmp.default)}`;
 						return val;
+					}
+					if (prop === "default" && tmp.type === "set") {
+						let array = [];
+						for (const value of tmp.default) {
+							array.push(`${tmp.enum}.${pascalcase(value)}`);
+						}
+						return `[${array}]`;
 					}
 					if (prop === "enum") {
 						return originalResult.split("'").join("");
@@ -118,8 +130,12 @@ export async function addColumn(
 		})
 		.setIsDecoratorFactory(true);
 
-	if (column.type === "enum" || column.type === "set") {
+	if (column.type === "enum") {
 		entityClass.getProperty(column.name).setType(pascalcase(column.name));
+	} else if (column.type === "set") {
+		entityClass
+			.getProperty(column.name)
+			.setType(`${pascalcase(column.name)}[]`);
 	} else if (arrayOfNumber.includes(column.type)) {
 		entityClass.getProperty(column.name).setType("number");
 	} else if (arrayOfString.includes(column.type)) {
@@ -184,18 +200,51 @@ export async function addColumn(
 		const initializer = validationStatement
 			.getDeclarations()[0]
 			.getInitializer() as ObjectLiteralExpression;
-		initializer.addPropertyAssignment({
-			name: column.name,
-			initializer: stringifyObject(buildValidationArgumentsFromObject(column), {
-				transform: (tmp, prop, originalResult) => {
-					if (prop === "options") {
-						return originalResult.split('"').join("");
+
+		if (column.type === "set") {
+			const property = initializer.addPropertyAssignment({
+				name: column.name,
+				initializer: "",
+			}) as PropertyAssignment;
+
+			property.setInitializer((writer) =>
+				writer.block(() => {
+					writer.writeLine("exists: true,");
+					writer.writeLine("custom: ").block(() => {
+						writer.writeLine("options: (values) =>").block(() => {
+							writer.writeLine("for (const value of values)").block(() => {
+								writer
+									.writeLine(
+										`if (!Object.values(${pascalcase(
+											column.name
+										)}).includes(value))`
+									)
+									.block(() => {
+										writer.writeLine("return false;");
+									});
+							});
+							writer.writeLine("return true;");
+						});
+					});
+				})
+			);
+		} else {
+			initializer.addPropertyAssignment({
+				name: column.name,
+				initializer: stringifyObject(
+					buildValidationArgumentsFromObject(column),
+					{
+						transform: (tmp, prop, originalResult) => {
+							if (prop === "options") {
+								return originalResult.split('"').join("");
+							}
+							return originalResult;
+						},
+						singleQuotes: false,
 					}
-					return originalResult;
-				},
-				singleQuotes: false,
-			}),
-		});
+				),
+			});
+		}
 	}
 
 	modelFile.fixMissingImports();
