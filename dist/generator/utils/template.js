@@ -8,12 +8,29 @@ function buildModelColumnArgumentsFromObject(dbColumnaData) {
     if (dbColumnaData.default !== undefined) {
         if (dbColumnaData.isNullable !== true && dbColumnaData.default !== null) {
             columnArgument.default = dbColumnaData.default;
+            /*} else if (dbColumnaData.date) {
+                columnArgument.default = dbColumnaData.date;
+            } else if (dbColumnaData.time) {
+                columnArgument.default = dbColumnaData.time;*/
         }
-        else if (dbColumnaData.date) {
-            columnArgument.default = dbColumnaData.date;
-        }
-        else if (dbColumnaData.time) {
-            columnArgument.default = dbColumnaData.time;
+        else if (dbColumnaData.now) {
+            switch (dbColumnaData.type) {
+                case "datetime":
+                case "timestamp":
+                    columnArgument.default = () => "CURRENT_TIMESTAMP";
+                    break;
+                /* WIP: find a way to default current date, time and year without
+                making the alteration of the impossible.
+                case "time":
+                    columnArgument.default = () => "(TIME(CURRENT_TIMESTAMP))";
+                    break;
+                case "date":
+                    columnArgument.default = () => "(DATE(CURRENT_TIMESTAMP))";
+                    break;
+                case "year":
+                    columnArgument.default = () => "(YEAR(CURRENT_TIMESTAMP))";
+                    break;*/
+            }
         }
     }
     if (dbColumnaData.type.includes("int")) {

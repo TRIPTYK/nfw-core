@@ -19,8 +19,9 @@ export interface EntityColumn {
     isPrimary?: boolean;
     isUnique?: boolean;
     default: any;
-    date: Date;
-    time: string;
+    /*date: Date;
+    time: string;*/
+    now?:boolean;
     enums: Array<string>;
 }
 

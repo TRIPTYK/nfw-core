@@ -652,8 +652,7 @@ interface EntityColumn {
     isPrimary?: boolean;
     isUnique?: boolean;
     default: any;
-    date: Date;
-    time: string;
+    now?: boolean;
     enums: Array<string>;
 }
 declare type RelationTypes = "one-to-one" | "one-to-many" | "many-to-many";
