@@ -96,6 +96,9 @@ async function addColumn(entity, column) {
         name: "Column",
         arguments: stringifyObject(template_1.buildModelColumnArgumentsFromObject(column), {
             transform: (tmp, prop, originalResult) => {
+                if (prop === "default" && tmp.type === "json") {
+                    return `() => \`('${JSON.stringify(tmp.default)}')\``;
+                }
                 if (prop === "default" && tmp.type === "enum") {
                     const val = `${tmp.enum}.${pascalcase(tmp.default)}`;
                     return val;
