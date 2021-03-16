@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildValidationArgumentsFromObject = exports.buildModelColumnArgumentsFromObject = void 0;
 const pascalcase = require("pascalcase");
+const types_1 = require("../../enums/types");
 function buildModelColumnArgumentsFromObject(dbColumnaData) {
     const columnArgument = {};
     columnArgument.type = dbColumnaData.type;
@@ -9,9 +10,9 @@ function buildModelColumnArgumentsFromObject(dbColumnaData) {
         if (dbColumnaData.isNullable !== true && dbColumnaData.default !== null) {
             columnArgument.default = dbColumnaData.default;
             /*} else if (dbColumnaData.date) {
-                columnArgument.default = dbColumnaData.date;
-            } else if (dbColumnaData.time) {
-                columnArgument.default = dbColumnaData.time;*/
+            columnArgument.default = dbColumnaData.date;
+        } else if (dbColumnaData.time) {
+            columnArgument.default = dbColumnaData.time;*/
         }
         else if (dbColumnaData.now) {
             switch (dbColumnaData.type) {
@@ -66,30 +67,6 @@ function buildModelColumnArgumentsFromObject(dbColumnaData) {
     return columnArgument;
 }
 exports.buildModelColumnArgumentsFromObject = buildModelColumnArgumentsFromObject;
-const arrayOfInt = [
-    "int",
-    "integer",
-    "tinyint",
-    "smallint",
-    "mediumint",
-    "bigint",
-];
-const arrayOfText = [
-    "char",
-    "nchar",
-    "national char",
-    "varchar",
-    "nvarchar",
-    "national varchar",
-    "blob",
-    "text",
-    "tinyblob",
-    "tinytext",
-    "mediumblob",
-    "mediumtext",
-    "longblob",
-    "longtext",
-];
 function buildValidationArgumentsFromObject(dbColumnaData) {
     const validationArguments = {};
     if (!dbColumnaData.isNullable) {
@@ -114,7 +91,7 @@ function buildValidationArgumentsFromObject(dbColumnaData) {
             errorMessage: "Email is not valid",
         };
     }
-    if (arrayOfText.includes(dbColumnaData.type)) {
+    if (types_1.arrayOfString.includes(dbColumnaData.type)) {
         validationArguments["isString"] = {
             errorMessage: "This field must be a string",
         };
@@ -129,7 +106,7 @@ function buildValidationArgumentsFromObject(dbColumnaData) {
             errorMessage: "This field must be a float",
         };
     }
-    if (arrayOfInt.includes(dbColumnaData.type)) {
+    if (types_1.arrayOfInt.includes(dbColumnaData.type)) {
         validationArguments["isInt"] = {
             errorMessage: "This field must be an integer",
         };

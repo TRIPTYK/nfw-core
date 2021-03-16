@@ -16,48 +16,12 @@ import {
 	buildModelColumnArgumentsFromObject,
 	buildValidationArgumentsFromObject,
 } from "../utils/template";
+import { arrayOfNumber, arrayOfString, arrayOfDate } from "../../enums/types";
 
 export async function addColumn(
 	entity: string,
 	column: EntityColumn
 ): Promise<void> {
-	const arrayOfNumber = [
-		"int",
-		"integer",
-		"tinyint",
-		"smallint",
-		"mediumint",
-		"bigint",
-		"float",
-		"double",
-		"double precision",
-		"real",
-		"decimal",
-		"dec",
-		"numeric",
-		"fixed",
-		"bool",
-		"boolean",
-		"year",
-	];
-	const arrayOfString = [
-		"char",
-		"nchar",
-		"national char",
-		"varchar",
-		"nvarchar",
-		"national varchar",
-		"blob",
-		"text",
-		"tinyblob",
-		"tinytext",
-		"mediumblob",
-		"mediumtext",
-		"longblob",
-		"longtext",
-	];
-	const arrayOfDate = ["date", "datetime", "timestamp", "time"];
-
 	const model = resources(entity).find((r) => r.template === "model");
 	const modelFile = project.getSourceFile(`${model.path}/${model.name}`);
 	const { classPrefixName } = getEntityNaming(entity);

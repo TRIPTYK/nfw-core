@@ -2,6 +2,7 @@ import * as pascalcase from "pascalcase";
 import { ColumnOptions, ColumnType } from "typeorm";
 import { ValidationSchema } from "../../types/validation";
 import { EntityColumn } from "../interfaces/generator.interface";
+import { arrayOfInt, arrayOfString } from "../../enums/types";
 
 export function buildModelColumnArgumentsFromObject(
 	dbColumnaData: EntityColumn
@@ -13,12 +14,12 @@ export function buildModelColumnArgumentsFromObject(
 	if (dbColumnaData.default !== undefined && dbColumnaData.default !== "") {
 		if (dbColumnaData.isNullable !== true && dbColumnaData.default !== null) {
 			columnArgument.default = dbColumnaData.default;
-		/*} else if (dbColumnaData.date) {
+			/*} else if (dbColumnaData.date) {
 			columnArgument.default = dbColumnaData.date;
 		} else if (dbColumnaData.time) {
 			columnArgument.default = dbColumnaData.time;*/
 		} else if (dbColumnaData.now) {
-			switch(dbColumnaData.type) {
+			switch (dbColumnaData.type) {
 				case "datetime":
 				case "timestamp":
 					columnArgument.default = () => "CURRENT_TIMESTAMP";
@@ -78,30 +79,6 @@ export function buildModelColumnArgumentsFromObject(
 	return columnArgument;
 }
 
-const arrayOfInt = [
-	"int",
-	"integer",
-	"tinyint",
-	"smallint",
-	"mediumint",
-	"bigint",
-];
-const arrayOfText = [
-	"char",
-	"nchar",
-	"national char",
-	"varchar",
-	"nvarchar",
-	"national varchar",
-	"blob",
-	"text",
-	"tinyblob",
-	"tinytext",
-	"mediumblob",
-	"mediumtext",
-	"longblob",
-	"longtext",
-];
 export function buildValidationArgumentsFromObject(
 	dbColumnaData: EntityColumn
 ): ValidationSchema<any> {
@@ -131,7 +108,7 @@ export function buildValidationArgumentsFromObject(
 		};
 	}
 
-	if (arrayOfText.includes(dbColumnaData.type)) {
+	if (arrayOfString.includes(dbColumnaData.type)) {
 		validationArguments["isString"] = {
 			errorMessage: "This field must be a string",
 		};
