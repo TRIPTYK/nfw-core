@@ -392,7 +392,7 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     qb: SelectQueryBuilder<any>,
     { number, size }: PaginationQueryParams
   ) {
-    qb.skip((number - 1) * number).take(size);
+    qb.skip((number - 1) * size).take(size);
   }
 
   public handleSorting(qb: SelectQueryBuilder<any>, sort: string[]) {
