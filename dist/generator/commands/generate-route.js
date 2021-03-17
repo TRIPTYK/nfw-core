@@ -9,8 +9,9 @@ async function generateBasicRoute(prefix, methods) {
     if (!prefix) {
         return;
     }
+    prefix = prefix.toLowerCase();
     for (const route of registry_application_1.ApplicationRegistry.application.Routes) {
-        if (prefix === route.prefix) {
+        if (prefix === route.prefix.toLowerCase()) {
             throw new Error("This route already exists.");
         }
     }

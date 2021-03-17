@@ -18,9 +18,9 @@ export default async function addEndpoint(
         throw new Error("Subroute can't be added to basic routes.");
     }
 
-    subroute = `/${normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`;
+    subroute = `/${normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`.toLowerCase();
 
-    prefix = getJsonApiEntityName(prefix)?.entityName.toLowerCase() ?? prefix;
+    prefix = (getJsonApiEntityName(prefix)?.entityName ?? prefix).toLowerCase();
 
     const methodName = toCamelCase(
         `${method} ${prefix} ${subroute.replace("/", " ")}`

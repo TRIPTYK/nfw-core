@@ -12,8 +12,10 @@ export default async function generateBasicRoute(
         return;
     }
 
+    prefix = prefix.toLowerCase();
+
     for (const route of ApplicationRegistry.application.Routes) {
-        if (prefix === route.prefix) {
+        if (prefix === route.prefix.toLowerCase()) {
             throw new Error("This route already exists.");
         }
     }

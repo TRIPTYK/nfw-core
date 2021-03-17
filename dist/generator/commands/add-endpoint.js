@@ -11,8 +11,8 @@ async function addEndpoint(prefix, method, subroute) {
         ?.type === "basic") {
         throw new Error("Subroute can't be added to basic routes.");
     }
-    subroute = `/${path_1.normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`;
-    prefix = naming_1.getJsonApiEntityName(prefix)?.entityName.toLowerCase() ?? prefix;
+    subroute = `/${path_1.normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`.toLowerCase();
+    prefix = (naming_1.getJsonApiEntityName(prefix)?.entityName ?? prefix).toLowerCase();
     const methodName = case_util_1.toCamelCase(`${method} ${prefix} ${subroute.replace("/", " ")}`);
     const controller = resources_1.resources(prefix).find((r) => r.template === "controller");
     const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);
