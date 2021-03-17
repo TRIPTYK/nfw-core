@@ -26,6 +26,24 @@ function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixN
         arguments: [],
     })
         .setIsDecoratorFactory(true);
+    addedClass
+        .addProperty({
+        name: "updated_at",
+    })
+        .toggleModifier("public")
+        .addDecorator({
+        name: "Serialize",
+    })
+        .setIsDecoratorFactory(true);
+    addedClass
+        .addProperty({
+        name: "created_at",
+    })
+        .toggleModifier("public")
+        .addDecorator({
+        name: "Serialize",
+    })
+        .setIsDecoratorFactory(true);
     return file;
 }
 exports.createSerializerSchema = createSerializerSchema;

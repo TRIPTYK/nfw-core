@@ -9,43 +9,8 @@ const resources_1 = require("../static/resources");
 const enums_1 = require("../templates/enums");
 const project_1 = require("../utils/project");
 const template_1 = require("../utils/template");
+const types_1 = require("../../enums/types");
 async function addColumn(entity, column) {
-    const arrayOfNumber = [
-        "int",
-        "integer",
-        "tinyint",
-        "smallint",
-        "mediumint",
-        "bigint",
-        "float",
-        "double",
-        "double precision",
-        "real",
-        "decimal",
-        "dec",
-        "numeric",
-        "fixed",
-        "bool",
-        "boolean",
-        "year",
-    ];
-    const arrayOfString = [
-        "char",
-        "nchar",
-        "national char",
-        "varchar",
-        "nvarchar",
-        "national varchar",
-        "blob",
-        "text",
-        "tinyblob",
-        "tinytext",
-        "mediumblob",
-        "mediumtext",
-        "longblob",
-        "longtext",
-    ];
-    const arrayOfDate = ["date", "datetime", "timestamp", "time"];
     const model = resources_1.resources(entity).find((r) => r.template === "model");
     const modelFile = project_1.default.getSourceFile(`${model.path}/${model.name}`);
     const { classPrefixName } = resources_1.getEntityNaming(entity);
@@ -73,16 +38,16 @@ async function addColumn(entity, column) {
                 type: `${pascalcase(column.name)}[]`,
             });
         }
-        else if (arrayOfNumber.includes(column.type)) {
+        else if (types_1.arrayOfNumber.includes(column.type)) {
             entityInterface.addProperty({
                 name: column.name,
                 type: "number",
             });
         }
-        else if (arrayOfString.includes(column.type)) {
+        else if (types_1.arrayOfString.includes(column.type)) {
             entityInterface.addProperty({ name: column.name, type: "string" });
         }
-        else if (arrayOfDate.includes(column.type)) {
+        else if (types_1.arrayOfDate.includes(column.type)) {
             entityInterface.addProperty({ name: column.name, type: "Date" });
         }
         else {
@@ -127,13 +92,13 @@ async function addColumn(entity, column) {
             .getProperty(column.name)
             .setType(`${pascalcase(column.name)}[]`);
     }
-    else if (arrayOfNumber.includes(column.type)) {
+    else if (types_1.arrayOfNumber.includes(column.type)) {
         entityClass.getProperty(column.name).setType("number");
     }
-    else if (arrayOfString.includes(column.type)) {
+    else if (types_1.arrayOfString.includes(column.type)) {
         entityClass.getProperty(column.name).setType("string");
     }
-    else if (arrayOfDate.includes(column.type)) {
+    else if (types_1.arrayOfDate.includes(column.type)) {
         entityClass.getProperty(column.name).setType("Date");
     }
     if (column.enums) {
