@@ -264,7 +264,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         return qb.set(null);
     }
     handlePagination(qb, { number, size }) {
-        qb.skip((number - 1) * number).take(size);
+        qb.skip((number - 1) * size).take(size);
     }
     handleSorting(qb, sort) {
         for (const field of sort) {
