@@ -1,17 +1,22 @@
 import { ArrayLiteralExpression, PropertyAccessExpression } from "ts-morph";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
+import * as pluralize from "pluralize";
+import * as pascalcase from "pascalcase";
 
 export default async function getEntityRoutes(
 	entity: string,
 	routes?: any
 ): Promise<any> {
-	const controller = resources(entity).find((r) => r.template === "controller");
+	const entityName = pascalcase(pluralize.singular(entity));
+	const controller = resources(entityName).find(
+		(r) => r.template === "controller"
+	);
 
 	const controllerFile = project.getSourceFile(
 		`${controller.path}/${controller.name}`
 	);
-	const { classPrefixName } = getEntityNaming(entity);
+	const { classPrefixName } = getEntityNaming(entityName);
 
 	if (!controllerFile) {
 		throw new Error("This controller does not exist.");

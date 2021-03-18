@@ -137,7 +137,7 @@ export class MetadataController extends BaseController {
 
 	protected getRoutes(routes: any, entity: string) {
 		for (const route of routes) {
-			if (route.prefix === pluralize(entity.toLowerCase())) return route.routes;
+			if (route.prefix === entity) return route.routes;
 		}
 		return null;
 	}

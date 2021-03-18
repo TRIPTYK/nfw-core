@@ -19,7 +19,6 @@ const base_controller_1 = require("../base.controller");
 const get_perms_1 = require("../../generator/commands/get-perms");
 const get_roles_1 = require("../../generator/commands/get-roles");
 const get_entityRoutes_1 = require("../../generator/commands/get-entityRoutes");
-const pluralize = require("pluralize");
 /**
  * Use or inherit this controller in your app if you want to get api metadata
  */
@@ -106,7 +105,7 @@ let MetadataController = class MetadataController extends base_controller_1.Base
     }
     getRoutes(routes, entity) {
         for (const route of routes) {
-            if (route.prefix === pluralize(entity.toLowerCase()))
+            if (route.prefix === entity)
                 return route.routes;
         }
         return null;

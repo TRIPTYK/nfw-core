@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
+const pluralize = require("pluralize");
+const pascalcase = require("pascalcase");
 async function getEntityRoutes(entity, routes) {
-    const controller = resources_1.resources(entity).find((r) => r.template === "controller");
+    const entityName = pascalcase(pluralize.singular(entity));
+    const controller = resources_1.resources(entityName).find((r) => r.template === "controller");
     const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);
-    const { classPrefixName } = resources_1.getEntityNaming(entity);
+    const { classPrefixName } = resources_1.getEntityNaming(entityName);
     if (!controllerFile) {
         throw new Error("This controller does not exist.");
     }
