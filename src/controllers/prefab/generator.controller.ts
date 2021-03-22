@@ -219,7 +219,7 @@ export class GeneratorController extends BaseController {
 		});
 	}
 
-	private sendMessageAndWaitResponse(type: string, data?: any) {
+	private sendMessageAndWaitResponse(type: string, data?: any): Promise<string> {
 		return new Promise((resolve, rej) => {
 			this.socket.emit(type, data, (response) => {
 				console.log(`[${type}]:\t${response}`);
@@ -233,9 +233,13 @@ export class GeneratorController extends BaseController {
 	}
 
 	private async afterProcedure() {
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
-		await this.sendMessageAndWaitResponse("app-save");
+		try {
+			await project.save();
+			await this.sendMessageAndWaitResponse("app-recompile-sync");
+			await this.sendMessageAndWaitResponse("app-restart");
+			await this.sendMessageAndWaitResponse("app-save");
+		} catch (error) {
+			console.log(error);
+		}
 	}
 }
