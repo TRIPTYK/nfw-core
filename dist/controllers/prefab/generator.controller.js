@@ -54,18 +54,12 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
     async generateRoute(req, res) {
         await generate_route_1.default(req.params.name, req.body.methods);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async generateSubRoute(req, res) {
         await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async generateEntity(req, res) {
         await generate_entity_1.generateJsonApiEntity(req.params.name, {
@@ -73,10 +67,7 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
             relations: req.body.relations,
         });
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async addPermissions(req, res) {
         for (const element of req.body.elements) {
@@ -94,26 +85,17 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
             }
         }
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async addEntityRelation(req, res) {
         await add_relation_1.addRelation(req.params.name, req.body);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async generateColumn(req, res) {
         await add_column_1.addColumn(req.params.name, req.body);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async do(req, res) {
         for (const column of req.body.columns) {
@@ -133,71 +115,57 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
             }
         }
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async deleteRoute(req, res) {
         await delete_route_1.default(req.params.name);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async deleteSubRoute(req, res) {
         await remove_endpoint_1.default(req.params.name, req.params.methodName);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async deleteEntityColumn(req, res) {
         await remove_column_1.removeColumn(req.params.name, req.params.column);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async deleteEntityRelation(req, res) {
         await remove_relation_1.removeRelation(req.params.name, req.params.relation);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async deleteEntity(req, res) {
         await delete_entity_1.deleteJsonApiEntity(req.params.name);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     async modSubRoute(req, res) {
         await remove_endpoint_1.default(req.params.name, req.params.methodName);
         await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
         res.sendStatus(HttpStatus.ACCEPTED);
-        await this.sendMessageAndWaitResponse("app-save");
-        await project_1.default.save();
-        await this.sendMessageAndWaitResponse("app-recompile-sync");
-        await this.sendMessageAndWaitResponse("app-restart");
+        await this.afterProcedure();
     }
     sendMessageAndWaitResponse(type, data) {
         return new Promise((resolve, rej) => {
             this.socket.emit(type, data, (response) => {
-                if (response !== "ok") {
-                    rej(response);
+                console.log(`[${type}]:\t${response}`);
+                if (response === "ok") {
+                    resolve(response);
                 }
                 else {
-                    resolve(response);
+                    rej(response);
                 }
             });
         });
+    }
+    async afterProcedure() {
+        await project_1.default.save();
+        await this.sendMessageAndWaitResponse("app-recompile-sync");
+        await this.sendMessageAndWaitResponse("app-restart");
+        await this.sendMessageAndWaitResponse("app-save");
     }
 };
 __decorate([

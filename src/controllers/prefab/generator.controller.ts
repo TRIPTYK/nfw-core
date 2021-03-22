@@ -55,10 +55,7 @@ export class GeneratorController extends BaseController {
 	public async generateRoute(req: Request, res: Response) {
 		await generateBasicRoute(req.params.name, req.body.methods);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/route/:name/subroute")
@@ -69,10 +66,7 @@ export class GeneratorController extends BaseController {
 	public async generateSubRoute(req: Request, res: Response) {
 		await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/entity/:name")
@@ -86,10 +80,7 @@ export class GeneratorController extends BaseController {
 			relations: req.body.relations,
 		});
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/perms/:name")
@@ -114,10 +105,7 @@ export class GeneratorController extends BaseController {
 		}
 
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/entity/:name/relation")
@@ -128,10 +116,7 @@ export class GeneratorController extends BaseController {
 	public async addEntityRelation(req: Request, res: Response) {
 		await addRelation(req.params.name, req.body);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/entity/:name/column")
@@ -142,10 +127,7 @@ export class GeneratorController extends BaseController {
 	public async generateColumn(req: Request, res: Response) {
 		await addColumn(req.params.name, req.body);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Post("/entity/:name/entity-actions")
@@ -171,60 +153,42 @@ export class GeneratorController extends BaseController {
 			}
 		}
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Delete("/route/:name")
 	public async deleteRoute(req: Request, res: Response) {
 		await deleteBasicRoute(req.params.name);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Delete("/route/:name/subroute/:methodName")
 	public async deleteSubRoute(req: Request, res: Response) {
 		await removeEndpoint(req.params.name, req.params.methodName);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Delete("/entity/:name/:column")
 	public async deleteEntityColumn(req: Request, res: Response) {
 		await removeColumn(req.params.name, req.params.column);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Delete("/entity/:name/relation/:relation")
 	public async deleteEntityRelation(req: Request, res: Response) {
 		await removeRelation(req.params.name, req.params.relation);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Delete("/entity/:name")
 	public async deleteEntity(req: Request, res: Response) {
 		await deleteJsonApiEntity(req.params.name);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	@Patch("/route/:name/subroute/:methodName")
@@ -236,10 +200,7 @@ export class GeneratorController extends BaseController {
 		await removeEndpoint(req.params.name, req.params.methodName);
 		await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
 		res.sendStatus(HttpStatus.ACCEPTED);
-		await this.sendMessageAndWaitResponse("app-save");
-		await project.save();
-		await this.sendMessageAndWaitResponse("app-recompile-sync");
-		await this.sendMessageAndWaitResponse("app-restart");
+		await this.afterProcedure();
 	}
 
 	constructor() {
@@ -261,12 +222,20 @@ export class GeneratorController extends BaseController {
 	private sendMessageAndWaitResponse(type: string, data?: any) {
 		return new Promise((resolve, rej) => {
 			this.socket.emit(type, data, (response) => {
-				if (response !== "ok") {
-					rej(response);
-				} else {
+				console.log(`[${type}]:\t${response}`);
+				if (response === "ok") {
 					resolve(response);
+				} else {
+					rej(response);
 				}
 			});
 		});
+	}
+
+	private async afterProcedure() {
+		await project.save();
+		await this.sendMessageAndWaitResponse("app-recompile-sync");
+		await this.sendMessageAndWaitResponse("app-restart");
+		await this.sendMessageAndWaitResponse("app-save");
 	}
 }

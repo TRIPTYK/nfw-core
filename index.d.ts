@@ -1,14 +1,17 @@
 /// <reference types="socket.io-client" />
-import { Router, Request, Response as Response$1, Application, NextFunction } from 'express';
+import * as Express from 'express';
+import { Request, Response as Response$1, NextFunction } from 'express';
 import { ParamSchema, Location, Schema as Schema$1 } from 'express-validator';
-import { Repository, SelectQueryBuilder, EntityMetadata, DatabaseType, Connection, ConnectionOptions, ColumnType, EntityOptions, ColumnOptions } from 'typeorm';
+import * as typeorm from 'typeorm';
+import { Repository, SelectQueryBuilder, EntityMetadata, DatabaseType, Connection, ConnectionOptions, EntityOptions, ColumnOptions } from 'typeorm';
 export * from 'typeorm';
 import * as JSONAPISerializer from 'json-api-serializer';
-import { RelationType } from 'typeorm/metadata/types/RelationTypes';
-import ts_morph, { SourceFile } from 'ts-morph';
+import * as typeorm_metadata_types_RelationTypes from 'typeorm/metadata/types/RelationTypes';
+import * as ts_morph from 'ts-morph';
+import ts_morph__default, { SourceFile } from 'ts-morph';
 
 interface ControllerInterface {
-    init(router: Router): any;
+    init(router: Express.Router): any;
 }
 
 declare abstract class BaseController implements ControllerInterface {
@@ -105,8 +108,8 @@ interface RouteContext {
     controllerInstance: BaseController;
 }
 declare abstract class BaseApplication implements ApplicationInterface {
-    protected app: Application;
-    protected router: Router;
+    protected app: Express.Application;
+    protected router: Express.Router;
     protected routes: Array<{
         prefix: string;
         type: "basic" | "generated" | "entity";
@@ -116,7 +119,7 @@ declare abstract class BaseApplication implements ApplicationInterface {
     setupMiddlewares(middlewaresForApp: MiddlewareMetadata[]): Promise<any>;
     abstract afterInit(): Promise<any>;
     init(): Promise<any>;
-    get App(): Application;
+    get App(): Express.Application;
     get Routes(): {
         prefix: string;
         type: "basic" | "generated" | "entity";
@@ -358,6 +361,7 @@ declare class GeneratorController extends BaseController {
     modSubRoute(req: Request, res: Response$1): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
+    private afterProcedure;
 }
 
 declare abstract class BaseService {
@@ -480,7 +484,7 @@ declare class MetadataController extends BaseController {
         routes: RouteDefinition[];
     }[];
     getEntityRoutes(req: Request, res: Response$1): Promise<any>;
-    getSupportedTypes(): ColumnType[];
+    getSupportedTypes(): typeorm.ColumnType[];
     countAllEntitiesRecords(): Promise<{
         entityName: string;
         count: number;
@@ -508,7 +512,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     };
@@ -530,7 +534,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     }[];
@@ -554,7 +558,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     };
@@ -687,7 +691,7 @@ declare function removeRelation(entity: string, relationName: string | EntityRel
  * @param options
  * @param classPrefixName
  */
-declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
 /**
  *
@@ -698,15 +702,15 @@ declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, f
  */
 declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): SourceFile;
+declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph__default.SourceFile;
 
 declare function buildModelColumnArgumentsFromObject(dbColumnaData: EntityColumn): ColumnOptions;
 declare function buildValidationArgumentsFromObject(dbColumnaData: EntityColumn): ValidationSchema<any>;

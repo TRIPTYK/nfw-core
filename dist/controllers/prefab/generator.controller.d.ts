@@ -21,4 +21,5 @@ export declare class GeneratorController extends BaseController {
     modSubRoute(req: Request, res: Response): Promise<void>;
     constructor();
     private sendMessageAndWaitResponse;
+    private afterProcedure;
 }
