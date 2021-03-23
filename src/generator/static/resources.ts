@@ -43,7 +43,11 @@ export function resources(entity: string): TemplateStructureInterface[] {
 			path: "src/api/serializers/schemas",
 			name: `${filePrefixName}.serializer.schema.ts`,
 		},
-		{ template: "test", path: "test", name: `${filePrefixName}.test.ts` },
+		{ 
+			template: "test", 
+			path: "src/test", 
+			name: `${filePrefixName}.test.ts`,
+		},
 		{
 			template: "serializer",
 			path: "src/api/serializers",
