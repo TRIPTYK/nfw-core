@@ -165,8 +165,8 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         try {
             await project_1.default.save();
             await this.sendMessageAndWaitResponse("app-recompile-sync");
-            await this.sendMessageAndWaitResponse("app-restart");
             await this.sendMessageAndWaitResponse("app-save");
+            await this.sendMessageAndWaitResponse("app-restart");
         }
         catch (error) {
             console.log(error);

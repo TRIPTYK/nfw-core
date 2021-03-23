@@ -236,8 +236,8 @@ export class GeneratorController extends BaseController {
 		try {
 			await project.save();
 			await this.sendMessageAndWaitResponse("app-recompile-sync");
-			await this.sendMessageAndWaitResponse("app-restart");
 			await this.sendMessageAndWaitResponse("app-save");
+			await this.sendMessageAndWaitResponse("app-restart");
 		} catch (error) {
 			console.log(error);
 		}
