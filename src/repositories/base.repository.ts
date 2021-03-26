@@ -29,6 +29,7 @@ interface FilterConditionBlock {
     | "not-eq"
     | "not-in"
     | "not-gt"
+    | "like"
     | "not-lt";
   path: string;
   conjunction?: "and" | "or";
@@ -217,6 +218,10 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
       case "gt":
         queryString = `${propertyName} > :${varName}`;
         queryParams = { [varName]: block.value };
+        break;
+      case "like":
+        queryString = `${propertyName} LIKE :${varName}`;
+        queryParams = { [varName]: `%${block.value}%` };
         break;
       default:
         break;

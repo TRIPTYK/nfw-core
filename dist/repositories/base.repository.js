@@ -132,6 +132,10 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
                 queryString = `${propertyName} > :${varName}`;
                 queryParams = { [varName]: block.value };
                 break;
+            case "like":
+                queryString = `${propertyName} LIKE :${varName}`;
+                queryParams = { [varName]: `%${block.value}%` };
+                break;
             default:
                 break;
         }
