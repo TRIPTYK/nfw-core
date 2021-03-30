@@ -1,11 +1,9 @@
-/// <reference types="socket.io-client" />
 import { Request, Response } from "express";
-import { BaseController } from "../base.controller";
+import { WsController } from "../ws.controller";
 /**
  * Generates app
  */
-export declare class GeneratorController extends BaseController {
-    socket: SocketIOClient.Socket;
+export declare class GeneratorController extends WsController {
     generateRoute(req: Request, res: Response): Promise<void>;
     generateSubRoute(req: Request, res: Response): Promise<void>;
     generateEntity(req: Request, res: Response): Promise<void>;
@@ -20,6 +18,5 @@ export declare class GeneratorController extends BaseController {
     deleteEntity(req: Request, res: Response): Promise<void>;
     modSubRoute(req: Request, res: Response): Promise<void>;
     constructor();
-    private sendMessageAndWaitResponse;
     private afterProcedure;
 }

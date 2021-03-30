@@ -11,8 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeneratorController = void 0;
 const HttpStatus = require("http-status");
-const SocketIO = require("socket.io-client");
-const registry_application_1 = require("../../application/registry.application");
 const controller_decorator_1 = require("../../decorators/controller.decorator");
 const add_column_1 = require("../../generator/commands/add-column");
 const add_relation_1 = require("../../generator/commands/add-relation");
@@ -31,26 +29,11 @@ const remove_relation_1 = require("../../generator/commands/remove-relation");
 const project_1 = require("../../generator/utils/project");
 const validation_middleware_1 = require("../../middlewares/validation.middleware");
 const generator_validation_1 = require("../../validation/generator.validation");
-const base_controller_1 = require("../base.controller");
+const ws_controller_1 = require("../ws.controller");
 /**
  * Generates app
  */
-let GeneratorController = class GeneratorController extends base_controller_1.BaseController {
-    constructor() {
-        super();
-        this.socket = null;
-        this.socket = SocketIO("http://localhost:3000", {
-            query: {
-                app: false,
-            },
-        });
-        registry_application_1.ApplicationRegistry.on(registry_application_1.ApplicationLifeCycleEvent.Running, () => {
-            this.socket.on("connect", () => {
-                this.socket.emit("hello");
-            });
-            // removeRelation("user", "documents").then(() => project.save());
-        });
-    }
+let GeneratorController = class GeneratorController extends ws_controller_1.WsController {
     async generateRoute(req, res) {
         await generate_route_1.default(req.params.name, req.body.methods);
         res.sendStatus(HttpStatus.ACCEPTED);
@@ -148,17 +131,9 @@ let GeneratorController = class GeneratorController extends base_controller_1.Ba
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
-    sendMessageAndWaitResponse(type, data) {
-        return new Promise((resolve, rej) => {
-            this.socket.emit(type, data, (response) => {
-                console.log(`[${type}]:\t${response}`);
-                if (response === "ok") {
-                    resolve(response);
-                }
-                else {
-                    rej(response);
-                }
-            });
+    constructor() {
+        super("http://localhost:3000", () => {
+            this.socket.emit("hello");
         });
     }
     async afterProcedure() {

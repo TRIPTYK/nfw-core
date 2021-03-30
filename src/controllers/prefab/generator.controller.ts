@@ -1,11 +1,6 @@
 /* eslint-disable arrow-body-style */
 import e, { Request, Response } from "express";
 import * as HttpStatus from "http-status";
-import * as SocketIO from "socket.io-client";
-import {
-	ApplicationLifeCycleEvent,
-	ApplicationRegistry,
-} from "../../application/registry.application";
 import {
 	Controller,
 	Delete,
@@ -38,14 +33,13 @@ import {
 	createRoute,
 	createSubRoute,
 } from "../../validation/generator.validation";
-import { BaseController } from "../base.controller";
+import { WsController } from "../ws.controller";
 
 /**
  * Generates app
  */
 @Controller("generate")
-export class GeneratorController extends BaseController {
-	public socket: SocketIOClient.Socket = null;
+export class GeneratorController extends WsController {
 
 	@Post("/route/:name")
 	@MethodMiddleware(ValidationMiddleware, {
@@ -204,31 +198,8 @@ export class GeneratorController extends BaseController {
 	}
 
 	constructor() {
-		super();
-		this.socket = SocketIO("http://localhost:3000", {
-			query: {
-				app: false,
-			},
-		});
-		ApplicationRegistry.on(ApplicationLifeCycleEvent.Running, () => {
-			this.socket.on("connect", () => {
-				this.socket.emit("hello");
-			});
-
-			// removeRelation("user", "documents").then(() => project.save());
-		});
-	}
-
-	private sendMessageAndWaitResponse(type: string, data?: any): Promise<string> {
-		return new Promise((resolve, rej) => {
-			this.socket.emit(type, data, (response) => {
-				console.log(`[${type}]:\t${response}`);
-				if (response === "ok") {
-					resolve(response);
-				} else {
-					rej(response);
-				}
-			});
+		super("http://localhost:3000", () => {
+			this.socket.emit("hello");
 		});
 	}
 

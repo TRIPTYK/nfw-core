@@ -14,3 +14,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./base.controller"), exports);
 __exportStar(require("./json-api.controller"), exports);
 __exportStar(require("./prefab"), exports);
+__exportStar(require("./ws.controller"), exports);
