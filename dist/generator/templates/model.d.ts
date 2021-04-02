@@ -1,4 +1,3 @@
-import { SourceFile } from "ts-morph";
 import { GeneratorParameters } from "../interfaces/generator.interface";
 /**
  *
@@ -7,4 +6,4 @@ import { GeneratorParameters } from "../interfaces/generator.interface";
  * @param {array} entities
  * @return {SourceFile}
  */
-export declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): SourceFile;
+export declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): import("ts-morph").SourceFile;
