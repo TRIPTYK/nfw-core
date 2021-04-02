@@ -1,7 +1,7 @@
 import project from "../utils/project";
 import { resources } from "../static/resources";
 
-export default async function getRoles(): Promise<Array<String>> {
+export async function getRoles(): Promise<Array<String>> {
 	const controller = resources("role").find((r) => r.template === "roles");
 
 	const controllerFile = project.getSourceFile(

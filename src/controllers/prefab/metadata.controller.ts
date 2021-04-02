@@ -7,7 +7,7 @@ import { Controller, Get } from "../../decorators/controller.decorator";
 import { TypeORMService } from "../../services/typeorm.service";
 import { BaseController } from "../base.controller";
 import getPerms from "../../generator/commands/get-perms";
-import getRoles from "../../generator/commands/get-roles";
+import { getRoles } from "../../generator/commands/get-roles";
 import getEntityRoutes from "../../generator/commands/get-entityRoutes";
 import * as pluralize from "pluralize";
 

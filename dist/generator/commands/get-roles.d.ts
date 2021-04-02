@@ -1,1 +1,1 @@
-export default function getRoles(): Promise<Array<String>>;
+export declare function getRoles(): Promise<Array<String>>;

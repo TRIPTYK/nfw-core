@@ -48,7 +48,7 @@ let MetadataController = class MetadataController extends base_controller_1.Base
         }));
     }
     getRoles(req, res) {
-        return get_roles_1.default();
+        return get_roles_1.getRoles();
     }
     getPerms(req, res) {
         return get_perms_1.default(req.params.name);

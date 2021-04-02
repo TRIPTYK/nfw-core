@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRoles = void 0;
 const project_1 = require("../utils/project");
 const resources_1 = require("../static/resources");
 async function getRoles() {
@@ -19,4 +20,4 @@ async function getRoles() {
     }
     return array;
 }
-exports.default = getRoles;
+exports.getRoles = getRoles;
