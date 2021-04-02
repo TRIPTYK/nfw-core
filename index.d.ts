@@ -1,14 +1,17 @@
 /// <reference types="socket.io-client" />
-import { Router, Request, Response as Response$1, Application, NextFunction } from 'express';
+import * as Express from 'express';
+import { Request, Response as Response$1, NextFunction } from 'express';
 import { ParamSchema, Location, Schema as Schema$1 } from 'express-validator';
-import { Repository, SelectQueryBuilder, EntityMetadata, DatabaseType, Connection, ConnectionOptions, ColumnType, EntityOptions, ColumnOptions } from 'typeorm';
+import * as typeorm from 'typeorm';
+import { Repository, SelectQueryBuilder, EntityMetadata, DatabaseType, Connection, ConnectionOptions, EntityOptions, ColumnOptions } from 'typeorm';
 export * from 'typeorm';
 import * as JSONAPISerializer from 'json-api-serializer';
-import { RelationType } from 'typeorm/metadata/types/RelationTypes';
-import ts_morph, { SourceFile } from 'ts-morph';
+import * as typeorm_metadata_types_RelationTypes from 'typeorm/metadata/types/RelationTypes';
+import * as ts_morph from 'ts-morph';
+import ts_morph__default, { SourceFile } from 'ts-morph';
 
 interface ControllerInterface {
-    init(router: Router): any;
+    init(router: Express.Router): any;
 }
 
 declare abstract class BaseController implements ControllerInterface {
@@ -105,8 +108,8 @@ interface RouteContext {
     controllerInstance: BaseController;
 }
 declare abstract class BaseApplication implements ApplicationInterface {
-    protected app: Application;
-    protected router: Router;
+    protected app: Express.Application;
+    protected router: Express.Router;
     protected routes: Array<{
         prefix: string;
         type: "basic" | "generated" | "entity";
@@ -116,7 +119,7 @@ declare abstract class BaseApplication implements ApplicationInterface {
     setupMiddlewares(middlewaresForApp: MiddlewareMetadata[]): Promise<any>;
     abstract afterInit(): Promise<any>;
     init(): Promise<any>;
-    get App(): Application;
+    get App(): Express.Application;
     get Routes(): {
         prefix: string;
         type: "basic" | "generated" | "entity";
@@ -313,31 +316,6 @@ declare class ApplicationRegistry {
     static registerSerializerFor<T extends JsonApiModel<T>>(entity: Constructor<T>, serializer: Constructor<BaseJsonApiSerializer<T>>): void;
 }
 
-declare abstract class BaseJsonApiController<T extends JsonApiModel<T>> extends BaseController {
-    entity: Constructor<T>;
-    protected serializer: BaseJsonApiSerializer<T>;
-    protected repository: BaseJsonApiRepository<T>;
-    constructor();
-    callMethod(methodName: string): any;
-    list(req: Request, _res: Response$1): Promise<any>;
-    get(req: Request, _res: Response$1): Promise<any>;
-    create(req: Request, _res: Response$1): Promise<any>;
-    update(req: Request, _res: Response$1): Promise<any>;
-    remove(req: Request, res: Response$1): Promise<any>;
-    fetchRelationships(req: Request, res: Response$1): Promise<Response$1<any, Record<string, any>>>;
-    fetchRelated(req: Request, res: Response$1): Promise<any>;
-    addRelationships(req: Request, res: Response$1): Promise<any>;
-    updateRelationships(req: Request, res: Response$1): Promise<any>;
-    removeRelationships(req: Request, res: Response$1): Promise<any>;
-    protected parseJsonApiQueryParams(query: Record<string, any>): {
-        includes: string[];
-        sort: string[];
-        fields: any;
-        page: any;
-        filter: any;
-    };
-}
-
 /**
  * BaseController that handles WebSocket connection.
  */
@@ -499,7 +477,7 @@ declare class MetadataController extends BaseController {
         routes: RouteDefinition[];
     }[];
     getEntityRoutes(req: Request, res: Response$1): Promise<any>;
-    getSupportedTypes(): ColumnType[];
+    getSupportedTypes(): typeorm.ColumnType[];
     countAllEntitiesRecords(): Promise<{
         entityName: string;
         count: number;
@@ -527,7 +505,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     };
@@ -549,7 +527,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     }[];
@@ -573,11 +551,36 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: RelationType;
+            relationType: typeorm_metadata_types_RelationTypes.RelationType;
             isNullable: boolean;
         }[];
     };
     protected getRoutes(routes: any, entity: string): any;
+}
+
+declare abstract class BaseJsonApiController<T extends JsonApiModel<T>> extends BaseController {
+    entity: Constructor<T>;
+    protected serializer: BaseJsonApiSerializer<T>;
+    protected repository: BaseJsonApiRepository<T>;
+    constructor();
+    callMethod(methodName: string): any;
+    list(req: Request, _res: Response$1): Promise<any>;
+    get(req: Request, _res: Response$1): Promise<any>;
+    create(req: Request, _res: Response$1): Promise<any>;
+    update(req: Request, _res: Response$1): Promise<any>;
+    remove(req: Request, res: Response$1): Promise<any>;
+    fetchRelationships(req: Request, res: Response$1): Promise<Response$1<any, Record<string, any>>>;
+    fetchRelated(req: Request, res: Response$1): Promise<any>;
+    addRelationships(req: Request, res: Response$1): Promise<any>;
+    updateRelationships(req: Request, res: Response$1): Promise<any>;
+    removeRelationships(req: Request, res: Response$1): Promise<any>;
+    protected parseJsonApiQueryParams(query: Record<string, any>): {
+        includes: string[];
+        sort: string[];
+        fields: any;
+        page: any;
+        filter: any;
+    };
 }
 
 declare abstract class BaseErrorMiddleware implements ErrorMiddlewareInterface {
@@ -637,6 +640,11 @@ interface SchemaOptions {
 declare function JsonApiSerializer(options: SchemaOptions): ClassDecorator;
 declare function SerializerSchema(name?: string): ClassDecorator;
 
+declare const arrayOfInt: string[];
+declare const arrayOfString: string[];
+declare const arrayOfNumber: string[];
+declare const arrayOfDate: string[];
+
 declare class RelationshipNotFoundError extends Error {
     constructor(message: string);
 }
@@ -689,17 +697,31 @@ interface EntityColumns {
 
 declare function addColumn(entity: string, column: EntityColumn): Promise<void>;
 
+declare function addEndpoint(prefix: string, method: string, subroute?: string): Promise<void>;
+
+declare function addPerms(element: any): Promise<void>;
+
 declare function addRelation(entity: string, relation: EntityRelation): Promise<void>;
+
+declare function addRole(roleName: string): Promise<void>;
 
 declare function deleteJsonApiEntity(modelName: string): Promise<void>;
 
+declare function deleteRole(roleName: string): Promise<void>;
+
+declare function deleteBasicRoute(prefix: string): Promise<void>;
+
 declare function generateJsonApiEntity(modelName: string, data?: EntityColumns): Promise<void>;
+
+declare function generateBasicRoute(prefix: string, methods?: Array<string>): Promise<void>;
 
 declare function removeColumn(modelName: string, column: EntityColumn | string): Promise<void>;
 
-declare function removeRelation(entity: string, relationName: string | EntityRelation): Promise<void>;
+declare function removeEndpoint(prefix: string, methodName: string): Promise<void>;
 
-declare function addRole(roleName: string): Promise<void>;
+declare function removePerms(element: any): Promise<void>;
+
+declare function removeRelation(entity: string, relationName: string | EntityRelation): Promise<void>;
 
 declare function save(): Promise<void>;
 
@@ -710,7 +732,18 @@ declare function save(): Promise<void>;
  * @param options
  * @param classPrefixName
  */
-declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createBaseControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName }: GeneratorParameters): ts_morph.SourceFile;
+
+/**
+ *
+ * @param path
+ * @param className
+ * @param options
+ * @param classPrefixName
+ */
+declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+
+declare function createEnumsTemplate(name: string, enums: Array<string>): void;
 
 /**
  *
@@ -721,23 +754,23 @@ declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, f
  */
 declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): SourceFile;
+declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
-
-declare function buildModelColumnArgumentsFromObject(dbColumnaData: EntityColumn): ColumnOptions;
-declare function buildValidationArgumentsFromObject(dbColumnaData: EntityColumn): ValidationSchema<any>;
+declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph__default.SourceFile;
 
 declare function getJsonApiEntityName(prefix: string): {
     entityName: string;
     tableName: string;
 };
+
+declare function buildModelColumnArgumentsFromObject(dbColumnaData: EntityColumn): ColumnOptions;
+declare function buildValidationArgumentsFromObject(dbColumnaData: EntityColumn): ValidationSchema<any>;
 
 declare type DeserializeMiddlewareArgs = {
     serializer: Constructor<BaseJsonApiSerializer<any>>;
@@ -812,4 +845,4 @@ declare const createRoute: ValidationSchema<any>;
 declare const createSubRoute: ValidationSchema<any>;
 declare const addPermissions: ValidationSchema<any>;
 
-export { AnyFunction, ApplicationInterface, ApplicationLifeCycleEvent, ApplicationRegistry, ApplicationStatus, BaseApplication, BaseController, BaseErrorMiddleware, BaseJsonApiController, BaseJsonApiRepository, BaseJsonApiSerializer, BaseMiddleware, BaseModel, BaseSerializerSchema, BaseSerializerSchemaInterface, BaseService, Configuration, ConfigurationService, Constructor, Controller, ControllerInterface, Delete, Deserialize, DeserializeMiddleware, DeserializeMiddlewareArgs, EntityColumn, EntityColumns, EntityOptionsExtended, EntityRelation, ErrorMiddlewareInterface, GeneratedController, GeneratorController, GeneratorParameters, Get, GlobalMiddleware, JsonApiController, JsonApiEntity, JsonApiMethodMiddleware, JsonApiMiddlewareMetadata, JsonApiModel, JsonApiSerializer, MetadataController, MethodMiddleware, MiddlewareInterface, MiddlewareMetadata, MiddlewareOrder, ModelInterface, ObjectKey, OverrideSerializer, OverrideValidator, PaginationParams, PaginationQueryParams, PaginationResponse, Patch, Post, Put, RegisterApplication, Relation, RelationMetadata, RelationTypes, RelationshipNotFoundError, RequestMethods, Response, RouteContext, RouteDefinition, RouteMiddleware, Schema, SchemaOptions, Serialize, SerializerInterface, SerializerParams, SerializerSchema, TemplateStructureInterface, TypeORMService, ValidationMiddleware, ValidationMiddlewareArgs, ValidationSchema, WsController, addColumn, addPermissions, addRelation, addRelationships, addRole, booleanMap, buildModelColumnArgumentsFromObject, buildValidationArgumentsFromObject, columnsActions, create, createColumn, createControllerTemplate, createEntity, createModelTemplate, createRelation, createRepositoryTemplate, createRoute, createSerializer, createSerializerSchema, createSubRoute, createTestTemplate, createValidationTemplate, deleteJsonApiEntity, fetchRelated, fetchRelationships, fullLog, generateJsonApiEntity, get, getEntityNaming, getJsonApiEntityName, jsonApiQuery, list, mesure, parseBool, remove, removeColumn, removeRelation, removeRelationships, resources, save, shadowLog, toCamelCase, toKebabCase, toSnakeCase, update, updateRelationships };
+export { AnyFunction, ApplicationInterface, ApplicationLifeCycleEvent, ApplicationRegistry, ApplicationStatus, BaseApplication, BaseController, BaseErrorMiddleware, BaseJsonApiController, BaseJsonApiRepository, BaseJsonApiSerializer, BaseMiddleware, BaseModel, BaseSerializerSchema, BaseSerializerSchemaInterface, BaseService, Configuration, ConfigurationService, Constructor, Controller, ControllerInterface, Delete, Deserialize, DeserializeMiddleware, DeserializeMiddlewareArgs, EntityColumn, EntityColumns, EntityOptionsExtended, EntityRelation, ErrorMiddlewareInterface, GeneratedController, GeneratorController, GeneratorParameters, Get, GlobalMiddleware, JsonApiController, JsonApiEntity, JsonApiMethodMiddleware, JsonApiMiddlewareMetadata, JsonApiModel, JsonApiSerializer, MetadataController, MethodMiddleware, MiddlewareInterface, MiddlewareMetadata, MiddlewareOrder, ModelInterface, ObjectKey, OverrideSerializer, OverrideValidator, PaginationParams, PaginationQueryParams, PaginationResponse, Patch, Post, Put, RegisterApplication, Relation, RelationMetadata, RelationTypes, RelationshipNotFoundError, RequestMethods, Response, RouteContext, RouteDefinition, RouteMiddleware, Schema, SchemaOptions, Serialize, SerializerInterface, SerializerParams, SerializerSchema, TemplateStructureInterface, TypeORMService, ValidationMiddleware, ValidationMiddlewareArgs, ValidationSchema, WsController, addColumn, addEndpoint, addPermissions, addPerms, addRelation, addRelationships, addRole, arrayOfDate, arrayOfInt, arrayOfNumber, arrayOfString, booleanMap, buildModelColumnArgumentsFromObject, buildValidationArgumentsFromObject, columnsActions, create, createBaseControllerTemplate, createColumn, createControllerTemplate, createEntity, createEnumsTemplate, createModelTemplate, createRelation, createRepositoryTemplate, createRoute, createSerializer, createSerializerSchema, createSubRoute, createTestTemplate, createValidationTemplate, deleteBasicRoute, deleteJsonApiEntity, deleteRole, fetchRelated, fetchRelationships, fullLog, generateBasicRoute, generateJsonApiEntity, get, getEntityNaming, getJsonApiEntityName, jsonApiQuery, list, mesure, parseBool, remove, removeColumn, removeEndpoint, removePerms, removeRelation, removeRelationships, resources, save, shadowLog, toCamelCase, toKebabCase, toSnakeCase, update, updateRelationships };

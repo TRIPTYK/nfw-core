@@ -1,2 +1,2 @@
-export * from "./base.validation";
-export * from "./generator.validation";
+export * from './base.validation';
+export * from './generator.validation';

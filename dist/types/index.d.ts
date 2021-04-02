@@ -1,3 +1,3 @@
-export * from "./global";
-export * from "./jsonapi";
-export * from "./validation";
+export * from './global';
+export * from './jsonapi';
+export * from './validation';

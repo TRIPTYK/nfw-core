@@ -1,2 +1,2 @@
-export * from "./pagination.response";
-export * from "./response.response";
+export * from './pagination.response';
+export * from './response.response';
