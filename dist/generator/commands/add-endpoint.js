@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addEndpoint = void 0;
 const path_1 = require("path");
 const application_1 = require("../../application");
 const case_util_1 = require("../../utils/case.util");
@@ -23,7 +24,7 @@ async function addEndpoint(prefix, method, subroute) {
     if (!controllerFile.getImportDeclaration("express")) {
         controllerFile.addImportDeclaration({
             defaultImport: "Express",
-            moduleSpecifier: "express"
+            moduleSpecifier: "express",
         });
     }
     const routeClass = controllerFile.getClass(`${classPrefixName}Controller`);
@@ -38,13 +39,13 @@ async function addEndpoint(prefix, method, subroute) {
         parameters: [
             {
                 name: "req",
-                type: "Express.Request"
+                type: "Express.Request",
             },
             {
                 name: "res",
-                type: "Express.Response"
-            }
-        ]
+                type: "Express.Response",
+            },
+        ],
     });
     const classMethod = routeClass.getMethod(methodName);
     classMethod.setBodyText(
@@ -53,9 +54,9 @@ async function addEndpoint(prefix, method, subroute) {
     classMethod
         .addDecorator({
         name: method.charAt(0).toUpperCase() + method.toLowerCase().slice(1),
-        arguments: [`"${subroute}"`]
+        arguments: [`"${subroute}"`],
     })
         .setIsDecoratorFactory(true);
     controllerFile.fixMissingImports();
 }
-exports.default = addEndpoint;
+exports.addEndpoint = addEndpoint;

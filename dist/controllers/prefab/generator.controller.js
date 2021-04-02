@@ -35,12 +35,12 @@ const ws_controller_1 = require("../ws.controller");
  */
 let GeneratorController = class GeneratorController extends ws_controller_1.WsController {
     async generateRoute(req, res) {
-        await generate_route_1.default(req.params.name, req.body.methods);
+        await generate_route_1.generateBasicRoute(req.params.name, req.body.methods);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
     async generateSubRoute(req, res) {
-        await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
+        await add_endpoint_1.addEndpoint(req.params.name, req.body.method, req.body.subRoute);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
@@ -55,16 +55,16 @@ let GeneratorController = class GeneratorController extends ws_controller_1.WsCo
     async addPermissions(req, res) {
         for (const element of req.body.elements) {
             if (element.type === "ADD") {
-                await add_permission_1.default(element);
+                await add_permission_1.addPerms(element);
             }
             if (element.type === "REMOVE") {
-                await remove_permissions_1.default(element);
+                await remove_permissions_1.removePerms(element);
             }
             if (element.type === "CREATE") {
-                await add_role_1.default(element.role);
+                await add_role_1.addRole(element.role);
             }
             if (element.type === "DELETE") {
-                await delete_role_1.default(element.role);
+                await delete_role_1.deleteRole(element.role);
             }
         }
         res.sendStatus(HttpStatus.ACCEPTED);
@@ -101,12 +101,12 @@ let GeneratorController = class GeneratorController extends ws_controller_1.WsCo
         await this.afterProcedure();
     }
     async deleteRoute(req, res) {
-        await delete_route_1.default(req.params.name);
+        await delete_route_1.deleteBasicRoute(req.params.name);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
     async deleteSubRoute(req, res) {
-        await remove_endpoint_1.default(req.params.name, req.params.methodName);
+        await remove_endpoint_1.removeEndpoint(req.params.name, req.params.methodName);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
@@ -126,8 +126,8 @@ let GeneratorController = class GeneratorController extends ws_controller_1.WsCo
         await this.afterProcedure();
     }
     async modSubRoute(req, res) {
-        await remove_endpoint_1.default(req.params.name, req.params.methodName);
-        await add_endpoint_1.default(req.params.name, req.body.method, req.body.subRoute);
+        await remove_endpoint_1.removeEndpoint(req.params.name, req.params.methodName);
+        await add_endpoint_1.addEndpoint(req.params.name, req.body.method, req.body.subRoute);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }

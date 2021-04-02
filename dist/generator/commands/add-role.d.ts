@@ -1,1 +1,1 @@
-export default function addRole(roleName: string): Promise<void>;
+export declare function addRole(roleName: string): Promise<void>;

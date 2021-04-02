@@ -7,7 +7,7 @@ import {
 import project from "../utils/project";
 import { resources } from "../static/resources";
 
-export default async function deleteRole(roleName: string): Promise<void> {
+export async function deleteRole(roleName: string): Promise<void> {
 	const controller = resources("role").find((r) => r.template === "roles");
 
 	const controllerFile = project.getSourceFile(

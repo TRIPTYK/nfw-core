@@ -2,7 +2,7 @@ import { ArrayLiteralExpression, PropertyAccessExpression } from "ts-morph";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 
-export default async function removePerms(element: any): Promise<void> {
+export async function removePerms(element: any): Promise<void> {
 	const controller = resources(element.entity).find(
 		(r) => r.template === "controller"
 	);

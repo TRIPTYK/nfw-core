@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateBasicRoute = void 0;
 const ts_morph_1 = require("ts-morph");
 const registry_application_1 = require("../../application/registry.application");
 const resources_1 = require("../static/resources");
@@ -24,7 +25,7 @@ async function generateBasicRoute(prefix, methods) {
         prefix,
         classPrefixName,
         filePrefixName,
-        fileTemplateInfo: file
+        fileTemplateInfo: file,
     });
     const applicationFile = project_1.default.getSourceFile("src/api/application.ts");
     const applicationClass = applicationFile.getClasses()[0];
@@ -42,11 +43,11 @@ async function generateBasicRoute(prefix, methods) {
         controllersArray.addElement(importControllerName);
     }
     for (const method of methods) {
-        await add_endpoint_1.default(prefix, method);
+        await add_endpoint_1.addEndpoint(prefix, method);
     }
     // auto generate imports
     for (const file of [].concat(applicationFile, createdFile)) {
         file.fixMissingImports();
     }
 }
-exports.default = generateBasicRoute;
+exports.generateBasicRoute = generateBasicRoute;

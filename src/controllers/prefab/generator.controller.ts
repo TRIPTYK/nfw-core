@@ -10,17 +10,17 @@ import {
 } from "../../decorators/controller.decorator";
 import { addColumn } from "../../generator/commands/add-column";
 import { addRelation } from "../../generator/commands/add-relation";
-import addEndpoint from "../../generator/commands/add-endpoint";
-import addPerms from "../../generator/commands/add-permission";
+import { addEndpoint } from "../../generator/commands/add-endpoint";
+import { addPerms } from "../../generator/commands/add-permission";
 import { deleteJsonApiEntity } from "../../generator/commands/delete-entity";
-import addRole from "../../generator/commands/add-role";
-import deleteRole from "../../generator/commands/delete-role";
-import deleteBasicRoute from "../../generator/commands/delete-route";
+import { addRole } from "../../generator/commands/add-role";
+import { deleteRole } from "../../generator/commands/delete-role";
+import { deleteBasicRoute } from "../../generator/commands/delete-route";
 import { generateJsonApiEntity } from "../../generator/commands/generate-entity";
-import generateBasicRoute from "../../generator/commands/generate-route";
+import { generateBasicRoute } from "../../generator/commands/generate-route";
 import { removeColumn } from "../../generator/commands/remove-column";
-import removeEndpoint from "../../generator/commands/remove-endpoint";
-import removePerms from "../../generator/commands/remove-permissions";
+import { removeEndpoint } from "../../generator/commands/remove-endpoint";
+import { removePerms } from "../../generator/commands/remove-permissions";
 import { removeRelation } from "../../generator/commands/remove-relation";
 import project from "../../generator/utils/project";
 import { ValidationMiddleware } from "../../middlewares/validation.middleware";
@@ -40,7 +40,6 @@ import { WsController } from "../ws.controller";
  */
 @Controller("generate")
 export class GeneratorController extends WsController {
-
 	@Post("/route/:name")
 	@MethodMiddleware(ValidationMiddleware, {
 		schema: createRoute,

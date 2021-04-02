@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteBasicRoute = void 0;
 const ts_morph_1 = require("ts-morph");
 const application_1 = require("../../application");
 const resources_1 = require("../static/resources");
@@ -34,4 +35,4 @@ async function deleteBasicRoute(prefix) {
     controllersArray.removeElement(exists);
     applicationFile.fixUnusedIdentifiers();
 }
-exports.default = deleteBasicRoute;
+exports.deleteBasicRoute = deleteBasicRoute;

@@ -1,1 +1,1 @@
-export default function deleteBasicRoute(prefix: string): Promise<void>;
+export declare function deleteBasicRoute(prefix: string): Promise<void>;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addRole = void 0;
 const camelcase = require("camelcase");
 const pascalcase = require("pascalcase");
 const project_1 = require("../utils/project");
@@ -22,4 +23,4 @@ async function addRole(roleName) {
         throw new Error(`${roleName} already exist`);
     }
 }
-exports.default = addRole;
+exports.addRole = addRole;

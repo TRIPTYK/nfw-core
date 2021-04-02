@@ -8,7 +8,7 @@ import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import * as pascalcase from "pascalcase";
 
-export default async function addPerms(element: any): Promise<void> {
+export async function addPerms(element: any): Promise<void> {
 	const controller = resources(element.entity).find(
 		(r) => r.template === "controller"
 	);

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addPerms = void 0;
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
@@ -83,4 +84,4 @@ async function addPerms(element) {
     }
     controllerFile.fixMissingImports();
 }
-exports.default = addPerms;
+exports.addPerms = addPerms;

@@ -4,3 +4,5 @@ export * from "./delete-entity";
 export * from "./generate-entity";
 export * from "./remove-column";
 export * from "./remove-relation";
+export * from "./add-role";
+export * from "./save";

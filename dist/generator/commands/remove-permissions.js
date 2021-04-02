@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.removePerms = void 0;
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function removePerms(element) {
@@ -44,4 +45,4 @@ async function removePerms(element) {
     }
     controllerFile.fixUnusedIdentifiers();
 }
-exports.default = removePerms;
+exports.removePerms = removePerms;

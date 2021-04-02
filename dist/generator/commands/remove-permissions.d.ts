@@ -1,1 +1,1 @@
-export default function removePerms(element: any): Promise<void>;
+export declare function removePerms(element: any): Promise<void>;

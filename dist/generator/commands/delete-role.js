@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteRole = void 0;
 const pascalcase = require("pascalcase");
 const project_1 = require("../utils/project");
 const resources_1 = require("../static/resources");
@@ -37,4 +38,4 @@ async function deleteRole(roleName) {
         const member = tmp.remove();
     }
 }
-exports.default = deleteRole;
+exports.deleteRole = deleteRole;

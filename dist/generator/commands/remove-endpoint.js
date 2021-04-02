@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.removeEndpoint = void 0;
 const application_1 = require("../../application");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
@@ -28,9 +29,8 @@ async function removeEndpoint(prefix, methodName) {
         throw new Error("This class does not exit");
     }
     const classMethod = routeClass.getMethod(subRoute.methodName);
-    classMethod.getDecorator(subRoute.methodName.charAt(0).toUpperCase() +
-        subRoute.methodName.slice(1));
+    classMethod.getDecorator(subRoute.methodName.charAt(0).toUpperCase() + subRoute.methodName.slice(1));
     classMethod.remove();
     controllerFile.fixMissingImports();
 }
-exports.default = removeEndpoint;
+exports.removeEndpoint = removeEndpoint;

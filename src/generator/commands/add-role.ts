@@ -3,7 +3,7 @@ import * as pascalcase from "pascalcase";
 import project from "../utils/project";
 import { resources } from "../static/resources";
 
-export default async function addRole(roleName: string): Promise<void> {
+export async function addRole(roleName: string): Promise<void> {
 	const controller = resources("role").find((r) => r.template === "roles");
 
 	const controllerFile = project.getSourceFile(
