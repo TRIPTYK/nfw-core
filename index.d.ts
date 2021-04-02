@@ -8,7 +8,6 @@ export * from 'typeorm';
 import * as JSONAPISerializer from 'json-api-serializer';
 import * as typeorm_metadata_types_RelationTypes from 'typeorm/metadata/types/RelationTypes';
 import * as ts_morph from 'ts-morph';
-import ts_morph__default, { SourceFile } from 'ts-morph';
 
 interface ControllerInterface {
     init(router: Express.Router): any;
@@ -752,7 +751,7 @@ declare function createEnumsTemplate(name: string, enums: Array<string>): void;
  * @param {array} entities
  * @return {SourceFile}
  */
-declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): SourceFile;
+declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
 declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
@@ -762,7 +761,7 @@ declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName
 
 declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): ts_morph.SourceFile;
 
-declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph__default.SourceFile;
+declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
 
 declare function getJsonApiEntityName(prefix: string): {
     entityName: string;
