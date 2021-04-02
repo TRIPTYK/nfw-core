@@ -1,5 +1,4 @@
 import * as pluralize from "pluralize";
-import { SourceFile } from "ts-morph";
 import { GeneratorParameters } from "../interfaces/generator.interface";
 import project from "../utils/project";
 
@@ -15,7 +14,7 @@ export function createModelTemplate({
   classPrefixName,
   modelName,
   filePrefixName,
-}: GeneratorParameters): SourceFile {
+}: GeneratorParameters) {
   const file = project.createSourceFile(
     `${fileTemplateInfo.path}/${fileTemplateInfo.name}`,
     null,

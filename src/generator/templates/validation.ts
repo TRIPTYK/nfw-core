@@ -1,7 +1,7 @@
 import { GeneratorParameters } from "../interfaces/generator.interface";
 import project from "../utils/project";
-import TsMorph = require("ts-morph");
-import stringifyObject = require("stringify-object");
+import { VariableDeclarationKind } from "ts-morph";
+import stringifyObject from "stringify-object";
 
 export function createValidationTemplate({
   fileTemplateInfo,
@@ -37,7 +37,7 @@ export function createValidationTemplate({
   );
 
   let variableStatement = file.addVariableStatement({
-    declarationKind: TsMorph.VariableDeclarationKind.Const,
+    declarationKind: VariableDeclarationKind.Const,
     declarations: [
       {
         name: "get",
@@ -59,7 +59,7 @@ export function createValidationTemplate({
   variableStatement.setIsExported(true);
 
   variableStatement = file.addVariableStatement({
-    declarationKind: TsMorph.VariableDeclarationKind.Const,
+    declarationKind: VariableDeclarationKind.Const,
     declarations: [
       {
         name: "list",
@@ -71,7 +71,7 @@ export function createValidationTemplate({
   variableStatement.setIsExported(true);
 
   variableStatement = file.addVariableStatement({
-    declarationKind: TsMorph.VariableDeclarationKind.Const,
+    declarationKind: VariableDeclarationKind.Const,
     declarations: [
       {
         name: "create",
@@ -83,7 +83,7 @@ export function createValidationTemplate({
   variableStatement.setIsExported(true);
 
   variableStatement = file.addVariableStatement({
-    declarationKind: TsMorph.VariableDeclarationKind.Const,
+    declarationKind: VariableDeclarationKind.Const,
     declarations: [
       {
         name: "update",
@@ -100,7 +100,7 @@ export function createValidationTemplate({
   variableStatement.setIsExported(true);
 
   variableStatement = file.addVariableStatement({
-    declarationKind: TsMorph.VariableDeclarationKind.Const,
+    declarationKind: VariableDeclarationKind.Const,
     declarations: [
       {
         name: "remove",
