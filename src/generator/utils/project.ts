@@ -1,19 +1,52 @@
-import tsMorph = require("ts-morph");
+import { 
+  ModuleKind, 
+  Project, 
+  ScriptTarget, 
+  ProjectOptions 
+} from "ts-morph";
+import { singleton } from "tsyringe";
 
-let isInitialised = false;
-const project = new tsMorph.Project({
-  tsConfigFilePath: "tsconfig.json",
-});
+@singleton()
+class CoreProject extends Project{
+
+  private static instance: CoreProject = null;
+
+  private static defaultConfig: ProjectOptions = {
+    compilerOptions: {
+      "lib": ["es2020"],
+      "target": ScriptTarget.ESNext,
+      "module": ModuleKind.CommonJS,
+      "allowSyntheticDefaultImports": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "declaration": true,
+      "outDir": "./dist",
+      "forceConsistentCasingInFileNames": true
+    }
+  }
+
+  constructor(config?: ProjectOptions) {
+    super(config ?? {
+      tsConfigFilePath: "tsconfig.json",
+    });
+    this.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
+  }
+
+  public static get Instance(): CoreProject {
+    if(!this.instance) {
+      try {
+        this.instance = new CoreProject();
+      } catch (error) {
+        this.instance = new CoreProject(this.defaultConfig);
+      }
+    }
+      
+    return this.instance;
+  }
+}
 
 /**
  * @return Project
  * @description Singleton like method
  */
-export default (() => {
-  if (!isInitialised) {
-    project.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
-    isInitialised = true;
-  }
-
-  return project;
-})();
+export default CoreProject.Instance;
