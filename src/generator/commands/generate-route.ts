@@ -4,14 +4,16 @@ import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { addEndpoint } from "./add-endpoint";
 
+/**
+ * Generates a basic route.
+ * @param prefix Prefix of the route.
+ * @param methods Methods used in the route.
+ * @returns A promise.
+ */
 export async function generateBasicRoute(
 	prefix: string,
 	methods?: Array<string>
 ): Promise<void> {
-	if (!prefix) {
-		return;
-	}
-
 	prefix = prefix.toLowerCase();
 
 	for (const route of ApplicationRegistry.application.Routes) {

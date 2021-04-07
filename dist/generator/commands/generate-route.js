@@ -6,10 +6,13 @@ const registry_application_1 = require("../../application/registry.application")
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const add_endpoint_1 = require("./add-endpoint");
+/**
+ * Generates a basic route.
+ * @param prefix Prefix of the route.
+ * @param methods Methods used in the route.
+ * @returns A promise.
+ */
 async function generateBasicRoute(prefix, methods) {
-    if (!prefix) {
-        return;
-    }
     prefix = prefix.toLowerCase();
     for (const route of registry_application_1.ApplicationRegistry.application.Routes) {
         if (prefix === route.prefix.toLowerCase()) {

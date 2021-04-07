@@ -4,10 +4,8 @@ import {
   ScriptTarget, 
   ProjectOptions 
 } from "ts-morph";
-import { singleton } from "tsyringe";
 
-@singleton()
-class CoreProject extends Project{
+class CoreProject {
 
   private static instance: Project = null;
 
@@ -25,22 +23,19 @@ class CoreProject extends Project{
     }
   }
 
-  constructor(config?: ProjectOptions) {
-    super(config ?? {
-      tsConfigFilePath: "tsconfig.json",
-    });
-    this.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
-  }
+  private static config: ProjectOptions = {
+    tsConfigFilePath: "tsconfig.json",
+  };
 
   public static get Instance() {
     if(!this.instance) {
       try {
-        this.instance = new CoreProject();
+        this.instance = new Project(this.config);
       } catch (error) {
-        this.instance = new CoreProject(this.defaultConfig);
+        this.instance = new Project(this.defaultConfig);
       }
+      this.instance.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
     }
-      
     return this.instance;
   }
 }

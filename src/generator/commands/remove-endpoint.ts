@@ -1,9 +1,13 @@
-import { getConnection } from "typeorm";
 import { ApplicationRegistry } from "../../application";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { getJsonApiEntityName } from "../utils/naming";
 
+/**
+ * Remove a endpoint of a specific route.
+ * @param prefix Prefix of the route.
+ * @param methodName Method (GET, POST, etc).
+ */
 export async function removeEndpoint(
 	prefix: string,
 	methodName: string

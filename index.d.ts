@@ -696,6 +696,12 @@ interface EntityColumns {
 
 declare function addColumn(entity: string, column: EntityColumn): Promise<void>;
 
+/**
+ * Add an endpoint to a specific route.
+ * @param prefix Prefix of the route.
+ * @param method Method of the endpoint.
+ * @param subroute Any subroute that would come after the endpoint.
+ */
 declare function addEndpoint(prefix: string, method: string, subroute?: string): Promise<void>;
 
 declare function addPerms(element: any): Promise<void>;
@@ -712,6 +718,12 @@ declare function deleteBasicRoute(prefix: string): Promise<void>;
 
 declare function generateJsonApiEntity(modelName: string, data?: EntityColumns): Promise<void>;
 
+/**
+ * Generates a basic route.
+ * @param prefix Prefix of the route.
+ * @param methods Methods used in the route.
+ * @returns A promise.
+ */
 declare function generateBasicRoute(prefix: string, methods?: Array<string>): Promise<void>;
 
 declare function getEntityRoutes(entity: string, routes?: any): Promise<any>;
@@ -720,6 +732,11 @@ declare function getRoles(): Promise<Array<String>>;
 
 declare function removeColumn(modelName: string, column: EntityColumn | string): Promise<void>;
 
+/**
+ * Remove a endpoint of a specific route.
+ * @param prefix Prefix of the route.
+ * @param methodName Method (GET, POST, etc).
+ */
 declare function removeEndpoint(prefix: string, methodName: string): Promise<void>;
 
 declare function removePerms(element: any): Promise<void>;

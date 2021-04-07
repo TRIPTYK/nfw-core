@@ -7,6 +7,12 @@ const case_util_1 = require("../../utils/case.util");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const naming_1 = require("../utils/naming");
+/**
+ * Add an endpoint to a specific route.
+ * @param prefix Prefix of the route.
+ * @param method Method of the endpoint.
+ * @param subroute Any subroute that would come after the endpoint.
+ */
 async function addEndpoint(prefix, method, subroute) {
     if (application_1.ApplicationRegistry.application.Routes.find((r) => r.prefix === prefix)
         ?.type === "basic") {
