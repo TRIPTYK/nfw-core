@@ -19,7 +19,7 @@ import { deleteBasicRoute } from "../../generator/commands/delete-route";
 import { generateJsonApiEntity } from "../../generator/commands/generate-entity";
 import { generateBasicRoute } from "../../generator/commands/generate-route";
 import { removeColumn } from "../../generator/commands/remove-column";
-import { removeEndpoint } from "../../generator/commands/remove-endpoint";
+import { deleteEndpoint } from "../../generator/commands/delete-endpoint";
 import { removePerms } from "../../generator/commands/remove-permissions";
 import { removeRelation } from "../../generator/commands/remove-relation";
 import project from "../../generator/utils/project";
@@ -158,7 +158,7 @@ export class GeneratorController extends WsController {
 
 	@Delete("/route/:name/subroute/:methodName")
 	public async deleteSubRoute(req: Request, res: Response) {
-		await removeEndpoint(req.params.name, req.params.methodName);
+		await deleteEndpoint(req.params.name, req.params.methodName);
 		res.sendStatus(HttpStatus.ACCEPTED);
 		await this.afterProcedure();
 	}
@@ -190,7 +190,7 @@ export class GeneratorController extends WsController {
 		location: ["body"],
 	})
 	public async modSubRoute(req: Request, res: Response) {
-		await removeEndpoint(req.params.name, req.params.methodName);
+		await deleteEndpoint(req.params.name, req.params.methodName);
 		await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
 		res.sendStatus(HttpStatus.ACCEPTED);
 		await this.afterProcedure();

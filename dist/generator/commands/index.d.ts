@@ -12,7 +12,7 @@ export * from "./get-entityRoutes";
 export * from "./get-perms";
 export * from "./get-roles";
 export * from "./remove-column";
-export * from "./remove-endpoint";
+export * from "./delete-endpoint";
 export * from "./remove-permissions";
 export * from "./remove-relation";
 export * from "./save";

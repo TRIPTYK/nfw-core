@@ -23,7 +23,7 @@ const delete_route_1 = require("../../generator/commands/delete-route");
 const generate_entity_1 = require("../../generator/commands/generate-entity");
 const generate_route_1 = require("../../generator/commands/generate-route");
 const remove_column_1 = require("../../generator/commands/remove-column");
-const remove_endpoint_1 = require("../../generator/commands/remove-endpoint");
+const delete_endpoint_1 = require("../../generator/commands/delete-endpoint");
 const remove_permissions_1 = require("../../generator/commands/remove-permissions");
 const remove_relation_1 = require("../../generator/commands/remove-relation");
 const project_1 = require("../../generator/utils/project");
@@ -106,7 +106,7 @@ let GeneratorController = class GeneratorController extends ws_controller_1.WsCo
         await this.afterProcedure();
     }
     async deleteSubRoute(req, res) {
-        await remove_endpoint_1.removeEndpoint(req.params.name, req.params.methodName);
+        await delete_endpoint_1.deleteEndpoint(req.params.name, req.params.methodName);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();
     }
@@ -126,7 +126,7 @@ let GeneratorController = class GeneratorController extends ws_controller_1.WsCo
         await this.afterProcedure();
     }
     async modSubRoute(req, res) {
-        await remove_endpoint_1.removeEndpoint(req.params.name, req.params.methodName);
+        await delete_endpoint_1.deleteEndpoint(req.params.name, req.params.methodName);
         await add_endpoint_1.addEndpoint(req.params.name, req.body.method, req.body.subRoute);
         res.sendStatus(HttpStatus.ACCEPTED);
         await this.afterProcedure();

@@ -4,11 +4,11 @@ import project from "../utils/project";
 import { getJsonApiEntityName } from "../utils/naming";
 
 /**
- * Remove a endpoint of a specific route.
+ * Delete an endpoint of a specific route.
  * @param prefix Prefix of the route.
  * @param methodName Method (GET, POST, etc).
  */
-export async function removeEndpoint(
+export async function deleteEndpoint(
 	prefix: string,
 	methodName: string
 ): Promise<void> {

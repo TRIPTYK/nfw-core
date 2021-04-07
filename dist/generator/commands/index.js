@@ -25,7 +25,7 @@ __exportStar(require("./get-entityRoutes"), exports);
 __exportStar(require("./get-perms"), exports);
 __exportStar(require("./get-roles"), exports);
 __exportStar(require("./remove-column"), exports);
-__exportStar(require("./remove-endpoint"), exports);
+__exportStar(require("./delete-endpoint"), exports);
 __exportStar(require("./remove-permissions"), exports);
 __exportStar(require("./remove-relation"), exports);
 __exportStar(require("./save"), exports);

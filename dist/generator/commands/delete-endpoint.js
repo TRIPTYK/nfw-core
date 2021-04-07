@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeEndpoint = void 0;
+exports.deleteEndpoint = void 0;
 const application_1 = require("../../application");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const naming_1 = require("../utils/naming");
 /**
- * Remove a endpoint of a specific route.
+ * Delete an endpoint of a specific route.
  * @param prefix Prefix of the route.
  * @param methodName Method (GET, POST, etc).
  */
-async function removeEndpoint(prefix, methodName) {
+async function deleteEndpoint(prefix, methodName) {
     const currentRoute = application_1.ApplicationRegistry.application.Routes.find((r) => r.prefix === prefix);
     prefix = naming_1.getJsonApiEntityName(prefix)?.entityName.toLowerCase() ?? prefix;
     if (currentRoute?.type === "basic") {
@@ -38,4 +38,4 @@ async function removeEndpoint(prefix, methodName) {
     classMethod.remove();
     controllerFile.fixMissingImports();
 }
-exports.removeEndpoint = removeEndpoint;
+exports.deleteEndpoint = deleteEndpoint;
