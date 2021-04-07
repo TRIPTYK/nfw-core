@@ -1,11 +1,5 @@
-import { Project, ProjectOptions } from "ts-morph";
-declare class CoreProject extends Project {
-    private static instance;
-    private static defaultConfig;
-    constructor(config?: ProjectOptions);
-    static get Instance(): CoreProject;
-}
-declare const _default: CoreProject;
+import { Project } from "ts-morph";
+declare const _default: Project;
 /**
  * @return Project
  * @description Singleton like method

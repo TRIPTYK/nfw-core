@@ -9,7 +9,7 @@ import { singleton } from "tsyringe";
 @singleton()
 class CoreProject extends Project{
 
-  private static instance: CoreProject = null;
+  private static instance: Project = null;
 
   private static defaultConfig: ProjectOptions = {
     compilerOptions: {
@@ -32,7 +32,7 @@ class CoreProject extends Project{
     this.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
   }
 
-  public static get Instance(): CoreProject {
+  public static get Instance() {
     if(!this.instance) {
       try {
         this.instance = new CoreProject();
