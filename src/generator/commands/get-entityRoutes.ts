@@ -4,7 +4,7 @@ import project from "../utils/project";
 import * as pluralize from "pluralize";
 import * as pascalcase from "pascalcase";
 
-export default async function getEntityRoutes(
+export async function getEntityRoutes(
 	entity: string,
 	routes?: any
 ): Promise<any> {

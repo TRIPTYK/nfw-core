@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getEntityRoutes = void 0;
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const pluralize = require("pluralize");
@@ -43,4 +44,4 @@ async function getEntityRoutes(entity, routes) {
     }
     return routeRoleList;
 }
-exports.default = getEntityRoutes;
+exports.getEntityRoutes = getEntityRoutes;

@@ -33,7 +33,7 @@ let MetadataController = class MetadataController extends base_controller_1.Base
     getEntityRoutes(req, res) {
         const allRoutes = registry_application_1.ApplicationRegistry.application.Routes;
         const entityRoutes = this.getRoutes(allRoutes, req.params.name);
-        return get_entityRoutes_1.default(req.params.name, entityRoutes);
+        return get_entityRoutes_1.getEntityRoutes(req.params.name, entityRoutes);
     }
     getSupportedTypes() {
         const connection = this.typeormConnection.connection;

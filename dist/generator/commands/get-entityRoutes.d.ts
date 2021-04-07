@@ -1,1 +1,1 @@
-export default function getEntityRoutes(entity: string, routes?: any): Promise<any>;
+export declare function getEntityRoutes(entity: string, routes?: any): Promise<any>;

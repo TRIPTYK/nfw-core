@@ -33,6 +33,7 @@ export async function addPerms(element: any): Promise<void> {
 
 	if (element.methodName) {
 		const controllerMethod = controllerClass.getMethod(element.methodName);
+
 		if (controllerMethod) {
 			const decorators = controllerMethod.getDecorator(
 				"JsonApiMethodMiddleware"
