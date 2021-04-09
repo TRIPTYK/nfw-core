@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createValidationTemplate = void 0;
 const project_1 = require("../utils/project");
 const ts_morph_1 = require("ts-morph");
-const stringify_object_1 = require("stringify-object");
+const stringifyObject = require("stringify-object");
 function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
         overwrite: true,
@@ -19,7 +19,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
             {
                 name: "get",
                 type: `ValidationSchema<${classPrefixName}>`,
-                initializer: stringify_object_1.default({
+                initializer: stringifyObject({
                     id: {
                         in: ["params"],
                         errorMessage: "Please provide a valid id",
