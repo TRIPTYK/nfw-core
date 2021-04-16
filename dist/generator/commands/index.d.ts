@@ -11,6 +11,7 @@ export * from "./generate-route";
 export * from "./get-entityRoutes";
 export * from "./get-perms";
 export * from "./get-roles";
+export * from "./get-routes";
 export * from "./remove-column";
 export * from "./delete-endpoint";
 export * from "./remove-permissions";
