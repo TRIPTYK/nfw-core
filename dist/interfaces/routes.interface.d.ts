@@ -15,4 +15,4 @@ export interface RouteDefinition {
     methodName: string;
 }
 export declare type routeType = "basic" | "generated" | "entity";
-export declare type reqestType = "get" | "post" | "delete" | "options" | "put" | "patch";
+export declare type requestType = "get" | "post" | "delete" | "options" | "put" | "patch";

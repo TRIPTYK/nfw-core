@@ -6,6 +6,7 @@ exports.BaseApplication = void 0;
 const Express = require("express");
 const pluralize = require("pluralize");
 const tsyringe_1 = require("tsyringe");
+const routes_1 = require("../enums/routes");
 const base_error_middleware_1 = require("../middlewares/base.error-middleware");
 const base_middleware_1 = require("../middlewares/base.middleware");
 const deserialize_middleware_1 = require("../middlewares/deserialize.middleware");
@@ -89,68 +90,6 @@ class BaseApplication {
                 const serializer = Reflect.getMetadata("serializer", jsonApiEntity);
                 const validation = Reflect.getMetadata("validator", jsonApiEntity);
                 this.router.use(`/${jsonApiEntityName}`, router);
-                const jsonApiRoutes = [
-                    {
-                        path: "/:id",
-                        methodType: "get",
-                        method: "get",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/",
-                        methodType: "get",
-                        method: "list",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/",
-                        methodType: "post",
-                        method: "create",
-                        middlewares: ["deserialize", "validation"],
-                    },
-                    {
-                        path: "/:id",
-                        methodType: "patch",
-                        method: "update",
-                        middlewares: ["deserialize", "validation"],
-                    },
-                    {
-                        path: "/:id",
-                        methodType: "delete",
-                        method: "remove",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/:relation",
-                        methodType: "get",
-                        method: "fetchRelated",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "get",
-                        method: "fetchRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "post",
-                        method: "addRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "patch",
-                        method: "updateRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "delete",
-                        method: "removeRelationships",
-                        middlewares: ["validation"],
-                    },
-                ];
                 for (const route of routes) {
                     const routeContext = {
                         routeDefinition: route,
@@ -169,7 +108,7 @@ class BaseApplication {
                     middlewares.push(instanceController.callMethod(route.methodName));
                     router[route.requestMethod](`${route.path}`, middlewares);
                 }
-                for (const { path, methodType, method, middlewares } of jsonApiRoutes) {
+                for (const { path, methodType, method, middlewares } of routes_1.jsonApiRoutes) {
                     const routeContext = {
                         routeDefinition: {
                             path,
@@ -239,7 +178,7 @@ class BaseApplication {
                     router[methodType](path, middlewaresForController.map((mid) => this.useMiddleware(mid.middleware, mid.args, routeContext)), applyMiddlewares);
                 }
                 //push the entities routes to the routes list
-                const routeList = jsonApiRoutes.map((route) => {
+                const routeList = routes_1.jsonApiRoutes.map((route) => {
                     return {
                         path: route.path,
                         requestMethod: route.methodType,

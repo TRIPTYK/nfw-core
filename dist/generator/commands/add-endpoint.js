@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addEndpoint = void 0;
 const path_1 = require("path");
-const application_1 = require("../../application");
 const case_util_1 = require("../../utils/case.util");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const naming_1 = require("../utils/naming");
+const get_routes_1 = require("./get-routes");
+const enums_1 = require("../../enums");
 /**
  * Add an endpoint to a specific route.
  * @param prefix Prefix of the route.
@@ -14,10 +15,12 @@ const naming_1 = require("../utils/naming");
  * @param subroute Any subroute that would come after the endpoint.
  */
 async function addEndpoint(prefix, method, subroute) {
-    if (application_1.ApplicationRegistry.application.Routes.find((r) => r.prefix === prefix)
+    if ((await get_routes_1.getRoutes()).find(r => r.prefix === prefix)
         ?.type === "basic") {
         throw new Error("Subroute can't be added to basic routes.");
     }
+    if (!enums_1.httpRequestMethods.includes(method.toUpperCase()))
+        throw new Error(`"${method}" is not a valid HTTP request method.`);
     subroute = `/${path_1.normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`.toLowerCase();
     prefix = (naming_1.getJsonApiEntityName(prefix)?.entityName ?? prefix).toLowerCase();
     const methodName = case_util_1.toCamelCase(`${method} ${prefix} ${subroute.replace("/", " ")}`);

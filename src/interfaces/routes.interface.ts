@@ -19,7 +19,8 @@ export interface RouteDefinition {
 }
 
 export type routeType = "basic" | "generated" | "entity";
-export type reqestType =
+
+export type requestType =
 	| "get"
 	| "post"
 	| "delete"

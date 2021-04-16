@@ -1,4 +1,5 @@
 import { container } from "tsyringe";
+import { httpRequestMethods as methods } from "../enums/methods";
 import {
 	EntityColumn,
 	EntityRelation,
@@ -237,24 +238,6 @@ export const columnsActions: ValidationSchema<any> = {
 		},
 	},
 };
-
-const methods = [
-	"GET",
-	"PUT",
-	"POST",
-	"DELETE",
-	"PATCH",
-	"COPY",
-	"HEAD",
-	"OPTIONS",
-	"LINK",
-	"UNLINK",
-	"PURGE",
-	"LOCK",
-	"UNLOCK",
-	"PROFIND",
-	"VIEW",
-];
 
 export const createRoute: ValidationSchema<any> = {
 	methods: {

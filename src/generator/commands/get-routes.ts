@@ -1,59 +1,74 @@
 import project from "../utils/project";
 import {
 	GlobalRouteDefinition,
-	reqestType,
 	RouteDefinition,
 	routeType,
 } from "../../interfaces/routes.interface";
 import * as pluralize from "pluralize";
+import { jsonApiRoutes, validDecorators } from "../../enums/routes";
 
-export async function getRoutes(): Promise<any> {
-	const validDecorator = ["Get", "Post", "Patch", "Delete"];
+export async function getRoutes(): Promise<GlobalRouteDefinition[]> {
 
-	const controllerFiles = project.getSourceFiles(
-		"src/api/controllers/*.controller.ts"
-	);
+	const regController = /Controller/gm;
+	const regQuotes = /"/gm;
+
+	const typeByController: {[key: string]: routeType} = {
+		JsonApiController: "entity",
+		GeneratedController: "generated",
+		Controller: "basic"
+	}
+
+	const controllerFiles = [
+		...project.getSourceFiles("src/api/controllers/*.controller.ts"),
+		...project.getSourceFiles("node_modules/@triptyk/nfw-core/src/controllers/prefab/*.controller.ts")
+	];
 
 	const entity: GlobalRouteDefinition[] = [];
+
 	for (const controller of controllerFiles) {
-		const classes = controller.getClasses();
+		
+		const controllerClass = controller.getClasses()
+			.find(c => c.getName().match(regController));
+		const controllerDecorator = controllerClass.getDecorators()
+			.find(c => c.getName().match(regController));
 
-		for (const classe of classes) {
-			let prefix = classe.getName().replace("Controller", "").toLowerCase();
-			const classDecorators = classe.getDecorators();
-			const arrayNameDecorator = [];
-			for (const classDecorator of classDecorators) {
-				arrayNameDecorator.push(classDecorator.getName());
-			}
-			let type: routeType;
-			if (arrayNameDecorator.includes("JsonApiController")) {
-				type = "entity";
-				prefix = pluralize(prefix);
-			} else if (arrayNameDecorator.includes("GeneratedController")) {
-				type = "generated";
-			} else {
-				type = "basic";
-			}
+		if(controllerClass) {
+			let prefix = controllerDecorator.getArguments()[0]
+				.getText().toLowerCase().replace(regQuotes, '');
+			const type: routeType = typeByController[controllerDecorator.getName()];
+			prefix = (type === "entity") ? pluralize(prefix) : prefix;
 
-			const routes: RouteDefinition[] = [];
-			const methods = classe.getMethods();
-			for (const method of methods) {
-				const decorators = method.getDecorators();
-
-				for (const decorator of decorators) {
-					if (validDecorator.includes(decorator.getName())) {
-						const args = decorator.getArguments();
-
-						for (const arg of args) {
-							routes.push({
-								path: arg.getFullText(),
-								requestMethod: decorator.getName().toLowerCase() as reqestType,
-								methodName: method.getName(),
-							});
-						}
-					}
+			let routes: RouteDefinition[] = [
+				...controllerClass.getMethods(),
+				...controllerClass.getBaseClass().getMethods()
+			]
+			.filter(m => m.getDecorators().length > 0)
+			.map(m => {
+				const deco = m.getDecorators()[0];
+				const arg = deco.getArguments()[0];
+				if(validDecorators.includes(deco.getName())) {
+					return {
+						path: (arg)? arg.getText().replace(regQuotes, '') : `/${m.getName()}`,
+						requestMethod: deco.getName().toLowerCase(),
+						methodName: m.getName()
+					} as RouteDefinition;
 				}
+			})
+			.filter(route => route);
+			
+			if(type === "entity") {
+				routes = [
+					...routes,
+					...jsonApiRoutes.map(route => {
+						return {
+							path: route.path,
+							requestMethod: route.methodType,
+							methodName: route.method
+						} as RouteDefinition;
+					})
+				];
 			}
+
 			entity.push({ prefix, type, routes });
 		}
 	}

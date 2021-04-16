@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateBasicRoute = void 0;
 const ts_morph_1 = require("ts-morph");
-const registry_application_1 = require("../../application/registry.application");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const add_endpoint_1 = require("./add-endpoint");
+const get_routes_1 = require("./get-routes");
 /**
  * Generates a basic route.
  * @param prefix Prefix of the route.
@@ -14,7 +14,7 @@ const add_endpoint_1 = require("./add-endpoint");
  */
 async function generateBasicRoute(prefix, methods) {
     prefix = prefix.toLowerCase();
-    for (const route of registry_application_1.ApplicationRegistry.application.Routes) {
+    for (const route of (await get_routes_1.getRoutes())) {
         if (prefix === route.prefix.toLowerCase()) {
             throw new Error("This route already exists.");
         }

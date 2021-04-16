@@ -10,6 +10,7 @@ import {
 	MiddlewareMetadata,
 	RequestMethods,
 } from "../decorators/controller.decorator";
+import { jsonApiRoutes } from "../enums/routes";
 import { ApplicationInterface } from "../interfaces/application.interface";
 import { GlobalRouteDefinition, RouteContext, RouteDefinition } from "../interfaces/routes.interface";
 import { BaseErrorMiddleware } from "../middlewares/base.error-middleware";
@@ -102,69 +103,6 @@ export abstract class BaseApplication implements ApplicationInterface {
 				const validation = Reflect.getMetadata("validator", jsonApiEntity);
 
 				this.router.use(`/${jsonApiEntityName}`, router);
-
-				const jsonApiRoutes = [
-					{
-						path: "/:id",
-						methodType: "get",
-						method: "get",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/",
-						methodType: "get",
-						method: "list",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/",
-						methodType: "post",
-						method: "create",
-						middlewares: ["deserialize", "validation"],
-					},
-					{
-						path: "/:id",
-						methodType: "patch",
-						method: "update",
-						middlewares: ["deserialize", "validation"],
-					},
-					{
-						path: "/:id",
-						methodType: "delete",
-						method: "remove",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/:id/:relation",
-						methodType: "get",
-						method: "fetchRelated",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/:id/relationships/:relation",
-						methodType: "get",
-						method: "fetchRelationships",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/:id/relationships/:relation",
-						methodType: "post",
-						method: "addRelationships",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/:id/relationships/:relation",
-						methodType: "patch",
-						method: "updateRelationships",
-						middlewares: ["validation"],
-					},
-					{
-						path: "/:id/relationships/:relation",
-						methodType: "delete",
-						method: "removeRelationships",
-						middlewares: ["validation"],
-					},
-				];
 
 				for (const route of routes) {
 					const routeContext: RouteContext = {

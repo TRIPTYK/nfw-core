@@ -1,9 +1,10 @@
 import { normalize } from "path";
-import { ApplicationRegistry } from "../../application";
 import { toCamelCase } from "../../utils/case.util";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { getJsonApiEntityName } from "../utils/naming";
+import { getRoutes } from "./get-routes";
+import { httpRequestMethods } from "../../enums";
 
 /**
  * Add an endpoint to a specific route.
@@ -17,11 +18,14 @@ export async function addEndpoint(
 	subroute?: string
 ): Promise<void> {
 	if (
-		ApplicationRegistry.application.Routes.find((r) => r.prefix === prefix)
+		(await getRoutes()).find(r => r.prefix === prefix)
 			?.type === "basic"
 	) {
 		throw new Error("Subroute can't be added to basic routes.");
 	}
+
+	if(!httpRequestMethods.includes(method.toUpperCase()))
+		throw new Error(`"${method}" is not a valid HTTP request method.`);
 
 	subroute = `/${normalize(subroute ?? "/").replace(
 		/^\/+|\/+$/,

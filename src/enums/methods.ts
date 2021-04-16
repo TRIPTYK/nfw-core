@@ -1,0 +1,17 @@
+export const httpRequestMethods = [
+	"GET",
+	"PUT",
+	"POST",
+	"DELETE",
+	"PATCH",
+	"COPY",
+	"HEAD",
+	"OPTIONS",
+	"LINK",
+	"UNLINK",
+	"PURGE",
+	"LOCK",
+	"UNLOCK",
+	"PROFIND",
+	"VIEW",
+];

@@ -1,1 +1,2 @@
-export declare function getRoutes(): Promise<any>;
+import { GlobalRouteDefinition } from "../../interfaces/routes.interface";
+export declare function getRoutes(): Promise<GlobalRouteDefinition[]>;

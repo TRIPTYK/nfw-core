@@ -1,7 +1,7 @@
 import { ObjectLiteralExpression, SyntaxKind } from "ts-morph";
-import { ApplicationRegistry } from "../../application";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
+import { getRoutes } from "./get-routes";
 
 export async function deleteBasicRoute(prefix: string): Promise<void> {
 	if (!prefix.length) {
@@ -19,7 +19,7 @@ export async function deleteBasicRoute(prefix: string): Promise<void> {
 		throw new Error(`Entity file ${file.name} does not seems to exists`);
 	}
 
-	const currentRoute = ApplicationRegistry.application.Routes.find(
+	const currentRoute = (await getRoutes()).find(
 		(route) => route.prefix === prefix
 	);
 

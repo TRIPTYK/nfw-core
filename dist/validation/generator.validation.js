@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addPermissions = exports.createSubRoute = exports.createRoute = exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
 const tsyringe_1 = require("tsyringe");
+const methods_1 = require("../enums/methods");
 const typeorm_service_1 = require("../services/typeorm.service");
 exports.createEntity = {
     columns: {
@@ -231,23 +232,6 @@ exports.columnsActions = {
         },
     },
 };
-const methods = [
-    "GET",
-    "PUT",
-    "POST",
-    "DELETE",
-    "PATCH",
-    "COPY",
-    "HEAD",
-    "OPTIONS",
-    "LINK",
-    "UNLINK",
-    "PURGE",
-    "LOCK",
-    "UNLOCK",
-    "PROFIND",
-    "VIEW",
-];
 exports.createRoute = {
     methods: {
         exists: true,
@@ -255,7 +239,7 @@ exports.createRoute = {
     },
     "methods.*": {
         isIn: {
-            options: [methods],
+            options: [methods_1.httpRequestMethods],
         },
     },
 };
@@ -264,7 +248,7 @@ exports.createSubRoute = {
         exists: true,
         isString: true,
         isIn: {
-            options: [methods],
+            options: [methods_1.httpRequestMethods],
         },
     },
     subRoute: {

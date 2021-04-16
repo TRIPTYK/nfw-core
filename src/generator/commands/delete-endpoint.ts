@@ -1,7 +1,7 @@
-import { ApplicationRegistry } from "../../application";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { getJsonApiEntityName } from "../utils/naming";
+import { getRoutes } from "./get-routes";
 
 /**
  * Delete an endpoint of a specific route.
@@ -12,8 +12,8 @@ export async function deleteEndpoint(
 	prefix: string,
 	methodName: string
 ): Promise<void> {
-	const currentRoute = ApplicationRegistry.application.Routes.find(
-		(r) => r.prefix === prefix
+	const currentRoute = (await getRoutes()).find(
+		r => r.prefix === prefix
 	);
 
 	prefix = getJsonApiEntityName(prefix)?.entityName.toLowerCase() ?? prefix;
