@@ -6,7 +6,7 @@ export interface RouteContext {
 }
 export interface GlobalRouteDefinition {
     prefix: string;
-    type: "basic" | "generated" | "entity";
+    type: routeType;
     routes: RouteDefinition[];
 }
 export interface RouteDefinition {
@@ -14,3 +14,5 @@ export interface RouteDefinition {
     requestMethod: RequestMethods;
     methodName: string;
 }
+export declare type routeType = "basic" | "generated" | "entity";
+export declare type reqestType = "get" | "post" | "delete" | "options" | "put" | "patch";
