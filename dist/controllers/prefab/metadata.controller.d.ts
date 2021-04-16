@@ -8,11 +8,7 @@ import { BaseController } from "../base.controller";
 export declare class MetadataController extends BaseController {
     private typeormConnection;
     constructor(typeormConnection: TypeORMService);
-    getAllRoutes(): {
-        prefix: string;
-        type: "basic" | "generated" | "entity";
-        routes: import("../../decorators/controller.decorator").RouteDefinition[];
-    }[];
+    getAllRoutes(): import("../../interfaces/routes.interface").GlobalRouteDefinition[];
     getEntityRoutes(req: Request, res: Response): Promise<any>;
     getSupportedTypes(): import("typeorm").ColumnType[];
     countAllEntitiesRecords(): Promise<{

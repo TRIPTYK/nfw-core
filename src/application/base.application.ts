@@ -9,9 +9,9 @@ import {
 	JsonApiMiddlewareMetadata,
 	MiddlewareMetadata,
 	RequestMethods,
-	RouteDefinition,
 } from "../decorators/controller.decorator";
 import { ApplicationInterface } from "../interfaces/application.interface";
+import { GlobalRouteDefinition, RouteContext, RouteDefinition } from "../interfaces/routes.interface";
 import { BaseErrorMiddleware } from "../middlewares/base.error-middleware";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { DeserializeMiddleware } from "../middlewares/deserialize.middleware";
@@ -20,19 +20,10 @@ import { Constructor } from "../types/global";
 import { toKebabCase } from "../utils/case.util";
 import * as BaseValidation from "../validation/base.validation";
 
-export interface RouteContext {
-	routeDefinition: RouteDefinition;
-	controllerInstance: BaseController;
-}
-
 export abstract class BaseApplication implements ApplicationInterface {
 	protected app: Express.Application;
 	protected router: Express.Router;
-	protected routes: Array<{
-		prefix: string;
-		type: "basic" | "generated" | "entity";
-		routes: Array<RouteDefinition>;
-	}>;
+	protected routes: GlobalRouteDefinition[];
 
 	public constructor() {
 		this.app = Express();

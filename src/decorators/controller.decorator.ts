@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { container } from "tsyringe";
+import { RouteDefinition } from "../interfaces/routes.interface";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { JsonApiModel } from "../models/json-api.model";
 import { Constructor } from "../types/global";
@@ -12,12 +13,6 @@ export type RequestMethods =
     | "options"
     | "put"
     | "patch";
-
-export interface RouteDefinition {
-    path: string;
-    requestMethod: RequestMethods;
-    methodName: string;
-}
 
 export interface MiddlewareMetadata {
     middleware: Constructor<BaseMiddleware>;

@@ -1,30 +1,19 @@
 import * as Express from "express";
 import { BaseController } from "../controllers/base.controller";
-import { MiddlewareMetadata, RouteDefinition } from "../decorators/controller.decorator";
+import { MiddlewareMetadata } from "../decorators/controller.decorator";
 import { ApplicationInterface } from "../interfaces/application.interface";
+import { GlobalRouteDefinition } from "../interfaces/routes.interface";
 import { Constructor } from "../types/global";
-export interface RouteContext {
-    routeDefinition: RouteDefinition;
-    controllerInstance: BaseController;
-}
 export declare abstract class BaseApplication implements ApplicationInterface {
     protected app: Express.Application;
     protected router: Express.Router;
-    protected routes: Array<{
-        prefix: string;
-        type: "basic" | "generated" | "entity";
-        routes: Array<RouteDefinition>;
-    }>;
+    protected routes: GlobalRouteDefinition[];
     constructor();
     setupMiddlewares(middlewaresForApp: MiddlewareMetadata[]): Promise<any>;
     abstract afterInit(): Promise<any>;
     init(): Promise<any>;
     get App(): Express.Application;
-    get Routes(): {
-        prefix: string;
-        type: "basic" | "generated" | "entity";
-        routes: RouteDefinition[];
-    }[];
+    get Routes(): GlobalRouteDefinition[];
     listen(port: number): Promise<unknown>;
     /**
      * Setup controllers routing
