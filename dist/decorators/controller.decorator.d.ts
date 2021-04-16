@@ -3,11 +3,6 @@ import { JsonApiModel } from "../models/json-api.model";
 import { Constructor } from "../types/global";
 import { ValidationSchema } from "../types/validation";
 export declare type RequestMethods = "get" | "post" | "delete" | "options" | "put" | "patch";
-export interface RouteDefinition {
-    path: string;
-    requestMethod: RequestMethods;
-    methodName: string;
-}
 export interface MiddlewareMetadata {
     middleware: Constructor<BaseMiddleware>;
     args?: any;
