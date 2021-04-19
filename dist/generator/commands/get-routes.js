@@ -4,6 +4,7 @@ exports.getRoutes = void 0;
 const project_1 = require("../utils/project");
 const pluralize = require("pluralize");
 const routes_1 = require("../../enums/routes");
+const enums_1 = require("../../enums");
 async function getRoutes() {
     const regController = /Controller/gm;
     const regQuotes = /"/gm;
@@ -27,15 +28,12 @@ async function getRoutes() {
                 .getText().toLowerCase().replace(regQuotes, '');
             const type = typeByController[controllerDecorator.getName()];
             prefix = (type === "entity") ? pluralize(prefix) : prefix;
-            let routes = [
-                ...controllerClass.getMethods(),
-                ...controllerClass.getBaseClass().getMethods()
-            ]
+            let routes = controllerClass.getMethods()
                 .filter(m => m.getDecorators().length > 0)
                 .map(m => {
                 const deco = m.getDecorators()[0];
                 const arg = deco.getArguments()[0];
-                if (routes_1.validDecorators.includes(deco.getName())) {
+                if (enums_1.httpRequestMethods.includes(deco.getName().toUpperCase())) {
                     return {
                         path: (arg) ? arg.getText().replace(regQuotes, '') : `/${m.getName()}`,
                         requestMethod: deco.getName().toLowerCase(),

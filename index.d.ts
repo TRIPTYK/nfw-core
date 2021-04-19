@@ -645,8 +645,14 @@ declare const jsonApiRoutes: {
     method: string;
     middlewares: string[];
 }[];
-declare const validDecorators: string[];
 
+/**
+ * All Http request methods.
+ */
+declare const allHttpRequestMethods: string[];
+/**
+ * Http request methods compatibles with NFW.
+ */
 declare const httpRequestMethods: string[];
 
 declare class RelationshipNotFoundError extends Error {
@@ -742,9 +748,10 @@ declare function removeColumn(modelName: string, column: EntityColumn | string):
 /**
  * Delete an endpoint of a specific route.
  * @param prefix Prefix of the route.
- * @param methodName Method (GET, POST, etc).
+ * @param methodName Ts Method.
  */
 declare function deleteEndpoint(prefix: string, methodName: string): Promise<void>;
+declare function deleteEndpointByUri(prefix: string, subroute: string, requestMethod: string): Promise<void>;
 
 declare function removePerms(element: any): Promise<void>;
 
@@ -872,4 +879,4 @@ declare const createRoute: ValidationSchema<any>;
 declare const createSubRoute: ValidationSchema<any>;
 declare const addPermissions: ValidationSchema<any>;
 
-export { AnyFunction, ApplicationInterface, ApplicationLifeCycleEvent, ApplicationRegistry, ApplicationStatus, BaseApplication, BaseController, BaseErrorMiddleware, BaseJsonApiController, BaseJsonApiRepository, BaseJsonApiSerializer, BaseMiddleware, BaseModel, BaseSerializerSchema, BaseSerializerSchemaInterface, BaseService, Configuration, ConfigurationService, Constructor, Controller, ControllerInterface, Delete, Deserialize, DeserializeMiddleware, DeserializeMiddlewareArgs, EntityColumn, EntityColumns, EntityOptionsExtended, EntityRelation, ErrorMiddlewareInterface, GeneratedController, GeneratorController, GeneratorParameters, Get, GlobalMiddleware, JsonApiController, JsonApiEntity, JsonApiMethodMiddleware, JsonApiMiddlewareMetadata, JsonApiModel, JsonApiSerializer, MetadataController, MethodMiddleware, MiddlewareInterface, MiddlewareMetadata, MiddlewareOrder, ModelInterface, ObjectKey, OverrideSerializer, OverrideValidator, PaginationParams, PaginationQueryParams, PaginationResponse, Patch, Post, Put, RegisterApplication, Relation, RelationMetadata, RelationTypes, RelationshipNotFoundError, RequestMethods, Response, RouteMiddleware, Schema, SchemaOptions, Serialize, SerializerInterface, SerializerParams, SerializerSchema, TemplateStructureInterface, TypeORMService, ValidationMiddleware, ValidationMiddlewareArgs, ValidationSchema, WsController, addColumn, addEndpoint, addPermissions, addPerms, addRelation, addRelationships, addRole, arrayOfDate, arrayOfInt, arrayOfNumber, arrayOfString, booleanMap, buildModelColumnArgumentsFromObject, buildValidationArgumentsFromObject, columnsActions, create, createBaseControllerTemplate, createColumn, createControllerTemplate, createEntity, createEnumsTemplate, createModelTemplate, createRelation, createRepositoryTemplate, createRoute, createSerializer, createSerializerSchema, createSubRoute, createTestTemplate, createValidationTemplate, deleteBasicRoute, deleteEndpoint, deleteJsonApiEntity, deleteRole, fetchRelated, fetchRelationships, fullLog, generateBasicRoute, generateJsonApiEntity, get, getEntityNaming, getEntityRoutes, getJsonApiEntityName, getRoles, getRoutes, httpRequestMethods, jsonApiQuery, jsonApiRoutes, list, mesure, parseBool, remove, removeColumn, removePerms, removeRelation, removeRelationships, resources, save, shadowLog, toCamelCase, toKebabCase, toSnakeCase, update, updateRelationships, validDecorators };
+export { AnyFunction, ApplicationInterface, ApplicationLifeCycleEvent, ApplicationRegistry, ApplicationStatus, BaseApplication, BaseController, BaseErrorMiddleware, BaseJsonApiController, BaseJsonApiRepository, BaseJsonApiSerializer, BaseMiddleware, BaseModel, BaseSerializerSchema, BaseSerializerSchemaInterface, BaseService, Configuration, ConfigurationService, Constructor, Controller, ControllerInterface, Delete, Deserialize, DeserializeMiddleware, DeserializeMiddlewareArgs, EntityColumn, EntityColumns, EntityOptionsExtended, EntityRelation, ErrorMiddlewareInterface, GeneratedController, GeneratorController, GeneratorParameters, Get, GlobalMiddleware, JsonApiController, JsonApiEntity, JsonApiMethodMiddleware, JsonApiMiddlewareMetadata, JsonApiModel, JsonApiSerializer, MetadataController, MethodMiddleware, MiddlewareInterface, MiddlewareMetadata, MiddlewareOrder, ModelInterface, ObjectKey, OverrideSerializer, OverrideValidator, PaginationParams, PaginationQueryParams, PaginationResponse, Patch, Post, Put, RegisterApplication, Relation, RelationMetadata, RelationTypes, RelationshipNotFoundError, RequestMethods, Response, RouteMiddleware, Schema, SchemaOptions, Serialize, SerializerInterface, SerializerParams, SerializerSchema, TemplateStructureInterface, TypeORMService, ValidationMiddleware, ValidationMiddlewareArgs, ValidationSchema, WsController, addColumn, addEndpoint, addPermissions, addPerms, addRelation, addRelationships, addRole, allHttpRequestMethods, arrayOfDate, arrayOfInt, arrayOfNumber, arrayOfString, booleanMap, buildModelColumnArgumentsFromObject, buildValidationArgumentsFromObject, columnsActions, create, createBaseControllerTemplate, createColumn, createControllerTemplate, createEntity, createEnumsTemplate, createModelTemplate, createRelation, createRepositoryTemplate, createRoute, createSerializer, createSerializerSchema, createSubRoute, createTestTemplate, createValidationTemplate, deleteBasicRoute, deleteEndpoint, deleteEndpointByUri, deleteJsonApiEntity, deleteRole, fetchRelated, fetchRelationships, fullLog, generateBasicRoute, generateJsonApiEntity, get, getEntityNaming, getEntityRoutes, getJsonApiEntityName, getRoles, getRoutes, httpRequestMethods, jsonApiQuery, jsonApiRoutes, list, mesure, parseBool, remove, removeColumn, removePerms, removeRelation, removeRelationships, resources, save, shadowLog, toCamelCase, toKebabCase, toSnakeCase, update, updateRelationships };

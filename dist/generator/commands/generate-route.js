@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateBasicRoute = void 0;
 const ts_morph_1 = require("ts-morph");
+const __1 = require("../../..");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 const add_endpoint_1 = require("./add-endpoint");
@@ -14,11 +15,14 @@ const get_routes_1 = require("./get-routes");
  */
 async function generateBasicRoute(prefix, methods) {
     prefix = prefix.toLowerCase();
+    methods = methods.map((m) => m.toUpperCase());
     for (const route of (await get_routes_1.getRoutes())) {
         if (prefix === route.prefix.toLowerCase()) {
             throw new Error("This route already exists.");
         }
     }
+    if (methods.find((v) => !__1.httpRequestMethods.includes(v)))
+        throw new Error(`One of the methods is not valid, methods must be in these values: ${__1.httpRequestMethods}`);
     methods = methods ?? ["GET"];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(prefix);
     const file = resources_1.resources(filePrefixName).find((f) => f.template === "base-controller");

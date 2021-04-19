@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { container } from "tsyringe";
+import { httpRequestMethods } from "../..";
 import { RouteDefinition } from "../interfaces/routes.interface";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { JsonApiModel } from "../models/json-api.model";
 import { Constructor } from "../types/global";
 import { ValidationSchema } from "../types/validation";
 
-export type RequestMethods =
-    | "get"
-    | "post"
-    | "delete"
-    | "options"
-    | "put"
-    | "patch";
+export type RequestMethods = 
+        | "get"
+        | "post"
+        | "delete"
+        | "options"
+        | "put"
+        | "patch";
 
 export interface MiddlewareMetadata {
     middleware: Constructor<BaseMiddleware>;

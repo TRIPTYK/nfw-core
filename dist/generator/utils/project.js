@@ -10,7 +10,11 @@ class CoreProject {
             catch (error) {
                 this.instance = new ts_morph_1.Project(this.defaultConfig);
             }
-            this.instance.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts", "node_modules/@triptyk/nfw-core/src/**/*.ts"]);
+            this.instance.addSourceFilesAtPaths([
+                "src/**/*.ts",
+                "test/**/*.ts",
+                "node_modules/@triptyk/nfw-core/src/**/*.ts"
+            ]);
         }
         return this.instance;
     }

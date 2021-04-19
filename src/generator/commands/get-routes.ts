@@ -5,10 +5,11 @@ import {
 	routeType,
 } from "../../interfaces/routes.interface";
 import * as pluralize from "pluralize";
-import { jsonApiRoutes, validDecorators } from "../../enums/routes";
+import { jsonApiRoutes } from "../../enums/routes";
+import { httpRequestMethods } from "../../enums";
 
 export async function getRoutes(): Promise<GlobalRouteDefinition[]> {
-
+	
 	const regController = /Controller/gm;
 	const regQuotes = /"/gm;
 
@@ -37,16 +38,13 @@ export async function getRoutes(): Promise<GlobalRouteDefinition[]> {
 				.getText().toLowerCase().replace(regQuotes, '');
 			const type: routeType = typeByController[controllerDecorator.getName()];
 			prefix = (type === "entity") ? pluralize(prefix) : prefix;
-
-			let routes: RouteDefinition[] = [
-				...controllerClass.getMethods(),
-				...controllerClass.getBaseClass().getMethods()
-			]
+			
+			let routes: RouteDefinition[] = controllerClass.getMethods()
 			.filter(m => m.getDecorators().length > 0)
 			.map(m => {
 				const deco = m.getDecorators()[0];
 				const arg = deco.getArguments()[0];
-				if(validDecorators.includes(deco.getName())) {
+				if(httpRequestMethods.includes(deco.getName().toUpperCase())) {
 					return {
 						path: (arg)? arg.getText().replace(regQuotes, '') : `/${m.getName()}`,
 						requestMethod: deco.getName().toLowerCase(),

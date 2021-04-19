@@ -4,4 +4,3 @@ export declare const jsonApiRoutes: {
     method: string;
     middlewares: string[];
 }[];
-export declare const validDecorators: string[];

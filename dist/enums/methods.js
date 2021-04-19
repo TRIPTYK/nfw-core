@@ -1,7 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpRequestMethods = void 0;
-exports.httpRequestMethods = [
+exports.httpRequestMethods = exports.allHttpRequestMethods = void 0;
+const project_1 = require("../generator/utils/project");
+const decorators = project_1.default
+    .getSourceFile("node_modules/@triptyk/nfw-core/src/decorators/controller.decorator.ts")
+    .getFunctions();
+/**
+ * All Http request methods.
+ */
+exports.allHttpRequestMethods = [
     "GET",
     "PUT",
     "POST",
@@ -18,3 +25,9 @@ exports.httpRequestMethods = [
     "PROFIND",
     "VIEW",
 ];
+/**
+ * Http request methods compatibles with NFW.
+ */
+exports.httpRequestMethods = decorators
+    .filter(d => exports.allHttpRequestMethods.includes(d.getName().toUpperCase()))
+    .map(d => d.getName().toUpperCase());

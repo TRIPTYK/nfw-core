@@ -1,4 +1,5 @@
 import { ObjectLiteralExpression, SyntaxKind } from "ts-morph";
+import { httpRequestMethods } from "../../..";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { addEndpoint } from "./add-endpoint";
@@ -15,12 +16,16 @@ export async function generateBasicRoute(
 	methods?: Array<string>
 ): Promise<void> {
 	prefix = prefix.toLowerCase();
+	methods = methods.map((m) => m.toUpperCase());
 
 	for (const route of (await getRoutes())) {
 		if (prefix === route.prefix.toLowerCase()) {
 			throw new Error("This route already exists.");
 		}
 	}
+
+	if (methods.find((v) => !httpRequestMethods.includes(v)))
+			throw new Error(`One of the methods is not valid, methods must be in these values: ${httpRequestMethods}`);
 
 	methods = methods ?? ["GET"];
 

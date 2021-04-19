@@ -5,7 +5,6 @@ const path_1 = require("path");
 const case_util_1 = require("../../utils/case.util");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
-const naming_1 = require("../utils/naming");
 const get_routes_1 = require("./get-routes");
 const enums_1 = require("../../enums");
 /**
@@ -20,9 +19,9 @@ async function addEndpoint(prefix, method, subroute) {
         throw new Error("Subroute can't be added to basic routes.");
     }
     if (!enums_1.httpRequestMethods.includes(method.toUpperCase()))
-        throw new Error(`"${method}" is not a valid HTTP request method.`);
+        throw new Error(`${method.toUpperCase()} doesn't exist or isn't compatible yet. Use ${enums_1.httpRequestMethods.join(", ")} instead.`);
     subroute = `/${path_1.normalize(subroute ?? "/").replace(/^\/+|\/+$/, "")}`.toLowerCase();
-    prefix = (naming_1.getJsonApiEntityName(prefix)?.entityName ?? prefix).toLowerCase();
+    prefix = ( /*getJsonApiEntityName(prefix)?.entityName ??*/prefix).toLowerCase();
     const methodName = case_util_1.toCamelCase(`${method} ${prefix} ${subroute.replace("/", " ")}`);
     const controller = resources_1.resources(prefix).find((r) => r.template === "controller");
     const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);

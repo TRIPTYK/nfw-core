@@ -1,3 +1,6 @@
+import { httpRequestMethods } from "../..";
+import { capitalize } from "../generator/utils/capitalize";
+
 export const jsonApiRoutes = [
     {
         path: "/:id",
@@ -60,5 +63,3 @@ export const jsonApiRoutes = [
         middlewares: ["validation"],
     },
 ];
-
-export const validDecorators = ["Get", "Post", "Patch", "Delete"];

@@ -2,11 +2,13 @@ import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { getJsonApiEntityName } from "../utils/naming";
 import { getRoutes } from "./get-routes";
+import { join, normalize } from "path";
+import { httpRequestMethods } from "../../..";
 
 /**
  * Delete an endpoint of a specific route.
  * @param prefix Prefix of the route.
- * @param methodName Method (GET, POST, etc).
+ * @param methodName Ts Method.
  */
 export async function deleteEndpoint(
 	prefix: string,
@@ -16,7 +18,7 @@ export async function deleteEndpoint(
 		r => r.prefix === prefix
 	);
 
-	prefix = getJsonApiEntityName(prefix)?.entityName.toLowerCase() ?? prefix;
+	prefix = /*getJsonApiEntityName(prefix)?.entityName.toLowerCase() ??*/ prefix;
 
 	if (currentRoute?.type === "basic") {
 		throw new Error("Subroute of basic routes can't be deleted.");
@@ -27,11 +29,11 @@ export async function deleteEndpoint(
 	);
 
 	if (!currentRoute) {
-		throw new Error(`"${prefix}" does not exist.`);
+		throw new Error(`Prefix "${prefix}" does not exist.`);
 	}
 
 	if (!subRoute) {
-		throw new Error(`"${methodName}" does not exist.`);
+		throw new Error(`Method "${methodName}" does not exist.`);
 	}
 
 	const controller = resources(prefix).find((r) => r.template === "controller");
@@ -59,4 +61,26 @@ export async function deleteEndpoint(
 	);
 	classMethod.remove();
 	controllerFile.fixMissingImports();
+}
+
+export async function deleteEndpointByUri(prefix: string, subroute: string, requestMethod: string) {
+
+	requestMethod = requestMethod.toUpperCase();
+	subroute = normalize(`/${subroute}`);
+
+	if(!httpRequestMethods.includes(requestMethod))
+		throw new Error(`${requestMethod} doesn't exist or isn't compatible yet. Use ${httpRequestMethods} instead.`);
+	
+	const currentPrefix = (await getRoutes()).find(r => r.prefix === prefix);
+
+	if(!currentPrefix)
+		throw new Error(`Prefix "${prefix} doesn't exist."`);
+	
+	const currentRoute = currentPrefix.routes
+		.find(sub => sub.path === subroute && sub.requestMethod === requestMethod.toLowerCase());
+
+	if(!currentRoute)
+		throw new Error(`Route "${join(prefix, subroute)}" (${requestMethod}) doesn't exist.`);
+	
+	await deleteEndpoint(prefix, currentRoute.methodName);
 }

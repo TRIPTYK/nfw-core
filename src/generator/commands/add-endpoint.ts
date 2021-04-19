@@ -25,19 +25,20 @@ export async function addEndpoint(
 	}
 
 	if(!httpRequestMethods.includes(method.toUpperCase()))
-		throw new Error(`"${method}" is not a valid HTTP request method.`);
+		throw new Error(`${method.toUpperCase()} doesn't exist or isn't compatible yet. Use ${httpRequestMethods.join(", ")} instead.`);
 
 	subroute = `/${normalize(subroute ?? "/").replace(
 		/^\/+|\/+$/,
 		""
 	)}`.toLowerCase();
 
-	prefix = (getJsonApiEntityName(prefix)?.entityName ?? prefix).toLowerCase();
+	prefix = (/*getJsonApiEntityName(prefix)?.entityName ??*/ prefix).toLowerCase();
 
 	const methodName = toCamelCase(
 		`${method} ${prefix} ${subroute.replace("/", " ")}`
 	);
-	const controller = resources(prefix).find((r) => r.template === "controller");
+	
+	const controller = resources(prefix).find((r) => r.template === "controller");	
 
 	const controllerFile = project.getSourceFile(
 		`${controller.path}/${controller.name}`

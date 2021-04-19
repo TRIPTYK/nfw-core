@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validDecorators = exports.jsonApiRoutes = void 0;
+exports.jsonApiRoutes = void 0;
 exports.jsonApiRoutes = [
     {
         path: "/:id",
@@ -63,4 +63,3 @@ exports.jsonApiRoutes = [
         middlewares: ["validation"],
     },
 ];
-exports.validDecorators = ["Get", "Post", "Patch", "Delete"];
