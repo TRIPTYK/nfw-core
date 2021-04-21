@@ -1,16 +1,14 @@
 /// <reference types="socket.io-client" />
-import * as Express from 'express';
-import { Request, Response as Response$1, NextFunction } from 'express';
+import { Router, Request, Response as Response$1, Application, NextFunction } from 'express';
 import { ParamSchema, Location, Schema as Schema$1 } from 'express-validator';
-import * as typeorm from 'typeorm';
-import { DatabaseType, Connection, ConnectionOptions, EntityMetadata, Repository, SelectQueryBuilder, EntityOptions, ColumnOptions } from 'typeorm';
+import { DatabaseType, Connection, ConnectionOptions, ColumnType, EntityMetadata, Repository, SelectQueryBuilder, EntityOptions, ColumnOptions } from 'typeorm';
 export * from 'typeorm';
 import * as JSONAPISerializer from 'json-api-serializer';
-import * as typeorm_metadata_types_RelationTypes from 'typeorm/metadata/types/RelationTypes';
-import * as ts_morph from 'ts-morph';
+import { RelationType } from 'typeorm/metadata/types/RelationTypes';
+import { SourceFile } from 'ts-morph';
 
 interface ControllerInterface {
-    init(router: Express.Router): any;
+    init(router: Router): any;
 }
 
 declare abstract class BaseController implements ControllerInterface {
@@ -184,7 +182,7 @@ declare class MetadataController extends BaseController {
     constructor(typeormConnection: TypeORMService);
     getAllRoutes(): GlobalRouteDefinition[];
     getEntityRoutes(req: Request, res: Response$1): Promise<any>;
-    getSupportedTypes(): typeorm.ColumnType[];
+    getSupportedTypes(): ColumnType[];
     countAllEntitiesRecords(): Promise<{
         entityName: string;
         count: number;
@@ -212,7 +210,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: typeorm_metadata_types_RelationTypes.RelationType;
+            relationType: RelationType;
             isNullable: boolean;
         }[];
     };
@@ -234,7 +232,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: typeorm_metadata_types_RelationTypes.RelationType;
+            relationType: RelationType;
             isNullable: boolean;
         }[];
     }[];
@@ -258,7 +256,7 @@ declare class MetadataController extends BaseController {
             propertyName: string;
             inverseEntityName: string;
             inversePropertyName: string;
-            relationType: typeorm_metadata_types_RelationTypes.RelationType;
+            relationType: RelationType;
             isNullable: boolean;
         }[];
     };
@@ -585,14 +583,14 @@ interface ApplicationInterface {
 }
 
 declare abstract class BaseApplication implements ApplicationInterface {
-    protected app: Express.Application;
-    protected router: Express.Router;
+    protected app: Application;
+    protected router: Router;
     protected routes: GlobalRouteDefinition[];
     constructor();
     setupMiddlewares(middlewaresForApp: MiddlewareMetadata[]): Promise<any>;
     abstract afterInit(): Promise<any>;
     init(): Promise<any>;
-    get App(): Express.Application;
+    get App(): Application;
     get Routes(): GlobalRouteDefinition[];
     listen(port: number): Promise<unknown>;
     /**
@@ -766,7 +764,7 @@ declare function save(): Promise<void>;
  * @param options
  * @param classPrefixName
  */
-declare function createBaseControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName }: GeneratorParameters): ts_morph.SourceFile;
+declare function createBaseControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName }: GeneratorParameters): SourceFile;
 
 /**
  *
@@ -775,7 +773,7 @@ declare function createBaseControllerTemplate({ fileTemplateInfo, classPrefixNam
  * @param options
  * @param classPrefixName
  */
-declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createControllerTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
 
 declare function createEnumsTemplate(name: string, enums: Array<string>): void;
 
@@ -786,17 +784,17 @@ declare function createEnumsTemplate(name: string, enums: Array<string>): void;
  * @param {array} entities
  * @return {SourceFile}
  */
-declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createModelTemplate({ fileTemplateInfo, classPrefixName, modelName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createRepositoryTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
 
-declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): ts_morph.SourceFile;
+declare function createTestTemplate({ fileTemplateInfo }: GeneratorParameters): SourceFile;
 
-declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): ts_morph.SourceFile;
+declare function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }: GeneratorParameters): SourceFile;
 
 declare function getJsonApiEntityName(prefix: string): {
     entityName: string;

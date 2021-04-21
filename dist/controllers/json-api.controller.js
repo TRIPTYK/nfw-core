@@ -139,12 +139,12 @@ class BaseJsonApiController extends base_controller_1.BaseController {
     }
     async updateRelationships(req, res) {
         const { relation, id } = req.params;
-        await this.repository.updateRelationshipsFromRequest(relation, id, req.body.data);
+        await this.repository.updateRelationshipsFromRequest(relation, id, req.body.data.relationships[relation].data);
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     async removeRelationships(req, res) {
         const { relation, id } = req.params;
-        await this.repository.removeRelationshipsFromRequest(relation, id, req.body.data);
+        await this.repository.removeRelationshipsFromRequest(relation, id, req.body.data.relationships[relation].data);
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     parseJsonApiQueryParams(query) {

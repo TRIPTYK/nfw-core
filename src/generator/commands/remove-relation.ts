@@ -89,4 +89,5 @@ export async function removeRelation(
 
   serializerClass.getProperty(relationName)?.remove();
   inverseSerializerClass.getProperty(inverseProperty)?.remove();
+  modelFile.fixMissingImports();
 }
