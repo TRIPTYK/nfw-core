@@ -51,7 +51,7 @@ let MetadataController = class MetadataController extends base_controller_1.Base
         return get_roles_1.getRoles();
     }
     getPerms(req, res) {
-        return get_perms_1.default(req.params.name);
+        return get_perms_1.getPerms(req.params.name);
     }
     async countEntityRecords(req, res) {
         const { entity } = req.params;

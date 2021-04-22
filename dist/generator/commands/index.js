@@ -25,6 +25,7 @@ __exportStar(require("./get-entityRoutes"), exports);
 __exportStar(require("./get-perms"), exports);
 __exportStar(require("./get-roles"), exports);
 __exportStar(require("./get-routes"), exports);
+__exportStar(require("./get-supportedType"), exports);
 __exportStar(require("./remove-column"), exports);
 __exportStar(require("./delete-endpoint"), exports);
 __exportStar(require("./remove-permissions"), exports);
