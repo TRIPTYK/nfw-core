@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPerms = void 0;
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
 async function getPerms(entity) {
@@ -24,4 +25,4 @@ async function getPerms(entity) {
     }
     return array;
 }
-exports.default = getPerms;
+exports.getPerms = getPerms;
