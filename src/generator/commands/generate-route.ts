@@ -16,7 +16,6 @@ export async function generateBasicRoute(
 	methods?: Array<string>
 ): Promise<void> {
 	prefix = prefix.toLowerCase();
-	methods = methods.map((m) => m.toUpperCase());
 
 	for (const route of (await getRoutes())) {
 		if (prefix === route.prefix.toLowerCase()) {
@@ -24,10 +23,11 @@ export async function generateBasicRoute(
 		}
 	}
 
+	methods = methods ?? ["GET"];
+	methods = methods.map((m) => m.toUpperCase());
+
 	if (methods.find((v) => !httpRequestMethods.includes(v)))
 			throw new Error(`One of the methods is not valid, methods must be in these values: ${httpRequestMethods}`);
-
-	methods = methods ?? ["GET"];
 
 	const { filePrefixName, classPrefixName } = getEntityNaming(prefix);
 

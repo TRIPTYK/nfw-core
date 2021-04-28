@@ -1,9 +1,3 @@
-import project from "../generator/utils/project";
-
-// const decorators = project
-// 	.getSourceFile("node_modules/@triptyk/nfw-core/src/decorators/controller.decorator.ts")
-// 	.getFunctions();
-
 /**
  * All Http request methods.
  */
@@ -28,7 +22,11 @@ export const allHttpRequestMethods = [
 /**
  * Http request methods compatibles with NFW.
  */
-export const httpRequestMethods = allHttpRequestMethods;/*decorators
-	.filter(d => allHttpRequestMethods.includes(d.getName().toUpperCase()))
-	.map(d => d.getName().toUpperCase());*/
+export const httpRequestMethods = [
+	"GET",
+	"PUT",
+	"POST",
+	"DELETE",
+	"PATCH",
+];
 	

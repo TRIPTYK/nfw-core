@@ -15,15 +15,15 @@ const get_routes_1 = require("./get-routes");
  */
 async function generateBasicRoute(prefix, methods) {
     prefix = prefix.toLowerCase();
-    methods = methods.map((m) => m.toUpperCase());
     for (const route of (await get_routes_1.getRoutes())) {
         if (prefix === route.prefix.toLowerCase()) {
             throw new Error("This route already exists.");
         }
     }
+    methods = methods ?? ["GET"];
+    methods = methods.map((m) => m.toUpperCase());
     if (methods.find((v) => !__1.httpRequestMethods.includes(v)))
         throw new Error(`One of the methods is not valid, methods must be in these values: ${__1.httpRequestMethods}`);
-    methods = methods ?? ["GET"];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(prefix);
     const file = resources_1.resources(filePrefixName).find((f) => f.template === "base-controller");
     const imported = await Promise.resolve().then(() => require(`../templates/${file.template}`));
