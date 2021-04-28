@@ -118,6 +118,22 @@ export abstract class BaseJsonApiController<
   }
 
   public async update(req: Request, _res: Response): Promise<any> {
+    for (const field in req.body) {
+      const thisRelation = this.repository.metadata.findRelationWithPropertyPath(
+        field
+      );
+      if (thisRelation) {
+        const isMany = thisRelation.isManyToMany || thisRelation.isOneToMany;
+        if (isMany) {
+          await this.repository.updateRelationshipsFromRequest(
+            field,
+            req.params.id,
+            req.body[field]
+          );
+          delete req.body[field];
+        }
+      }
+    }
     let saved = await this.repository.preload({
       ...req.body,
       ...{ id: req.params.id },
@@ -126,7 +142,6 @@ export abstract class BaseJsonApiController<
     if (saved === undefined) {
       throw Boom.notFound();
     }
-
     saved = await this.repository.save(saved as any);
 
     return saved;

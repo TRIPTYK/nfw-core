@@ -1,1 +1,1 @@
-export default function getPerms(entity: any): Promise<any>;
+export declare function getPerms(entity: any): Promise<any>;
