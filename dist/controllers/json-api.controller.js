@@ -87,26 +87,13 @@ class BaseJsonApiController extends base_controller_1.BaseController {
         });
     }
     async update(req, _res) {
-        // console.log("body update");
-        // console.log(req.body);
-        // const coucou = {};
         for (const field in req.body) {
             const thisRelation = this.repository.metadata.findRelationWithPropertyPath(field);
             if (thisRelation) {
-                console.log("relation ok pour : " + field);
                 const isMany = thisRelation.isManyToMany || thisRelation.isOneToMany;
                 if (isMany) {
-                    console.log("ismanyCondition + " + field);
                     await this.repository.updateRelationshipsFromRequest(field, req.params.id, req.body[field]);
-                    console.log("before : ");
-                    console.log(req.body[field]);
                     delete req.body[field];
-                    console.log("after :");
-                    console.log(req.body);
-                    // console.log(field);
-                }
-                else {
-                    console.log("ismanyCondition NOT + " + field);
                 }
             }
         }
@@ -117,8 +104,6 @@ class BaseJsonApiController extends base_controller_1.BaseController {
         if (saved === undefined) {
             throw Boom.notFound();
         }
-        const metadata = this.repository.metadata.ownRelations;
-        // console.log(metadata);
         saved = await this.repository.save(saved);
         return saved;
     }

@@ -4,7 +4,10 @@ exports.deleteRole = void 0;
 const pascalcase = require("pascalcase");
 const project_1 = require("../utils/project");
 const resources_1 = require("../static/resources");
+const get_roles_1 = require("./get-roles");
 async function deleteRole(roleName) {
+    if (!(await get_roles_1.getRoles()).find(v => v === roleName))
+        throw new Error(`Role "${roleName}" does not exist.`);
     const controller = resources_1.resources("role").find((r) => r.template === "roles");
     const controllerFile = project_1.default.getSourceFile(`${controller.path}/${controller.name}`);
     if (!controllerFile) {

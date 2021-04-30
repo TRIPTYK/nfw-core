@@ -6,8 +6,13 @@ import {
 } from "ts-morph";
 import project from "../utils/project";
 import { resources } from "../static/resources";
+import { getRoles } from "./get-roles";
 
 export async function deleteRole(roleName: string): Promise<void> {
+
+	if(!(await getRoles()).find(v => v===roleName))
+		throw new Error(`Role "${roleName}" does not exist.`);
+		
 	const controller = resources("role").find((r) => r.template === "roles");
 
 	const controllerFile = project.getSourceFile(
