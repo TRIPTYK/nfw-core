@@ -46,7 +46,12 @@ export async function addPerms(element: any): Promise<void> {
 					})
 					.setIsDecoratorFactory(true);
 			} else {
-				const args = decorators.getArguments()[1] as ArrayLiteralExpression;
+				let args = decorators.getArguments()[1] as ArrayLiteralExpression;
+				
+				if(!args) {
+					decorators.addArgument("[]");
+					args = decorators.getArguments()[1] as ArrayLiteralExpression;
+				}
 
 				for (const e of args.getElements()) {
 					const tmp = e as PropertyAccessExpression;
@@ -55,7 +60,7 @@ export async function addPerms(element: any): Promise<void> {
 						throw new Error(`${element.role} already exist`);
 					}
 				}
-
+				
 				args.addElement(`Roles.${element.role}`);
 			}
 		} else {

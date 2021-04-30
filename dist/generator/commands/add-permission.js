@@ -29,7 +29,11 @@ async function addPerms(element) {
                     .setIsDecoratorFactory(true);
             }
             else {
-                const args = decorators.getArguments()[1];
+                let args = decorators.getArguments()[1];
+                if (!args) {
+                    decorators.addArgument("[]");
+                    args = decorators.getArguments()[1];
+                }
                 for (const e of args.getElements()) {
                     const tmp = e;
                     if (element.role === tmp.getName()) {
