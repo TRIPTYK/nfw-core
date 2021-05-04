@@ -302,37 +302,32 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
     /**
      * Simplified from TypeORM source code
      */
-    handleIncludes(qb, allRelations, alias, metadata, prefix, applyJoin) {
-        let matchedBaseRelations = allRelations;
+    handleIncludes(qb, allRelations, alias, metadata, prefix) {
+        // find all relations that match given prefix
+        let matchedBaseRelations = [];
         if (prefix) {
-            const regexp = new RegExp(`^${prefix.replace(".", "\\.")}\\.`);
+            const regexp = new RegExp("^" + prefix.replace(".", "\\.") + "\\.");
             matchedBaseRelations = allRelations
-                .filter((relation) => regexp.exec(relation))
-                .map((relation) => relation.replace(regexp, ""));
+                .filter((relation) => relation.match(regexp))
+                .map((relation) => relation.replace(regexp, ""))
+                .filter((relation) => metadata.findRelationWithPropertyPath(relation));
         }
-        for (const baseRel of matchedBaseRelations) {
-            if (!metadata.findRelationWithPropertyPath(baseRel)) {
-                throw Boom.badRequest(`Relation ${baseRel} does not exist`);
-            }
+        else {
+            matchedBaseRelations = allRelations.filter((relation) => metadata.findRelationWithPropertyPath(relation));
         }
-        for (const relation of matchedBaseRelations) {
-            const relationAlias = this.buildAlias(alias, relation);
+        // go through all matched relations and add join for them
+        matchedBaseRelations.forEach((relation) => {
+            // generate a relation alias
+            let relationAlias = this.buildAlias(alias, relation);
             // add a join for the found relation
-            const selection = `${alias}.${relation}`;
-            if (applyJoin) {
-                // if applyJoin returns null , stop executing the applyJoin function
-                if (applyJoin(relation, selection, relationAlias) === null) {
-                    applyJoin = null;
-                }
-            }
-            else {
-                qb.leftJoinAndSelect(selection, relationAlias);
-            }
+            const selection = alias + "." + relation;
+            qb.leftJoinAndSelect(selection, relationAlias);
             // remove added relations from the allRelations array, this is needed to find all not found relations at the end
-            allRelations.splice(allRelations.indexOf(prefix ? `${prefix}.${relation}` : relation), 1);
-            const join = qb.expressionMap.joinAttributes.find((joinAttr) => joinAttr.entityOrProperty === selection);
-            this.handleIncludes(qb, allRelations, join.alias.name, join.metadata, prefix ? `${prefix}.${relation}` : relation, applyJoin);
-        }
+            allRelations.splice(allRelations.indexOf(prefix ? prefix + "." + relation : relation), 1);
+            // try to find sub-relations
+            const join = qb.expressionMap.joinAttributes.find((join) => join.entityOrProperty === selection);
+            this.handleIncludes(qb, allRelations, join.alias.name, join.metadata, prefix ? prefix + "." + relation : relation);
+        });
     }
     buildAlias(alias, relation) {
         return dashify(`${alias}.${relation}`);

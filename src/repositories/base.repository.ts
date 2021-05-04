@@ -443,60 +443,49 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     allRelations: string[],
     alias: string,
     metadata: EntityMetadata,
-    prefix: string,
-    applyJoin?: (
-      relation: string,
-      selection: string,
-      relationAlias: string
-    ) => undefined | null
+    prefix: string
   ) {
-    let matchedBaseRelations: string[] = allRelations;
-
+    // find all relations that match given prefix
+    let matchedBaseRelations: string[] = [];
     if (prefix) {
-      const regexp = new RegExp(`^${prefix.replace(".", "\\.")}\\.`);
+      const regexp = new RegExp("^" + prefix.replace(".", "\\.") + "\\.");
       matchedBaseRelations = allRelations
-        .filter((relation) => regexp.exec(relation))
-        .map((relation) => relation.replace(regexp, ""));
+        .filter((relation) => relation.match(regexp))
+        .map((relation) => relation.replace(regexp, ""))
+        .filter((relation) => metadata.findRelationWithPropertyPath(relation));
+    } else {
+      matchedBaseRelations = allRelations.filter((relation) =>
+        metadata.findRelationWithPropertyPath(relation)
+      );
     }
 
-    for (const baseRel of matchedBaseRelations) {
-      if (!metadata.findRelationWithPropertyPath(baseRel)) {
-        throw Boom.badRequest(`Relation ${baseRel} does not exist`);
-      }
-    }
-
-    for (const relation of matchedBaseRelations) {
-      const relationAlias: string = this.buildAlias(alias, relation);
+    // go through all matched relations and add join for them
+    matchedBaseRelations.forEach((relation) => {
+      // generate a relation alias
+      let relationAlias: string = this.buildAlias(alias, relation);
 
       // add a join for the found relation
-      const selection = `${alias}.${relation}`;
-      if (applyJoin) {
-        // if applyJoin returns null , stop executing the applyJoin function
-        if (applyJoin(relation, selection, relationAlias) === null) {
-          applyJoin = null;
-        }
-      } else {
-        qb.leftJoinAndSelect(selection, relationAlias);
-      }
+      const selection = alias + "." + relation;
+      qb.leftJoinAndSelect(selection, relationAlias);
 
       // remove added relations from the allRelations array, this is needed to find all not found relations at the end
       allRelations.splice(
-        allRelations.indexOf(prefix ? `${prefix}.${relation}` : relation),
+        allRelations.indexOf(prefix ? prefix + "." + relation : relation),
         1
       );
 
+      // try to find sub-relations
       const join = qb.expressionMap.joinAttributes.find(
-        (joinAttr) => joinAttr.entityOrProperty === selection
+        (join) => join.entityOrProperty === selection
       );
       this.handleIncludes(
         qb,
         allRelations,
-        join.alias.name,
-        join.metadata,
-        prefix ? `${prefix}.${relation}` : relation,
-        applyJoin
+        join!.alias.name,
+        join!.metadata!,
+        prefix ? prefix + "." + relation : relation
       );
-    }
+    });
   }
 
   public buildAlias(alias: string, relation: string) {

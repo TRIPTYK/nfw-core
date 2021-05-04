@@ -64,7 +64,7 @@ export declare class BaseJsonApiRepository<T> extends Repository<T> {
     /**
      * Simplified from TypeORM source code
      */
-    handleIncludes(qb: SelectQueryBuilder<any>, allRelations: string[], alias: string, metadata: EntityMetadata, prefix: string, applyJoin?: (relation: string, selection: string, relationAlias: string) => undefined | null): void;
+    handleIncludes(qb: SelectQueryBuilder<any>, allRelations: string[], alias: string, metadata: EntityMetadata, prefix: string): void;
     buildAlias(alias: string, relation: string): any;
     /**
      *
