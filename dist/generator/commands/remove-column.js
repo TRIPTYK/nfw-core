@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeColumn = void 0;
+const camelcase = require("camelcase");
 const ts_morph_1 = require("ts-morph");
 const resources_1 = require("../static/resources");
 const project_1 = require("../utils/project");
@@ -25,6 +26,12 @@ async function removeColumn(modelName, column) {
         entityInterface.getProperty(columnName)?.remove();
     }
     columnProperty.remove();
+    const importDeclaration = modelFile.getImportDeclaration(`../enums/${camelcase(columnName)}.enum`);
+    if (importDeclaration) {
+        const enumsFile = project_1.default.getSourceFile(`src/api/enums/${camelcase(columnName)}.enum.ts`);
+        importDeclaration.remove();
+        enumsFile.delete();
+    }
     const serializer = resources_1.resources(modelName).find((r) => r.template === "serializer-schema");
     const serializerFile = project_1.default.getSourceFile(`${serializer.path}/${serializer.name}`);
     const serializerClass = serializerFile.getClass(`${classPrefixName}SerializerSchema`);
@@ -46,5 +53,6 @@ async function removeColumn(modelName, column) {
             }
         }
     }
+    validationFile.fixUnusedIdentifiers();
 }
 exports.removeColumn = removeColumn;

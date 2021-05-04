@@ -8,7 +8,7 @@ function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixN
     });
     const addedClass = file.addClass({
         name: `${classPrefixName}SerializerSchema`,
-        isDefaultExport: true,
+        isExported: true,
     });
     file.addImportDeclaration({
         namedImports: [`${classPrefixName}Interface`],
@@ -16,7 +16,7 @@ function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixN
     });
     file.addImportDeclaration({
         namedImports: ["Serialize", "Deserialize", "SerializerSchema", "Relation"],
-        moduleSpecifier: "../../../core/decorators/serializer.decorator",
+        moduleSpecifier: "@triptyk/nfw-core",
     });
     addedClass.setExtends(`BaseSerializerSchema<${classPrefixName}Interface>`);
     addedClass.addImplements(`${classPrefixName}Interface`);
@@ -24,6 +24,24 @@ function createSerializerSchema({ fileTemplateInfo, classPrefixName, filePrefixN
         .addDecorator({
         name: "SerializerSchema",
         arguments: [],
+    })
+        .setIsDecoratorFactory(true);
+    addedClass
+        .addProperty({
+        name: "updated_at",
+    })
+        .toggleModifier("public")
+        .addDecorator({
+        name: "Serialize",
+    })
+        .setIsDecoratorFactory(true);
+    addedClass
+        .addProperty({
+        name: "created_at",
+    })
+        .toggleModifier("public")
+        .addDecorator({
+        name: "Serialize",
     })
         .setIsDecoratorFactory(true);
     return file;

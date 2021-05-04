@@ -9,10 +9,14 @@ import {
   JsonApiMiddlewareMetadata,
   MiddlewareMetadata,
   RequestMethods,
-  RouteDefinition,
 } from "../decorators/controller.decorator";
-import { jsonApiRoutesStructure } from "../enums/json-api.routes-structure";
+import { jsonApiRoutes } from "../enums/routes";
 import { ApplicationInterface } from "../interfaces/application.interface";
+import {
+  GlobalRouteDefinition,
+  RouteContext,
+  RouteDefinition,
+} from "../interfaces/routes.interface";
 import { BaseErrorMiddleware } from "../middlewares/base.error-middleware";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { DeserializeMiddleware } from "../middlewares/deserialize.middleware";
@@ -21,18 +25,15 @@ import { Constructor } from "../types/global";
 import { toKebabCase } from "../utils/case.util";
 import * as BaseValidation from "../validation/base.validation";
 
-export interface RouteContext {
-  routeDefinition: RouteDefinition;
-  controllerInstance: BaseController;
-}
-
 export abstract class BaseApplication implements ApplicationInterface {
   protected app: Express.Application;
   protected router: Express.Router;
+  protected routes: GlobalRouteDefinition[];
 
   public constructor() {
     this.app = Express();
     this.router = Express.Router();
+    this.routes = [];
   }
 
   public async setupMiddlewares(
@@ -58,6 +59,10 @@ export abstract class BaseApplication implements ApplicationInterface {
     return this.app;
   }
 
+  public get Routes() {
+    return this.routes;
+  }
+
   public listen(port: number) {
     return new Promise((resolve) => {
       const server = this.app.listen(port, () => {
@@ -69,6 +74,7 @@ export abstract class BaseApplication implements ApplicationInterface {
   /**
    * Setup controllers routing
    */
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async setupControllers(controllers: Constructor<BaseController>[]) {
     for (const controller of controllers) {
       const instanceController = container.resolve(controller);
@@ -143,12 +149,7 @@ export abstract class BaseApplication implements ApplicationInterface {
           router[route.requestMethod](`${route.path}`, middlewares);
         }
 
-        for (const {
-          path,
-          methodType,
-          method,
-          middlewares,
-        } of jsonApiRoutesStructure) {
+        for (const { path, methodType, method, middlewares } of jsonApiRoutes) {
           const routeContext: RouteContext = {
             routeDefinition: {
               path,
@@ -294,6 +295,28 @@ export abstract class BaseApplication implements ApplicationInterface {
             applyMiddlewares
           );
         }
+        //push the entities routes to the routes list
+        const routeList = jsonApiRoutes.map((route) => {
+          return {
+            path: route.path,
+            requestMethod: route.methodType as RequestMethods,
+            methodName: route.method,
+          };
+        });
+        for (const i of routes) {
+          if (
+            !routeList.some(
+              (r) => r.path === i.path && r.requestMethod === i.requestMethod
+            )
+          ) {
+            routeList.push(i);
+          }
+        }
+        this.routes.push({
+          prefix: jsonApiEntityName,
+          type: "entity",
+          routes: routeList,
+        });
       } else {
         this.router.use(`/${prefix}`, router);
 
@@ -332,6 +355,15 @@ export abstract class BaseApplication implements ApplicationInterface {
 
           router[route.requestMethod](`${route.path}`, middlewares);
         }
+
+        //push basics routes to the routes list
+        this.routes.push({
+          prefix,
+          type: Reflect.getMetadata("generated", controller)
+            ? "generated"
+            : "basic",
+          routes,
+        });
       }
     }
   }

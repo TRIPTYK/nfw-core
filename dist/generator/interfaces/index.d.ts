@@ -1,1 +1,1 @@
-export * from "./generator.interface";
+export * from './generator.interface';

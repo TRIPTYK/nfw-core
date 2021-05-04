@@ -1,23 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { container } from "tsyringe";
+import { httpRequestMethods } from "../..";
+import { RouteDefinition } from "../interfaces/routes.interface";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { JsonApiModel } from "../models/json-api.model";
 import { Constructor } from "../types/global";
 import { ValidationSchema } from "../types/validation";
 
-export type RequestMethods =
-    | "get"
-    | "post"
-    | "delete"
-    | "options"
-    | "put"
-    | "patch";
-
-export interface RouteDefinition {
-    path: string;
-    requestMethod: RequestMethods;
-    methodName: string;
-}
+export type RequestMethods = 
+        | "get"
+        | "post"
+        | "delete"
+        | "options"
+        | "put"
+        | "patch";
 
 export interface MiddlewareMetadata {
     middleware: Constructor<BaseMiddleware>;
@@ -55,6 +51,23 @@ export function Controller(routeName: string): ClassDecorator {
 /**
  *
  * @param routeName
+ */
+export function GeneratedController(routeName: string): ClassDecorator {
+    return function <TFunction extends Function>(target: TFunction): void {
+        container.registerSingleton(target as any);
+
+        Reflect.defineMetadata("routeName", routeName, target);
+        Reflect.defineMetadata("generated", true, target);
+
+        if (!Reflect.hasMetadata("routes", target)) {
+            Reflect.defineMetadata("routes", [], target);
+        }
+    };
+}
+
+/**
+ *
+ * @param entity
  */
 export function JsonApiController<T extends JsonApiModel<T>>(
     entity: Constructor<T>

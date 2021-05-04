@@ -22,17 +22,21 @@ export async function generateJsonApiEntity(
   const { filePrefixName, classPrefixName } = getEntityNaming(modelName);
 
   for (const file of resources(filePrefixName)) {
-    const { default: generator } = await import(
-      `../templates/${file.template}`
-    );
-    const createdFile = await generator({
-      modelName,
-      classPrefixName,
-      filePrefixName,
-      fileTemplateInfo: file,
-      tableColumns,
-    });
-    files.push(createdFile);
+    if(!["base-controller", "roles"].includes(file.template)) {
+      const imported = await import(
+        `../templates/${file.template}`
+      );
+      const generator = imported[Object.keys(imported)[0]];
+      
+      const createdFile = await generator({
+        modelName,
+        classPrefixName,
+        filePrefixName,
+        fileTemplateInfo: file,
+        tableColumns,
+      });
+      files.push(createdFile);
+    }
   }
 
   const applicationFile = project.getSourceFile("src/api/application.ts");

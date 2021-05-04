@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { RouteContext } from "../application/base.application";
 import { MiddlewareInterface } from "../interfaces/middleware.interface";
+import { RouteContext } from "../interfaces/routes.interface";
 
 export abstract class BaseMiddleware implements MiddlewareInterface {
   protected context: RouteContext;

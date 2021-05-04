@@ -49,5 +49,6 @@ async function removeRelation(entity, relationName) {
     inverseInterface.getProperty(inverseProperty)?.remove();
     serializerClass.getProperty(relationName)?.remove();
     inverseSerializerClass.getProperty(inverseProperty)?.remove();
+    modelFile.fixMissingImports();
 }
 exports.removeRelation = removeRelation;

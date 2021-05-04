@@ -7,36 +7,36 @@ exports.jsonApiQuery = {
     "page.*": {
         in: ["query"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     fields: {
         in: ["query"],
         optional: true,
         errorMessage: "Must be a string or object",
         custom: {
-            options: isObjectOrString
-        }
+            options: isObjectOrString,
+        },
     },
     include: {
         in: ["query"],
         errorMessage: "Must be a string",
         optional: true,
-        isString: true
+        isString: true,
     },
     sort: {
         in: ["query"],
         errorMessage: "Must be a string",
         optional: true,
-        isString: true
+        isString: true,
     },
     filter: {
         in: ["query"],
         errorMessage: "Must be an object",
         optional: true,
         custom: {
-            options: isObject
-        }
-    }
+            options: isObject,
+        },
+    },
 };
 exports.get = {
     ...exports.jsonApiQuery,
@@ -44,11 +44,11 @@ exports.get = {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
-    }
+        toInt: true,
+    },
 };
 exports.list = {
-    ...exports.jsonApiQuery
+    ...exports.jsonApiQuery,
 };
 exports.create = {};
 exports.remove = {
@@ -56,77 +56,74 @@ exports.remove = {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
-    relation: {
-        isString: true
-    }
 };
 exports.fetchRelated = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     relation: {
         in: ["params"],
-        isString: true
-    }
+        isString: true,
+    },
 };
 exports.fetchRelationships = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     relation: {
         in: ["params"],
-        isString: true
-    }
+        isString: true,
+    },
 };
 exports.addRelationships = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     relation: {
         in: ["params"],
-        isString: true
-    }
+        isString: true,
+    },
 };
 exports.updateRelationships = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     relation: {
         in: ["params"],
-        isString: true
-    }
+        isString: true,
+    },
 };
 exports.removeRelationships = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
+        toInt: true,
     },
     relation: {
         in: ["params"],
-        isString: true
-    }
+        isString: true,
+    },
 };
 exports.update = {
     id: {
         errorMessage: "Please provide a valid id",
         in: ["params"],
         isInt: true,
-        toInt: true
-    }
+        toInt: true,
+    },
 };

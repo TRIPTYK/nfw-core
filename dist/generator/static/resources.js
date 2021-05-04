@@ -15,6 +15,11 @@ function resources(entity) {
     const { filePrefixName } = getEntityNaming(entity);
     return [
         {
+            template: "base-controller",
+            path: "src/api/controllers",
+            name: `${filePrefixName}.controller.ts`,
+        },
+        {
             template: "controller",
             path: "src/api/controllers",
             name: `${filePrefixName}.controller.ts`,
@@ -34,7 +39,11 @@ function resources(entity) {
             path: "src/api/serializers/schemas",
             name: `${filePrefixName}.serializer.schema.ts`,
         },
-        { template: "test", path: "test", name: `${filePrefixName}.test.ts` },
+        {
+            template: "test",
+            path: "src/test",
+            name: `${filePrefixName}.test.ts`,
+        },
         {
             template: "serializer",
             path: "src/api/serializers",
@@ -44,6 +53,11 @@ function resources(entity) {
             template: "model",
             path: "src/api/models",
             name: `${filePrefixName}.model.ts`,
+        },
+        {
+            template: "roles",
+            path: "src/api/enums",
+            name: `${filePrefixName}.enum.ts`,
         },
     ];
 }

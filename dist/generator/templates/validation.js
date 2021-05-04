@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createValidationTemplate = void 0;
 const project_1 = require("../utils/project");
-const TsMorph = require("ts-morph");
+const ts_morph_1 = require("ts-morph");
 const stringifyObject = require("stringify-object");
 function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefixName, }) {
     const file = project_1.default.createSourceFile(`${fileTemplateInfo.path}/${fileTemplateInfo.name}`, null, {
@@ -11,10 +11,10 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     file.addStatements((writer) => writer.writeLine('import * as Joi from "joi";'));
     file.addStatements((writer) => writer.writeLine('import Boom from "@hapi/boom";'));
     file.addStatements((writer) => writer.writeLine('import * as Moment from "moment-timezone";'));
-    file.addStatements((writer) => writer.writeLine('import { ValidationSchema } from "../../core/types/validation";'));
+    file.addStatements((writer) => writer.writeLine('import { ValidationSchema } from "@triptyk/nfw-core";'));
     file.addStatements((writer) => writer.writeLine(`import { ${classPrefixName} } from "../models/${filePrefixName}.model";`));
     let variableStatement = file.addVariableStatement({
-        declarationKind: TsMorph.VariableDeclarationKind.Const,
+        declarationKind: ts_morph_1.VariableDeclarationKind.Const,
         declarations: [
             {
                 name: "get",
@@ -32,7 +32,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
-        declarationKind: TsMorph.VariableDeclarationKind.Const,
+        declarationKind: ts_morph_1.VariableDeclarationKind.Const,
         declarations: [
             {
                 name: "list",
@@ -43,7 +43,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
-        declarationKind: TsMorph.VariableDeclarationKind.Const,
+        declarationKind: ts_morph_1.VariableDeclarationKind.Const,
         declarations: [
             {
                 name: "create",
@@ -54,7 +54,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
-        declarationKind: TsMorph.VariableDeclarationKind.Const,
+        declarationKind: ts_morph_1.VariableDeclarationKind.Const,
         declarations: [
             {
                 name: "update",
@@ -70,7 +70,7 @@ function createValidationTemplate({ fileTemplateInfo, classPrefixName, filePrefi
     });
     variableStatement.setIsExported(true);
     variableStatement = file.addVariableStatement({
-        declarationKind: TsMorph.VariableDeclarationKind.Const,
+        declarationKind: ts_morph_1.VariableDeclarationKind.Const,
         declarations: [
             {
                 name: "remove",

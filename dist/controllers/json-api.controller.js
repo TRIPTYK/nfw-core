@@ -87,6 +87,16 @@ class BaseJsonApiController extends base_controller_1.BaseController {
         });
     }
     async update(req, _res) {
+        for (const field in req.body) {
+            const thisRelation = this.repository.metadata.findRelationWithPropertyPath(field);
+            if (thisRelation) {
+                const isMany = thisRelation.isManyToMany || thisRelation.isOneToMany;
+                if (isMany) {
+                    await this.repository.updateRelationshipsFromRequest(field, req.params.id, req.body[field]);
+                    delete req.body[field];
+                }
+            }
+        }
         let saved = await this.repository.preload({
             ...req.body,
             ...{ id: req.params.id },
@@ -139,12 +149,12 @@ class BaseJsonApiController extends base_controller_1.BaseController {
     }
     async updateRelationships(req, res) {
         const { relation, id } = req.params;
-        await this.repository.updateRelationshipsFromRequest(relation, id, req.body.data);
+        await this.repository.updateRelationshipsFromRequest(relation, id, req.body.data.relationships[relation].data);
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     async removeRelationships(req, res) {
         const { relation, id } = req.params;
-        await this.repository.removeRelationshipsFromRequest(relation, id, req.body.data);
+        await this.repository.removeRelationshipsFromRequest(relation, id, req.body.data.relationships[relation].data);
         res.sendStatus(HttpStatus.NO_CONTENT).end();
     }
     parseJsonApiQueryParams(query) {

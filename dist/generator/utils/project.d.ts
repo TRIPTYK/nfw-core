@@ -1,5 +1,5 @@
-import tsMorph = require("ts-morph");
-declare const _default: tsMorph.Project;
+import { Project } from "ts-morph";
+declare const _default: Project;
 /**
  * @return Project
  * @description Singleton like method

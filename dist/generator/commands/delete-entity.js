@@ -11,13 +11,13 @@ async function deleteJsonApiEntity(modelName) {
     const files = [];
     const { filePrefixName, classPrefixName } = resources_1.getEntityNaming(modelName);
     for (const file of resources_1.resources(filePrefixName)) {
-        const fileObj = project_1.default.getSourceFile(`${file.path}/${file.name}`);
-        if (!fileObj) {
-            throw new Error(`Entity file ${file.name} does not seems to exists`);
+        if (!["base-controller", "roles"].includes(file.template)) {
+            const fileObj = project_1.default.getSourceFile(`${file.path}/${file.name}`);
+            if (!fileObj)
+                throw new Error(`Entity file ${file.name} does not seems to exists`);
+            files.push(fileObj);
         }
-        files.push(fileObj);
     }
-    // do something
     for (const file of files) {
         file?.delete();
     }

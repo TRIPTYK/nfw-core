@@ -6,6 +6,7 @@ exports.BaseApplication = void 0;
 const Express = require("express");
 const pluralize = require("pluralize");
 const tsyringe_1 = require("tsyringe");
+const routes_1 = require("../enums/routes");
 const base_error_middleware_1 = require("../middlewares/base.error-middleware");
 const base_middleware_1 = require("../middlewares/base.middleware");
 const deserialize_middleware_1 = require("../middlewares/deserialize.middleware");
@@ -41,6 +42,7 @@ class BaseApplication {
         };
         this.app = Express();
         this.router = Express.Router();
+        this.routes = [];
     }
     async setupMiddlewares(middlewaresForApp) {
         const middlewaresToApply = middlewaresForApp.map((e) => this.useMiddleware(e.middleware, e.args, null));
@@ -55,6 +57,9 @@ class BaseApplication {
     get App() {
         return this.app;
     }
+    get Routes() {
+        return this.routes;
+    }
     listen(port) {
         return new Promise((resolve) => {
             const server = this.app.listen(port, () => {
@@ -65,6 +70,7 @@ class BaseApplication {
     /**
      * Setup controllers routing
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async setupControllers(controllers) {
         for (const controller of controllers) {
             const instanceController = tsyringe_1.container.resolve(controller);
@@ -84,68 +90,6 @@ class BaseApplication {
                 const serializer = Reflect.getMetadata("serializer", jsonApiEntity);
                 const validation = Reflect.getMetadata("validator", jsonApiEntity);
                 this.router.use(`/${jsonApiEntityName}`, router);
-                const jsonApiRoutes = [
-                    {
-                        path: "/:id",
-                        methodType: "get",
-                        method: "get",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/",
-                        methodType: "get",
-                        method: "list",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/",
-                        methodType: "post",
-                        method: "create",
-                        middlewares: ["deserialize", "validation"],
-                    },
-                    {
-                        path: "/:id",
-                        methodType: "patch",
-                        method: "update",
-                        middlewares: ["deserialize", "validation"],
-                    },
-                    {
-                        path: "/:id",
-                        methodType: "delete",
-                        method: "remove",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/:relation",
-                        methodType: "get",
-                        method: "fetchRelated",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "get",
-                        method: "fetchRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "post",
-                        method: "addRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "patch",
-                        method: "updateRelationships",
-                        middlewares: ["validation"],
-                    },
-                    {
-                        path: "/:id/relationships/:relation",
-                        methodType: "delete",
-                        method: "removeRelationships",
-                        middlewares: ["validation"],
-                    },
-                ];
                 for (const route of routes) {
                     const routeContext = {
                         routeDefinition: route,
@@ -164,7 +108,7 @@ class BaseApplication {
                     middlewares.push(instanceController.callMethod(route.methodName));
                     router[route.requestMethod](`${route.path}`, middlewares);
                 }
-                for (const { path, methodType, method, middlewares } of jsonApiRoutes) {
+                for (const { path, methodType, method, middlewares } of routes_1.jsonApiRoutes) {
                     const routeContext = {
                         routeDefinition: {
                             path,
@@ -233,6 +177,24 @@ class BaseApplication {
                     applyMiddlewares.push(instanceController.callMethod(method));
                     router[methodType](path, middlewaresForController.map((mid) => this.useMiddleware(mid.middleware, mid.args, routeContext)), applyMiddlewares);
                 }
+                //push the entities routes to the routes list
+                const routeList = routes_1.jsonApiRoutes.map((route) => {
+                    return {
+                        path: route.path,
+                        requestMethod: route.methodType,
+                        methodName: route.method,
+                    };
+                });
+                for (const i of routes) {
+                    if (!routeList.some((r) => r.path === i.path && r.requestMethod === i.requestMethod)) {
+                        routeList.push(i);
+                    }
+                }
+                this.routes.push({
+                    prefix: jsonApiEntityName,
+                    type: "entity",
+                    routes: routeList,
+                });
             }
             else {
                 this.router.use(`/${prefix}`, router);
@@ -255,6 +217,14 @@ class BaseApplication {
                     middlewares.push(instanceController.callMethod(route.methodName));
                     router[route.requestMethod](`${route.path}`, middlewares);
                 }
+                //push basics routes to the routes list
+                this.routes.push({
+                    prefix,
+                    type: Reflect.getMetadata("generated", controller)
+                        ? "generated"
+                        : "basic",
+                    routes,
+                });
             }
         }
     }

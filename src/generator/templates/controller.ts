@@ -30,8 +30,8 @@ export function createControllerTemplate({
     name: `${classPrefixName}Controller`,
   });
 
-  controllerClass.setIsDefaultExport(true);
-
+  controllerClass.setIsExported(true);
+  
   controllerClass
     .addDecorator({
       name: "JsonApiController",

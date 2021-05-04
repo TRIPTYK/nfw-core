@@ -8,7 +8,15 @@ import { BaseController } from "../base.controller";
 export declare class MetadataController extends BaseController {
     private typeormConnection;
     constructor(typeormConnection: TypeORMService);
+    getAllRoutes(): import("../../interfaces/routes.interface").GlobalRouteDefinition[];
+    getEntityRoutes(req: Request, res: Response): Promise<any>;
     getSupportedTypes(): import("typeorm").ColumnType[];
+    countAllEntitiesRecords(): Promise<{
+        entityName: string;
+        count: number;
+    }[]>;
+    getRoles(req: Request, res: Response): Promise<String[]>;
+    getPerms(req: Request, res: Response): Promise<any>;
     countEntityRecords(req: Request, res: Response): Promise<{
         count: number;
     }>;
@@ -80,4 +88,5 @@ export declare class MetadataController extends BaseController {
             isNullable: boolean;
         }[];
     };
+    protected getRoutes(routes: any, entity: string): any;
 }

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
+exports.addPermissions = exports.createSubRoute = exports.createRoute = exports.columnsActions = exports.createColumn = exports.createRelation = exports.createEntity = void 0;
 const tsyringe_1 = require("tsyringe");
+const methods_1 = require("../enums/methods");
 const typeorm_service_1 = require("../services/typeorm.service");
 exports.createEntity = {
     columns: {
@@ -229,5 +230,59 @@ exports.columnsActions = {
         isIn: {
             options: [["ADD", "REMOVE"]],
         },
+    },
+};
+exports.createRoute = {
+    methods: {
+        exists: true,
+        isArray: true,
+    },
+    "methods.*": {
+        isIn: {
+            options: [methods_1.httpRequestMethods],
+        },
+    },
+};
+exports.createSubRoute = {
+    method: {
+        exists: true,
+        isString: true,
+        isIn: {
+            options: [methods_1.httpRequestMethods],
+        },
+    },
+    subRoute: {
+        exists: true,
+        isString: true,
+    },
+};
+exports.addPermissions = {
+    elements: {
+        exists: true,
+        isArray: true,
+    },
+    "elements.*.role": {
+        exists: true,
+        isString: true,
+    },
+    "elements.*.type": {
+        exists: true,
+        isString: true,
+    },
+    "elements.*.entity": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.methodName": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.requestMethod": {
+        isString: true,
+        optional: true,
+    },
+    "elements.*.path": {
+        isString: true,
+        optional: true,
     },
 };

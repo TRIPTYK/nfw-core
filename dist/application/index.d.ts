@@ -1,2 +1,2 @@
-export * from "./base.application";
-export * from "./registry.application";
+export * from './base.application';
+export * from './registry.application';

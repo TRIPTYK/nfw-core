@@ -1,19 +1,51 @@
-import tsMorph = require("ts-morph");
+import { 
+  ModuleKind, 
+  Project, 
+  ScriptTarget, 
+  ProjectOptions 
+} from "ts-morph";
 
-let isInitialised = false;
-const project = new tsMorph.Project({
-  tsConfigFilePath: "tsconfig.json",
-});
+class CoreProject {
+
+  private static instance: Project = null;
+
+  private static defaultConfig: ProjectOptions = {
+    compilerOptions: {
+      "lib": ["es2020"],
+      "target": ScriptTarget.ESNext,
+      "module": ModuleKind.CommonJS,
+      "allowSyntheticDefaultImports": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "declaration": true,
+      "outDir": "./dist",
+      "forceConsistentCasingInFileNames": true
+    }
+  }
+
+  private static config: ProjectOptions = {
+    tsConfigFilePath: "tsconfig.json",
+  };
+
+  public static get Instance() {
+    if(!this.instance) {
+      try {
+        this.instance = new Project(this.config);
+      } catch (error) {
+        this.instance = new Project(this.defaultConfig);
+      }
+      this.instance.addSourceFilesAtPaths([
+        "src/**/*.ts", 
+        "test/**/*.ts", 
+        "node_modules/@triptyk/nfw-core/src/**/*.ts"
+      ]);
+    }
+    return this.instance;
+  }
+}
 
 /**
  * @return Project
  * @description Singleton like method
  */
-export default (() => {
-  if (!isInitialised) {
-    project.addSourceFilesAtPaths(["src/**/*.ts", "test/**/*.ts"]);
-    isInitialised = true;
-  }
-
-  return project;
-})();
+export default CoreProject.Instance;

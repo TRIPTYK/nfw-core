@@ -11,6 +11,10 @@ function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePr
         namedImports: [classPrefixName],
         moduleSpecifier: `../models/${filePrefixName}.model`,
     });
+    file.addImportDeclaration({
+        namedImports: [`${classPrefixName}SerializerSchema`],
+        moduleSpecifier: `./schemas/${filePrefixName}.serializer.schema`,
+    });
     const serializerClass = file.addClass({
         name: `${classPrefixName}Serializer`,
     });
@@ -26,8 +30,8 @@ function createSerializer({ modelName, fileTemplateInfo, classPrefixName, filePr
             (writer) => {
                 writer.block(() => {
                     writer.setIndentationLevel(1);
-                    writer.writeLine(`type : "${pluralize(modelName)}",`);
-                    writer.writeLine(`schemas : () => [${classPrefixName}SerializerSchema]`);
+                    writer.writeLine(`type: "${pluralize(modelName)}",`);
+                    writer.writeLine(`schemas: () => [${classPrefixName}SerializerSchema]`);
                 });
             },
         ],

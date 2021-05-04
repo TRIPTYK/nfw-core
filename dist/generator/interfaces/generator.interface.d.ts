@@ -17,6 +17,8 @@ export interface EntityColumn {
     isPrimary?: boolean;
     isUnique?: boolean;
     default: any;
+    now?: boolean;
+    enums: Array<string>;
 }
 export declare type RelationTypes = "one-to-one" | "one-to-many" | "many-to-many";
 export interface EntityRelation {

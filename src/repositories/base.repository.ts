@@ -29,6 +29,7 @@ interface FilterConditionBlock {
     | "not-eq"
     | "not-in"
     | "not-gt"
+    | "like"
     | "not-lt";
   path: string;
   conjunction?: "and" | "or";
@@ -218,6 +219,10 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
         queryString = `${propertyName} > :${varName}`;
         queryParams = { [varName]: block.value };
         break;
+      case "like":
+        queryString = `${propertyName} LIKE :${varName}`;
+        queryParams = { [varName]: `%${block.value}%` };
+        break;
       default:
         break;
     }
@@ -392,7 +397,7 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     qb: SelectQueryBuilder<any>,
     { number, size }: PaginationQueryParams
   ) {
-    qb.skip((number - 1) * number).take(size);
+    qb.skip((number - 1) * size).take(size);
   }
 
   public handleSorting(qb: SelectQueryBuilder<any>, sort: string[]) {
