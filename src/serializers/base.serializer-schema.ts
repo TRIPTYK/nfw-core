@@ -2,36 +2,7 @@
 import { container } from "tsyringe";
 import { ConfigurationService } from "../services/configuration.service";
 
-export interface BaseSerializerSchemaInterface<T> {
-  baseUrl: string;
-  links(
-    data: T,
-    extraData: any,
-    type: string
-  ): {
-    self?: string;
-    related?: string;
-  };
-  relationshipLinks(
-    data: T,
-    extraData: any,
-    type: string,
-    relationshipName: string
-  ): {
-    self?: string;
-    related?: string;
-  };
-  relationshipMeta(
-    data: T,
-    extraData: any,
-    type: string,
-    relationshipName: string
-  ): any;
-  meta(data: T, extraData: any, type: string): any;
-}
-
-export abstract class BaseSerializerSchema<T>
-  implements BaseSerializerSchemaInterface<T> {
+export abstract class BaseSerializerSchema<T extends Record<string, any>> {
   public get baseUrl() {
     const configurationService = container.resolve<ConfigurationService>(
       ConfigurationService
@@ -50,7 +21,11 @@ export abstract class BaseSerializerSchema<T>
       )
     );
 
-  public topLevelLinks(data, extraData, type) {
+  public topLevelMeta(data: T, extraData: any, type: string) {
+    return {};
+  }
+
+  public topLevelLinks(data: T, extraData: any, type: string) {
     if (extraData.page) {
       const max = Math.ceil(extraData.total / extraData.size);
       return {
@@ -73,13 +48,18 @@ export abstract class BaseSerializerSchema<T>
     };
   }
 
-  public links(data, extraData, type) {
+  public links(data: T, extraData: any, type: string) {
     return {
       self: `${this.baseUrl}/${type}/${data.id}`,
     };
   }
 
-  public relationshipLinks(data, extraData, type, relationshipName) {
+  public relationshipLinks(
+    data: T,
+    extraData: any,
+    type: string,
+    relationshipName: string
+  ) {
     return {
       self: `${this.baseUrl}/${type}/${data.id}/relationships/${relationshipName}`,
       related: `${this.baseUrl}/${type}/${data.id}/${relationshipName}`,

@@ -151,6 +151,14 @@ export abstract class BaseJsonApiSerializer<T>
             property
           );
         },
+        meta: (data, extraData) => {
+          return schemaInstance.relationshipMeta(
+            data,
+            extraData,
+            this.type,
+            property
+          );
+        },
       };
 
       this.convertSerializerSchemaToObjectSchema(
@@ -173,6 +181,9 @@ export abstract class BaseJsonApiSerializer<T>
       },
       meta: (data, extraData) => {
         return schemaInstance.meta(data, extraData, this.type);
+      },
+      topLevelMeta: (data, extraData) => {
+        return schemaInstance.topLevelMeta(data, extraData, this.type);
       },
     });
   }
