@@ -100,8 +100,9 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     }
 
     if (allowFields && params.fields) {
-      this.handleSparseFields(queryBuilder, params.fields, [], select);
-      queryBuilder.select(select);
+      queryBuilder.select(
+        this.handleSparseFields(queryBuilder, params.fields, [])
+      );
     }
 
     /**
@@ -345,9 +346,6 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
       relations = (body as { id: string }).id;
     }
 
-    user[relationName] = isMany ? [] : null;
-    await this.save(user);
-
     const qb = this.createQueryBuilder().relation(relationName).of(user);
 
     if (isMany) {
@@ -401,38 +399,78 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
   }
 
   public handleSorting(qb: SelectQueryBuilder<any>, sort: string[]) {
-    for (const field of sort) {
+    for (let field of sort) {
+      let order: "ASC" | "DESC";
+      // JSON-API convention , when sort field starts with '-' order is DESC
       if (field.startsWith("-")) {
-        // JSON-API convention , when sort field starts with '-' order is DESC
-        qb.addOrderBy(`${qb.alias}.${field}`.substr(1), "DESC");
+        field = field.substr(1);
+        order = "DESC";
       } else {
-        qb.addOrderBy(`${qb.alias}.${field}`, "ASC");
+        order = "ASC";
+      }
+
+      const levels = field.split(".");
+      if (levels.length > 1) {
+        const fieldName = levels.pop();
+        const rel = qb.expressionMap.joinAttributes.find(
+          (e) => e.entityOrProperty === `${qb.alias}.${levels.join(".")}`
+        );
+
+        qb.addOrderBy(`${rel.alias.name}.${fieldName}`, order);
+      } else {
+        const [fieldName] = levels;
+        qb.addOrderBy(`${qb.alias}.${fieldName}`, order);
       }
     }
   }
 
   public handleSparseFields(
-    qb: SelectQueryBuilder<any>,
-    props: Record<string, any> | string,
+    qb: SelectQueryBuilder<T>,
+    props: Record<string, any> | string | any[],
     parents: string[] = [],
-    select: string[]
+    currentSelection?: string[]
   ) {
-    if (typeof props === "string") {
-      if (!parents.length) {
-        parents = [this.metadata.tableName];
+    /**
+     * Transform the base fields selection (root entity) to object
+     */
+    if (!currentSelection) {
+      currentSelection = [];
+      let newProps = {};
+
+      for (const prop of props as any[]) {
+        if (typeof prop === "string") {
+          newProps[qb.alias] = prop;
+        } else {
+          newProps = { ...newProps, ...prop };
+        }
       }
 
-      for (const elem of props.split(",")) {
-        select.push(`${parents.join(".")}.${elem}`);
+      props = newProps;
+    }
+
+    if (typeof props === "string") {
+      const alias = qb.alias;
+      const selects = props.split(",");
+      for (const select of selects) {
+        if (parents[0] === alias) {
+          currentSelection.push(`${alias}.${select}`);
+        } else {
+          const rel = qb.expressionMap.joinAttributes.find(
+            (e) => e.entityOrProperty === `${alias}.${parents.join(".")}`
+          );
+          currentSelection.push(`${rel.alias.name}.${select}`);
+        }
       }
     } else {
       for (const index in props) {
         const property = props[index];
         const copy = parents.slice(); // slice makes a copy
         copy.push(index); // fast way to check if string is number
-        this.handleSparseFields(qb, property, copy, select);
+        this.handleSparseFields(qb, property, copy, currentSelection);
       }
     }
+
+    return currentSelection;
   }
 
   /**
@@ -505,33 +543,22 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     const thisRelation = this.metadata.findRelationWithPropertyPath(
       relationName
     );
-    const otherEntity = thisRelation.type as any;
-    const otherRepo = ApplicationRegistry.repositoryFor(otherEntity);
-    const alias = otherRepo.metadata.tableName;
-    const aliasRelation = this.buildAlias(
-      alias,
-      thisRelation.inverseSidePropertyPath
-    );
+    const alias = this.metadata.tableName;
 
-    if ((await this.count({ where: { id } })) === 0) {
-      throw Boom.notFound();
+    const resultQb = this.createQueryBuilder(alias)
+      .relation(thisRelation.propertyPath)
+      .of(id);
+
+    if (thisRelation.isManyToOne || thisRelation.isOneToOne) {
+      let res = await resultQb.loadOne();
+      return {
+        id: res.id,
+      };
+    } else {
+      let res = await resultQb.loadMany();
+      return res.map((e) => {
+        return { id: e.id };
+      });
     }
-
-    const resultQb = otherRepo
-      .createQueryBuilder(otherRepo.metadata.tableName)
-      .select(`${alias}.id`)
-      .leftJoin(
-        `${alias}.${thisRelation.inverseSidePropertyPath}`,
-        aliasRelation
-      )
-      .where(`${aliasRelation}.id = :id`, { id });
-
-    otherRepo.jsonApiRequest(params, {}, resultQb);
-
-    const result = await (thisRelation.isManyToOne || thisRelation.isOneToOne
-      ? resultQb.getOne()
-      : resultQb.getMany());
-
-    return result;
   }
 }
