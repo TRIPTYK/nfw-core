@@ -60,7 +60,7 @@ export declare class BaseJsonApiRepository<T> extends Repository<T> {
     }): Promise<any>;
     handlePagination(qb: SelectQueryBuilder<any>, { number, size }: PaginationQueryParams): void;
     handleSorting(qb: SelectQueryBuilder<any>, sort: string[]): void;
-    handleSparseFields(qb: SelectQueryBuilder<any>, props: Record<string, any> | string, parents: string[], select: string[]): void;
+    handleSparseFields(qb: SelectQueryBuilder<T>, props: Record<string, any> | string | any[], parents?: string[], currentSelection?: string[]): string[];
     /**
      * Simplified from TypeORM source code
      */

@@ -140,7 +140,7 @@ export abstract class BaseJsonApiSerializer<T>
       const relationType = Reflect.getMetadata("type", schemaTypeRelation);
       relationShips[property] = {
         deserialize: (data) => {
-          return { id: data.id };
+          return { id: isNaN(data.id) ? data.id : parseInt(data.id, 10) };
         },
         type: relationType,
         links: (data, extraData) => {

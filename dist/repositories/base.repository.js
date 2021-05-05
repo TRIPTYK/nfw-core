@@ -40,8 +40,7 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
             this.handleSorting(queryBuilder, params.sort);
         }
         if (allowFields && params.fields) {
-            this.handleSparseFields(queryBuilder, params.fields, [], select);
-            queryBuilder.select(select);
+            queryBuilder.select(this.handleSparseFields(queryBuilder, params.fields, []));
         }
         /**
          * Check if pagination is enabled
@@ -233,8 +232,6 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         else {
             relations = body.id;
         }
-        user[relationName] = isMany ? [] : null;
-        await this.save(user);
         const qb = this.createQueryBuilder().relation(relationName).of(user);
         if (isMany) {
             return qb.add(relations);
@@ -271,23 +268,56 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
         qb.skip((number - 1) * size).take(size);
     }
     handleSorting(qb, sort) {
-        for (const field of sort) {
+        for (let field of sort) {
+            let order;
+            // JSON-API convention , when sort field starts with '-' order is DESC
             if (field.startsWith("-")) {
-                // JSON-API convention , when sort field starts with '-' order is DESC
-                qb.addOrderBy(`${qb.alias}.${field}`.substr(1), "DESC");
+                field = field.substr(1);
+                order = "DESC";
             }
             else {
-                qb.addOrderBy(`${qb.alias}.${field}`, "ASC");
+                order = "ASC";
+            }
+            const levels = field.split(".");
+            if (levels.length > 1) {
+                const fieldName = levels.pop();
+                const rel = qb.expressionMap.joinAttributes.find((e) => e.entityOrProperty === `${qb.alias}.${levels.join(".")}`);
+                qb.addOrderBy(`${rel.alias.name}.${fieldName}`, order);
+            }
+            else {
+                const [fieldName] = levels;
+                qb.addOrderBy(`${qb.alias}.${fieldName}`, order);
             }
         }
     }
-    handleSparseFields(qb, props, parents = [], select) {
-        if (typeof props === "string") {
-            if (!parents.length) {
-                parents = [this.metadata.tableName];
+    handleSparseFields(qb, props, parents = [], currentSelection) {
+        /**
+         * Transform the base fields selection (root entity) to object
+         */
+        if (!currentSelection) {
+            currentSelection = [];
+            let newProps = {};
+            for (const prop of props) {
+                if (typeof prop === "string") {
+                    newProps[qb.alias] = prop;
+                }
+                else {
+                    newProps = { ...newProps, ...prop };
+                }
             }
-            for (const elem of props.split(",")) {
-                select.push(`${parents.join(".")}.${elem}`);
+            props = newProps;
+        }
+        if (typeof props === "string") {
+            const alias = qb.alias;
+            const selects = props.split(",");
+            for (const select of selects) {
+                if (parents[0] === alias) {
+                    currentSelection.push(`${alias}.${select}`);
+                }
+                else {
+                    const rel = qb.expressionMap.joinAttributes.find((e) => e.entityOrProperty === `${alias}.${parents.join(".")}`);
+                    currentSelection.push(`${rel.alias.name}.${select}`);
+                }
             }
         }
         else {
@@ -295,9 +325,10 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
                 const property = props[index];
                 const copy = parents.slice(); // slice makes a copy
                 copy.push(index); // fast way to check if string is number
-                this.handleSparseFields(qb, property, copy, select);
+                this.handleSparseFields(qb, property, copy, currentSelection);
             }
         }
+        return currentSelection;
     }
     /**
      * Simplified from TypeORM source code
@@ -339,23 +370,22 @@ class BaseJsonApiRepository extends typeorm_1.Repository {
      */
     async fetchRelationshipsFromRequest(relationName, id, params) {
         const thisRelation = this.metadata.findRelationWithPropertyPath(relationName);
-        const otherEntity = thisRelation.type;
-        const otherRepo = registry_application_1.ApplicationRegistry.repositoryFor(otherEntity);
-        const alias = otherRepo.metadata.tableName;
-        const aliasRelation = this.buildAlias(alias, thisRelation.inverseSidePropertyPath);
-        if ((await this.count({ where: { id } })) === 0) {
-            throw Boom.notFound();
+        const alias = this.metadata.tableName;
+        const resultQb = this.createQueryBuilder(alias)
+            .relation(thisRelation.propertyPath)
+            .of(id);
+        if (thisRelation.isManyToOne || thisRelation.isOneToOne) {
+            let res = await resultQb.loadOne();
+            return {
+                id: res.id,
+            };
         }
-        const resultQb = otherRepo
-            .createQueryBuilder(otherRepo.metadata.tableName)
-            .select(`${alias}.id`)
-            .leftJoin(`${alias}.${thisRelation.inverseSidePropertyPath}`, aliasRelation)
-            .where(`${aliasRelation}.id = :id`, { id });
-        otherRepo.jsonApiRequest(params, {}, resultQb);
-        const result = await (thisRelation.isManyToOne || thisRelation.isOneToOne
-            ? resultQb.getOne()
-            : resultQb.getMany());
-        return result;
+        else {
+            let res = await resultQb.loadMany();
+            return res.map((e) => {
+                return { id: e.id };
+            });
+        }
     }
 }
 exports.BaseJsonApiRepository = BaseJsonApiRepository;
