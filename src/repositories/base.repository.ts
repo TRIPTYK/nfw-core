@@ -325,12 +325,11 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     id: string | number,
     body: { id: string }[] | { id: string }
   ): Promise<any> {
-    const user = await this.findOne(id);
     const thisRelation = this.metadata.findRelationWithPropertyPath(
       relationName
     );
 
-    if (!user || !thisRelation) {
+    if (!thisRelation) {
       throw Boom.notFound();
     }
 
@@ -346,12 +345,12 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
       relations = (body as { id: string }).id;
     }
 
-    const qb = this.createQueryBuilder().relation(relationName).of(user);
+    const qb = this.createQueryBuilder().relation(relationName).of(id);
 
     if (isMany) {
-      return qb.add(relations);
+      return await qb.add(relations);
     }
-    return qb.set(relations);
+    return await qb.set(relations);
   }
 
   /**
