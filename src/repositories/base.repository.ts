@@ -1,4 +1,5 @@
 import * as Boom from "@hapi/boom";
+import { notFound } from "@hapi/boom";
 import * as dashify from "dashify";
 import * as Sqlstring from "sqlstring";
 import {
@@ -428,49 +429,58 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     props: Record<string, any> | string | any[],
     parents: string[] = [],
     currentSelection?: string[]
-  ) {
+) {
     /**
      * Transform the base fields selection (root entity) to object
      */
     if (!currentSelection) {
-      currentSelection = [];
-      let newProps = {};
+        currentSelection = [];
+        let newProps = {};
 
-      for (const prop of props as any[]) {
-        if (typeof prop === "string") {
-          newProps[qb.alias] = prop;
-        } else {
-          newProps = { ...newProps, ...prop };
+        props = Array.isArray(props) ? props : [props];
+        for (const prop of props as any[]) {
+            if (typeof prop === "string") {
+                newProps[qb.alias] = prop;
+            } else {
+                newProps = { ...newProps, ...prop };
+            }
         }
-      }
 
-      props = newProps;
+        props = newProps;
     }
 
     if (typeof props === "string") {
-      const alias = qb.alias;
-      const selects = props.split(",");
-      for (const select of selects) {
-        if (parents[0] === alias) {
-          currentSelection.push(`${alias}.${select}`);
-        } else {
-          const rel = qb.expressionMap.joinAttributes.find(
-            (e) => e.entityOrProperty === `${alias}.${parents.join(".")}`
-          );
-          currentSelection.push(`${rel.alias.name}.${select}`);
+        const alias = qb.alias;
+        const selects = props.split(",");
+        for (const select of selects) {
+            if (parents[0] === alias) {
+                currentSelection.push(`${alias}.${select}`);
+            } else {
+                const rel = qb.expressionMap.joinAttributes.find(
+                    (e) =>
+                        e.entityOrProperty ===
+                        `${alias}.${parents.join(".")}`
+                );
+                if (!rel) {
+                    throw notFound(
+                        `Field ${alias}.${parents.join(".")} not found`
+                    );
+                }
+                currentSelection.push(`${rel.alias.name}.${select}`);
+            }
         }
-      }
     } else {
-      for (const index in props) {
-        const property = props[index];
-        const copy = parents.slice(); // slice makes a copy
-        copy.push(index); // fast way to check if string is number
-        this.handleSparseFields(qb, property, copy, currentSelection);
-      }
+        for (const index in props) {
+            const property = props[index];
+            const copy = parents.slice(); // slice makes a copy
+            copy.push(index); // fast way to check if string is number
+            this.handleSparseFields(qb, property, copy, currentSelection);
+        }
     }
 
     return currentSelection;
   }
+
 
   /**
    * Simplified from TypeORM source code

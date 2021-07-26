@@ -52,8 +52,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "build": "rm -rf dist && tsc && npx rollup -c",
-    "prepublishOnly": "rm -rf dist && tsc && npx rollup -c"
+    "prepublishOnly": "tsc && npx rollup -c",
+    "postpublish": "rm -rf dist"
   },
   "repository": {
     "type": "git",
