@@ -193,8 +193,7 @@ export abstract class BaseJsonApiController<
       ).serialize(
         await this.repository.fetchRelated(
           relation,
-          req.params.id,
-          this.parseJsonApiQueryParams(req.query)
+          req.params.id
         ),
         useSchema,
         {

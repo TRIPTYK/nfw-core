@@ -127,53 +127,46 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     return queryBuilder;
   }
 
+  private exists(primaryKey: number | string, repo?: any): Promise<Boolean> {
+      return (repo ? repo : this)
+          .createQueryBuilder()
+          .select("id")
+          .where({ id: primaryKey })
+          .getRawOne()
+          .then((e) => (e ? true : false));
+  }
+
   /**
    *
    * @param req
    * @param serializer
    */
   public async fetchRelated(
-    relationName: string,
-    id: string | number,
-    params: JsonApiRequestParams
+      relationName: string,
+      id: string | number
   ): Promise<any> {
-    const thisRelation = this.metadata.findRelationWithPropertyPath(
-      relationName
-    );
+      const thisRelation =
+          this.metadata.findRelationWithPropertyPath(relationName);
 
-    if (!thisRelation) {
-      throw Boom.notFound();
-    }
+      if (!thisRelation) {
+          throw Boom.notFound("Relation not found");
+      }
 
-    const otherEntity = thisRelation.type as any;
-    const otherRepo = ApplicationRegistry.repositoryFor(otherEntity);
-    const alias = otherRepo.metadata.tableName;
-    const aliasRelation = this.buildAlias(
-      // build an unusable alias, just need it to fetch the relation
-      thisRelation.inverseSidePropertyPath,
-      thisRelation.inverseSidePropertyPath
-    );
+      if (!(await this.exists(id))) {
+          throw Boom.notFound("Entity does not exists");
+      }
 
-    if ((await this.findOne({ where: { id } })) === undefined) {
-      throw Boom.notFound();
-    }
+      const resultQb = this.createQueryBuilder(this.metadata.tableName)
+          .relation(relationName)
+          .of(id);
 
-    const resultQb = otherRepo
-      .createQueryBuilder(otherRepo.metadata.tableName)
-      .innerJoin(
-        // innerjoin, if not exists returns empty
-        `${alias}.${thisRelation.inverseSidePropertyPath}`,
-        aliasRelation
-      )
-      .where(`${aliasRelation}.id = :id`, { id });
-
-    otherRepo.jsonApiRequest(params, {}, resultQb);
-
-    const result = await (thisRelation.isManyToOne || thisRelation.isOneToOne
-      ? resultQb.getOne()
-      : resultQb.getMany());
-
-    return result;
+      if (thisRelation.isManyToOne || thisRelation.isOneToOne) {
+          const result = await resultQb.loadOne();
+          return result;
+      } else {
+          const result = await resultQb.loadMany();
+          return result;
+      }
   }
 
   private applyConditionBlock(
