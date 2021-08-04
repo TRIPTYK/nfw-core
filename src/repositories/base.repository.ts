@@ -127,7 +127,7 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
     return queryBuilder;
   }
 
-  private exists(primaryKey: number | string, repo?: any): Promise<Boolean> {
+  public exists(primaryKey: number | string, repo?: any): Promise<Boolean> {
       return (repo ? repo : this)
           .createQueryBuilder()
           .select("id")

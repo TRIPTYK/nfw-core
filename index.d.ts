@@ -306,12 +306,13 @@ declare class BaseJsonApiRepository<T> extends Repository<T> {
         allowFields?: boolean;
         allowFilters?: boolean;
     }, parentQueryBuilder?: SelectQueryBuilder<T>): SelectQueryBuilder<T>;
+    private exists;
     /**
      *
      * @param req
      * @param serializer
      */
-    fetchRelated(relationName: string, id: string | number, params: JsonApiRequestParams): Promise<any>;
+    fetchRelated(relationName: string, id: string | number): Promise<any>;
     private applyConditionBlock;
     private applyFilter;
     /**
