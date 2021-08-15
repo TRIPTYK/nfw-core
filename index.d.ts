@@ -306,7 +306,7 @@ declare class BaseJsonApiRepository<T> extends Repository<T> {
         allowFields?: boolean;
         allowFilters?: boolean;
     }, parentQueryBuilder?: SelectQueryBuilder<T>): SelectQueryBuilder<T>;
-    private exists;
+    exists(primaryKey: number | string, repo?: any): Promise<Boolean>;
     /**
      *
      * @param req

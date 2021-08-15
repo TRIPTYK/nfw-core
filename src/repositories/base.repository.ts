@@ -7,10 +7,11 @@ import {
   EntityMetadata,
   Repository,
   SelectQueryBuilder,
-  WhereExpression,
+  WhereExpressionBuilder,
 } from "typeorm";
 import { ApplicationRegistry } from "../application/registry.application";
 import { PaginationQueryParams } from "../types/jsonapi";
+import { toSnakeCase } from "../utils";
 
 interface JsonApiRequestParams {
   includes?: string[];
@@ -23,7 +24,9 @@ interface JsonApiRequestParams {
 interface FilterConditionBlock {
   value: string;
   operator:
+    | "is-null"
     | "eq"
+    | "not-is-null"
     | "in"
     | "gt"
     | "lt"
@@ -171,17 +174,23 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
 
   private applyConditionBlock(
     block: FilterConditionBlock,
-    we: WhereExpression
+    we: WhereExpressionBuilder
   ) {
     block.conjunction ??= "and";
     block.operator ??= "eq";
 
     let queryString = "";
     let queryParams = {};
-    const varName = `${block.operator}${block.value}`;
-    const propertyName = `${Sqlstring.format(block.path)}`;
+    const varName = toSnakeCase(`${block.operator}${block.path}${block.conjunction}`);
+    const propertyName = Sqlstring.format(block.path);
 
     switch (block.operator) {
+      case "is-null":
+        queryString = `${propertyName} IS NULL`;
+        break;
+      case "not-is-null":
+        queryString = `${propertyName} IS NOT NULL`;
+      break;
       case "eq":
         queryString = `${propertyName} = :${varName}`;
         queryParams = { [varName]: block.value };
@@ -236,7 +245,7 @@ export class BaseJsonApiRepository<T> extends Repository<T> {
 
   private applyFilter(
     queryBlock: FilterBlock | (FilterConditionBlock | FilterBlock)[],
-    we: WhereExpression | SelectQueryBuilder<T>
+    we: WhereExpressionBuilder | SelectQueryBuilder<T>
   ) {
     const conjunction = queryBlock["conjunction"] ?? "and";
     const brackets = new Brackets((qb) => {
