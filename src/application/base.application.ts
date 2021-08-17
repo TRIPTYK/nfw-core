@@ -373,8 +373,8 @@ export abstract class BaseApplication implements ApplicationInterface {
     args: any,
     context: RouteContext
   ) => {
-    const instance = new middleware(args);
-    instance.init(context);
+    const instance = new middleware();
+    instance.init(context,args);
     container.registerInstance(middleware, instance);
     if (instance instanceof BaseMiddleware) {
       return (req, res, next) => {
