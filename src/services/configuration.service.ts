@@ -44,6 +44,7 @@ export type Configuration = {
     database: string;
     host: string;
     name: string;
+    subscribers: string[];
     synchronize: boolean;
     entities: string[];
     port: number;
@@ -165,6 +166,7 @@ export class ConfigurationService<T = Configuration> extends BaseService {
       pwd: loaded.TYPEORM_PWD,
       synchronize: parseBool(loaded.TYPEORM_SYNCHRONIZE),
       entities: loaded.TYPEORM_ENTITIES.split(","),
+      subscribers: loaded.TYPEORM_SUBSCRIBERS.split(","),
       type: ["mariadb", "mysql", "oracle", "postgresql"].includes(
         loaded.TYPEORM_TYPE
       )

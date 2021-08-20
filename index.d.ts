@@ -522,7 +522,7 @@ declare type routeType = "basic" | "generated" | "entity";
 
 declare abstract class BaseMiddleware implements MiddlewareInterface {
     protected context: RouteContext;
-    init(context: RouteContext): void;
+    init(context: RouteContext, args?: any): void;
     abstract use(req: Request, res: Response$1, next: (err?: any) => void, args: any): any;
 }
 

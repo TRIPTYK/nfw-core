@@ -44,6 +44,7 @@ export class TypeORMService extends BaseService {
       type: typeorm.type as any,
       migrations: typeorm.migrations,
       username: typeorm.user,
+      subscribers: typeorm.subscribers,
       cli: {
         entitiesDir: typeorm.entitiesDir,
         migrationsDir: typeorm.migrationsDir,
