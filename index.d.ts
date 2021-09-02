@@ -111,6 +111,7 @@ declare type Configuration = {
         database: string;
         host: string;
         name: string;
+        subscribers: string[];
         synchronize: boolean;
         entities: string[];
         port: number;

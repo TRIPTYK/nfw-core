@@ -108,6 +108,20 @@ export abstract class BaseApplication implements ApplicationInterface {
 
         this.router.use(`/${jsonApiEntityName}`, router);
 
+        if (middlewaresForController.length) {
+          router.use(middlewaresForController.map((iterator) => {
+            const routeContext: RouteContext = {
+              routeDefinition: null,
+              controllerInstance: instanceController
+            };
+            return this.useMiddleware(
+              iterator.middleware,
+              iterator.args,
+              routeContext
+            )
+          }));
+        }
+
         for (const route of routes) {
           const routeContext: RouteContext = {
             routeDefinition: route,
@@ -127,9 +141,7 @@ export abstract class BaseApplication implements ApplicationInterface {
 
           const middlewares = [];
 
-          for (const iterator of middlewaresForController.concat(
-            middlewaresWithArgs
-          )) {
+          for (const iterator of middlewaresWithArgs) {
             // need to arrow function to keep "this" context in method
             middlewares.push(
               this.useMiddleware(
@@ -320,12 +332,27 @@ export abstract class BaseApplication implements ApplicationInterface {
       } else {
         this.router.use(`/${prefix}`, router);
 
+        if (middlewaresForController.length) {
+          router.use(middlewaresForController.map((iterator) => {
+            const routeContext: RouteContext = {
+              routeDefinition: null,
+              controllerInstance: instanceController
+            };
+            return this.useMiddleware(
+              iterator.middleware,
+              iterator.args,
+              routeContext
+            )
+          }));
+        }
+
         // Iterate over all routes and register them to our express application
         for (const route of routes) {
           const routeContext: RouteContext = {
             routeDefinition: route,
             controllerInstance: instanceController,
           };
+          
           let middlewaresWithArgs = Reflect.getMetadata(
             "middlewares",
             controller,
