@@ -134,13 +134,19 @@ export abstract class BaseJsonApiController<
   }
 
   public async remove(req: Request, res: Response): Promise<any> {
-    const entity: T = await this.repository.findOne(req.params.id);
+    const entity: DeepPartial<T> = await this.repository.findOne(req.params.id) as any;
+
+    const isSoftDelete = Reflect.getMetadata("soft", this) ?? true;
 
     if (!entity) {
       throw Boom.notFound();
     }
 
-    await this.repository.remove(entity);
+    if (isSoftDelete) {
+      await this.repository.softRemove(entity);
+    }else{
+      await this.repository.remove(entity as any);
+    }
     res.sendStatus(HttpStatus.NO_CONTENT).end();
   }
 
