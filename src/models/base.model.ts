@@ -1,4 +1,4 @@
-import { CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
 import { ModelInterface } from "../interfaces/model.interface";
 
 export abstract class BaseModel implements ModelInterface {
@@ -9,4 +9,9 @@ export abstract class BaseModel implements ModelInterface {
     nullable: true,
   })
   public updated_at: Date;
+
+  @DeleteDateColumn({
+    nullable: true,
+  })
+  public deleted_at: Date;
 }
