@@ -13,5 +13,5 @@ export abstract class BaseModel implements ModelInterface {
   @DeleteDateColumn({
     nullable: true,
   })
-  public deleted_at: Date;
+  public deleted_at?: Date;
 }
