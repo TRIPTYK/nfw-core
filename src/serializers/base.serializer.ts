@@ -147,7 +147,7 @@ export abstract class BaseJsonApiSerializer<T>
           return schemaInstance.relationshipLinks(
             data,
             extraData,
-            this.type,
+            schemaType,
             property
           );
         },
@@ -155,7 +155,7 @@ export abstract class BaseJsonApiSerializer<T>
           return schemaInstance.relationshipMeta(
             data,
             extraData,
-            this.type,
+            schemaType,
             property
           );
         },

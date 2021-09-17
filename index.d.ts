@@ -272,6 +272,7 @@ interface ModelInterface {
 declare abstract class BaseModel implements ModelInterface {
     created_at: Date;
     updated_at: Date;
+    deleted_at?: Date;
 }
 
 declare abstract class JsonApiModel<T> extends BaseModel {
