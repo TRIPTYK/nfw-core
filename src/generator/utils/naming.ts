@@ -1,10 +1,10 @@
 import { getConnection } from "typeorm";
-import { ApplicationRegistry } from "../../application";
+import { getMetadataStorage } from "../../metadata/metadata-storage";
 
 export function getJsonApiEntityName(prefix: string) {
     return getConnection()
         .entityMetadatas.filter((table) =>
-            ApplicationRegistry.entities.includes(table.target as any)
+            getMetadataStorage().entities.includes(table.target as any)
         )
         .map((table) => {
             return {

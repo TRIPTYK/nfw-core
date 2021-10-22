@@ -1,6 +1,3 @@
-import { httpRequestMethods } from "../..";
-import { capitalize } from "../generator/utils/capitalize";
-
 export const jsonApiRoutes = [
     {
         path: "/:id",

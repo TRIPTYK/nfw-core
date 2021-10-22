@@ -1,9 +1,8 @@
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
-import { getJsonApiEntityName } from "../utils/naming";
 import { getRoutes } from "./get-routes";
 import { join, normalize } from "path";
-import { httpRequestMethods } from "../../..";
+import { httpRequestMethods } from "../../enums/methods";
 
 /**
  * Delete an endpoint of a specific route.

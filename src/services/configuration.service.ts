@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import { config } from "dotenv";
 import { join } from "path";
 import { singleton } from "tsyringe";
 import { DatabaseType } from "typeorm";
@@ -101,7 +101,7 @@ export class ConfigurationService<T = Configuration> extends BaseService {
   }
 
   public loadConfiguration(): T {
-    const { parsed: loaded } = dotenv.config({
+    const { parsed: loaded } = config({
       path: join(process.cwd(), `${process.env.NODE_ENV ?? "development"}.env`),
     });
     const applyObj: any = {};
@@ -165,8 +165,8 @@ export class ConfigurationService<T = Configuration> extends BaseService {
       port: parseInt(loaded.TYPEORM_PORT, 10),
       pwd: loaded.TYPEORM_PWD,
       synchronize: parseBool(loaded.TYPEORM_SYNCHRONIZE),
-      entities: loaded.TYPEORM_ENTITIES.split(","),
-      subscribers: loaded.TYPEORM_SUBSCRIBERS.split(","),
+      entities: loaded.TYPEORM_ENTITIES?.split(",") ?? [],
+      subscribers: loaded.TYPEORM_SUBSCRIBERS?.split(",") ?? [],
       type: ["mariadb", "mysql", "oracle", "postgresql"].includes(
         loaded.TYPEORM_TYPE
       )

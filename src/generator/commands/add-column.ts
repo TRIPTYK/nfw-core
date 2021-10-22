@@ -1,6 +1,6 @@
 import * as camelcase from "camelcase";
 import * as pascalcase from "pascalcase";
-import * as stringifyObject from "stringify-object";
+import stringifyObject from "stringify-object";
 import {
   ObjectLiteralExpression,
   PropertyAssignment,

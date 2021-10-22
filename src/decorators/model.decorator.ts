@@ -4,13 +4,10 @@ import { EntityOptions, getMetadataArgsStorage } from "typeorm";
 import { EntityRepositoryMetadataArgs } from "typeorm/metadata-args/EntityRepositoryMetadataArgs";
 import { TableMetadataArgs } from "typeorm/metadata-args/TableMetadataArgs";
 import { ApplicationRegistry } from "../application/registry.application";
+import { getMetadataStorage } from "../metadata/metadata-storage";
 import { BaseJsonApiRepository } from "../repositories/base.repository";
-import { BaseJsonApiSerializer } from "../serializers/base.serializer";
-import { Constructor } from "../types/global";
 
 export interface EntityOptionsExtended<T> extends EntityOptions {
-  repository: Constructor<BaseJsonApiRepository<T>>;
-  serializer: Constructor<BaseJsonApiSerializer<T>>;
   validator: any;
 }
 
@@ -38,7 +35,7 @@ export function JsonApiEntity<T>(
 export function JsonApiEntity<T>(
   nameOrOptions?: string | any,
   maybeOptions?: EntityOptionsExtended<T>
-): ClassDecorator {
+) {
   const options =
     (typeof nameOrOptions === "object" ? nameOrOptions : maybeOptions) || {};
   const name = typeof nameOrOptions === "string" ? nameOrOptions : options.name;
@@ -56,24 +53,10 @@ export function JsonApiEntity<T>(
       withoutRowid: options.withoutRowid,
     } as TableMetadataArgs);
 
-    Reflect.defineMetadata("name", name, target);
-    Reflect.defineMetadata("repository", options.repository, target);
-    Reflect.defineMetadata("serializer", options.serializer, target);
-    Reflect.defineMetadata("validator", options.validator, target);
-
-    getMetadataArgsStorage().entityRepositories.push({
-      target: options.repository,
-      entity: target,
-    } as EntityRepositoryMetadataArgs);
-
-    ApplicationRegistry.registerEntity(target as any);
-    ApplicationRegistry.registerCustomRepositoryFor(
-      target as any,
-      options.repository ?? new BaseJsonApiRepository<T>()
-    );
-    ApplicationRegistry.registerSerializerFor(
-      target as any,
-      options.serializer
-    );
+    
+    getMetadataStorage().entities.push({
+      name,
+      target
+    });
   };
 }

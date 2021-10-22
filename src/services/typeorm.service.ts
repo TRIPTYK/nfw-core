@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { autoInjectable, singleton } from "tsyringe";
-import { Connection, ConnectionOptions, createConnection } from "typeorm";
+import { Connection, ConnectionOptions, createConnection, getMetadataArgsStorage } from "typeorm";
 import { BaseService } from "./base.service";
 import { ConfigurationService } from "./configuration.service";
 
@@ -32,6 +32,8 @@ export class TypeORMService extends BaseService {
 
   public get ConfigurationObject(): ConnectionOptions {
     const { typeorm } = this.configurationService.config;
+
+    console.log(getMetadataArgsStorage().entityRepositories);
 
     return {
       database: typeorm.database,

@@ -1,58 +1,39 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import { container } from "tsyringe";
+import { getMetadataStorage } from "../metadata/metadata-storage";
 import { BaseSerializerSchema } from "../serializers/base.serializer-schema";
 import { Constructor } from "../types/global";
 
-export interface RelationMetadata {
-  type: () => Schema;
-  property: string;
-}
-
-/**
- * Comment
- *
- * @returns {PropertyDecorator}
- */
 export function Serialize(): PropertyDecorator {
-  return function (target: object, propertyKey: string | symbol) {
-    if (!Reflect.hasMetadata("serialize", target)) {
-      Reflect.defineMetadata("serialize", [], target);
-    }
-
-    Reflect.getMetadata("serialize", target).push(propertyKey);
-  };
-}
-
-export function Deserialize(): PropertyDecorator {
-  return function (target: object, propertyKey: string | symbol) {
-    if (!Reflect.hasMetadata("deserialize", target)) {
-      Reflect.defineMetadata("deserialize", [], target);
-    }
-
-    Reflect.getMetadata("deserialize", target).push(propertyKey);
-  };
-}
-
-export function Relation(type: () => Schema): PropertyDecorator {
-  return function (target: object, propertyKey: string) {
-    if (!Reflect.hasMetadata("relations", target)) {
-      Reflect.defineMetadata("relations", [], target);
-    }
-
-    const relations: RelationMetadata[] = Reflect.getMetadata(
-      "relations",
-      target
-    );
-
-    relations.push({
-      type,
-      property: propertyKey,
+  return function (target: Constructor<BaseSerializerSchema<unknown>>, propertyKey: string) {
+    getMetadataStorage().serializerSchemaColumns.push({
+      target,
+      type:"serialize",
+      column: propertyKey
     });
   };
 }
 
-export type Schema = Constructor<any>;
+export function Deserialize(): PropertyDecorator {
+  return function (target: Constructor<BaseSerializerSchema<unknown>>, propertyKey: string) {
+    getMetadataStorage().serializerSchemaColumns.push({
+      target,
+      type: "deserialize",
+      column: propertyKey
+    });
+  };
+}
+
+export function Relation(type: () => Constructor<BaseSerializerSchema<unknown>>): PropertyDecorator {
+  return function (target: Constructor<BaseSerializerSchema<unknown>>, propertyKey: string) {
+    getMetadataStorage().serializerSchemaRelations.push({
+      target,
+      relation : type,
+      column: propertyKey
+    });
+  };
+}
 
 export interface SchemaOptions {
   schemas: () => Constructor<BaseSerializerSchema<any>>[];

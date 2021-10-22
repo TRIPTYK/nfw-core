@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import * as HttpStatus from "http-status";
 import { DeepPartial } from "typeorm";
 import { ApplicationRegistry } from "../application/registry.application";
-import { JsonApiModel } from "../models/json-api.model";
+import { BaseJsonApiModel } from "../models/json-api.model";
 import { BaseJsonApiRepository } from "../repositories/base.repository";
 import { PaginationResponse } from "../responses/pagination.response";
 import { Response as ApiResponse } from "../responses/response.response";
@@ -13,19 +13,11 @@ import { Constructor } from "../types/global";
 import { BaseController } from "./base.controller";
 
 export abstract class BaseJsonApiController<
-  T extends JsonApiModel<T>
+  T extends BaseJsonApiModel<T>
 > extends BaseController {
   public entity: Constructor<T>;
   protected serializer: BaseJsonApiSerializer<T>;
   protected repository: BaseJsonApiRepository<T>;
-
-  public constructor() {
-    super();
-    this.entity = Reflect.getMetadata("entity", this);
-    this.name = Reflect.getMetadata("name", this.entity);
-    this.serializer = ApplicationRegistry.serializerFor(this.entity);
-    this.repository = ApplicationRegistry.repositoryFor(this.entity);
-  }
 
   public callMethod(methodName: string): any {
     return async (req: Request, res: Response, next: (arg0: any) => any) => {
@@ -33,8 +25,7 @@ export abstract class BaseJsonApiController<
         const response = await this[methodName](req, res);
 
         if (!res.headersSent) {
-          const useSchema =
-            Reflect.getMetadata("schema-use", this, methodName) ?? "default";
+          const useSchema = "default";
 
           if (response instanceof PaginationResponse) {
             const serialized = await this.serializer.serialize(
@@ -134,17 +125,11 @@ export abstract class BaseJsonApiController<
   public async remove(req: Request, res: Response): Promise<any> {
     const entity: DeepPartial<T> = await this.repository.findOne(req.params.id) as any;
 
-    const isSoftDelete = Reflect.getMetadata("soft", this) ?? true;
-
     if (!entity) {
       throw Boom.notFound();
     }
 
-    if (isSoftDelete) {
-      await this.repository.softRemove(entity);
-    }else{
-      await this.repository.remove(entity as any);
-    }
+    await this.repository.remove(entity as any);
     res.sendStatus(HttpStatus.NO_CONTENT).end();
   }
 
@@ -166,14 +151,7 @@ export abstract class BaseJsonApiController<
 
     res.type("application/vnd.api+json");
     return res.json(
-      await ApplicationRegistry.serializerFor(
-        otherEntityMetadata.target as any
-      ).serialize(relatedIds, "relationships", {
-        id: req.params.id,
-        thisType: this.name,
-        relationName: relation,
-        url: req.url,
-      })
+      
     );
   }
 
@@ -187,23 +165,11 @@ export abstract class BaseJsonApiController<
       throw Boom.notFound();
     }
 
-    const useSchema =
-      Reflect.getMetadata("schema-use", this, "fetchRelated") ?? "default";
+    const useSchema = "default";
 
     res.type("application/vnd.api+json");
     return res.json(
-      await ApplicationRegistry.serializerFor(
-        otherEntityMetadata.target as any
-      ).serialize(
-        await this.repository.fetchRelated(
-          relation,
-          req.params.id
-        ),
-        useSchema,
-        {
-          url: req.url,
-        }
-      )
+      
     );
   }
 

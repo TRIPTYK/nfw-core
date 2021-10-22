@@ -1,6 +1,5 @@
 import * as JSONAPISerializer from "json-api-serializer";
 import {
-  RelationMetadata,
   SchemaOptions,
 } from "../decorators/serializer.decorator";
 import { SerializerInterface } from "../interfaces/serializer.interface";
@@ -30,12 +29,6 @@ export abstract class BaseJsonApiSerializer<T>
       convertCase: "camelCase",
       unconvertCase: "snake_case",
     });
-
-    const schemasData: SchemaOptions = Reflect.getMetadata("schemas", this);
-
-    for (const schema of schemasData.schemas()) {
-      Reflect.defineMetadata("type", schemasData.type, schema);
-    }
   }
 
   public init() {
@@ -104,13 +97,6 @@ export abstract class BaseJsonApiSerializer<T>
     }
   }
 
-  public getSchema(name: string) {
-    const schemasData: SchemaOptions = Reflect.getMetadata("schemas", this);
-    return schemasData
-      .schemas()
-      .find((schema) => Reflect.getMetadata("name", schema) === name);
-  }
-
   public convertSerializerSchemaToObjectSchema(
     schema: Constructor<BaseSerializerSchema<T>>,
     rootSchema: Constructor<BaseSerializerSchema<T>>,
@@ -123,7 +109,7 @@ export abstract class BaseJsonApiSerializer<T>
       (Reflect.getMetadata("deserialize", schema.prototype) ?? []) as string[]
     );
     const relations = (Reflect.getMetadata("relations", schema.prototype) ??
-      []) as RelationMetadata[];
+      []);
     const schemaType = Reflect.getMetadata("type", schema) as string;
     const schemaInstance = new schema();
 

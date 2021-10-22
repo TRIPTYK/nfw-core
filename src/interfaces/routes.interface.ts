@@ -1,8 +1,8 @@
 import { BaseController } from "../controllers";
-import { RequestMethods } from "../decorators";
+import { ControllerRoutesMetadataArgs, RequestMethods } from "../metadata/metadata-storage";
 
 export interface RouteContext {
-	routeDefinition: RouteDefinition;
+	routeMeta: ControllerRoutesMetadataArgs;
 	controllerInstance: BaseController;
 }
 

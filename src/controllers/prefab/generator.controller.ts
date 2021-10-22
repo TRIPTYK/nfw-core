@@ -42,8 +42,10 @@ import { WsController } from "../ws.controller";
 export class GeneratorController extends WsController {
 	@Post("/route/:name")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: createRoute,
-		location: ["body"],
+		args : {
+			schema: createRoute,
+			location: ["body"]
+		}
 	})
 	public async generateRoute(req: Request, res: Response) {
 		await generateBasicRoute(req.params.name, req.body.methods);
@@ -53,8 +55,10 @@ export class GeneratorController extends WsController {
 
 	@Post("/route/:name/subroute")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: createSubRoute,
-		location: ["body"],
+		args: {
+			schema: createSubRoute,
+			location: ["body"],
+		}
 	})
 	public async generateSubRoute(req: Request, res: Response) {
 		await addEndpoint(req.params.name, req.body.method, req.body.subRoute);
@@ -64,8 +68,10 @@ export class GeneratorController extends WsController {
 
 	@Post("/entity/:name")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: createEntity,
-		location: ["body"],
+		args : {
+			schema: createEntity,
+			location: ["body"],
+		}
 	})
 	public async generateEntity(req: Request, res: Response) {
 		await generateJsonApiEntity(req.params.name, {
@@ -78,8 +84,10 @@ export class GeneratorController extends WsController {
 
 	@Post("/perms/:name")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: addPermissions,
-		location: ["body"],
+		args : {
+			schema: addPermissions,
+			location: ["body"],
+		}
 	})
 	public async addPermissions(req: Request, res: Response) {
 		for (const element of req.body.elements) {
@@ -102,9 +110,11 @@ export class GeneratorController extends WsController {
 	}
 
 	@Post("/entity/:name/relation")
-	@MethodMiddleware(ValidationMiddleware, {
-		schema: createRelation,
-		location: ["body"],
+	@MethodMiddleware(ValidationMiddleware,  {
+		args : {
+			schema: createRelation,
+			location: ["body"],
+		}
 	})
 	public async addEntityRelation(req: Request, res: Response) {
 		await addRelation(req.params.name, req.body);
@@ -114,8 +124,9 @@ export class GeneratorController extends WsController {
 
 	@Post("/entity/:name/column")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: createColumn,
-		location: ["body"],
+			args : {schema: createColumn,
+			location: ["body"],
+		}
 	})
 	public async generateColumn(req: Request, res: Response) {
 		await addColumn(req.params.name, req.body);
@@ -125,8 +136,10 @@ export class GeneratorController extends WsController {
 
 	@Post("/entity/:name/entity-actions")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: columnsActions,
-		location: ["body"],
+		args : {
+			schema: columnsActions,
+			location: ["body"],
+		}
 	})
 	public async do(req: Request, res: Response) {
 		for (const column of req.body.columns) {
@@ -186,8 +199,10 @@ export class GeneratorController extends WsController {
 
 	@Patch("/route/:name/subroute/:methodName")
 	@MethodMiddleware(ValidationMiddleware, {
-		schema: createSubRoute,
-		location: ["body"],
+		args : {
+			schema: createSubRoute,
+			location: ["body"],
+		}
 	})
 	public async modSubRoute(req: Request, res: Response) {
 		await deleteEndpoint(req.params.name, req.params.methodName);

@@ -10,6 +10,7 @@ import { getPerms } from "../../generator/commands/get-perms";
 import { getRoles } from "../../generator/commands/get-roles";
 import { getEntityRoutes } from "../../generator/commands/get-entityRoutes";
 import * as pluralize from "pluralize";
+import { getMetadataStorage } from "../../metadata/metadata-storage";
 
 /**
  * Use or inherit this controller in your app if you want to get api metadata
@@ -89,7 +90,7 @@ export class MetadataController extends BaseController {
 
 	protected getJsonApiEntities() {
 		return this.typeormConnection.connection.entityMetadatas.filter((table) =>
-			ApplicationRegistry.entities.includes(table.target as any)
+			getMetadataStorage().entities.includes(table.target as any)
 		);
 	}
 

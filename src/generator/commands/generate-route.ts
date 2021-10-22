@@ -1,5 +1,5 @@
 import { ObjectLiteralExpression, SyntaxKind } from "ts-morph";
-import { httpRequestMethods } from "../../..";
+import { httpRequestMethods } from "../../enums/methods";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
 import { addEndpoint } from "./add-endpoint";

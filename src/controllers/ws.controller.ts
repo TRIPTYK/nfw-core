@@ -1,12 +1,12 @@
 import { BaseController } from "./base.controller";
-import * as SocketIO from "socket.io-client";
+import { Socket, io  } from "socket.io-client";
 import { ApplicationLifeCycleEvent, ApplicationRegistry } from "../application/registry.application";
 
 /**
  * BaseController that handles WebSocket connection.
  */
 export class WsController extends BaseController {
-    public socket: SocketIOClient.Socket = null;
+    public socket: Socket  = null;
 
     /**
      * @param address Address of the WS server to connect.
@@ -19,9 +19,9 @@ export class WsController extends BaseController {
         callback = () => {}
         ) {
 		super();
-		this.socket = SocketIO(address, {
+		this.socket = io(address, {
 			query: {
-				app: false,
+				app: "false",
 			},
 		});
 		ApplicationRegistry.on(ApplicationLifeCycleEvent.Running, () => {

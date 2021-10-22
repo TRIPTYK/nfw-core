@@ -1,19 +1,13 @@
-import * as Express from "express";
-import { ApplicationRegistry } from "../application/registry.application";
+import { Request, Response } from "express";
 import { ControllerInterface } from "../interfaces/controller.interface";
 
 export abstract class BaseController implements ControllerInterface {
   public name: string;
 
-  public constructor() {
-    ApplicationRegistry.registerController(this);
-    this.name = Reflect.getMetadata("routeName", this);
-  }
-
   public callMethod(methodName: string) {
     const middlewareFunction = async (
-      req: Express.Request,
-      res: Express.Response,
+      req: Request,
+      res: Response,
       next: (arg0: any) => any
     ) => {
       try {
