@@ -1,5 +1,5 @@
 import * as pascalcase from "pascalcase";
-import * as pluralize from "pluralize";
+import pluralize from "pluralize";
 import { EntityRelation } from "../interfaces/generator.interface";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";

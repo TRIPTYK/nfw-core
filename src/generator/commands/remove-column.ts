@@ -1,4 +1,4 @@
-import * as camelcase from "camelcase";
+import camelcase from "camelcase";
 import { SyntaxKind, VariableDeclarationKind } from "ts-morph";
 import { EntityColumn } from "../interfaces/generator.interface";
 import { resources, getEntityNaming } from "../static/resources";

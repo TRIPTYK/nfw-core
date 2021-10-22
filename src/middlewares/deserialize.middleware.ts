@@ -20,19 +20,12 @@ export class DeserializeMiddleware extends BaseMiddleware {
     if (!req.body.data) {
       return next();
     }
-    // console.log("before");
-    // console.log(req.body);
 
     const fields = await container
       .resolve(args.serializer)
       .deserialize(req.body);
     req.body = {};
-    // req.body = req.body.data;
-    // console.log("assignation");
-
-    // console.log(req.body);
-
-    // req.body = fields;
+    
     for (const key in fields) {
       if (key !== "id") {
         req.body[key] = fields[key];

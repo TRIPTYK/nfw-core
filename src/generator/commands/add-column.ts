@@ -1,4 +1,4 @@
-import * as camelcase from "camelcase";
+import camelcase from "camelcase";
 import * as pascalcase from "pascalcase";
 import stringifyObject from "stringify-object";
 import {

@@ -33,12 +33,10 @@ export class TypeORMService extends BaseService {
   public get ConfigurationObject(): ConnectionOptions {
     const { typeorm } = this.configurationService.config;
 
-    console.log(getMetadataArgsStorage().entityRepositories);
-
     return {
       database: typeorm.database,
       entities: typeorm.entities,
-      synchronize: typeorm.synchronize,
+      synchronize: true,
       host: typeorm.host,
       name: typeorm.name,
       password: typeorm.pwd,

@@ -1,7 +1,7 @@
 import { ArrayLiteralExpression, PropertyAccessExpression } from "ts-morph";
 import { resources, getEntityNaming } from "../static/resources";
 import project from "../utils/project";
-import * as pluralize from "pluralize";
+import pluralize from "pluralize";
 import * as pascalcase from "pascalcase";
 
 export async function getEntityRoutes(

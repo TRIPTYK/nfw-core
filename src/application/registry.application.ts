@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import { EventEmitter } from "events";
-import { container } from "tsyringe";
-import { getCustomRepository } from "typeorm";
+import { container, instanceCachingFactory } from "tsyringe";
+import { ConnectionManager, useContainer } from "typeorm";
 import { v4 } from "uuid";
 import { BaseErrorMiddleware, BaseMiddleware } from "..";
 import { BaseController } from "../controllers/base.controller";
@@ -10,7 +9,6 @@ import { BaseJsonApiRepository } from "../repositories/base.repository";
 import { BaseJsonApiSerializer } from "../serializers/base.serializer";
 import { BaseService } from "../services/base.service";
 import { Constructor } from "../types/global";
-import { importGlob } from "../utils/import-glob";
 import { mesure } from "../utils/mesure.util";
 import { BaseApplication } from "./base.application";
 
@@ -26,6 +24,7 @@ export enum ApplicationLifeCycleEvent {
 }
 
 export interface RegisterOptions {
+  baseRoute: string,
   controllers: Constructor<BaseController>[],
   services: Constructor<BaseService>[],
   middlewares: Constructor<BaseMiddleware | BaseErrorMiddleware>[],
@@ -46,11 +45,10 @@ export class ApplicationRegistry {
 
   public static async registerApplication<T extends BaseApplication>(
     app: Constructor<T>,
-    { controllers, services, serializers }: RegisterOptions
+    { controllers, services, serializers, baseRoute }: RegisterOptions
   ) {
     ApplicationRegistry.eventEmitter.emit(ApplicationLifeCycleEvent.Boot);
     ApplicationRegistry.status = ApplicationStatus.Booting;
-
     const startTime = Date.now();
 
     // services before all
@@ -86,7 +84,7 @@ export class ApplicationRegistry {
 
     // setup routes etc ...
     time = await mesure(async () => {
-      await instance.setupControllers(controllers);
+      await instance.setupControllers(controllers,baseRoute);
     });
     console.log(`[${time}ms] setup controllers and routing`);
 

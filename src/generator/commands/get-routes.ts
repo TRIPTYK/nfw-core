@@ -4,7 +4,7 @@ import {
 	RouteDefinition,
 	routeType,
 } from "../../interfaces/routes.interface";
-import * as pluralize from "pluralize";
+import pluralize from "pluralize";
 import { jsonApiRoutes } from "../../enums/routes";
 import { httpRequestMethods } from "../../enums";
 

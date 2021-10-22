@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import { EntityOptions, getMetadataArgsStorage } from "typeorm";
-import { EntityRepositoryMetadataArgs } from "typeorm/metadata-args/EntityRepositoryMetadataArgs";
 import { TableMetadataArgs } from "typeorm/metadata-args/TableMetadataArgs";
-import { ApplicationRegistry } from "../application/registry.application";
 import { getMetadataStorage } from "../metadata/metadata-storage";
-import { BaseJsonApiRepository } from "../repositories/base.repository";
 
-export interface EntityOptionsExtended<T> extends EntityOptions {
-  validator: any;
-}
+export interface EntityOptionsExtended<T> extends EntityOptions {}
 
 /**
  * This decorator is used to mark classes that will be an entity (table or document depend on database type).

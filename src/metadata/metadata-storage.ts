@@ -1,4 +1,4 @@
-import { BaseErrorMiddleware, BaseJsonApiSerializer, BaseMiddleware, BaseSerializerSchema, Constructor, BaseJsonApiModel, BaseJsonApiRepository } from "..";
+import { BaseErrorMiddleware, BaseJsonApiSerializer, BaseMiddleware, BaseSerializerSchema, Constructor, BaseJsonApiModel, BaseJsonApiRepository, ErrorMiddlewareInterface } from "..";
 
 export type RequestMethods = 
         | "get"
@@ -59,7 +59,7 @@ export interface ServicesMetadataArgs {
     target: Constructor<unknown>;
 }
 
-export interface MiddlewaresMetadataArgs {
+export interface UseMiddlewaresMetadataArgs {
     target: Constructor<unknown>;
     middleware: Constructor<BaseMiddleware | BaseErrorMiddleware>;
     level: "controller" | "route" | "application";
@@ -67,6 +67,10 @@ export interface MiddlewaresMetadataArgs {
     args: unknown;
     property?: string;
     type: "error" | "classic";
+}
+
+export interface MiddlewaresMetadataArgs {
+    target: Constructor<BaseMiddleware | BaseErrorMiddleware>
 }
 
 export interface SerializerSchemaColumnsMetadataArgs {
@@ -94,9 +98,10 @@ export class MetadataStorage {
     public controllers: ControllersMetadataArgs[] = [];
     public controllerRoutes: ControllerRoutesMetadataArgs[] = [];
     public services: ServicesMetadataArgs[] = [];
-    public middlewares: MiddlewaresMetadataArgs[] = [];
+    public useMiddlewares: UseMiddlewaresMetadataArgs[] = [];
     public serializers: SerializersMetadataArgs[] = [];
     public middlewareOverrides: RouteMiddlewareOverridesMedataArgs[] = [];
+    public middlewares: MiddlewaresMetadataArgs[] = [];
     public serializerSchemas: SerializerSchemaMetadataArgs[] = [];
     public serializerSchemaColumns: SerializerSchemaColumnsMetadataArgs[] = [];
     public serializerSchemaRelations: SerializerSchemaRelationMetadataArgs[] = [];

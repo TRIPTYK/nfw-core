@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable complexity */
 import kebabCase from "@queso/kebab-case";
-import * as Express from "express";
+import Express from "express";
 import { container } from "tsyringe";
 import { BaseController } from "../controllers/base.controller";
 import { ApplicationInterface } from "../interfaces/application.interface";
@@ -51,9 +51,9 @@ export abstract class BaseApplication implements ApplicationInterface {
   /**
    * Setup controllers routing
    */
-  public async setupControllers(controllers: Constructor<BaseController>[]) {
+  public async setupControllers(controllers: Constructor<BaseController>[], baseRoute: string) {
     const globalMiddlewares = getMetadataStorage()
-      .middlewares.filter((e) => e.level === "application")
+      .useMiddlewares.filter((e) => e.level === "application")
       .sort((a, b) => b.priority - a.priority);
 
     if (globalMiddlewares.length) {
@@ -69,7 +69,7 @@ export abstract class BaseApplication implements ApplicationInterface {
         (e) => e.target === controller
       );
       const controllerMiddlewares = getMetadataStorage()
-        .middlewares.filter(
+        .useMiddlewares.filter(
           (e) => e.target === controller.constructor && e.level === "controller"
         )
         .sort((a, b) => b.priority - a.priority);
@@ -92,7 +92,7 @@ export abstract class BaseApplication implements ApplicationInterface {
 
         for (const route of routesMetadata) {
           const middlewaresMetaForRoute = getMetadataStorage()
-            .middlewares.filter(
+            .useMiddlewares.filter(
               (e) =>
                 e.target.constructor === Object.getPrototypeOf(controller) &&
                 e.level === "route"
@@ -102,7 +102,7 @@ export abstract class BaseApplication implements ApplicationInterface {
             routerForController[route.method](
               route.path,
               middlewaresMetaForRoute.map((m) => this.useMiddleware(m.middleware,m.args)).concat(
-                [instanceController.callMethod(route.property)]
+                [(req,res,next) => instanceController[route.property](req,res,next)]
               )
             );
         }
@@ -111,26 +111,34 @@ export abstract class BaseApplication implements ApplicationInterface {
       } else {
         for (const route of routesMetadata) {
           const middlewaresMetaForRoute = getMetadataStorage()
-            .middlewares.filter(
+            .useMiddlewares.filter(
               (e) =>
                 e.target.constructor === Object.getPrototypeOf(controller) &&
                 e.level === "route"
             )
             .sort((a, b) => b.priority - a.priority);
 
-          
-
+            console.log(route.method,route.path)
           routerForController[route.method](
             route.path,
             middlewaresMetaForRoute.map((m) => this.useMiddleware(m.middleware,m.args)).concat(
-              [instanceController.callMethod(route.property)]
+              [
+                async (req,res,next) => {
+                 const result = await instanceController[route.property](req,res,next);
+
+                 res.json(result);
+                }
+              ]
             )
           );
         }
 
+        console.log(controllerMetadata.routeName)
         this.router.use(controllerMetadata.routeName, routerForController);
       }
     }
+
+    this.app.use(baseRoute, this.router);
   }
 
   private useMiddleware = (

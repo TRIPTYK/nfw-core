@@ -1,5 +1,6 @@
 
-import { BaseJsonApiModel, BaseJsonApiRepository, Constructor, getMetadataArgsStorage } from "..";
+import { getMetadataArgsStorage } from "typeorm";
+import { BaseJsonApiModel, BaseJsonApiRepository, Constructor } from "..";
 import { getMetadataStorage } from "../metadata/metadata-storage";
 
 export function JsonApiRepository(entity:  Constructor<BaseJsonApiModel<unknown>>) {

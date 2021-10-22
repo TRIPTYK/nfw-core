@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { autoInjectable, container } from "tsyringe";
 import { BaseController, BaseErrorMiddleware } from "..";
-import { RouteDefinition } from "../interfaces/routes.interface";
 import { getMetadataStorage, RequestMethods } from "../metadata/metadata-storage";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { BaseJsonApiModel } from "../models/json-api.model";
@@ -58,10 +56,6 @@ export function GeneratedController(routeName: string) {
     };
 }
 
-/**
- *
- * @param entity
- */
 export function JsonApiController(
     entity: Constructor<BaseJsonApiModel<unknown>>
 ) {
@@ -75,17 +69,17 @@ export function JsonApiController(
     };
 }
 
-export interface MiddlewareDecoratorArgs<T = unknown> {
+export interface UseMiddlewareDecoratorArgs<T = unknown> {
     priority?: number,
     args?: T,
 }
 
 export function RouteMiddleware<T = unknown>(
     middlewareClass: Constructor<BaseMiddleware | BaseErrorMiddleware>,
-    options?: MiddlewareDecoratorArgs<T>
+    options?: UseMiddlewareDecoratorArgs<T>
 ) {
     return function <T extends Constructor<BaseMiddleware | BaseErrorMiddleware>>(target: T): void {
-        getMetadataStorage().middlewares.push({
+        getMetadataStorage().useMiddlewares.push({
             target,
             middleware : middlewareClass, 
             level: "route",
@@ -98,10 +92,10 @@ export function RouteMiddleware<T = unknown>(
 
 export function MethodMiddleware<T = unknown>(
     middlewareClass: Constructor<BaseMiddleware>,
-    options?: MiddlewareDecoratorArgs<T>
+    options?: UseMiddlewareDecoratorArgs<T>
 ): MethodDecorator {
     return function (target: any, property: string): void {
-        getMetadataStorage().middlewares.push({
+        getMetadataStorage().useMiddlewares.push({
             target,
             middleware: middlewareClass,
             level: "route",
@@ -115,10 +109,10 @@ export function MethodMiddleware<T = unknown>(
 
 export function JsonApiMethodMiddleware<T = unknown>(
     middlewareClass: Constructor<BaseMiddleware>,
-    options?: MiddlewareDecoratorArgs<T>
+    options?: UseMiddlewareDecoratorArgs<T>
 ): MethodDecorator {
     return function (target: any, property: string): void {
-        getMetadataStorage().middlewares.push({
+        getMetadataStorage().useMiddlewares.push({
             target,
             middleware: middlewareClass,
             level: "route",
