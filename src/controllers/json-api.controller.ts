@@ -123,8 +123,6 @@ export abstract class BaseJsonApiController<
       ...{ id: req.params.id },
     });
 
-    console.log(saved);
-
     if (saved === undefined) {
       throw Boom.notFound();
     }

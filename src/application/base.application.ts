@@ -315,15 +315,7 @@ export abstract class BaseApplication implements ApplicationInterface {
             methodName: route.method,
           };
         });
-        for (const i of routes) {
-          if (
-            !routeList.some(
-              (r) => r.path === i.path && r.requestMethod === i.requestMethod
-            )
-          ) {
-            routeList.push(i);
-          }
-        }
+  
         this.routes.push({
           prefix: jsonApiEntityName,
           type: "entity",
