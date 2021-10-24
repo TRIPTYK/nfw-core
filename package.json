@@ -26,6 +26,7 @@
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
     "http-status": "^1.4.1",
+    "is-class": "^0.0.9",
     "json-api-serializer": "^2.6.3",
     "pascalcase": "^1.0.0",
     "passport-jwt": "^4.0.0",
@@ -38,6 +39,7 @@
     "ts-morph": "^12.0.0",
     "tsyringe": "^4.6.0",
     "typeorm": "^0.2.36",
+    "typescript": "^4.4.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -56,7 +58,6 @@
     "prepublishOnly": "tsc && npx rollup -c",
     "postpublish": "rm -rf dist"
   },
-  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TRIPTYK/nfw-core.git"

@@ -6,7 +6,6 @@ export * from './controllers';
 export * from './decorators';
 export * from './enums';
 export * from './errors';
-export * from './generator';
 export * from './interfaces';
 export * from './middlewares';
 export * from './models';

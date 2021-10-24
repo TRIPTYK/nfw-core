@@ -1,9 +1,18 @@
-import { BaseController } from "../controllers";
-import { ControllerRoutesMetadataArgs, RequestMethods } from "../metadata/metadata-storage";
+import { Request, Response } from "express";
+import { RequestMethods } from "../metadata/metadata-storage";
 
-export interface RouteContext {
-	routeMeta: ControllerRoutesMetadataArgs;
-	controllerInstance: BaseController;
+export interface GuardContext<T> {
+	request: Request;
+	method: string;
+	controller: T;
+	args?: unknown;
+}
+
+export interface ResponseHandlerContext<T> {
+	response: Response;
+	method: string;
+	controller: T;
+	args?: unknown;
 }
 
 export interface GlobalRouteDefinition {

@@ -1,28 +1,17 @@
+import { NextFunction, Request, Response } from "express";
 import { autoInjectable, container } from "tsyringe";
 import { BaseController, BaseErrorMiddleware } from "..";
+import { GuardInterface } from "../interfaces/guard.interface";
+import { ResponseHandlerInterface } from "../interfaces/response-handler.interface";
 import { getMetadataStorage, RequestMethods } from "../metadata/metadata-storage";
 import { BaseMiddleware } from "../middlewares/base.middleware";
 import { BaseJsonApiModel } from "../models/json-api.model";
 import { Constructor } from "../types/global";
-import { ValidationSchema } from "../types/validation";
-
 
 export interface MiddlewareMetadata {
     middleware: Constructor<BaseMiddleware>;
     args?: unknown;
 }
-
-export interface JsonApiMiddlewareMetadata extends MiddlewareMetadata {
-    order: MiddlewareOrder;
-}
-
-export type MiddlewareOrder =
-    | "afterValidation"
-    | "beforeValidation"
-    | "afterDeserialization"
-    | "beforeDeserialization"
-    | "beforeAll"
-    | "afterAll";
 
 /**
  *
@@ -30,12 +19,43 @@ export type MiddlewareOrder =
  */
 export function Controller(routeName: string) {
     return function <T extends Constructor<unknown>>(target: T): void {
-        container.registerSingleton(target);
         autoInjectable()(target);
+        container.isRegistered(target);
+        container.registerSingleton(target);
         getMetadataStorage().controllers.push({
             type : "classic",
             target : target,
             routeName: routeName
+        })
+    };
+}
+
+/**
+ *
+ * @param routeName
+ */
+ export function UseGuard(guard: Constructor<GuardInterface>, args?: unknown) {
+    return function <T extends Constructor<BaseController>>(target: T, property?: string): void {
+        getMetadataStorage().useGuards.push({
+            target : target,
+            guard,
+            args,
+            propertyName : property
+        })
+    };
+}
+
+/**
+ *
+ * @param routeName
+ */
+ export function UseResponseHandler(responseHandler: Constructor<ResponseHandlerInterface>, args?: unknown) {
+    return function <T extends Constructor<BaseController>>(target: T, property?: string): void {
+        getMetadataStorage().useResponseHandlers.push({
+            target : target,
+            responseHandler,
+            args,
+            propertyName : property
         })
     };
 }
@@ -74,69 +94,24 @@ export interface UseMiddlewareDecoratorArgs<T = unknown> {
     args?: T,
 }
 
-export function RouteMiddleware<T = unknown>(
-    middlewareClass: Constructor<BaseMiddleware | BaseErrorMiddleware>,
+export function UseMiddleware<T = unknown>(
+    middlewareClass: Constructor<BaseMiddleware | BaseErrorMiddleware> | ((req: Request,res: Response,next: NextFunction) => unknown),
     options?: UseMiddlewareDecoratorArgs<T>
 ) {
-    return function <T extends Constructor<BaseMiddleware | BaseErrorMiddleware>>(target: T): void {
+    return function(target: any, property?: string): void {
         getMetadataStorage().useMiddlewares.push({
             target,
             middleware : middlewareClass, 
-            level: "route",
+            level: property ? "route" : "controller",
             priority: options?.priority,
-            args : options?.args,
-            type: middlewareClass.constructor === BaseMiddleware ?  "classic" : "error"
-        });
-    };
-}
-
-export function MethodMiddleware<T = unknown>(
-    middlewareClass: Constructor<BaseMiddleware>,
-    options?: UseMiddlewareDecoratorArgs<T>
-): MethodDecorator {
-    return function (target: any, property: string): void {
-        getMetadataStorage().useMiddlewares.push({
-            target,
-            middleware: middlewareClass,
-            level: "route",
             property,
-            priority: options?.priority ?? 0,
-            args : options?.args,
-            type: middlewareClass.constructor === BaseMiddleware ?  "classic" : "error"
+            args : options?.args
         });
     };
 }
 
-export function JsonApiMethodMiddleware<T = unknown>(
-    middlewareClass: Constructor<BaseMiddleware>,
-    options?: UseMiddlewareDecoratorArgs<T>
-): MethodDecorator {
-    return function (target: any, property: string): void {
-        getMetadataStorage().useMiddlewares.push({
-            target,
-            middleware: middlewareClass,
-            level: "route",
-            property,
-            priority: options?.priority ?? 0,
-            args : options?.args,
-            type: middlewareClass.constructor === BaseMiddleware ?  "classic" : "error"
-        });
-    };
-}
 
-export function OverrideSerializer(schema = "default"): MethodDecorator {
-    return function (target: any, propertyKey: string): void {
-        
-    };
-}
 
-export function OverrideValidator<T>(
-    schema: ValidationSchema<T>
-): MethodDecorator {
-    return function (target: any, propertyKey: string): void {
-        
-    };
-}
 
 const registerMethod = (path: string = null, method: RequestMethods) =>
     function (target: Constructor<BaseController>, propertyKey: string): void {

@@ -1,16 +1,14 @@
 import { EventEmitter } from "events";
-import { container, instanceCachingFactory } from "tsyringe";
-import { ConnectionManager, useContainer } from "typeorm";
+import { Application, default as createApplication } from "express";
+import { container } from "tsyringe";
+import { createConnection } from "typeorm";
 import { v4 } from "uuid";
-import { BaseErrorMiddleware, BaseMiddleware } from "..";
 import { BaseController } from "../controllers/base.controller";
-import { BaseJsonApiModel } from "../models/json-api.model";
-import { BaseJsonApiRepository } from "../repositories/base.repository";
-import { BaseJsonApiSerializer } from "../serializers/base.serializer";
+import { buildApplication } from "../factory/build-application";
+import { getMetadataStorage } from "../metadata/metadata-storage";
 import { BaseService } from "../services/base.service";
 import { Constructor } from "../types/global";
 import { mesure } from "../utils/mesure.util";
-import { BaseApplication } from "./base.application";
 
 export enum ApplicationStatus {
   Booting = "BOOTING",
@@ -25,16 +23,11 @@ export enum ApplicationLifeCycleEvent {
 
 export interface RegisterOptions {
   baseRoute: string,
-  controllers: Constructor<BaseController>[],
-  services: Constructor<BaseService>[],
-  middlewares: Constructor<BaseMiddleware | BaseErrorMiddleware>[],
-  entities: Constructor<BaseJsonApiModel<unknown>>[],
-  serializers: Constructor<BaseJsonApiSerializer<unknown>>[],
-  repositories: Constructor<BaseJsonApiRepository<unknown>>[],
+  controllers: Constructor<BaseController>[]
 }
 
 export class ApplicationRegistry {
-  public static application: BaseApplication;
+  public static application: Application;
   public static status: ApplicationStatus = ApplicationStatus.None;
   public static guid = v4();
   private static eventEmitter: EventEmitter = new EventEmitter();
@@ -43,13 +36,23 @@ export class ApplicationRegistry {
     ApplicationRegistry.eventEmitter.on(event, callback);
   }
 
-  public static async registerApplication<T extends BaseApplication>(
-    app: Constructor<T>,
-    { controllers, services, serializers, baseRoute }: RegisterOptions
+  public static async registerApplication(
+    { controllers, baseRoute }: RegisterOptions
   ) {
     ApplicationRegistry.eventEmitter.emit(ApplicationLifeCycleEvent.Boot);
     ApplicationRegistry.status = ApplicationStatus.Booting;
+
+    await createConnection({
+      database: "nfw",
+      host: "localhost",
+      password: "test123*",
+      username: "root",
+      type: "mysql",
+      entities: ["./src/api/models/*.ts"]
+    });
+
     const startTime = Date.now();
+    const services = getMetadataStorage().services.map(s => s.target);
 
     // services before all
     let time = await mesure(async () => {
@@ -59,13 +62,8 @@ export class ApplicationRegistry {
     });
     console.log(`[${time}ms] initialized ${services.length} services`);
 
-    const instance = (ApplicationRegistry.application = new app());
-    // app constructor
-    time = await mesure(async () => {
-      await instance.init();
-    });
-    console.log(`[${time}ms] initialized app instance`);
-
+    const instance = (ApplicationRegistry.application = createApplication());
+    
     // controllers
     time = await mesure(async () => {
       await Promise.all(
@@ -74,24 +72,12 @@ export class ApplicationRegistry {
     });
     console.log(`[${time}ms] initialized ${controllers.length} controllers`);
 
-    // serializers
-    time = await mesure(async () => {
-      for (const serializer of serializers) {
-        container.resolve(serializer).init();
-      }
-    });
-    console.log(`[${time}ms] initialized ${serializers.length} serializers`);
-
     // setup routes etc ...
     time = await mesure(async () => {
-      await instance.setupControllers(controllers,baseRoute);
+      const mainRouter = buildApplication(controllers);
+      instance.use(baseRoute, mainRouter);
     });
     console.log(`[${time}ms] setup controllers and routing`);
-
-    // afterInit hook
-    time = await mesure(async () => {
-      await instance.afterInit();
-    });
 
     ApplicationRegistry.status = ApplicationStatus.Running;
     ApplicationRegistry.eventEmitter.emit(ApplicationLifeCycleEvent.Running);

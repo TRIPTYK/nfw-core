@@ -1,4 +1,7 @@
-import { BaseErrorMiddleware, BaseJsonApiSerializer, BaseMiddleware, BaseSerializerSchema, Constructor, BaseJsonApiModel, BaseJsonApiRepository, ErrorMiddlewareInterface } from "..";
+import { NextFunction, Request, Response } from "express";
+import { BaseErrorMiddleware, BaseJsonApiSerializer, BaseMiddleware, BaseSerializerSchema, Constructor, BaseJsonApiModel, BaseJsonApiRepository, ErrorMiddlewareInterface, BaseController } from "..";
+import { GuardInterface } from "../interfaces/guard.interface";
+import { ResponseHandlerInterface } from "../interfaces/response-handler.interface";
 
 export type RequestMethods = 
         | "get"
@@ -61,12 +64,18 @@ export interface ServicesMetadataArgs {
 
 export interface UseMiddlewaresMetadataArgs {
     target: Constructor<unknown>;
-    middleware: Constructor<BaseMiddleware | BaseErrorMiddleware>;
+    middleware: Constructor<BaseMiddleware | BaseErrorMiddleware> | ((req: Request,res: Response,next: NextFunction) => unknown);
     level: "controller" | "route" | "application";
     priority: number;
     args: unknown;
     property?: string;
-    type: "error" | "classic";
+}
+
+export interface UseGuardsMetadataArgs {
+    target: Constructor<BaseController>;
+    guard: Constructor<GuardInterface>;
+    args?: unknown;
+    propertyName?: string;
 }
 
 export interface MiddlewaresMetadataArgs {
@@ -90,9 +99,27 @@ export interface SerializerSchemaMetadataArgs {
     entity?: Constructor<BaseJsonApiSerializer<unknown>>;
 }
 
+export interface UseParamsMetadataArgs {
+    target: Constructor<BaseController>;
+    property: string;
+    parameterIndex: number;
+    type : "request" | "body" | "params" | "param";
+    args?: unknown[];
+}
+
+export interface UseResponseHandlerMetadataArgs {
+    target: Constructor<BaseController>;
+    responseHandler: Constructor<ResponseHandlerInterface>;
+    args?: unknown;
+    propertyName?: string;
+}
+
 export class MetadataStorage {
     public static instance: MetadataStorage;
 
+    public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
+    public useParams: UseParamsMetadataArgs[] = [];
+    public useGuards: UseGuardsMetadataArgs[] = [];
     public entities: EntitiesMetadataArgs[] = [];
     public repositories: EntityRepositoriesMetadataArgs[] = [];
     public controllers: ControllersMetadataArgs[] = [];
