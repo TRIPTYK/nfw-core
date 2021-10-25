@@ -1,0 +1,42 @@
+{
+  "name": "@triptyk/nfw-core",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TRIPTYK/nfw-core.git"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TRIPTYK/nfw-core/issues"
+  },
+  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
+  "devDependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/mysql": "^4.5.9",
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.8",
+    "@types/node": "^16.11.4",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.1"
+  },
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "koa": "^2.13.4",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.6.0",
+    "typescript": "^4.4.4"
+  }
+}
