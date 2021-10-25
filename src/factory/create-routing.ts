@@ -2,11 +2,13 @@ import Router, { RouterContext } from '@koa/router';
 import { isClass } from 'is-class';
 import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
+import { GuardInterface } from '../guards/guard.interface.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storage/metadata/controller.js';
 import { RouteMetadataArgs } from '../storage/metadata/route.js';
 import { UseMiddlewareMetadataArgs } from '../storage/metadata/use-middleware.js';
 import { UseParamsMetadataArgs } from '../storage/metadata/use-params.js';
+import { Class } from '../types/class.js';
 import { CreateApplicationOptions } from './create-application.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
@@ -53,12 +55,43 @@ export function useMiddleware (middlewareMeta: UseMiddlewareMetadataArgs) {
  *
  */
 export function createRoute (controllerRouter: Router, controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
-  const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyKey === routeMetadata.propertyName).sort((a, b) => a.index - b.index);
-
   const middlewaresForRoute = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.target.constructor === controllerMetadata.target && middlewareMeta.propertyName === routeMetadata.propertyName);
 
+  controllerRouter[routeMetadata.method](routeMetadata.routeName, ...middlewaresForRoute.map(useMiddleware), handleRouteControllerAction(controllerInstance, controllerMetadata, routeMetadata));
+}
+
+export function handleRouteControllerAction (controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
-  controllerRouter[routeMetadata.method](routeMetadata.routeName, ...middlewaresForRoute.map(useMiddleware), (ctx: RouterContext, next: Next) => {
-    controllerMethod.call(controllerInstance, ...paramsForRouteMetadata.map((e) => applyParam(e, ctx)));
-  })
+  const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index);
+  const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
+    /**
+     * If on controller level
+     */
+    if (guardMeta.propertyName === undefined) {
+      return guardMeta.target === controllerMetadata.target;
+    }
+    /**
+     * If on controller action level
+     */
+    return guardMeta.target.constructor === controllerMetadata.target && guardMeta.propertyName === routeMetadata.propertyName;
+  });
+
+  return async (ctx: RouterContext, _next: Next) => {
+    const guardsReturn = await Promise.all(guardForRouteMetadata.map((guardMeta) => {
+      return container.resolve(guardMeta.guard as Class<GuardInterface>).can({
+        controllerAction: routeMetadata.propertyName,
+        controllerInstance,
+        routerContext: ctx
+      });
+    }));
+
+    if (guardsReturn.includes(false)) {
+      ctx.response.body = 'Forbidden';
+      return;
+    }
+
+    const controllerActionResult = await controllerMethod.call(controllerInstance, ...paramsForRouteMetadata.map((e) => applyParam(e, ctx)));
+
+    ctx.response.body = controllerActionResult;
+  };
 }

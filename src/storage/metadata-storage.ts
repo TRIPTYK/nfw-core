@@ -1,5 +1,6 @@
 import { ControllerMetadataArgs } from './metadata/controller.js';
 import { RouteMetadataArgs } from './metadata/route.js';
+import { UseGuardMetadataArgs } from './metadata/use-guard.js';
 import { UseMiddlewareMetadataArgs } from './metadata/use-middleware.js';
 import { UseParamsMetadataArgs } from './metadata/use-params.js';
 
@@ -38,7 +39,12 @@ export class MetadataStorage {
     public useParams: UseParamsMetadataArgs[] = [];
 
     /**
-    * Middleware uses
+    * Middleware uses for controllers/routes
     */
     public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
+
+    /**
+     * Use guards for controllers/routes
+     */
+   public useGuards: UseGuardMetadataArgs[] = [];
 }
