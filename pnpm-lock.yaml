@@ -14,6 +14,7 @@ specifiers:
   eslint-plugin-import: ^2.25.2
   eslint-plugin-node: ^11.1.0
   eslint-plugin-promise: ^5.1.1
+  is-class: ^0.0.9
   koa: ^2.13.4
   reflect-metadata: ^0.1.13
   tsyringe: ^4.6.0
@@ -21,6 +22,7 @@ specifiers:
 
 dependencies:
   '@koa/router': 10.1.1
+  is-class: 0.0.9
   koa: 2.13.4
   reflect-metadata: 0.1.13
   tsyringe: 4.6.0
@@ -1734,6 +1736,10 @@ packages:
     resolution: {integrity: sha512-nsuwtxZfMX67Oryl9LCQ+upnC0Z0BgpwntpS89m1H/TLF0zNfzfLMV/9Wa/6MZsj0acpEjAO0KF1xT6ZdLl95w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /is-class/0.0.9:
+    resolution: {integrity: sha512-kUfRnejcRC9YLgblxoJ76dp9gZ3vMKTrDS5I6z2UVMOsHHSImNKCJocjQTkZr38PwiSZ9LVklaHEENaVYeFTXg==}
+    dev: false
 
   /is-core-module/2.8.0:
     resolution: {integrity: sha512-vd15qHsaqrRL7dtH6QNuy0ndJmRDrS9HAM1CAiSifNUFv4x1a0CCVsj18hJ1mShxIG6T2i1sO78MkP56r0nYRw==}
