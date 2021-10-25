@@ -5,3 +5,4 @@ export * from './decorators/controller.decorator.js';
 export * from './decorators/route.decorator.js';
 export * from './decorators/params/body.decorator.js';
 export * from './decorators/params/param.decorator.js';
+export * from './factory/custom-decorator.js';

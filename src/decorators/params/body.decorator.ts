@@ -1,5 +1,4 @@
 import { MetadataStorage } from '../../storage/metadata-storage.js'
-import { ParamType } from '../../storage/metadata/use-params.js';
 
 export function Body () {
   return function (target: unknown, propertyKey: string, index: number) {
@@ -7,7 +6,9 @@ export function Body () {
       target,
       propertyKey,
       index,
-      paramType: ParamType.BODY
+      handle: (context) => {
+        return context.body;
+      }
     });
   }
 }

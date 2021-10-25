@@ -3,7 +3,7 @@ import { Next } from 'koa';
 import { container } from 'tsyringe';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storage/metadata/controller.js';
-import { ParamType, UseParamsMetadataArgs } from '../storage/metadata/use-params.js';
+import { UseParamsMetadataArgs } from '../storage/metadata/use-params.js';
 import { CreateApplicationOptions } from './create-application.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
@@ -36,25 +36,7 @@ export function createController (controller: ControllerMetadataArgs, controller
 }
 
 export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: RouterContext) {
-  switch (paramMetadata.paramType) {
-    case ParamType.BODY: {
-      return ctx.body;
-    }
-    case ParamType.PARAM: {
-      const [paramName] = paramMetadata.args as [string];
-      return ctx.params[paramName];
-    }
-    case ParamType.QUERY: {
-      return ctx.query;
-    }
-    case ParamType.QUERYPARAM: {
-      const [queryParamName] = paramMetadata.args as [string];
-      return ctx.query[queryParamName];
-    }
-    case ParamType.CUSTOM: {
-      // TODO
-    }
-  }
+  return paramMetadata.handle(ctx, paramMetadata.args);
 }
 
 /**

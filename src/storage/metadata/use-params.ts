@@ -1,20 +1,9 @@
-export enum ParamType {
-    BODY,
-    REQUEST,
-    RESPONSE,
-    PARAM,
-    PARAMS,
-    QUERY,
-    QUERYPARAM,
-    HEADER,
-    HEADERS,
-    CUSTOM,
-}
+import { RouterContext } from '@koa/router';
 
 export interface UseParamsMetadataArgs {
     target: unknown,
     propertyKey: string,
-    paramType: ParamType,
     args?: unknown[],
     index: number,
+    handle: (ctx: RouterContext, args: unknown[]) => unknown,
 }

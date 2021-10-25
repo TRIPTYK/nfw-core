@@ -1,6 +1,5 @@
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { RouteMethod } from '../storage/metadata/route.js';
-import { Class } from '../types/class.js';
 
 export function GET (routeName: string) {
   return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
