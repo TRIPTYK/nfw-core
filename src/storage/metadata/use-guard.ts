@@ -5,5 +5,5 @@ export interface UseGuardMetadataArgs {
     target: unknown,
     propertyName?: string,
     args?: unknown[],
-    guard: Class<GuardInterface> | GuardInterface,
+    guard: Class<GuardInterface>,
 }

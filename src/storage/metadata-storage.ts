@@ -3,6 +3,7 @@ import { RouteMetadataArgs } from './metadata/route.js';
 import { UseGuardMetadataArgs } from './metadata/use-guard.js';
 import { UseMiddlewareMetadataArgs } from './metadata/use-middleware.js';
 import { UseParamsMetadataArgs } from './metadata/use-params.js';
+import { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.js';
 
 export class MetadataStorage {
     /**
@@ -47,4 +48,9 @@ export class MetadataStorage {
      * Use guards for controllers/routes
      */
    public useGuards: UseGuardMetadataArgs[] = [];
+
+    /**
+     * Use guards for controllers/routes
+     */
+    public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 }

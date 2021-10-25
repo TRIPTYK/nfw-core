@@ -2,13 +2,12 @@ import Router, { RouterContext } from '@koa/router';
 import { isClass } from 'is-class';
 import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
-import { GuardInterface } from '../guards/guard.interface.js';
+import { ResponseHandlerInterface } from '../index.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storage/metadata/controller.js';
 import { RouteMetadataArgs } from '../storage/metadata/route.js';
 import { UseMiddlewareMetadataArgs } from '../storage/metadata/use-middleware.js';
 import { UseParamsMetadataArgs } from '../storage/metadata/use-params.js';
-import { Class } from '../types/class.js';
 import { CreateApplicationOptions } from './create-application.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
@@ -63,6 +62,18 @@ export function createRoute (controllerRouter: Router, controllerInstance: unkno
 export function handleRouteControllerAction (controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index);
+  const responsehandlerForRouteMetadata = MetadataStorage.instance.useResponseHandlers.find((guardMeta) => {
+    /**
+     * If on controller level
+     */
+    if (guardMeta.propertyName === undefined) {
+      return guardMeta.target === controllerMetadata.target;
+    }
+    /**
+     * If on controller action level
+     */
+    return guardMeta.target.constructor === controllerMetadata.target && guardMeta.propertyName === routeMetadata.propertyName;
+  });
   const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
     /**
      * If on controller level
@@ -76,22 +87,57 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
     return guardMeta.target.constructor === controllerMetadata.target && guardMeta.propertyName === routeMetadata.propertyName;
   });
 
+  /**
+   * Pre-fetch gaurds and response-handlers to do not resolve every request
+   */
+  let responseHandlerInstance: ResponseHandlerInterface;
+
+  if (responsehandlerForRouteMetadata) {
+    responseHandlerInstance = container.resolve(responsehandlerForRouteMetadata.responseHandler);
+  }
+
+  const guardsInstance = guardForRouteMetadata.map((guardMeta) => {
+    return {
+      instance: container.resolve(guardMeta.guard),
+      args: guardMeta.args
+    }
+  });
+
   return async (ctx: RouterContext, _next: Next) => {
-    const guardsReturn = await Promise.all(guardForRouteMetadata.map((guardMeta) => {
-      return container.resolve(guardMeta.guard as Class<GuardInterface>).can({
+    /**
+     * Guards are executed one at a time
+     */
+    for (const { instance, args } of guardsInstance) {
+      const guardResponse = await instance.can({
         controllerAction: routeMetadata.propertyName,
         controllerInstance,
-        routerContext: ctx
+        request: ctx.request,
+        args
       });
-    }));
-
-    if (guardsReturn.includes(false)) {
-      ctx.response.body = 'Forbidden';
-      return;
+      if (!guardResponse) {
+        ctx.response.status = 403;
+        ctx.response.body = 'Forbidden';
+        return;
+      }
     }
 
+    /**
+     * Call main controller action and apply decorator params
+     */
     const controllerActionResult = await controllerMethod.call(controllerInstance, ...paramsForRouteMetadata.map((e) => applyParam(e, ctx)));
 
-    ctx.response.body = controllerActionResult;
+    /**
+     * Handle controller action response
+     */
+    if (responseHandlerInstance) {
+      await responseHandlerInstance.handle(controllerActionResult, {
+        controllerAction: routeMetadata.propertyName,
+        controllerInstance,
+        response: ctx.response,
+        args: responsehandlerForRouteMetadata.args
+      });
+    } else {
+      ctx.response.body = controllerActionResult;
+    }
   };
 }

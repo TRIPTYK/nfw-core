@@ -1,11 +1,12 @@
-import { RouterContext } from '@koa/router';
+import { Request } from 'koa';
 
-export interface ControllerRouteContext {
+export interface ControllerGuardContext {
     controllerInstance: unknown,
     controllerAction: string,
-    routerContext: RouterContext,
+    request: Request,
+    args?: unknown[],
 }
 
 export interface GuardInterface {
-    can(context : ControllerRouteContext) : Promise<boolean> | boolean,
+    can(context : ControllerGuardContext) : Promise<boolean> | boolean,
 }
