@@ -21,9 +21,9 @@ export * from './decorators/use-response-handler.js';
 export * from './decorators/use-error-handler.decorator.js';
 export * from './decorators/use-not-found-middleware.decorator.js';
 
-export * from './error-handler/error-middleware.interface.js';
-export * from './response-handlers/response-handler.interface.js';
-export * from './middlewares/middleware.interface.js';
-export * from './guards/guard.interface.js';
+export * from './interfaces/error-middleware.interface.js';
+export * from './interfaces/response-handler.interface.js';
+export * from './interfaces/middleware.interface.js';
+export * from './interfaces/guard.interface.js';
 
 export * from 'tsyringe';

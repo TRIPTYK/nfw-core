@@ -2,7 +2,7 @@ import Router from '@koa/router';
 import { MikroORM } from '@mikro-orm/core'
 import Koa, { Middleware } from 'koa'
 import { container } from 'tsyringe';
-import { MiddlewareInterface } from '../middlewares/middleware.interface.js'
+import { MiddlewareInterface } from '../interfaces/middleware.interface.js'
 import { ErrorHandlerInterface, GuardInterface } from '../index.js';
 import { Class } from '../types/class.js';
 import { createRouting } from './create-routing.js';

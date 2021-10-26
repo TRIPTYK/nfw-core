@@ -3,7 +3,7 @@ import { isClass } from 'is-class';
 import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
 import { ErrorHandlerInterface, ResponseHandlerInterface } from '../index.js';
-import { MiddlewareInterface } from '../middlewares/middleware.interface.js';
+import { MiddlewareInterface } from '../interfaces/middleware.interface.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storage/metadata/controller.metadata.js';
 import { RouteMetadataArgs } from '../storage/metadata/route.metadata.js';

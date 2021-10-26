@@ -1,4 +1,4 @@
-import { GuardInterface } from '../../guards/guard.interface.js';
+import { GuardInterface } from '../../interfaces/guard.interface.js';
 import { Class } from '../../types/class.js';
 
 export interface UseGuardMetadataArgs {

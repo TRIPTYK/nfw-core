@@ -1,4 +1,4 @@
-import { ResponseHandlerInterface } from '../../response-handlers/response-handler.interface.js';
+import { ResponseHandlerInterface } from '../../interfaces/response-handler.interface.js';
 import { Class } from '../../types/class.js';
 
 export interface UseResponseHandlerMetadataArgs {

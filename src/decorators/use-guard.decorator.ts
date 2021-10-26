@@ -1,4 +1,4 @@
-import { GuardInterface } from '../guards/guard.interface.js'
+import { GuardInterface } from '../interfaces/guard.interface.js'
 import { MetadataStorage } from '../storage/metadata-storage.js'
 import { Class } from '../types/class.js'
 
