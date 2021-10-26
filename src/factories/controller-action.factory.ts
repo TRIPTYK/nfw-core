@@ -7,7 +7,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
 import { applyParam } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './create-application.factory.js';
+import { CreateApplicationOptions } from './application.factory.js';
 
 export function handleRouteControllerAction (controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;

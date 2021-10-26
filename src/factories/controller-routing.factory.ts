@@ -3,8 +3,8 @@ import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './create-application.factory.js';
-import { createRoute } from './create-controller-routes.factory.js';
+import { CreateApplicationOptions } from './application.factory.js';
+import { createRoute } from './controller-routes.factory.js';
 
 /**
  * Handles creating controller-level route

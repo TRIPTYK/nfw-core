@@ -1,8 +1,8 @@
 import Router from '@koa/router';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './create-application.factory.js';
-import { createController } from './create-controller-routing.factory.js';
+import { CreateApplicationOptions } from './application.factory.js';
+import { createController } from './controller-routing.factory.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
   const globalMiddlewaresMeta = applicationOptions.globalMiddlewares ?? [];

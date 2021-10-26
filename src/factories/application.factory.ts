@@ -5,7 +5,7 @@ import { container } from 'tsyringe';
 import { MiddlewareInterface } from '../interfaces/middleware.interface.js'
 import { ErrorHandlerInterface, GuardInterface } from '../index.js';
 import { Class } from '../types/class.js';
-import { createRouting } from './create-application-routing.factory.js';
+import { createRouting } from './application-routing.factory.js';
 
 interface GuardOptions {
   guard: Class<GuardInterface>,
