@@ -1,5 +1,5 @@
-import { MetadataStorage } from '../storage/metadata-storage.js';
-import { RouteMethod } from '../storage/metadata/route.metadata.js';
+import { MetadataStorage } from '../storages/metadata-storage.js';
+import { RouteMethod } from '../storages/metadata/route.metadata.js';
 
 export function GET (routeName: string) {
   return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {

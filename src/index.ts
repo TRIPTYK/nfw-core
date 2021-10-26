@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 
-export { createApplication as default } from './factory/create-application.js';
-export { databaseInjectionToken } from './factory/create-application.js';
-export * from './factory/custom-decorator.js';
+export { createApplication as default } from './factories/create-application.js';
+export { databaseInjectionToken } from './factories/create-application.js';
+export * from './factories/custom-decorator.js';
 
 export * from './decorators/controller.decorator.js';
 export * from './decorators/route.decorator.js';

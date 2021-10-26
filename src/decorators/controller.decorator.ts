@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../storage/metadata-storage.js'
+import { MetadataStorage } from '../storages/metadata-storage.js'
 import { Class } from '../types/class.js'
 
 export function Controller (routeName: string) {

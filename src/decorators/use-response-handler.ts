@@ -1,5 +1,5 @@
 import { ResponseHandlerInterface } from '../interfaces/response-handler.interface.js';
-import { MetadataStorage } from '../storage/metadata-storage.js';
+import { MetadataStorage } from '../storages/metadata-storage.js';
 import { Class } from '../types/class.js';
 
 export function UseResponseHandler (responseHandler: Class<ResponseHandlerInterface>, ...args: unknown[]) {

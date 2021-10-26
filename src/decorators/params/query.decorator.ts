@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../../storage/metadata-storage.js'
+import { MetadataStorage } from '../../storages/metadata-storage.js'
 
 export function Query () {
   return function (target: unknown, propertyKey: string, index: number) {

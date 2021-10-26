@@ -1,5 +1,5 @@
 import { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js'
-import { MetadataStorage } from '../storage/metadata-storage.js'
+import { MetadataStorage } from '../storages/metadata-storage.js'
 import { Class } from '../types/class.js'
 
 export function UseErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
