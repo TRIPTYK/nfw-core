@@ -22,6 +22,7 @@
   "devDependencies": {
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/mysql": "^4.5.9",
+    "@types/http-errors": "^1.8.1",
     "@types/koa": "^2.13.4",
     "@types/koa__router": "^8.0.8",
     "@types/node": "^16.11.4",
@@ -37,6 +38,7 @@
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "http-errors": "^1.8.0",
     "is-class": "^0.0.9",
     "koa": "^2.13.4",
     "reflect-metadata": "^0.1.13",

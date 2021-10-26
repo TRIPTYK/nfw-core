@@ -10,6 +10,7 @@ import { UseErrorHandlerMetadataArgs } from '../storage/metadata/use-error-handl
 import { UseMiddlewareMetadataArgs } from '../storage/metadata/use-middleware.metadata.js';
 import { UseParamsMetadataArgs } from '../storage/metadata/use-params.metadata.js';
 import { CreateApplicationOptions } from './create-application.js';
+import createError from 'http-errors';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
   for (const controller of applicationOptions.controllers) {
@@ -140,8 +141,7 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
       });
       if (!guardResponse) {
         ctx.response.status = 403;
-        ctx.response.body = 'Forbidden';
-        return;
+        throw createError(403);
       }
     }
 
