@@ -15,6 +15,7 @@ import createError from 'http-errors';
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
   for (const controller of applicationOptions.controllers) {
     const controllerMetadata = MetadataStorage.instance.controllers.find((cMetadata) => cMetadata.target === controller);
+
     const controllerRouter = new Router({
       prefix: controllerMetadata.routeName
     });
