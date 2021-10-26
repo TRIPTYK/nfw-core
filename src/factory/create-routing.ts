@@ -2,7 +2,8 @@ import Router, { RouterContext } from '@koa/router';
 import { isClass } from 'is-class';
 import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
-import { ErrorHandlerInterface, MiddlewareInteface, ResponseHandlerInterface } from '../index.js';
+import { ErrorHandlerInterface, ResponseHandlerInterface } from '../index.js';
+import { MiddlewareInterface } from '../middlewares/middleware.interface.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storage/metadata/controller.metadata.js';
 import { RouteMetadataArgs } from '../storage/metadata/route.metadata.js';
@@ -23,6 +24,7 @@ export function createRouting (applicationRouter: Router, applicationOptions: Cr
 
   for (const controller of applicationOptions.controllers) {
     const controllerMetadata = MetadataStorage.instance.controllers.find((cMetadata) => cMetadata.target === controller);
+
     const controllerRouter = new Router({
       prefix: controllerMetadata.routeName
     });
@@ -75,7 +77,7 @@ export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: RouterCon
   return paramMetadata.handle(ctx, paramMetadata.args);
 }
 
-export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInteface>) {
+export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInterface>) {
   if (!isClass(middleware)) {
     return middleware as Middleware;
   }
@@ -209,7 +211,7 @@ function useErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
   }
 }
 
-function useNotFoundMiddleware (middlewareNotFound: Class<MiddlewareInteface> | Middleware) {
+function useNotFoundMiddleware (middlewareNotFound: Class<MiddlewareInterface> | Middleware) {
   const middlewareInstance = resolveMiddleware(middlewareNotFound);
   return async (context: RouterContext, next: Next) => {
     await next();

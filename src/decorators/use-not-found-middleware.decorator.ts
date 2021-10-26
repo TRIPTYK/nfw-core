@@ -1,9 +1,9 @@
 import { Middleware } from 'koa';
-import { MiddlewareInteface } from '../middlewares/middleware.interface.js';
+import { MiddlewareInterface } from '../middlewares/middleware.interface.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { Class } from '../types/class.js';
 
-export function UseNotFoundMiddleware (middleware: Class<MiddlewareInteface> | Middleware) {
+export function UseNotFoundMiddleware (middleware: Class<MiddlewareInterface> | Middleware) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {
     MetadataStorage.instance.useMiddlewares.push({
       target,
