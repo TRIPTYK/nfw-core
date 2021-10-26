@@ -4,10 +4,11 @@ import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
 import { ResponseHandlerInterface } from '../index.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
-import { ControllerMetadataArgs } from '../storage/metadata/controller.js';
-import { RouteMetadataArgs } from '../storage/metadata/route.js';
-import { UseMiddlewareMetadataArgs } from '../storage/metadata/use-middleware.js';
-import { UseParamsMetadataArgs } from '../storage/metadata/use-params.js';
+import { ControllerMetadataArgs } from '../storage/metadata/controller.metadata.js';
+import { RouteMetadataArgs } from '../storage/metadata/route.metadata.js';
+import { UseErrorHandlerMetadataArgs } from '../storage/metadata/use-error-handler.metadata.js';
+import { UseMiddlewareMetadataArgs } from '../storage/metadata/use-middleware.metadata.js';
+import { UseParamsMetadataArgs } from '../storage/metadata/use-params.metadata.js';
 import { CreateApplicationOptions } from './create-application.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
@@ -31,7 +32,18 @@ export function createController (controllerMetadata: ControllerMetadataArgs, co
 
   const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target);
 
-  controllerRouter.use(...controllerMiddlewares.map(useMiddleware));
+  /**
+   * Only one error handler per controller route
+   */
+  const errorHandlerMeta = MetadataStorage.instance.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target);
+
+  const applyMiddlewares = controllerMiddlewares.map(useMiddleware);
+
+  if (errorHandlerMeta) {
+    applyMiddlewares.unshift(useErrorHandler(errorHandlerMeta));
+  }
+
+  controllerRouter.use(...applyMiddlewares);
 
   for (const routeMetadata of controllerRoutesMeta) {
     createRoute(controllerRouter, controllerInstance, controllerMetadata, routeMetadata);
@@ -56,7 +68,19 @@ export function useMiddleware (middlewareMeta: UseMiddlewareMetadataArgs) {
 export function createRoute (controllerRouter: Router, controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
   const middlewaresForRoute = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.target.constructor === controllerMetadata.target && middlewareMeta.propertyName === routeMetadata.propertyName);
 
-  controllerRouter[routeMetadata.method](routeMetadata.routeName, ...middlewaresForRoute.map(useMiddleware), handleRouteControllerAction(controllerInstance, controllerMetadata, routeMetadata));
+  /**
+   * Only one error handler per controller route
+   */
+  const errorHandlerForRouteMeta = MetadataStorage.instance.useErrorHandler.find((errorHandlerMeta) => errorHandlerMeta.target.constructor === controllerMetadata.target && errorHandlerMeta.propertyName === routeMetadata.propertyName);
+
+  const middlewareInstances = middlewaresForRoute.map(useMiddleware);
+
+  if (errorHandlerForRouteMeta) {
+    middlewareInstances.unshift(useErrorHandler(errorHandlerForRouteMeta));
+  }
+  middlewareInstances.push(handleRouteControllerAction(controllerInstance, controllerMetadata, routeMetadata));
+
+  controllerRouter[routeMetadata.method](routeMetadata.routeName, ...middlewareInstances);
 }
 
 export function handleRouteControllerAction (controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
@@ -140,4 +164,15 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
       ctx.response.body = controllerActionResult;
     }
   };
+}
+
+function useErrorHandler (useErrorHandlerMeta: UseErrorHandlerMetadataArgs) {
+  const errorHandlerInstance = container.resolve(useErrorHandlerMeta.errorHandler);
+  return async (context: RouterContext, next: Next) => {
+    try {
+      await next();
+    } catch (e) {
+      await errorHandlerInstance.handle(e, context);
+    }
+  }
 }

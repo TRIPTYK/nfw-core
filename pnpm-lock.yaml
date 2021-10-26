@@ -14,6 +14,7 @@ specifiers:
   eslint-plugin-import: ^2.25.2
   eslint-plugin-node: ^11.1.0
   eslint-plugin-promise: ^5.1.1
+  eslint-plugin-unused-imports: ^1.1.5
   is-class: ^0.0.9
   koa: ^2.13.4
   reflect-metadata: ^0.1.13
@@ -25,7 +26,6 @@ dependencies:
   is-class: 0.0.9
   koa: 2.13.4
   reflect-metadata: 0.1.13
-  tsyringe: 4.6.0
   typescript: 4.4.4
 
 devDependencies:
@@ -41,6 +41,8 @@ devDependencies:
   eslint-plugin-import: 2.25.2_eslint@7.32.0
   eslint-plugin-node: 11.1.0_eslint@7.32.0
   eslint-plugin-promise: 5.1.1_eslint@7.32.0
+  eslint-plugin-unused-imports: 1.1.5_7c883a95cbf857d337c3a5c0b5b14818
+  tsyringe: 4.6.0
 
 packages:
 
@@ -1105,6 +1107,26 @@ packages:
       eslint: ^7.0.0
     dependencies:
       eslint: 7.32.0
+    dev: true
+
+  /eslint-plugin-unused-imports/1.1.5_7c883a95cbf857d337c3a5c0b5b14818:
+    resolution: {integrity: sha512-TeV8l8zkLQrq9LBeYFCQmYVIXMjfHgdRQLw7dEZp4ZB3PeR10Y5Uif11heCsHRmhdRIYMoewr1d9ouUHLbLHew==}
+    engines: {node: ^10.12.0 || >=12.0.0}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^4.14.2
+      eslint: ^6.0.0 || ^7.0.0
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.1.0_cceb079e15b82e20823304bc01a340f0
+      eslint: 7.32.0
+      eslint-rule-composer: 0.3.0
+    dev: true
+
+  /eslint-rule-composer/0.3.0:
+    resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
+    engines: {node: '>=4.0.0'}
     dev: true
 
   /eslint-scope/5.1.1:
@@ -2896,6 +2918,7 @@ packages:
 
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+    dev: true
 
   /tsscmp/1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
@@ -2917,7 +2940,7 @@ packages:
     engines: {node: '>= 6.0.0'}
     dependencies:
       tslib: 1.14.1
-    dev: false
+    dev: true
 
   /type-check/0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
