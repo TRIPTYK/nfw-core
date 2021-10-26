@@ -1,19 +1,24 @@
 import Router from '@koa/router';
 import { MikroORM } from '@mikro-orm/core'
-import Koa from 'koa'
+import Koa, { Middleware } from 'koa'
 import { container } from 'tsyringe';
-import { GuardInterface, MiddlewareInteface } from '../index.js';
+import { ErrorHandlerInterface, GuardInterface, MiddlewareInteface } from '../index.js';
 import { Class } from '../types/class.js';
 import { createRouting } from './create-routing.js';
+
+interface GuardOptions {
+  guard: Class<GuardInterface>,
+  args: unknown[],
+}
 
 export interface CreateApplicationOptions {
   controllers: Class<unknown>[],
   mikroORMConnection: MikroORM,
   baseRoute: string,
-  globalMiddlewares?: MiddlewareInteface[],
-  globalGuards?: GuardInterface[],
-  globalErrorhandler?: MiddlewareInteface,
-  globalNotFoundHandler?: MiddlewareInteface,
+  globalMiddlewares?: (Class<MiddlewareInteface> | Middleware)[],
+  globalGuards?: GuardOptions[],
+  globalErrorhandler?: Class<ErrorHandlerInterface>,
+  globalNotFoundMiddleware?: Class<MiddlewareInteface>,
 }
 
 export const databaseInjectionToken = Symbol('database-connection');
