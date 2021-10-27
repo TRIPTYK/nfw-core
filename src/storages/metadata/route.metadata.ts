@@ -11,7 +11,7 @@ export enum RouteMethod {
 }
 
 export interface RouteMetadataArgs {
-    target: unknown,
+    target: any,
     propertyName: string,
     method: RouteMethod,
     routeName: string,

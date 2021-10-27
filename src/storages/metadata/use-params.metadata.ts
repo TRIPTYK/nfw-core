@@ -1,14 +1,14 @@
 import { RouterContext } from '@koa/router';
 
 export interface ControllerParamsContext {
-    controllerInstance: unknown,
+    controllerInstance: any,
     controllerAction: string,
     ctx: RouterContext,
     args?: unknown[],
 }
 
 export interface UseParamsMetadataArgs {
-    target: unknown,
+    target: any,
     propertyName: string,
     index: number,
     handle: (ctx: ControllerParamsContext) => Promise<unknown> | unknown,

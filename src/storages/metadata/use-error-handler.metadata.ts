@@ -2,7 +2,7 @@ import { ErrorHandlerInterface } from '../../interfaces/error-middleware.interfa
 import { Class } from '../../types/class.js';
 
 export interface UseErrorHandlerMetadataArgs {
-    target: Class<unknown> | unknown,
+    target: Class<any> | any,
     propertyName?: string,
     errorHandler: Class<ErrorHandlerInterface>,
 }

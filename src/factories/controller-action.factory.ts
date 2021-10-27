@@ -9,7 +9,7 @@ import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
 import { applyParam } from '../utils/factory.util.js';
 import { CreateApplicationOptions } from './application.factory.js';
 
-export function handleRouteControllerAction (controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
+export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index);
   const responsehandlerForRouteMetadata = MetadataStorage.instance.useResponseHandlers.find((guardMeta) => {
@@ -54,7 +54,7 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
   });
 
   if ((applicationOptions.globalGuards ?? []).length) {
-    const resolvedGlobalGuards = applicationOptions.globalGuards.map((e) => {
+    const resolvedGlobalGuards = (applicationOptions.globalGuards ?? []).map((e) => {
       return {
         instance: container.resolve(e.guard),
         args: e.args
@@ -97,7 +97,7 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
     /**
        * Handle controller action response
        */
-    if (responseHandlerInstance) {
+    if (responsehandlerForRouteMetadata) {
       await responseHandlerInstance.handle(controllerActionResult, {
         controllerAction: routeMetadata.propertyName,
         controllerInstance,

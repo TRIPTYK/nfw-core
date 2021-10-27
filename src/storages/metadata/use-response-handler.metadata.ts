@@ -2,7 +2,7 @@ import { ResponseHandlerInterface } from '../../interfaces/response-handler.inte
 import { Class } from '../../types/class.js';
 
 export interface UseResponseHandlerMetadataArgs {
-    target: unknown,
+    target: any,
     propertyName?: string,
     args?: unknown[],
     responseHandler: Class<ResponseHandlerInterface>,

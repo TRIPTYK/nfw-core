@@ -17,6 +17,10 @@ export function createRouting (applicationRouter: Router, applicationOptions: Cr
   for (const controller of applicationOptions.controllers) {
     const controllerMetadata = MetadataStorage.instance.controllers.find((cMetadata) => cMetadata.target === controller);
 
+    if (!controllerMetadata) {
+      throw new Error(`Please decorate ${controller.constructor.name} with @Controller`);
+    }
+
     const controllerRouter = new Router({
       prefix: controllerMetadata.routeName
     });
@@ -27,5 +31,7 @@ export function createRouting (applicationRouter: Router, applicationOptions: Cr
   /**
    * Catch all route for 404
    */
-  applicationRouter.all('(.*)', useNotFoundMiddleware(applicationOptions.globalNotFoundMiddleware));
+  if (applicationOptions.globalNotFoundMiddleware) {
+    applicationRouter.all('(.*)', useNotFoundMiddleware(applicationOptions.globalNotFoundMiddleware));
+  }
 }
