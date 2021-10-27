@@ -8,7 +8,7 @@ export function Query () {
       index,
       args: [],
       handle: (context) => {
-        return context.query;
+        return context.ctx.query;
       }
     });
   }

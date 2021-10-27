@@ -8,7 +8,7 @@ export function Origin () {
       index,
       args: [],
       handle: (context) => {
-        return context.origin;
+        return context.ctx.origin;
       }
     });
   }

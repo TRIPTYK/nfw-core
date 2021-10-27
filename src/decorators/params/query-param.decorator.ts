@@ -6,8 +6,8 @@ export function QueryParam (paramName: string) {
       target,
       propertyName: propertyKey,
       index,
-      handle: (ctx, [paramName]: [string]) => {
-        return ctx.query[paramName];
+      handle: (context, [paramName]: [string]) => {
+        return context.ctx.query[paramName];
       },
       args: [paramName]
     });

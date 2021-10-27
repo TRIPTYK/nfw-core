@@ -8,7 +8,7 @@ export function Ip () {
       propertyName: propertyKey,
       index,
       handle: (context) => {
-        return context.ip;
+        return context.ctx.ip;
       }
     });
   }

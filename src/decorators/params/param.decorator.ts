@@ -6,8 +6,8 @@ export function Param (paramName: string) {
       target,
       propertyName: propertyKey,
       index,
-      handle: (ctx, [paramName]: [string]) => {
-        return ctx.params[paramName];
+      handle: (context, [paramName]: [string]) => {
+        return context.ctx.params[paramName];
       },
       args: [paramName]
     });

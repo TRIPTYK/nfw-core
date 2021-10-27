@@ -8,7 +8,7 @@ export function Header () {
       args: [],
       index,
       handle: (context) => {
-        return context.header;
+        return context.ctx.header;
       }
     });
   }

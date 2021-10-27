@@ -8,7 +8,7 @@ export function Body () {
       index,
       args: [],
       handle: (context) => {
-        return context.body;
+        return context.ctx.body;
       }
     });
   }

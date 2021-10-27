@@ -8,7 +8,7 @@ export function Method () {
       index,
       args: [],
       handle: (context) => {
-        return context.method;
+        return context.ctx.method;
       }
     });
   }

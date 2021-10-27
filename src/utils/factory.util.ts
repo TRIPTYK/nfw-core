@@ -3,16 +3,16 @@ import isClass from 'is-class';
 import { Middleware, Next } from 'koa';
 import { container } from 'tsyringe';
 import { MiddlewareInterface, ErrorHandlerInterface } from '../index.js';
-import { UseParamsMetadataArgs } from '../storages/metadata/use-params.metadata.js';
+import { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-params.metadata.js';
 import { Class } from '../types/class.js';
 
-export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: RouterContext) {
+export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
   return paramMetadata.handle(ctx, paramMetadata.args);
 }
 
 export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInterface>) {
   if (!isClass(middleware)) {
-    return middleware as Middleware;
+    return middleware;
   }
   return container.resolve(middleware).use;
 }

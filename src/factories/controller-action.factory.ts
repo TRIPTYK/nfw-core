@@ -83,10 +83,16 @@ export function handleRouteControllerAction (controllerInstance: unknown, contro
       }
     }
 
+    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => applyParam(e, {
+      controllerAction: routeMetadata.propertyName,
+      controllerInstance,
+      ctx
+    })));
+
     /**
        * Call main controller action and apply decorator params
        */
-    const controllerActionResult = await controllerMethod.call(controllerInstance, ...await Promise.all(paramsForRouteMetadata.map(async (e) => applyParam(e, ctx))));
+    const controllerActionResult = await controllerMethod.call(controllerInstance, ...resolvedParams);
 
     /**
        * Handle controller action response
