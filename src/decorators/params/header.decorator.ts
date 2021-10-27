@@ -5,7 +5,6 @@ export function Header () {
     MetadataStorage.instance.useParams.push({
       target,
       propertyName: propertyKey,
-      args: [],
       index,
       handle: (context) => {
         return context.ctx.header;

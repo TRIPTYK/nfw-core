@@ -21,6 +21,11 @@ export * from './decorators/use-response-handler.js';
 export * from './decorators/use-error-handler.decorator.js';
 export * from './decorators/use-not-found-middleware.decorator.js';
 
+export * from './storages/metadata-storage.js';
+export { ControllerParamsContext } from './storages/metadata/use-params.metadata.js';
+
+export { Class } from './types/class.js';
+
 export * from './interfaces/error-middleware.interface.js';
 export * from './interfaces/response-handler.interface.js';
 export * from './interfaces/middleware.interface.js';

@@ -6,7 +6,6 @@ export function Body () {
       target,
       propertyName: propertyKey,
       index,
-      args: [],
       handle: (context) => {
         return context.ctx.body;
       }

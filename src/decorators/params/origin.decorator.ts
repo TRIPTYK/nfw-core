@@ -6,7 +6,6 @@ export function Origin () {
       target,
       propertyName: propertyKey,
       index,
-      args: [],
       handle: (context) => {
         return context.ctx.origin;
       }

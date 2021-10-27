@@ -10,7 +10,6 @@ export interface ControllerParamsContext {
 export interface UseParamsMetadataArgs {
     target: unknown,
     propertyName: string,
-    args: unknown[],
     index: number,
-    handle: (ctx: ControllerParamsContext, ...args: unknown[]) => Promise<unknown> | unknown,
+    handle: (ctx: ControllerParamsContext) => Promise<unknown> | unknown,
 }

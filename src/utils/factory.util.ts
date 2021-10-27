@@ -7,7 +7,7 @@ import { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/meta
 import { Class } from '../types/class.js';
 
 export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
-  return paramMetadata.handle(ctx, paramMetadata.args);
+  return paramMetadata.handle(ctx);
 }
 
 export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInterface>) {
