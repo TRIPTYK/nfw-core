@@ -6,6 +6,7 @@ export function Method () {
       target,
       propertyName: propertyKey,
       index,
+      args: [],
       handle: (context) => {
         return context.method;
       }
