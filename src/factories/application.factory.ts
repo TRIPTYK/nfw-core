@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { MikroORM } from '@mikro-orm/core'
+import { MikroORM, RequestContext } from '@mikro-orm/core'
 import Koa, { Middleware } from 'koa'
 import { container } from 'tsyringe';
 import { MiddlewareInterface } from '../interfaces/middleware.interface.js'
@@ -20,6 +20,10 @@ export interface CreateApplicationOptions {
   globalGuards?: GuardOptions[],
   globalErrorhandler?: Class<ErrorHandlerInterface>,
   globalNotFoundMiddleware?: Class<MiddlewareInterface>,
+  /**
+   * Apply https://mikro-orm.io/docs/identity-map to each route
+   */
+  mikroORMContext?: boolean,
 }
 
 export const databaseInjectionToken = Symbol('database-connection');
@@ -34,6 +38,15 @@ export async function createApplication (options: CreateApplicationOptions) {
   container.register(databaseInjectionToken, {
     useValue: options.mikroORMConnection
   });
+
+  /**
+   * Use context for each request for MikroORM, see https://mikro-orm.io/docs/identity-map
+   */
+  if (options.mikroORMContext ?? true) {
+    app.use(async (_, next) => {
+      await RequestContext.createAsync(options.mikroORMConnection.em, next);
+    })
+  }
 
   createRouting(applicationRouter, options);
   app.use(applicationRouter.routes());
