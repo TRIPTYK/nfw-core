@@ -1,6 +1,6 @@
-import { RouterContext } from '@koa/router';
+import { RouterContext, Middleware } from '@koa/router';
 import isClass from 'is-class';
-import { Middleware, Next } from 'koa';
+import { Next } from 'koa';
 import { container } from 'tsyringe';
 import { MiddlewareInterface, ErrorHandlerInterface } from '../index.js';
 import { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-params.metadata.js';

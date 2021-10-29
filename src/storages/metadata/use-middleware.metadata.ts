@@ -1,4 +1,4 @@
-import { Middleware } from 'koa';
+import { Middleware } from '@koa/router';
 import { MiddlewareInterface } from '../../interfaces/middleware.interface.js';
 import { Class } from '../../types/class.js';
 
