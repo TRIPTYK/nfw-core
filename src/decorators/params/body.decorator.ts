@@ -1,3 +1,4 @@
+
 import { MetadataStorage } from '../../storages/metadata-storage.js'
 
 export function Body () {
@@ -7,7 +8,7 @@ export function Body () {
       propertyName: propertyKey,
       index,
       handle: (context) => {
-        return context.ctx.request.body;
+        return (context.ctx.request as any).body;
       }
     });
   }
