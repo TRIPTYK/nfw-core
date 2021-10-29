@@ -7,7 +7,7 @@ export function Body () {
       propertyName: propertyKey,
       index,
       handle: (context) => {
-        return context.ctx.body;
+        return context.ctx.request.body;
       }
     });
   }
