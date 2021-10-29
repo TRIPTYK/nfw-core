@@ -1,9 +1,9 @@
-import { Response } from 'koa';
+import { RouterContext } from '@koa/router';
 
 export interface ResponseHandlerContext {
     controllerInstance: unknown,
     controllerAction: string,
-    response: Response,
+    ctx: RouterContext,
     args?: unknown[],
 }
 

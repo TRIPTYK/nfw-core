@@ -101,7 +101,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
       await responseHandlerInstance.handle(controllerActionResult, {
         controllerAction: routeMetadata.propertyName,
         controllerInstance,
-        response: ctx.response,
+        ctx,
         args: responsehandlerForRouteMetadata.args
       });
     } else {
