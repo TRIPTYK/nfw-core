@@ -14,7 +14,8 @@ export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInte
   if (!isClass(middleware)) {
     return middleware;
   }
-  return container.resolve(middleware).use;
+  const instance = container.resolve(middleware);
+  return instance.use.bind(instance);
 }
 
 export function useErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
