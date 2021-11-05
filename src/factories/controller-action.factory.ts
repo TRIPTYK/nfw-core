@@ -74,7 +74,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
       const guardResponse = await instance.can({
         controllerAction: routeMetadata.propertyName,
         controllerInstance,
-        request: ctx.request,
+        ctx,
         args
       });
       if (!guardResponse) {

@@ -1,10 +1,10 @@
-import { Request } from 'koa';
+import { RouterContext } from '@koa/router';
 
 export interface ControllerGuardContext {
     controllerInstance: unknown,
     controllerAction: string,
-    request: Request,
-    args?: unknown[],
+    ctx: RouterContext,
+    args: unknown[],
 }
 
 export interface GuardInterface {
