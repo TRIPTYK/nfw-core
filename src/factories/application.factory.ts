@@ -15,7 +15,7 @@ interface GuardOptions {
 export interface CreateApplicationOptions {
   controllers: Class<unknown>[],
   mikroORMConnection: MikroORM,
-  baseRoute: string,
+  baseRoute: `/${string}`,
   globalMiddlewares?: (Class<MiddlewareInterface> | Middleware)[],
   globalGuards?: GuardOptions[],
   globalErrorhandler?: Class<ErrorHandlerInterface>,

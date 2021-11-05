@@ -1,7 +1,7 @@
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { RouteMethod } from '../storages/metadata/route.metadata.js';
 
-export function GET (routeName: string) {
+export function GET (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -12,7 +12,7 @@ export function GET (routeName: string) {
   }
 }
 
-export function POST (routeName: string) {
+export function POST (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -23,7 +23,7 @@ export function POST (routeName: string) {
   }
 }
 
-export function PATCH (routeName: string) {
+export function PATCH (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -33,7 +33,7 @@ export function PATCH (routeName: string) {
     });
   }
 }
-export function DELETE (routeName: string) {
+export function DELETE (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -44,7 +44,7 @@ export function DELETE (routeName: string) {
   }
 }
 
-export function OPTIONS (routeName: string) {
+export function OPTIONS (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -55,7 +55,7 @@ export function OPTIONS (routeName: string) {
   }
 }
 
-export function PUT (routeName: string) {
+export function PUT (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
@@ -66,7 +66,7 @@ export function PUT (routeName: string) {
   }
 }
 
-export function ALL (routeName: string) {
+export function ALL (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({
       target,
