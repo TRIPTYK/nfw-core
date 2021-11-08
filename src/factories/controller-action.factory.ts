@@ -71,15 +71,20 @@ export function handleRouteControllerAction (controllerInstance: any, controller
        * Guards are executed one at a time
        */
     for (const { instance, args } of guardsInstance) {
-      const guardResponse = await instance.can({
-        controllerAction: routeMetadata.propertyName,
-        controllerInstance,
-        ctx,
-        args
-      });
-      if (!guardResponse) {
+      try {
+        const guardResponse = await instance.can({
+          controllerAction: routeMetadata.propertyName,
+          controllerInstance,
+          ctx,
+          args
+        });
+        if (!guardResponse) {
+          ctx.response.status = 403;
+          throw createHttpError(403);
+        }
+      } catch (e) {
         ctx.response.status = 403;
-        throw createHttpError(403);
+        throw e;
       }
     }
 

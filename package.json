@@ -20,8 +20,6 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "^4.5.9",
-    "@mikro-orm/mysql": "^4.5.9",
     "@types/http-errors": "^1.8.1",
     "@types/jest": "^27.0.2",
     "@types/koa": "^2.13.4",
@@ -39,6 +37,8 @@
     "tsyringe": "^4.6.0"
   },
   "dependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/mysql": "^4.5.9",
     "@koa/router": "^10.1.1",
     "http-errors": "^1.8.0",
     "is-class": "^0.0.9",
