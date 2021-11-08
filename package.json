@@ -12,10 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TRIPTYK/nfw-core.git"
+    "url": "https://github.com/TRIPTYK/nfw-core.git"
   },
   "type": "module",
-  "author": "",
+  "author": "TRIPTYK",
+  "contributors": [
+    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
+    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
+    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TRIPTYK/nfw-core/issues"
