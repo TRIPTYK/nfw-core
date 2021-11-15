@@ -14,7 +14,6 @@ export * from './decorators/params/query-param.decorator.js';
 export * from './decorators/params/origin.decorator.js';
 export * from './decorators/params/ip.decorator.js';
 export * from './decorators/params/method.decorator.js';
-export * from './decorators/params/uploaded.decorator.js';
 export * from './decorators/use-middleware.decorator.js';
 export * from './decorators/use-guard.decorator.js';
 export * from './decorators/inject-repository.decorator.js';
