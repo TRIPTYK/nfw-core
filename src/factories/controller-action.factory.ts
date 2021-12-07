@@ -19,7 +19,8 @@ async function resolveParam (e: {
   }
 
   // if param has already been used
-  if (sharedParams[e.signature]) {
+  if (sharedParams[e.signature] && e.metadata.cache) {
+    console.log('reusing shared param ', e.signature);
     return sharedParams[e.signature];
   }
 
@@ -42,7 +43,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
       metadata: useParam,
-      signature: functionSignature(useParam.decoratorName, (useParam.handle as Function).arguments)
+      signature: functionSignature(useParam.decoratorName, useParam.args)
     })
   });
 
@@ -83,7 +84,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
   const guardsInstance = guardForRouteMetadata.map((guardMeta) => {
     const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
       metadata: useParam,
-      signature: functionSignature(useParam.decoratorName, (useParam.handle as Function).arguments)
+      signature: functionSignature(useParam.decoratorName, useParam.args)
     }));
     return {
       instance: container.resolve(guardMeta.guard),
@@ -99,7 +100,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     const resolvedGlobalGuards = (applicationOptions.globalGuards ?? []).map((e) => {
       const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === e).sort((a, b) => a.index - b.index).map((useParam) => ({
         metadata: useParam,
-        signature: functionSignature(useParam.decoratorName, (useParam.handle as Function).arguments)
+        signature: functionSignature(useParam.decoratorName, useParam.args)
       }));
 
       return {

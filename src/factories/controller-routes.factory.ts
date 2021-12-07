@@ -11,7 +11,7 @@ import { handleRouteControllerAction } from './controller-action.factory.js';
  *
  */
 export function createRoute (controllerRouter: Router, controllerInstance: unknown, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
-  const middlewaresForRoute = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.target.constructor === controllerMetadata.target && middlewareMeta.propertyName === routeMetadata.propertyName && middlewareMeta.type === 'classic');
+  const middlewaresForRoute = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.target.constructor === controllerMetadata.target && middlewareMeta.propertyName === routeMetadata.propertyName && middlewareMeta.type === 'classic').reverse(); // reverse because decorators call are inversed
 
   /**
      * Only one error handler per controller route

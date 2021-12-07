@@ -13,4 +13,6 @@ export interface UseParamsMetadataArgs {
     propertyName: string,
     index: number,
     handle: ((ctx: ControllerParamsContext) => Promise<unknown> | unknown) | 'args' | 'controller-context',
+    args: unknown[],
+    cache: boolean,
 }

@@ -14,8 +14,8 @@ export function createController (controllerMetadata: ControllerMetadataArgs, co
   const controllerInstance = container.resolve(controllerMetadata.target);
   const controllerRoutesMeta = MetadataStorage.instance.routes.filter((rMetadata) => rMetadata.target.constructor === controllerMetadata.target);
 
-  const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'classic');
-  const notFoundMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'not-found');
+  const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'classic').reverse();
+  const notFoundMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'not-found').reverse();
 
   /**
      * Only one error handler per controller route
