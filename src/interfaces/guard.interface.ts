@@ -8,5 +8,5 @@ export interface ControllerGuardContext {
 }
 
 export interface GuardInterface {
-    can(context : ControllerGuardContext) : Promise<boolean> | boolean,
+    can(...args: unknown[]) : Promise<boolean> | boolean,
 }

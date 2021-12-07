@@ -3,7 +3,7 @@ import { RouteMetadataArgs } from './metadata/route.metadata.js';
 import { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
 import { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
 import { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
-import { UseParamsMetadataArgs } from './metadata/use-params.metadata.js';
+import { UseParamsMetadataArgs } from './metadata/use-param.metadata.js';
 import { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.metadata.js';
 
 export class MetadataStorage {
@@ -39,6 +39,11 @@ export class MetadataStorage {
    * Use parameters in controller route
    */
   public useParams: UseParamsMetadataArgs[] = [];
+
+  /**
+   * Use parameters in controller route
+   */
+   public useResponseHandlerParams: UseParamsMetadataArgs[] = [];
 
   /**
    * Middleware uses for controllers/routes

@@ -1,14 +1,7 @@
-import { MetadataStorage } from '../../storages/metadata-storage.js'
+import { createCustomDecorator } from '../../index.js';
 
-export function QueryParam (paramName: string) {
-  return function (target: unknown, propertyKey: string, index: number) {
-    MetadataStorage.instance.useParams.push({
-      target,
-      propertyName: propertyKey,
-      index,
-      handle: (context) => {
-        return context.ctx.query[paramName];
-      }
-    });
-  }
+export function QueryParam (this: unknown, paramName: string) {
+  return createCustomDecorator(({ ctx }) => {
+    return ctx.query[paramName];
+  }, 'query-param');
 }

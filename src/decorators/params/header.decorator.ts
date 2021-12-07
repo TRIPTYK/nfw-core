@@ -1,14 +1,7 @@
-import { MetadataStorage } from '../../storages/metadata-storage.js'
+import { createCustomDecorator } from '../../index.js'
 
-export function Header () {
-  return function (target: unknown, propertyKey: string, index: number) {
-    MetadataStorage.instance.useParams.push({
-      target,
-      propertyName: propertyKey,
-      index,
-      handle: (context) => {
-        return context.ctx.header;
-      }
-    });
-  }
+export function Header (this: unknown) {
+  return createCustomDecorator(({ ctx }) => {
+    return ctx.header;
+  }, 'header');
 }

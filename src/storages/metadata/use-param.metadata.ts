@@ -8,8 +8,9 @@ export interface ControllerParamsContext {
 }
 
 export interface UseParamsMetadataArgs {
+    decoratorName: string,
     target: any,
     propertyName: string,
     index: number,
-    handle: (ctx: ControllerParamsContext) => Promise<unknown> | unknown,
+    handle: ((ctx: ControllerParamsContext) => Promise<unknown> | unknown) | 'args' | 'controller-context',
 }

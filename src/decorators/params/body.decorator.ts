@@ -1,15 +1,8 @@
 
-import { MetadataStorage } from '../../storages/metadata-storage.js'
+import { createCustomDecorator } from '../../index.js'
 
-export function Body () {
-  return function (target: unknown, propertyKey: string, index: number) {
-    MetadataStorage.instance.useParams.push({
-      target,
-      propertyName: propertyKey,
-      index,
-      handle: (context) => {
-        return (context.ctx.request as any).body;
-      }
-    });
-  }
+export function Body (this: unknown) {
+  return createCustomDecorator(({ ctx }) => {
+    return (ctx.request as any).body;
+  }, 'body');
 }

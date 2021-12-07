@@ -1,14 +1,7 @@
-import { MetadataStorage } from '../../storages/metadata-storage.js'
+import { createCustomDecorator } from '../../index.js'
 
-export function Ip () {
-  return function (target: unknown, propertyKey: string, index: number) {
-    MetadataStorage.instance.useParams.push({
-      target,
-      propertyName: propertyKey,
-      index,
-      handle: (context) => {
-        return context.ctx.ip;
-      }
-    });
-  }
+export function Ip (this : Function) {
+  return createCustomDecorator(({ ctx }) => {
+    return ctx.ip;
+  }, this.name)
 }
