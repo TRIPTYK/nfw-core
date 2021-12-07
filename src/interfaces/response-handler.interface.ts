@@ -8,5 +8,5 @@ export interface ResponseHandlerContext {
 }
 
 export interface ResponseHandlerInterface {
-    handle(controllerResponse: unknown, context : ResponseHandlerContext) : Promise<void> | void,
+    handle(...args: unknown[]) : Promise<void> | void,
 }

@@ -76,6 +76,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
      * Pre-fetch gaurds and response-handlers to do not resolve every request
      */
   let responseHandlerInstance: ResponseHandlerInterface;
+  let responseHandlerUseParams: any;
 
   if (responsehandlerForRouteMetadata) {
     responseHandlerInstance = container.resolve(responsehandlerForRouteMetadata.responseHandler);
