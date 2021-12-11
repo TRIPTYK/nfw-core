@@ -15,13 +15,15 @@ export * from './decorators/params/query-param.decorator.js';
 export * from './decorators/params/origin.decorator.js';
 export * from './decorators/params/ip.decorator.js';
 export * from './decorators/params/method.decorator.js';
+export * from './decorators/params/controller-context.decorator.js';
+export * from './decorators/params/router-context.decorator.js'
+
 export * from './decorators/use-middleware.decorator.js';
 export * from './decorators/use-guard.decorator.js';
 export * from './decorators/inject-repository.decorator.js';
 export * from './decorators/use-response-handler.js';
 export * from './decorators/use-error-handler.decorator.js';
 export * from './decorators/use-not-found-middleware.decorator.js';
-export * from './decorators/params/controller-context.decorator.js';
 
 export * from './storages/metadata-storage.js';
 export { ControllerParamsContext } from './storages/metadata/use-param.metadata.js';
@@ -32,6 +34,7 @@ export * from './interfaces/error-middleware.interface.js';
 export * from './interfaces/response-handler.interface.js';
 export * from './interfaces/middleware.interface.js';
 export * from './interfaces/guard.interface.js';
+export * from './interfaces/controller-context.interface.js';
 
 export * from 'tsyringe';
 

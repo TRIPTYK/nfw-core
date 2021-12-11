@@ -1,9 +1,4 @@
-import { MetadataStorage } from '../../index.js';
-
-export interface ControllerContextObject {
-    controllerAction: string,
-    controllerInstance: any,
-}
+import { MetadataStorage } from '../../storages/metadata-storage.js';
 
 /**
  *

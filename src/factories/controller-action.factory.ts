@@ -2,7 +2,7 @@ import { RouterContext } from '@koa/router';
 import createHttpError from 'http-errors';
 import { Next } from 'koa';
 import { container } from 'tsyringe';
-import { functionSignature, ResponseHandlerInterface } from '../index.js';
+import { ControllerContextInterface, functionSignature, ResponseHandlerInterface } from '../index.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
@@ -13,11 +13,7 @@ import { CreateApplicationOptions } from './application.factory.js';
 async function resolveParam (e: {
   metadata: UseParamsMetadataArgs,
   signature: string,
-}, controllerInstance: any, ctx: RouterContext, routeMetadata: RouteMetadataArgs, args: any | undefined, sharedParams: Record<string, unknown>) {
-  if (args && e.metadata.handle === 'args') {
-    return args;
-  }
-
+}, controllerInstance: any, ctx: RouterContext, routeMetadata: RouteMetadataArgs, sharedParams: Record<string, unknown>) {
   // if param has already been used
   if (sharedParams[e.signature] && e.metadata.cache) {
     console.log('reusing shared param ', e.signature);
@@ -47,17 +43,17 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     })
   });
 
-  const responsehandlerForRouteMetadata = MetadataStorage.instance.useResponseHandlers.find((guardMeta) => {
+  const responsehandlerForRouteMetadata = MetadataStorage.instance.useResponseHandlers.find((respHandlerMetadata) => {
     /**
        * If on controller level
        */
-    if (guardMeta.propertyName === undefined) {
-      return guardMeta.target === controllerMetadata.target;
+    if (respHandlerMetadata.propertyName === undefined) {
+      return respHandlerMetadata.target === controllerMetadata.target;
     }
     /**
        * If on controller action level
        */
-    return guardMeta.target.constructor === controllerMetadata.target && guardMeta.propertyName === routeMetadata.propertyName;
+    return respHandlerMetadata.target.constructor === controllerMetadata.target && respHandlerMetadata.propertyName === routeMetadata.propertyName;
   });
   const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
     /**
@@ -76,10 +72,26 @@ export function handleRouteControllerAction (controllerInstance: any, controller
      * Pre-fetch gaurds and response-handlers to do not resolve every request
      */
   let responseHandlerInstance: ResponseHandlerInterface;
-  let responseHandlerUseParams: any;
+  let responseHandlerUseParams: {
+    instance: ResponseHandlerInterface,
+    args?: unknown[],
+    paramsMeta: {
+      metadata: UseParamsMetadataArgs,
+      signature: string,
+    }[],
+  };
 
   if (responsehandlerForRouteMetadata) {
     responseHandlerInstance = container.resolve(responsehandlerForRouteMetadata.responseHandler);
+    const params = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === responsehandlerForRouteMetadata.responseHandler).sort((a, b) => a.index - b.index).map((useParam) => ({
+      metadata: useParam,
+      signature: functionSignature(useParam.decoratorName, useParam.args)
+    }));
+    responseHandlerUseParams = {
+      instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
+      args: responsehandlerForRouteMetadata.args,
+      paramsMeta: params
+    }
   }
 
   const guardsInstance = guardForRouteMetadata.map((guardMeta) => {
@@ -123,7 +135,21 @@ export function handleRouteControllerAction (controllerInstance: any, controller
        */
     for (const { instance, args, paramsMeta } of guardsInstance) {
       // We resolve the guards
-      const resolvedGuardParams = await Promise.all(paramsMeta.map((e) => resolveParam(e, controllerInstance, ctx, routeMetadata, args, sharedParams)));
+      const resolvedGuardParams = await Promise.all(paramsMeta.map((paramMeta) => {
+        /**
+         * If handle function is a string => special decorators
+         */
+        if (paramMeta.metadata.handle === 'args') {
+          return args;
+        }
+        if (paramMeta.metadata.handle === 'controller-context') {
+          return {
+            controllerAction: routeMetadata.propertyName,
+            controllerInstance
+          } as ControllerContextInterface
+        }
+        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata, sharedParams);
+      }));
 
       try {
         const guardResponse = await instance.can(...resolvedGuardParams);
@@ -140,7 +166,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     /**
      * Apply controller params , should resolve cached middleware
      */
-    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => resolveParam(e, controllerInstance, ctx, routeMetadata, undefined, sharedParams)));
+    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => resolveParam(e, controllerInstance, ctx, routeMetadata, sharedParams)));
 
     /**
      * Call main controller action and apply decorator params
@@ -151,12 +177,21 @@ export function handleRouteControllerAction (controllerInstance: any, controller
        * Handle controller action response
        */
     if (responsehandlerForRouteMetadata) {
-      await responseHandlerInstance.handle(controllerActionResult, {
-        controllerAction: routeMetadata.propertyName,
-        controllerInstance,
-        ctx,
-        args: responsehandlerForRouteMetadata.args
-      });
+      const resolvedHandlerParams = await Promise.all(responseHandlerUseParams.paramsMeta.map((paramMeta) => {
+        if (paramMeta.metadata.handle === 'args') {
+          return responsehandlerForRouteMetadata.args;
+        }
+        if (paramMeta.metadata.handle === 'controller-context') {
+          return {
+            controllerAction: routeMetadata.propertyName,
+            controllerInstance
+          } as ControllerContextInterface
+        }
+        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata, sharedParams)
+      }));
+      resolvedHandlerParams.unshift(controllerActionResult);
+      // we need to anonymise the function because we get a Typescript Error ?
+      await (responseHandlerInstance.handle as Function)(...resolvedHandlerParams);
     } else {
       ctx.response.body = controllerActionResult;
     }
