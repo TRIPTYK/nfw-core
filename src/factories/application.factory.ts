@@ -14,7 +14,10 @@ interface GuardOptions {
 
 export interface CreateApplicationOptions {
   controllers: Class<unknown>[],
-  mikroORMConnection: MikroORM,
+  /**
+   * Create an injection in the container with databaseInjectionToken and returns mikroORMConnection
+   */
+  mikroORMConnection?: MikroORM,
   baseRoute: `/${string}`,
   globalMiddlewares?: (Class<MiddlewareInterface> | Middleware)[],
   globalGuards?: GuardOptions[],
@@ -40,11 +43,12 @@ export async function createApplication (options: CreateApplicationOptions) {
   });
 
   /**
+   * MikroORM is optionnal
    * Use context for each request for MikroORM, see https://mikro-orm.io/docs/identity-map
    */
-  if (options.mikroORMContext ?? true) {
+  if (options.mikroORMConnection && (options.mikroORMContext ?? true)) {
     app.use(async (_, next) => {
-      await RequestContext.createAsync(options.mikroORMConnection.em, next);
+      await RequestContext.createAsync(options.mikroORMConnection!.em, next);
     })
   }
 

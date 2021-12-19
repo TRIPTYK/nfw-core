@@ -153,13 +153,12 @@ export function handleRouteControllerAction (controllerInstance: any, controller
 
       try {
         const guardResponse = await instance.can(...resolvedGuardParams);
-        if (!guardResponse) {
-          ctx.response.status = 403;
-          throw createHttpError(403);
+        if (guardResponse === false) {
+          ctx.response.status = instance.code ?? 403;
+          throw createHttpError(ctx.response.status, instance.message ?? 'Forbidden');
         }
-      } catch (e) {
-        ctx.response.status = 403;
-        throw e;
+      } catch (e: any) {
+        throw createHttpError(e.code ?? instance.code ?? 403, e.message ?? instance.message ?? 'Forbidden');
       }
     }
 

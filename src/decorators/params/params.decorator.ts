@@ -1,7 +1,7 @@
 import { createCustomDecorator } from '../../index.js';
 
-export function Param (this: unknown, name: string) {
+export function Params (this: unknown) {
   return createCustomDecorator(({ ctx }) => {
-    return ctx.params[name];
-  }, 'param', false);
+    return ctx.params;
+  }, 'params');
 }
