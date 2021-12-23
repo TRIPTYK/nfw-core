@@ -45,7 +45,7 @@
     "jest": "^27.4.5",
     "typescript": "~4.5.4"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/mysql": "^4.5.9"
   },

@@ -4,21 +4,29 @@ nav:
   - Getting started:
     - Installation: getting-started/installation.md
     - Creating the Web server: getting-started/web-server.md
-    - First controller: getting-started/controller.md
-    - First Middleware: getting-started/middleware.md
-  - Overview:
-    - Controllers: controllers.md
-    - Middlewares: middlewares.md
+    - Controller: getting-started/controller.md
+    - Middleware: getting-started/middleware.md
+    - Service: getting-started/service.md
+    - Guard: getting-started/guard.md
+    - Response handler: getting-started/response-handler.md
+  - Advanced:
+    - Controller context: advanced/controller-context.md
+    - Custom decorators: advanced/decorators.md
+    - MikroORM: advanced/mikro-orm.md
+  
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - admonition
+  - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
 theme:
   name: material
+  logo: assets/favicon.png
   features:
     - navigation.sections
     - content.code.annotate 

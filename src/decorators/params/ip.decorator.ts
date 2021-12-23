@@ -1,7 +1,7 @@
 import { createCustomDecorator } from '../../index.js'
 
-export function Ip (this : Function) {
+export function Ip (this : unknown) {
   return createCustomDecorator(({ ctx }) => {
     return ctx.ip;
-  }, this.name)
+  }, 'ip')
 }
