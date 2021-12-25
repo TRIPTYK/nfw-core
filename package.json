@@ -1,64 +1,59 @@
 {
   "name": "@triptyk/nfw-core",
-  "version": "1.0.0-beta4",
+  "version": "2.0.1",
   "description": "",
-  "author": "TRIPTYK SPRL",
-  "contributors": [
-    "Verliefden Romain",
-    "Deflorenne Amaury",
-    "Antoine Sam"
-  ],
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "dist/**/*"
-  ],
-  "license": "ISC",
   "main": "dist/index.js",
-  "types": "index.d.ts",
-  "dependencies": {
-    "@hapi/boom": "^8.0.1",
-    "@queso/kebab-case": "^1.1.0",
-    "@types/pluralize": "0.0.29",
-    "dashify": "^2.0.0",
-    "express": "^4.17.1",
-    "express-validator": "^6.2.0",
-    "http-status": "^1.4.1",
-    "json-api-serializer": "^2.6.1",
-    "pascalcase": "^1.0.0",
-    "passport-jwt": "^4.0.0",
-    "pluralize": "^8.0.0",
-    "reflect-metadata": "^0.1.13",
-    "socket.io": "^3.1.2",
-    "socket.io-client": "^3.1.1",
-    "sqlstring": "^2.3.2",
-    "stringify-object": "^3.3.0",
-    "ts-morph": "^9.1.0",
-    "tsyringe": "^4.4.0",
-    "typeorm": "^0.2.31",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "@rollup/plugin-multi-entry": "^4.0.0",
-    "@types/express": "^4.17.2",
-    "@types/express-rate-limit": "^3.3.3",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.11",
-    "@types/socket.io-client": "^1.4.35",
-    "mocha": "^6.2.2",
-    "rollup-plugin-dts": "^2.0.1"
-  },
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha",
-    "build": "rm -rf dist && tsc && npx rollup -c",
-    "prepublishOnly": "rm -rf dist && tsc && rollup -c"
+    "prepublishOnly": "pnpm exec tsc",
+    "lint": "eslint ./src/**/*.ts",
+    "postpublish": "rm -rf dist",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TRIPTYK/nfw-core.git"
+    "url": "https://github.com/TRIPTYK/nfw-core.git"
   },
+  "type": "module",
+  "author": "TRIPTYK",
+  "contributors": [
+    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
+    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
+    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
+  ],
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/TRIPTYK/nfw-core/issues"
   },
-  "homepage": "https://github.com/TRIPTYK/nfw-core#readme"
+  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
+  "devDependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/mysql": "^4.5.9",
+    "@types/http-errors": "^1.8.1",
+    "@types/jest": "^27.0.3",
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.11",
+    "@types/node": "^16.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "eslint": "^8.4.1",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jest": "^27.4.5",
+    "typescript": "~4.5.4"
+  },
+  "optionalDependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/mysql": "^4.5.9"
+  },
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "http-errors": "^1.8.1",
+    "is-class": "^0.0.9",
+    "koa": "^2.13.4",
+    "tsyringe": "^4.6.0"
+  }
 }
