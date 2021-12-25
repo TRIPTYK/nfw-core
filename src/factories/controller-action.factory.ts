@@ -69,7 +69,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
   });
 
   /**
-     * Pre-fetch gaurds and response-handlers to do not resolve every request
+     * Pre-fetch guards and response-handlers in order to not resolve every request
      */
   let responseHandlerInstance: ResponseHandlerInterface;
   let responseHandlerUseParams: {
