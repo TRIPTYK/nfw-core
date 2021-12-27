@@ -4,3 +4,4 @@ tests/
 pnpm-lock.yaml
 examples/
 docs/
+site/
