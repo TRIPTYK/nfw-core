@@ -1,6 +1,5 @@
 # NFW-CORE
 
-A NodeJS Typescript framework using Koa with a lot of syntax sugar :chocolate_bar:
+A NodeJS Typescript framework using Koa !
 
-## Features
-
+[See the wiki !](https://triptyk.github.io/nfw-core/)

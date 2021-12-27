@@ -9,3 +9,8 @@ npm i @triptyk/nfw-core
 ```
 pnpm i @triptyk/nfw-core
 ```
+
+## yarn
+```
+yarn add @triptyk/nfw-core
+```

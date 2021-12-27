@@ -3,3 +3,4 @@ tests/
 .vscode/
 pnpm-lock.yaml
 examples/
+docs/

@@ -11,9 +11,3 @@ A NodeJS Typescript framework using Koa for routing with a lot of syntax sugar :
 - MikroORM support
 - Dependency injections
 - Full Typescript
-
-## Goals
-
-- As flexible as possible and customizable
-- Easy to learn
-- Efficient
