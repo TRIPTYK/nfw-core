@@ -13,7 +13,7 @@
     
     
       
-        <title>Custom decorators - NFW-core</title>
+        <title>Parameters decorators - NFW-core</title>
       
     
     
@@ -90,7 +90,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Custom decorators
+              Parameters decorators
             
           </span>
         </div>
@@ -402,12 +402,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Custom decorators
+          Parameters decorators
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Custom decorators
+        Parameters decorators
       </a>
       
         
@@ -436,6 +436,19 @@
   <a href="#creating-a-custom-decorator" class="md-nav__link">
     Creating a custom decorator
   </a>
+  
+    <nav class="md-nav" aria-label="Creating a custom decorator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decorator-caching" class="md-nav__link">
+    Decorator caching
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -506,6 +519,19 @@
     Creating a custom decorator
   </a>
   
+    <nav class="md-nav" aria-label="Creating a custom decorator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decorator-caching" class="md-nav__link">
+    Decorator caching
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -526,7 +552,7 @@
 
 
 <h1 id="parameter-decorators">Parameter decorators</h1>
-<p>Below is the complete list of decorators available in a <a href="/advanced/controller-context/">Controller-Context</a>.</p>
+<p>Below is the complete list of decorators available in a <a href="/advanced/controller-context/">Controller Context</a>.</p>
 <h2 id="existing-decorators">Existing decorators</h2>
 <table>
 <thead>
@@ -583,6 +609,65 @@
 </tbody>
 </table>
 <h2 id="creating-a-custom-decorator">Creating a custom decorator</h2>
+<p>You can add your own decorators using <code>createCustomDecorator(handle: (ctx: ControllerParamsContext) =&gt; unknown, name: string, cache = false, args: unknown[] = [])</code>.</p>
+<ul>
+<li><code>handle</code> :  the function that will be executed to get a value for the decorator. This function passes the Koa context and the arguments passed to the decorator.</li>
+<li><code>name</code> : The name of the decorator, will be used for caching.</li>
+<li><code>cache</code> : Enable decorator caching.</li>
+<li><code>args</code>: The arguments passed to the decorator</li>
+</ul>
+<div class="highlight"><span class="filename">decorator/current-user.decorator.ts</span><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">MikroORM</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@mikro-orm/core&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">createCustomDecorator</span><span class="p">,</span> <span class="nx">databaseInjectionToken</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@triptyk/nfw-core&#39;</span>
+
+<span class="k">export</span> <span class="kd">function</span>  <span class="nx">CurrentUser</span><span class="p">(</span><span class="nx">this</span>: <span class="kt">unknown</span><span class="p">,</span>  <span class="nx">throwIfNotFound</span>: <span class="kt">boolean</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">createCustomDecorator</span><span class="p">(</span><span class="k">async</span> <span class="p">({</span> <span class="nx">ctx</span> <span class="p">,</span> <span class="nx">args</span> <span class="p">})</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">databaseConnection</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">resolve</span><span class="o">&lt;</span><span class="nx">MikroORM</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">databaseInjectionToken</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">databaseConnection</span><span class="p">.</span><span class="nx">em</span><span class="p">.</span><span class="nx">getContext</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">getRepository</span><span class="p">(</span><span class="nx">UserModel</span><span class="p">).</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;amaury&quot;</span> <span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span> <span class="o">&amp;&amp;</span> <span class="nx">throwIfNotFound</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;User not found&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+  <span class="p">},</span> <span class="s1">&#39;current-user&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="p">[</span><span class="nx">throwIfNotFound</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The decorator can then be called like any other decorator in a <a href="/advanced/controller-context/">Controller Context</a>.</p>
+<div class="highlight"><span class="filename">controller/user.controller.ts</span><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Controller</span><span class="p">,</span> <span class="nx">GET</span><span class="p">,</span> <span class="nx">UseGuard</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@triptyk/nfw-core&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">CurrentUser</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;../decorator/current-user.decorator.js&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">AuthorizeGuard</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;../guard/authorize.guard.js&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserModel</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;../model/user.model.js&#39;</span><span class="p">;</span>
+
+<span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">UsersController</span> <span class="p">{</span>
+  <span class="kd">@GET</span><span class="p">(</span><span class="s1">&#39;/profile&#39;</span><span class="p">)</span>
+  <span class="kd">@UseGuard</span><span class="p">(</span><span class="nx">AuthorizeGuard</span><span class="p">)</span>
+  <span class="nx">profile</span> <span class="p">(</span><span class="kd">@CurrentUser</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="nx">currentUser</span>: <span class="kt">UserModel</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">currentUser</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="decorator-caching">Decorator caching</h3>
+<p>Let's analyse the line below : </p>
+<div class="highlight"><pre><span></span><code><span class="nx">createCustomDecorator</span><span class="p">(</span>
+  <span class="nx">handle</span><span class="p">,</span>
+  <span class="s1">&#39;current-user&#39;</span><span class="p">,</span> <span class="c1">// (1)</span>
+  <span class="kc">true</span><span class="p">,</span>  <span class="c1">// (2)</span>
+  <span class="p">[</span><span class="nx">throwIfNotFound</span><span class="p">]</span> <span class="c1">// (3)</span>
+<span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>The name of the decorator 'current-user'</li>
+<li>Caching enabled</li>
+<li>The array of arguments</li>
+</ol>
+<p>You'll need to toggle the caching property to <code>true</code>.</p>
+<p>The array of arguments will be concatenated with the name to form a hash in order to reuse the decorator's result.</p>
+<p>For example, using the <code>@CurrentUser(false)</code> decorator will produce this hash : <code>current-userfalse</code>.</p>
+<p>If <code>@CurrentUser(false)</code> is used in another place <strong>in the same request</strong>, the result will be reused instead of calling the handle again.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The caching is request-wide, if you call the same endpoint again, it may not produce the same result.</p>
+</div>
 
               
             </article>

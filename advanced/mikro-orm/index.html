@@ -393,7 +393,7 @@
   
     <li class="md-nav__item">
       <a href="../decorators/" class="md-nav__link">
-        Custom decorators
+        Parameters decorators
       </a>
     </li>
   
@@ -526,7 +526,7 @@
 
 
 <h1 id="mikroorm-support">MikroORM Support</h1>
-<p>Even if optionnal, NFW-Core supports MikroORM by passing a mikroORMConnection.</p>
+<p>Even if optionnal, NFW-Core supports MikroORM by passing a mikroORMConnection to the app.</p>
 <div class="highlight"><pre><span></span><code>  <span class="kd">const</span> <span class="nx">orm</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">MikroORM</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
     <span class="p">...</span> <span class="c1">// MikroORM options</span>
   <span class="p">});</span>
@@ -534,11 +534,47 @@
   <span class="kd">const</span> <span class="nx">koaApp</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">createApplication</span><span class="p">({</span>
     <span class="c1">// ...</span>
     <span class="nx">mikroORMConnection</span>: <span class="kt">orm</span><span class="p">,</span>
-    <span class="nx">mikroORMContext</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="nx">mikroORMContext</span>: <span class="kt">true</span><span class="p">,</span> <span class="c1">// (1) </span>
   <span class="p">});</span>
 </code></pre></div>
+<ol>
+<li>See <a href="https://mikro-orm.io/docs/identity-map/#why-is-request-context-needed">MikroORM request context</a></li>
+</ol>
 <h2 id="injecting-the-mikroorm-connection">Injecting the MikroORM connection</h2>
+<p>You can use <code>@inject(databaseInjectionToken)</code> that resolves to the <code>mikroORMConnection</code> you passed in the <code>createApplication</code> function.</p>
+<div class="highlight"><span class="filename">controller/user.controller.ts</span><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">MikroORM</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@mikro-orm/core&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Controller</span><span class="p">,</span> <span class="nx">databaseInjectionToken</span><span class="p">,</span> <span class="nx">GET</span><span class="p">,</span> <span class="nx">inject</span><span class="p">,</span> <span class="nx">injectable</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@triptyk/nfw-core&#39;</span><span class="p">;</span>
+
+<span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span>
+<span class="kd">@injectable</span><span class="p">()</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">UsersController</span> <span class="p">{</span>
+  <span class="c1">// eslint-disable-next-line no-useless-constructor</span>
+  <span class="kr">constructor</span> <span class="p">(</span><span class="kd">@inject</span><span class="p">(</span><span class="nx">databaseInjectionToken</span><span class="p">)</span> <span class="k">private</span> <span class="nx">mikroORM</span>: <span class="kt">MikroORM</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="kd">@GET</span><span class="p">(</span><span class="s1">&#39;/meta&#39;</span><span class="p">)</span>
+  <span class="nx">meta</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">mikroORM</span><span class="p">.</span><span class="nx">getMetadata</span><span class="p">().</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;UserModel&#39;</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nx">path</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="injecting-repositories">Injecting repositories</h2>
+<p>You can use <code>@InjectRepository(&lt;Model&gt;)</code>.</p>
+<div class="highlight"><span class="filename">controller/user.controller.ts</span><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">EntityRepository</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@mikro-orm/sqlite&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Controller</span><span class="p">,</span> <span class="nx">GET</span><span class="p">,</span> <span class="nx">injectable</span><span class="p">,</span> <span class="nx">InjectRepository</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@triptyk/nfw-core&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserModel</span> <span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;../model/user.model.js&#39;</span><span class="p">;</span>
+
+<span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span>
+<span class="kd">@injectable</span><span class="p">()</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">UsersController</span> <span class="p">{</span>
+  <span class="c1">// eslint-disable-next-line no-useless-constructor</span>
+  <span class="kr">constructor</span> <span class="p">(</span><span class="kd">@InjectRepository</span><span class="p">(</span><span class="nx">UserModel</span><span class="p">)</span> <span class="k">private</span> <span class="nx">userRepository</span>: <span class="kt">EntityRepository</span><span class="o">&lt;</span><span class="nx">UserModel</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{}</span>
+
+  <span class="kd">@GET</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+  <span class="nx">list</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">find</span><span class="p">({});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
               
             </article>
@@ -552,7 +588,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../decorators/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom decorators" rel="prev">
+        <a href="../decorators/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Parameters decorators" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -561,7 +597,7 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Custom decorators
+              Parameters decorators
             </div>
           </div>
         </a>

@@ -396,7 +396,7 @@
   
     <li class="md-nav__item">
       <a href="../../advanced/decorators/" class="md-nav__link">
-        Custom decorators
+        Parameters decorators
       </a>
     </li>
   
@@ -444,6 +444,11 @@
 
 <p>First, we'll need to create the web-server itself with the createApplication function. </p>
 <p>The purpose of this function is to setup application's routing and register global elements.</p>
+<p>The routing is made using <a href="https://www.npmjs.com/package/koa-router">Koa Router</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Obviously, the middleware compatibles with NFW-core are Koa-like middleware.</p>
+</div>
 <div class="highlight"><span class="filename">application.ts</span><pre><span></span><code>  <span class="k">import</span> <span class="nx">createApplication</span> <span class="kr">from</span> <span class="s1">&#39;@triptyk/nfw-core&#39;</span><span class="p">;</span>
 
   <span class="k">async</span> <span class="kd">function</span> <span class="nx">init</span> <span class="p">()</span> <span class="p">{</span>
