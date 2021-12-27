@@ -8,7 +8,9 @@
     "prepublishOnly": "pnpm exec tsc",
     "lint": "eslint ./src/**/*.ts",
     "postpublish": "rm -rf dist",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "docs:deploy": "mkdocs gh-deploy --ignore-version",
+    "docs:serve": "mkdocs serve"
   },
   "repository": {
     "type": "git",

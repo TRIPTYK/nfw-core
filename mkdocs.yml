@@ -1,4 +1,7 @@
 site_name: NFW-core
+extra:
+  version:
+    provider: mike
 nav:
   - Home: index.md
   - Getting started:
@@ -13,7 +16,6 @@ nav:
     - Controller context: advanced/controller-context.md
     - Parameters decorators: advanced/decorators.md
     - MikroORM: advanced/mikro-orm.md
-  
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
@@ -21,6 +23,7 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - md_in_html
+  - meta
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
@@ -28,9 +31,11 @@ markdown_extensions:
 theme:
   name: material
   logo: assets/favicon.png
+  favicon: assets/favicon.png
   features:
     - navigation.sections
     - content.code.annotate 
 plugins:
   - search
+  - mike
 repo_url: https://github.com/TRIPTYK/nfw-core
