@@ -5,3 +5,8 @@ pnpm-lock.yaml
 examples/
 docs/
 site/
+.github/
+mkdocs.yml
+pnpm-lock.yaml
+.eslintrc.json
+.eslintignore
