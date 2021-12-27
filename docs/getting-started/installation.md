@@ -14,3 +14,6 @@ pnpm i @triptyk/nfw-core
 ```
 yarn add @triptyk/nfw-core
 ```
+
+!!! warning
+    Only ESM modules, no commonJS supported. Set your `"type": "module"` in package.json.
