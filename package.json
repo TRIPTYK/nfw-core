@@ -1,7 +1,7 @@
 {
   "name": "@triptyk/nfw-core",
   "version": "2.0.1",
-  "description": "",
+  "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -23,7 +23,7 @@
     "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
     "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/TRIPTYK/nfw-core/issues"
   },
