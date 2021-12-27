@@ -16,7 +16,7 @@ Below is the complete list of decorators available in a [Controller Context](/ad
 | @Method()  | Returns the HTTP Method `ctx.method` |
 | @Ctx()  | Returns Koa-router `ctx` (`RouterContext`) |
 | @Args()  | Special NFW decorator, it returns the args passed to a ResponseHandler or a Guard |
-| @ControllerContext()  | Special NFW decorator, it returns the current [ControllerContext]() |
+| @ControllerContext()  | Special NFW decorator, it returns the current [ControllerContext](/advanced/controller-context) |
 
 ## Creating a custom decorator
 
