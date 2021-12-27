@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { MikroORM, RequestContext } from '@mikro-orm/core'
+import type { MikroORM } from '@mikro-orm/core';
 import Koa, { Middleware } from 'koa'
 import { container } from 'tsyringe';
 import { MiddlewareInterface } from '../interfaces/middleware.interface.js'
@@ -47,9 +47,15 @@ export async function createApplication (options: CreateApplicationOptions) {
    * Use context for each request for MikroORM, see https://mikro-orm.io/docs/identity-map
    */
   if (options.mikroORMConnection && (options.mikroORMContext ?? true)) {
-    app.use(async (_, next) => {
-      await RequestContext.createAsync(options.mikroORMConnection!.em, next);
-    })
+    try {
+      const { RequestContext } = await import('@mikro-orm/core');
+      app.use(async (_, next) => {
+        await RequestContext.createAsync(options.mikroORMConnection!.em, next);
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('An error has been thrown trying to import @mikro-orm, check your dependencies !');
+    }
   }
 
   createRouting(applicationRouter, options);

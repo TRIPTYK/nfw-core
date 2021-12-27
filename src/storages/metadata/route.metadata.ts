@@ -7,6 +7,7 @@ export enum RouteMethod {
     PATCH = 'patch',
     OPTIONS = 'options',
     DELETE = 'delete',
+    HEAD = 'head',
     ALL = 'all'
 }
 

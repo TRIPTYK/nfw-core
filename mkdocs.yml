@@ -11,7 +11,7 @@ nav:
     - Response handler: getting-started/response-handler.md
   - Advanced:
     - Controller context: advanced/controller-context.md
-    - Custom decorators: advanced/decorators.md
+    - Parameters decorators: advanced/decorators.md
     - MikroORM: advanced/mikro-orm.md
   
 markdown_extensions:

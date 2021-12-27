@@ -66,6 +66,17 @@ export function PUT (routeName: `/${string}`) {
   }
 }
 
+export function HEAD (routeName: `/${string}`) {
+  return function (target: unknown, propertyKey: string) {
+    MetadataStorage.instance.routes.push({
+      target,
+      propertyName: propertyKey,
+      routeName,
+      method: RouteMethod.HEAD
+    });
+  }
+}
+
 export function ALL (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
     MetadataStorage.instance.routes.push({

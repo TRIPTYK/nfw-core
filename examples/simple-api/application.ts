@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import createApplication from '@triptyk/nfw-core';
 import { UsersController } from './controller.js';
 

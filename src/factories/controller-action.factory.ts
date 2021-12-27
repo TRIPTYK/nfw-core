@@ -7,6 +7,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
 import { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
+import { debug } from '../utils/debug.util.js';
 import { applyParam } from '../utils/factory.util.js';
 import { CreateApplicationOptions } from './application.factory.js';
 
@@ -16,7 +17,7 @@ async function resolveParam (e: {
 }, controllerInstance: any, ctx: RouterContext, routeMetadata: RouteMetadataArgs, sharedParams: Record<string, unknown>) {
   // if param has already been used
   if (sharedParams[e.signature] && e.metadata.cache) {
-    console.log('reusing shared param ', e.signature);
+    debug?.('info', 'reusing shared param ', e.signature);
     return sharedParams[e.signature];
   }
 

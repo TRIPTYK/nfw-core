@@ -1,6 +1,6 @@
-import { BaseEntity, EntityRepository, MikroORM } from '@mikro-orm/core';
+import type { BaseEntity, EntityRepository, MikroORM } from '@mikro-orm/core';
 import { container, injectWithTransform } from 'tsyringe';
-import { Transform } from 'tsyringe/dist/typings/types';
+import type { Transform } from 'tsyringe/dist/typings/types';
 import { databaseInjectionToken } from '../index.js';
 import { Class } from '../types/class.js';
 
