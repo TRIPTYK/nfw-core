@@ -1,6 +1,6 @@
 # Parameter decorators
 
-Below is the complete list of decorators available in a [Controller Context](/advanced/controller-context/).
+Below is the complete list of decorators available in a [Controller Context](/nfw-core/advanced/controller-context/).
 
 ## Existing decorators
 
@@ -16,7 +16,7 @@ Below is the complete list of decorators available in a [Controller Context](/ad
 | @Method()  | Returns the HTTP Method `ctx.method` |
 | @Ctx()  | Returns Koa-router `ctx` (`RouterContext`) |
 | @Args()  | Special NFW decorator, it returns the args passed to a ResponseHandler or a Guard |
-| @ControllerContext()  | Special NFW decorator, it returns the current [ControllerContext](/advanced/controller-context) |
+| @ControllerContext()  | Special NFW decorator, it returns the current [ControllerContext](/nfw-core/advanced/controller-context) infos (controllerAction and controllerInstance) |
 
 ## Creating a custom decorator
 
@@ -44,7 +44,7 @@ export function  CurrentUser(this: unknown,  throwIfNotFound: boolean) {
 }
 ```
 
-The decorator can then be called like any other decorator in a [Controller Context](/advanced/controller-context/).
+The decorator can then be called like any other decorator in a [Controller Context](/nfw-core/advanced/controller-context/).
 
 ```ts title="controller/user.controller.ts"
 import { Controller, GET, UseGuard } from '@triptyk/nfw-core';
