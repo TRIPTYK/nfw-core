@@ -25,5 +25,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
-        npm lint 
+        npm run lint 
         npm i --legacy-peer-deps && npm test
