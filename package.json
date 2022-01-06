@@ -18,6 +18,9 @@
   },
   "type": "module",
   "author": "TRIPTYK",
+  "engines": {
+    "node": ">=16.3.1"
+  },
   "contributors": [
     "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
     "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",

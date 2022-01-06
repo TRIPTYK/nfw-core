@@ -10,13 +10,21 @@ export class MetadataStorage {
   /**
    * Singleton
    */
-  private static _instance: MetadataStorage;
+  // eslint-disable-next-line no-use-before-define
+  private static _instance?: MetadataStorage;
 
   public static get instance () {
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
     }
     return (MetadataStorage._instance = new MetadataStorage());
+  }
+
+  /**
+   * Clear the MetadataStorage instance which is often useless after CreateApplication
+   */
+  public static clear () {
+    this._instance = undefined;
   }
 
   /**
@@ -39,11 +47,6 @@ export class MetadataStorage {
    * Use parameters in controller route
    */
   public useParams: UseParamsMetadataArgs[] = [];
-
-  /**
-   * Use parameters in controller route
-   */
-   public useResponseHandlerParams: UseParamsMetadataArgs[] = [];
 
   /**
    * Middleware uses for controllers/routes
