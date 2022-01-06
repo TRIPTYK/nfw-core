@@ -24,4 +24,4 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i && npm test
+    - run: npm i --legacy-peer-deps && npm test
