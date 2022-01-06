@@ -27,9 +27,9 @@ export default {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: [
+    'dist/tests/(.*)'
+  ],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8'

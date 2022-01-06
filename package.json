@@ -8,7 +8,7 @@
     "prepublishOnly": "pnpm exec tsc",
     "lint": "eslint ./src/**/*.ts",
     "postpublish": "rm -rf dist",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
     "docs:serve": "mkdocs serve"
   },
@@ -47,6 +47,8 @@
     "eslint-plugin-promise": "^5.2.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "jest": "^27.4.5",
+    "node-fetch": "^3.1.0",
+    "reflect-metadata": "^0.1.13",
     "typescript": "~4.5.4"
   },
   "optionalDependencies": {
