@@ -57,7 +57,7 @@ export class UsersController {
   }
 
   @GET('/:name')
-  get (@Param(':name') name: string) {
+  get (@Param('name') name: string) {
     return this.usersService.getUser(name);
   }
 }
