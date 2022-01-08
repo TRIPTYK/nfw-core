@@ -1,12 +1,12 @@
 import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseGuard, UseResponseHandler } from '../../../../src/index.js';
-import { IpGuard } from './guard.js';
+import { AgentGuard } from './guard.js';
 import { Middleware } from './middleware.js';
 import { MetaResponseHandler } from './response-handler.js';
 import { User, UsersService } from './service.js';
 
 @Controller('/users')
 @UseMiddleware(Middleware)
-@UseGuard(IpGuard, '::1')
+@UseGuard(AgentGuard, '123')
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
 @injectable()
 export class UsersController {
@@ -30,7 +30,7 @@ export class UsersController {
   }
 
   @GET('/:name')
-  get (@Param(':name') name: string) {
+  get (@Param('name') name: string) {
     return this.usersService.getUser(name);
   }
 }
