@@ -1,6 +1,8 @@
-import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseGuard, UseResponseHandler } from '../../../../src/index.js';
+import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware } from '../../../../src/index.js';
+import { ErrorHandler } from './error-handler.js';
 import { AgentGuard } from './guard.js';
 import { Middleware } from './middleware.js';
+import { NotFoundMiddleware } from './not-found-handler.js';
 import { MetaResponseHandler } from './response-handler.js';
 import { User, UsersService } from './service.js';
 
@@ -8,6 +10,8 @@ import { User, UsersService } from './service.js';
 @UseMiddleware(Middleware)
 @UseGuard(AgentGuard, '123')
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
+@UseErrorHandler(ErrorHandler)
+@UseNotFoundMiddleware(NotFoundMiddleware)
 @injectable()
 export class UsersController {
   // eslint-disable-next-line no-useless-constructor

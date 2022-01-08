@@ -33,8 +33,8 @@ test('Guard should refuse incorrect authorization with 403 code', async () => {
     }
   });
   expect(response.status).toStrictEqual(403);
-  const body = await response.text();
-  expect(body).toStrictEqual('Wrong auth');
+  const body = await response.json() as Record<string, unknown>;
+  expect(body.message).toStrictEqual('Wrong auth');
   await new Promise((resolve, _reject) => server.close(resolve));
 });
 
@@ -65,5 +65,20 @@ test('Used response handler should be closest to route', async () => {
   const body = await response.json() as Record<string, unknown>;
   expect(typeof body.meta).toStrictEqual('object');
   expect((body.meta as Record<string, string>).description).toStrictEqual('Returns all users of the app');
+  await new Promise((resolve, _reject) => server.close(resolve));
+});
+
+test('Not found middleware is used', async () => {
+  const server = await createDummyAcceptanceApp(8001);
+
+  const response = await fetch('http://localhost:8001/api/v1/users/aaaa/bbbb/2222', {
+    headers: {
+      Authorization: '123'
+    }
+  });
+
+  expect(response.status).toStrictEqual(404);
+  const body = await response.json() as Record<string, unknown>;
+  expect(body.message).toStrictEqual('Subroute not found');
   await new Promise((resolve, _reject) => server.close(resolve));
 });
