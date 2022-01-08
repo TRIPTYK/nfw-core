@@ -568,7 +568,7 @@ The code and the message returned can be customised in the Guard class.</p>
   <span class="p">}</span>
 
   <span class="kd">@GET</span><span class="p">(</span><span class="s1">&#39;/:name&#39;</span><span class="p">)</span>
-  <span class="nx">get</span> <span class="p">(</span><span class="kd">@Param</span><span class="p">(</span><span class="s1">&#39;:name&#39;</span><span class="p">)</span> <span class="nx">name</span>: <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">get</span> <span class="p">(</span><span class="kd">@Param</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="nx">name</span>: <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">usersService</span><span class="p">.</span><span class="nx">getUser</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
