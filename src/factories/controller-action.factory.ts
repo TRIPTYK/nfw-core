@@ -67,7 +67,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
        * If on controller action level
        */
     return guardMeta.target.constructor === controllerMetadata.target && guardMeta.propertyName === routeMetadata.propertyName;
-  });
+  }).reverse(); // reverse guards because route-level are pushed first
 
   /**
      * Pre-fetch guards and response-handlers in order to not resolve every request
