@@ -102,6 +102,22 @@ test('Used response handler should be closest to route', async () => {
   await new Promise((resolve, _reject) => server.close(resolve));
 });
 
+test('Middlewares are used in order', async () => {
+  const server = await createDummyAcceptanceApp(8001);
+
+  const response = await fetch('http://localhost:8001/api/v1/users/', {
+    headers: {
+      Authorization: '123',
+      'User-Agent': 'nfw-test'
+    }
+  });
+
+  const body = await response.json() as Record<string, any>;
+  expect(body.meta.state.tab[0]).toStrictEqual('controller');
+  expect(body.meta.state.tab[1]).toStrictEqual('route-list');
+  await new Promise((resolve, _reject) => server.close(resolve));
+});
+
 test('Not found middleware is used', async () => {
   const server = await createDummyAcceptanceApp(8001);
 
