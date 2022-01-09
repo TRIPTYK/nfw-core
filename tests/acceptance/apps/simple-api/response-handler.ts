@@ -8,7 +8,8 @@ export class MetaResponseHandler implements ResponseHandlerInterface {
       meta: {
         method,
         ip,
-        description
+        description,
+        state: ctx.state
       }
     }
   }

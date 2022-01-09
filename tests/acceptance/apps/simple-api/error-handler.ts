@@ -5,6 +5,7 @@ import { ErrorHandlerInterface } from '../../../../src/index.js';
 
 export class ErrorHandler implements ErrorHandlerInterface {
   handle (error: HttpError, context: RouterContext<DefaultState, DefaultContext>): void | Promise<void> {
+    context.status = error.status;
     context.body = {
       message: error.message
     }
