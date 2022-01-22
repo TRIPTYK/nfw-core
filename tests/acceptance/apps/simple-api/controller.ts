@@ -1,4 +1,4 @@
-import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware, UseMiddleware, ALL } from '../../../../src/index.js';
+import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware, UseMiddleware, ALL, ControllerContext, ControllerContextInterface } from '../../../../src/index.js';
 import { ErrorHandler } from './error-handler.js';
 import { HeadersGuard } from './guard.js';
 import { NotFoundMiddleware } from './not-found-handler.js';
