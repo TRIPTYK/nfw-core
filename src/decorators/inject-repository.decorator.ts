@@ -2,7 +2,7 @@ import type { BaseEntity, EntityRepository, MikroORM } from '@mikro-orm/core';
 import { container, injectWithTransform } from 'tsyringe';
 import type { Transform } from 'tsyringe/dist/typings/types';
 import { databaseInjectionToken } from '../index.js';
-import { Class } from '../types/class.js';
+import type { Class } from '../types/class.js';
 
 class RepositoryTransformer<T> implements Transform<Class<T>, EntityRepository<any>> {
   public transform (_target: Class<unknown>, entityName: string) {

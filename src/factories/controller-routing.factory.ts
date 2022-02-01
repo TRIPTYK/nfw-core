@@ -1,9 +1,9 @@
-import Router from '@koa/router';
+import type Router from '@koa/router';
 import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
+import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './application.factory.js';
+import type { CreateApplicationOptions } from './application.factory.js';
 import { createRoute } from './controller-routes.factory.js';
 
 /**

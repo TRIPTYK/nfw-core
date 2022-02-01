@@ -1,6 +1,6 @@
-import { GuardInterface } from '../interfaces/guard.interface.js'
+import type { GuardInterface } from '../interfaces/guard.interface.js'
 import { MetadataStorage } from '../storages/metadata-storage.js'
-import { Class } from '../types/class.js'
+import type { Class } from '../types/class.js'
 
 export function UseGuard (guard: Class<GuardInterface>, ...args: unknown[]) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {

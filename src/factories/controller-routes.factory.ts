@@ -1,9 +1,9 @@
-import Router from '@koa/router';
+import type Router from '@koa/router';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
-import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
+import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
+import type { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
 import { resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './application.factory.js';
+import type { CreateApplicationOptions } from './application.factory.js';
 import { handleRouteControllerAction } from './controller-action.factory.js';
 
 /**

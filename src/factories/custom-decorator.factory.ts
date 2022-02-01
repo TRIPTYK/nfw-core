@@ -1,5 +1,5 @@
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { ControllerParamsContext } from '../storages/metadata/use-param.metadata.js';
+import type { ControllerParamsContext } from '../storages/metadata/use-param.metadata.js';
 
 export function createCustomDecorator (handle: (ctx: ControllerParamsContext) => unknown, name: string, cache = false, args: unknown[] = []) {
   return function (target: unknown, propertyName: string, index: number) {

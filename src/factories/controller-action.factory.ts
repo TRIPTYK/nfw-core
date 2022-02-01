@@ -1,15 +1,16 @@
-import { RouterContext } from '@koa/router';
+import type { RouterContext } from '@koa/router';
 import createHttpError from 'http-errors';
-import { Next } from 'koa';
+import type { Next } from 'koa';
 import { container } from 'tsyringe';
-import { ControllerContextInterface, functionSignature, ResponseHandlerInterface } from '../index.js';
+import type { ControllerContextInterface, ResponseHandlerInterface } from '../index.js';
+import { functionSignature } from '../index.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
-import { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
-import { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
+import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
+import type { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
+import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
 import { debug } from '../utils/debug.util.js';
 import { applyParam } from '../utils/factory.util.js';
-import { CreateApplicationOptions } from './application.factory.js';
+import type { CreateApplicationOptions } from './application.factory.js';
 
 async function resolveParam (e: {
   metadata: UseParamsMetadataArgs,

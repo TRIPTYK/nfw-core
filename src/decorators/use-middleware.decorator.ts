@@ -1,7 +1,7 @@
-import { Middleware } from '@koa/router';
-import { MiddlewareInterface } from '../interfaces/middleware.interface.js';
+import type { Middleware } from '@koa/router';
+import type { MiddlewareInterface } from '../interfaces/middleware.interface.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { Class } from '../types/class.js';
+import type { Class } from '../types/class.js';
 
 export function UseMiddleware (middleware: Class<MiddlewareInterface> | Middleware) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {

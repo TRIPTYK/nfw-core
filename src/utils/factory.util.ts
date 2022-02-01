@@ -1,12 +1,12 @@
-import { RouterContext, Middleware } from '@koa/router';
+import type { RouterContext, Middleware } from '@koa/router';
 import isClass from 'is-class';
-import { Next } from 'koa';
+import type { Next } from 'koa';
 import { container } from 'tsyringe';
-import { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
-import { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js';
-import { MiddlewareInterface } from '../interfaces/middleware.interface.js';
-import { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
-import { Class } from '../types/class.js';
+import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
+import type { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js';
+import type { MiddlewareInterface } from '../interfaces/middleware.interface.js';
+import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
+import type { Class } from '../types/class.js';
 
 export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
   /**

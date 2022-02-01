@@ -1,10 +1,11 @@
 import Router from '@koa/router';
 import type { MikroORM } from '@mikro-orm/core';
-import Koa, { Middleware } from 'koa'
+import type { Middleware } from 'koa';
+import Koa from 'koa'
 import { container } from 'tsyringe';
-import { MiddlewareInterface } from '../interfaces/middleware.interface.js'
-import { ErrorHandlerInterface, GuardInterface } from '../index.js';
-import { Class } from '../types/class.js';
+import type { MiddlewareInterface } from '../interfaces/middleware.interface.js'
+import type { ErrorHandlerInterface, GuardInterface } from '../index.js';
+import type { Class } from '../types/class.js';
 import { createRouting } from './application-routing.factory.js';
 
 interface GuardOptions {

@@ -1,4 +1,4 @@
-import { RouterContext } from '@koa/router';
+import type { RouterContext } from '@koa/router';
 
 export interface ControllerGuardContext {
     controllerInstance: unknown,

@@ -1,10 +1,10 @@
-import { ControllerMetadataArgs } from './metadata/controller.metadata.js';
-import { RouteMetadataArgs } from './metadata/route.metadata.js';
-import { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
-import { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
-import { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
-import { UseParamsMetadataArgs } from './metadata/use-param.metadata.js';
-import { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.metadata.js';
+import type { ControllerMetadataArgs } from './metadata/controller.metadata.js';
+import type { RouteMetadataArgs } from './metadata/route.metadata.js';
+import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
+import type { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
+import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
+import type { UseParamsMetadataArgs } from './metadata/use-param.metadata.js';
+import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.metadata.js';
 
 export class MetadataStorage {
   /**
