@@ -1,6 +1,6 @@
-import { Middleware } from '@koa/router';
-import { MiddlewareInterface } from '../../interfaces/middleware.interface.js';
-import { Class } from '../../types/class.js';
+import type { Middleware } from '@koa/router';
+import type { MiddlewareInterface } from '../../interfaces/middleware.interface.js';
+import type { Class } from '../../types/class.js';
 
 export interface UseMiddlewareMetadataArgs {
     target: Class<any> | any,

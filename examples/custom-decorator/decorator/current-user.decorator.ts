@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import type { MikroORM } from '@mikro-orm/core';
 import { container, createCustomDecorator, databaseInjectionToken } from '@triptyk/nfw-core'
 import { UserModel } from '../model/user.model.js';
 

@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import type { MikroORM } from '@mikro-orm/core';
 import { Controller, databaseInjectionToken, GET, inject, injectable } from '@triptyk/nfw-core';
 
 @Controller('/users')

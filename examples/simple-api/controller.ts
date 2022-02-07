@@ -2,7 +2,8 @@ import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, 
 import { IpGuard } from './guard.js';
 import { Middleware } from './middleware.js';
 import { MetaResponseHandler } from './response-handler.js';
-import { User, UsersService } from './service.js';
+import type { User } from './service.js';
+import { UsersService } from './service.js';
 
 @Controller('/users')
 @UseMiddleware(Middleware)

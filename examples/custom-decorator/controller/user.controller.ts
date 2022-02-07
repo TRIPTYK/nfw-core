@@ -1,7 +1,7 @@
 import { Controller, GET, UseGuard } from '@triptyk/nfw-core';
 import { CurrentUser } from '../decorator/current-user.decorator.js';
 import { AuthorizeGuard } from '../guard/authorize.guard.js';
-import { UserModel } from '../model/user.model.js';
+import type { UserModel } from '../model/user.model.js';
 
 @Controller('/users')
 export class UsersController {

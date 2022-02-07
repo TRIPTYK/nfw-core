@@ -1,4 +1,5 @@
-import { Args, GuardInterface, Ip } from '@triptyk/nfw-core';
+import type { GuardInterface } from '@triptyk/nfw-core';
+import { Args, Ip } from '@triptyk/nfw-core';
 
 export class IpGuard implements GuardInterface {
   can (@Ip() ip: string, @Args() [allowedIp] : [string]) {

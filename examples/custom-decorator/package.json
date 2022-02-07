@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mikro-orm/core": "^4.5.10",
-    "@mikro-orm/sqlite": "^4.5.10",
+    "@mikro-orm/core": "^5.0.0",
+    "@mikro-orm/sqlite": "^5.0.0",
     "@triptyk/nfw-core": "link:../..",
     "reflect-metadata": "^0.1.13"
   },
