@@ -1,18 +1,18 @@
-import { createDummyAcceptanceApp } from "./apps/simple-api/application.js";
-import fetch from "node-fetch";
+import { createDummyAcceptanceApp } from './apps/simple-api/application.js';
+import fetch from 'node-fetch';
 
-const methods = ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"];
+const methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'];
 
-async function requests(mustNotFail: string) {
+async function requests (mustNotFail: string) {
   const url = `http://localhost:8001/api/v1/methods/${mustNotFail.toLowerCase()}`;
   const response = await fetch(url, {
-    method: mustNotFail,
+    method: mustNotFail
   });
 
   expect(response.status).toStrictEqual(204);
   for (const httpMethod of methods.filter((m) => m !== mustNotFail)) {
     const response = await fetch(url, {
-      method: httpMethod,
+      method: httpMethod
     });
     expect(response.status).toStrictEqual(404);
   }

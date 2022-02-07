@@ -1,5 +1,4 @@
 
-
 import {
   ALL,
   Controller,
@@ -8,32 +7,32 @@ import {
   OPTIONS,
   PATCH,
   POST,
-  PUT,
-} from "../../../../src/index.js";
+  PUT
+} from '../../../../src/index.js';
 
-@Controller("/methods")
+@Controller('/methods')
 export class MethodsController {
-  @GET("/get")
-  get() {}
+  @GET('/get')
+  get () {}
 
-  @PUT("/put")
-  put() {}
+  @PUT('/put')
+  put () {}
 
-  @PATCH("/patch")
-  patch() {}
+  @PATCH('/patch')
+  patch () {}
 
-  @POST("/post")
-  post() {}
+  @POST('/post')
+  post () {}
 
-  @DELETE("/delete")
-  delete() {}
+  @DELETE('/delete')
+  delete () {}
 
-  @ALL("/all")
-  all() {}
+  @ALL('/all')
+  all () {}
 
-  @OPTIONS("/head")
-  head() {}
+  @OPTIONS('/head')
+  head () {}
 
-  @OPTIONS("/options")
-  options() {}
+  @OPTIONS('/options')
+  options () {}
 }

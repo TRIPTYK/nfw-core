@@ -6,7 +6,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "prepublishOnly": "npm exec tsc",
-    "lint": "eslint ./{src,examples}/**/*.ts",
+    "lint": "eslint ./{src,examples,tests}/**/*.ts",
     "postpublish": "rm -rf dist",
     "test": "tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
@@ -43,6 +43,7 @@
     "eslint": "^8.8.0",
     "eslint-config-standard": "17.0.0-0",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.0",
     "eslint-plugin-n": "^14.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",

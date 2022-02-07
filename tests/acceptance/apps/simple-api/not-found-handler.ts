@@ -1,6 +1,6 @@
-import { RouterContext } from '@koa/router'
-import { DefaultContext, DefaultState } from 'koa';
-import { MiddlewareInterface } from '../../../../src/index.js';
+import type { RouterContext } from '@koa/router'
+import type { DefaultContext, DefaultState } from 'koa';
+import type { MiddlewareInterface } from '../../../../src/index.js';
 
 export class NotFoundMiddleware implements MiddlewareInterface {
   use (context: RouterContext<DefaultState, DefaultContext>): void | Promise<void> {

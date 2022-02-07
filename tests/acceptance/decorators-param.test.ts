@@ -10,15 +10,15 @@ test('Check all decorators', async () => {
 
   const body = await response.json() as Record<string, any>;
 
-  expect(body.ip).toStrictEqual("::ffff:127.0.0.1");
-  expect(body.method).toStrictEqual("GET");
-  expect(body.origin).toStrictEqual("http://localhost:8001");
-  expect(body.param1).toStrictEqual("1");
-  expect(body.param2).toStrictEqual("2");
-  expect(body.q1).toStrictEqual("hello");
-  expect(typeof body.params).toStrictEqual("object");
-  expect(typeof body.query).toStrictEqual("object");
-  expect(typeof body.ctx).toStrictEqual("object");
+  expect(body.ip).toStrictEqual('::ffff:127.0.0.1');
+  expect(body.method).toStrictEqual('GET');
+  expect(body.origin).toStrictEqual('http://localhost:8001');
+  expect(body.param1).toStrictEqual('1');
+  expect(body.param2).toStrictEqual('2');
+  expect(body.q1).toStrictEqual('hello');
+  expect(typeof body.params).toStrictEqual('object');
+  expect(typeof body.query).toStrictEqual('object');
+  expect(typeof body.ctx).toStrictEqual('object');
 
   await new Promise((resolve, _reject) => server.close(resolve));
 });
@@ -31,8 +31,8 @@ test('Check controller context decorator', async () => {
 
   const body = await response.json() as Record<string, any>;
 
-  expect(body.controllerAction).toStrictEqual("context");
-  expect(body.controllerInstance).toStrictEqual("DecoratorsController");
+  expect(body.controllerAction).toStrictEqual('context');
+  expect(body.controllerInstance).toStrictEqual('DecoratorsController');
 
   await new Promise((resolve, _reject) => server.close(resolve));
 });

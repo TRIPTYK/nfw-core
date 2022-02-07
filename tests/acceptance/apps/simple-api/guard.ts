@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
-import { Args, GuardInterface, Header } from '../../../../src/index.js';
+import type { GuardInterface } from '../../../../src/index.js';
+import { Args, Header } from '../../../../src/index.js';
 
 export class HeadersGuard implements GuardInterface {
   can (@Header() headers: Record<string, string>, @Args() [header, value, message] : [string, string, string]) {
