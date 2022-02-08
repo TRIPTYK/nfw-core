@@ -19,7 +19,7 @@ async function init () {
   user.username = 'amaury';
   user.id = 'abcdef';
 
-  await orm.em.persistAndFlush(user);
+  await orm.em.fork().persistAndFlush(user);
 
   /**
    * Create the app
