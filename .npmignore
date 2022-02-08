@@ -1,6 +1,7 @@
 src/
 tests/
 dist/tests/
+dist/coverage/
 .vscode/
 pnpm-lock.yaml
 examples/
