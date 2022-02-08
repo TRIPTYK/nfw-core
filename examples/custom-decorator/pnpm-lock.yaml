@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@mikro-orm/core': ^5.0.0
   '@mikro-orm/sqlite': ^5.0.0
-  '@triptyk/nfw-core': link:../..
+  '@triptyk/nfw-core': 3.0.0-beta.0
   nodemon: ^2.0.15
   reflect-metadata: ^0.1.13
   ts-node: ^10.4.0
