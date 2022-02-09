@@ -1,4 +1,4 @@
-import type { BaseEntity, EntityRepository, MikroORM } from '@mikro-orm/core';
+import type { AnyEntity, EntityRepository, MikroORM } from '@mikro-orm/core';
 import { container, injectWithTransform } from 'tsyringe';
 import type { Transform } from 'tsyringe/dist/typings/types';
 import { databaseInjectionToken } from '../index.js';
@@ -17,6 +17,6 @@ class RepositoryTransformer<T> implements Transform<Class<T>, EntityRepository<a
   }
 }
 
-export function InjectRepository (entity: Class<BaseEntity<any, any>>) {
+export function InjectRepository (entity: Class<AnyEntity>) {
   return injectWithTransform(entity, RepositoryTransformer, entity.name);
 }
