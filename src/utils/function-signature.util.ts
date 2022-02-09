@@ -1,3 +1,3 @@
 export function functionSignature (functionName: string, ...args: unknown[]) {
-  return functionName + args.map((arg) => arg).join('');
+  return functionName + '_' + args.map((arg) => arg).join('');
 }

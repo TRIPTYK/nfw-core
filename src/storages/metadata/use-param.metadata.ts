@@ -5,6 +5,7 @@ export interface ControllerParamsContext {
     controllerAction: string,
     ctx: RouterContext,
     args?: unknown[],
+    sharedParams : Record<string, unknown>,
 }
 
 export interface UseParamsMetadataArgs {

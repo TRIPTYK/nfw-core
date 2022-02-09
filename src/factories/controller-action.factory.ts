@@ -28,7 +28,8 @@ async function resolveParam (e: {
   const paramResult = await applyParam(e.metadata, {
     controllerAction: routeMetadata.propertyName,
     controllerInstance,
-    ctx
+    ctx,
+    sharedParams
   });
 
   sharedParams[e.signature] = paramResult;
