@@ -1,7 +1,7 @@
 import { createDummyAcceptanceApp } from './apps/simple-api/application.js';
 import fetch from 'node-fetch';
 
-const methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'];
+const methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'];
 
 async function requests (mustNotFail: string) {
   const url = `http://localhost:8001/api/v1/methods/${mustNotFail.toLowerCase()}`;

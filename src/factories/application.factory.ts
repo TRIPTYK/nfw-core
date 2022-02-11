@@ -1,13 +1,13 @@
 import Router from '@koa/router';
 import type { MikroORM } from '@mikro-orm/core';
 import type { Middleware } from 'koa';
-import Koa from 'koa';
 import { container } from 'tsyringe';
 import type { MiddlewareInterface } from '../interfaces/middleware.interface.js';
 import type { ErrorHandlerInterface, GuardInterface } from '../index.js';
 import type { Class } from '../types/class.js';
 import { createRouting } from './application-routing.factory.js';
 import HttpError from 'http-errors';
+import type Koa from 'koa';
 
 interface GuardOptions {
   guard: Class<GuardInterface>,
@@ -19,6 +19,7 @@ export interface CreateApplicationOptions {
   /**
    * Create an injection in the container with databaseInjectionToken and returns mikroORMConnection
    */
+  server: Koa,
   mikroORMConnection?: MikroORM,
   baseRoute: `/${string}`,
   globalMiddlewares?: (Class<MiddlewareInterface> | Middleware)[],
@@ -34,8 +35,7 @@ export interface CreateApplicationOptions {
 export const databaseInjectionToken = Symbol('database-connection');
 
 export async function createApplication (options: CreateApplicationOptions) {
-  const app = new Koa();
-
+  const app = options.server;
   const applicationRouter = new Router({
     prefix: options.baseRoute
   });

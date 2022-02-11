@@ -51,7 +51,8 @@
     "jest": "^27.5.0",
     "node-fetch": "^3.2.0",
     "reflect-metadata": "^0.1.13",
-    "typescript": "~4.5.5"
+    "typescript": "~4.5.5",
+    "koa": "^2.13.4"
   },
   "optionalDependencies": {
     "@mikro-orm/core": "^5.0.0"
@@ -60,7 +61,6 @@
     "@koa/router": "^10.1.1",
     "http-errors": "^2.0.0",
     "is-class": "^0.0.9",
-    "koa": "^2.13.4",
     "tsyringe": "^4.6.0"
   }
 }

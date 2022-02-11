@@ -1,12 +1,14 @@
 import 'reflect-metadata';
 import createApplication from '@triptyk/nfw-core';
 import { UsersController } from './controller.js';
+import Koa from 'koa';
 
 async function init () {
   /**
    * Create the app
    */
   const koaApp = await createApplication({
+    server: new Koa(),
     controllers: [UsersController],
     globalGuards: [],
     globalMiddlewares: [],
