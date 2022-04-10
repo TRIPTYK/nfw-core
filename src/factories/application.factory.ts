@@ -15,7 +15,7 @@ interface GuardOptions {
 }
 
 export interface CreateApplicationOptions {
-  controllers: Class<unknown>[],
+  areas: Class<unknown>[],
   /**
    * Create an injection in the container with databaseInjectionToken and returns mikroORMConnection
    */

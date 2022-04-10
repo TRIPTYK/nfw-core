@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import createApplication from '@triptyk/nfw-core';
-import { UsersController } from './controller.js';
 import Koa from 'koa';
+import { MainArea } from './area.js';
 
 async function init () {
   /**
@@ -9,7 +9,7 @@ async function init () {
    */
   const koaApp = await createApplication({
     server: new Koa(),
-    controllers: [UsersController],
+    areas: [MainArea],
     globalGuards: [],
     globalMiddlewares: [],
     baseRoute: '/api/v1'

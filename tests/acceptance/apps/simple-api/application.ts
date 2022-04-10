@@ -11,7 +11,7 @@ export async function createDummyAcceptanceApp (port: number) {
    */
   const koaApp = await createApplication({
     server: new Koa(),
-    controllers: [UsersController, DecoratorsController, MethodsController],
+    areas: [UsersController, DecoratorsController, MethodsController],
     globalGuards: [],
     globalMiddlewares: [],
     baseRoute: '/api/v1'

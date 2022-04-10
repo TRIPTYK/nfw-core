@@ -2,6 +2,7 @@ import Router from '@koa/router';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
+import { createArea } from './area-routing.factory.js';
 import { createController } from './controller-routing.factory.js';
 
 export function createRouting (applicationRouter: Router, applicationOptions: CreateApplicationOptions) {
@@ -14,18 +15,20 @@ export function createRouting (applicationRouter: Router, applicationOptions: Cr
 
   applicationRouter.use(...resolvedMiddlewares);
 
-  for (const controller of applicationOptions.controllers) {
-    const controllerMetadata = MetadataStorage.instance.controllers.find((cMetadata) => cMetadata.target === controller);
+  for (const area of applicationOptions.areas) {
+    const areaMetadata = MetadataStorage.instance.areas.find((aMetadata) => aMetadata.target === area);
 
-    if (!controllerMetadata) {
-      throw new Error(`Please decorate ${controller.constructor.name} with @Controller`);
+    if (!areaMetadata) {
+      throw new Error(`Please decorate ${area.constructor.name} with @Area`);
     }
 
-    const controllerRouter = new Router({
-      prefix: controllerMetadata.routeName
+    const areaRouter = new Router({
+      prefix: areaMetadata.routeName
     });
-    createController(controllerMetadata, controllerRouter, applicationOptions);
-    applicationRouter.use(controllerRouter.routes());
+    createArea(areaMetadata, areaRouter, applicationOptions);
+    applicationRouter.use(areaRouter.routes(), areaRouter.allowedMethods({
+      throw: true
+    }));
   }
 
   /**

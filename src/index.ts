@@ -2,6 +2,7 @@ export { createApplication as default } from './factories/application.factory.js
 export { databaseInjectionToken } from './factories/application.factory.js';
 export * from './factories/custom-decorator.factory.js';
 
+export * from './decorators/area.decorator.js';
 export * from './decorators/controller.decorator.js';
 export * from './decorators/params/args.decorator.js';
 export * from './decorators/route.decorator.js';
