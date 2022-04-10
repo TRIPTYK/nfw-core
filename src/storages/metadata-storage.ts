@@ -1,4 +1,4 @@
-import { AreaMetadataArgs } from './metadata/area.metadata.js';
+import type { AreaMetadataArgs } from './metadata/area.metadata.js';
 import type { ControllerMetadataArgs } from './metadata/controller.metadata.js';
 import type { RouteMetadataArgs } from './metadata/route.metadata.js';
 import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';

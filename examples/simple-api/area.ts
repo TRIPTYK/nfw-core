@@ -1,4 +1,4 @@
-import { Area, injectable } from '@triptyk/nfw-core';
+import { Area } from '@triptyk/nfw-core';
 import { UsersController } from './controller.js';
 
 @Area({

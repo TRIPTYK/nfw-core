@@ -1,8 +1,8 @@
 import Router from '@koa/router';
 import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
-import { Constructor } from '../types/contructor.js';
+import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
+import type { Constructor } from '../types/contructor.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 import { createController } from './controller-routing.factory.js';
@@ -12,7 +12,7 @@ import { createController } from './controller-routing.factory.js';
  */
 export function createArea (areaMetadata: AreaMetadataArgs, areaRouter: Router, applicationOptions: CreateApplicationOptions) {
   container.registerSingleton(areaMetadata.target as Constructor<unknown>);
-  const areaControllerMeta = MetadataStorage.instance.controllers.filter((cMetadata) =>  areaMetadata.controllers.includes(cMetadata.target));
+  const areaControllerMeta = MetadataStorage.instance.controllers.filter((cMetadata) => areaMetadata.controllers.includes(cMetadata.target));
 
   const areaMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === areaMetadata.target && middlewareMeta.type === 'classic').reverse();
   const notFoundMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === areaMetadata.target && middlewareMeta.type === 'not-found').reverse();
@@ -31,7 +31,6 @@ export function createArea (areaMetadata: AreaMetadataArgs, areaRouter: Router, 
 
   areaRouter.use(...applyMiddlewares);
 
-
   for (const controllerMetadata of areaControllerMeta) {
     const controllerRouter = new Router({
       prefix: controllerMetadata.routeName
@@ -45,5 +44,5 @@ export function createArea (areaMetadata: AreaMetadataArgs, areaRouter: Router, 
   /**
      * Catch all route for not found
      */
-   areaRouter.all('(.*)', ...applyNotFoundMiddlewares);
+  areaRouter.all('(.*)', ...applyNotFoundMiddlewares);
 }
