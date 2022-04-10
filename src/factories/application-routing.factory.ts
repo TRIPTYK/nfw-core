@@ -1,5 +1,6 @@
 import Router from '@koa/router';
 import { MetadataStorage } from '../storages/metadata-storage.js';
+import { allowedMethods } from '../utils/allowed-methods.util.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 import { createArea } from './area-routing.factory.js';
@@ -25,9 +26,7 @@ export function createRouting (applicationRouter: Router, applicationOptions: Cr
       prefix: areaMetadata.routeName
     });
     createArea(areaMetadata, areaRouter, applicationOptions);
-    applicationRouter.use(areaRouter.routes(), areaRouter.allowedMethods({
-      throw: true
-    }));
+    applicationRouter.use(areaRouter.routes(), allowedMethods(areaRouter));
   }
 
   /**

@@ -6,8 +6,8 @@ import type { MiddlewareInterface } from '../interfaces/middleware.interface.js'
 import type { ErrorHandlerInterface, GuardInterface } from '../index.js';
 import type { Class } from '../types/class.js';
 import { createRouting } from './application-routing.factory.js';
-import HttpError from 'http-errors';
 import type Koa from 'koa';
+import { allowedMethods } from '../utils/allowed-methods.util.js';
 
 interface GuardOptions {
   guard: Class<GuardInterface>,
@@ -65,11 +65,7 @@ export async function createApplication (options: CreateApplicationOptions) {
   createRouting(applicationRouter, options);
   app.use(applicationRouter.routes())
   app.use(
-    applicationRouter.allowedMethods({
-      throw: true,
-      notImplemented: () => new HttpError.NotImplemented(),
-      methodNotAllowed: () => new HttpError.MethodNotAllowed()
-    })
+    allowedMethods(applicationRouter)
   );
 
   return app;

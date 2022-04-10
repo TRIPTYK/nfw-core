@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
 import type { Constructor } from '../types/contructor.js';
+import { allowedMethods } from '../utils/allowed-methods.util.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 import { createController } from './controller-routing.factory.js';
@@ -36,9 +37,9 @@ export function createArea (areaMetadata: AreaMetadataArgs, areaRouter: Router, 
       prefix: controllerMetadata.routeName
     });
     createController(controllerMetadata, controllerRouter, applicationOptions);
-    areaRouter.use(controllerRouter.routes(), controllerRouter.allowedMethods({
-      throw: true
-    }));
+    areaRouter.use(controllerRouter.routes(),
+      allowedMethods(controllerRouter)
+    );
   }
 
   /**
