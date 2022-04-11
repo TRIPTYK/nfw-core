@@ -1,6 +1,7 @@
 import type Router from '@koa/router';
 import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
+import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
 import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
@@ -9,7 +10,7 @@ import { createRoute } from './controller-routes.factory.js';
 /**
  * Handles creating controller-level route
  */
-export function createController (controllerMetadata: ControllerMetadataArgs, controllerRouter: Router, applicationOptions: CreateApplicationOptions) {
+export function createController (areaMetadata: AreaMetadataArgs, controllerMetadata: ControllerMetadataArgs, controllerRouter: Router, applicationOptions: CreateApplicationOptions) {
   container.registerSingleton(controllerMetadata.target);
   const controllerInstance = container.resolve(controllerMetadata.target);
   const controllerRoutesMeta = MetadataStorage.instance.routes.filter((rMetadata) => rMetadata.target.constructor === controllerMetadata.target);
@@ -32,7 +33,7 @@ export function createController (controllerMetadata: ControllerMetadataArgs, co
   controllerRouter.use(...applyMiddlewares);
 
   for (const routeMetadata of controllerRoutesMeta) {
-    createRoute(controllerRouter, controllerInstance, controllerMetadata, routeMetadata, applicationOptions);
+    createRoute(areaMetadata, controllerRouter, controllerInstance, controllerMetadata, routeMetadata, applicationOptions);
   }
 
   /**

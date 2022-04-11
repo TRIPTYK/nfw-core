@@ -1,16 +1,30 @@
-                                                             import type { RouterContext } from '@koa/router';
+import type { RouterContext } from '@koa/router';
 import createHttpError from 'http-errors';
 import type { Next } from 'koa';
 import { container } from 'tsyringe';
 import type { ControllerContextInterface, ResponseHandlerInterface } from '../index.js';
 import { functionSignature } from '../index.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
+import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
 import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
+import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
 import { debug } from '../utils/debug.util.js';
 import { applyParam } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
+
+const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
+  const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
+    metadata: useParam,
+    signature: functionSignature(useParam.decoratorName, useParam.args)
+  }));
+  return {
+    instance: container.resolve(guardMeta.guard),
+    args: guardMeta.args,
+    paramsMeta: paramsForGuardMetadata
+  }
+}
 
 async function resolveParam (e: {
   metadata: UseParamsMetadataArgs,
@@ -37,7 +51,7 @@ async function resolveParam (e: {
   return paramResult;
 }
 
-export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
+export function handleRouteControllerAction (controllerInstance: any, areaMetadata: AreaMetadataArgs, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
@@ -58,6 +72,11 @@ export function handleRouteControllerAction (controllerInstance: any, controller
        */
     return respHandlerMetadata.target.constructor === controllerMetadata.target && respHandlerMetadata.propertyName === routeMetadata.propertyName;
   });
+
+  const guardForAreaMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
+    return guardMeta.target === areaMetadata.target;
+  }).reverse(); // reverse guards because route-level are pushed first
+
   const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
     /**
        * If on controller level
@@ -97,17 +116,10 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     }
   }
 
-  const guardsInstance = guardForRouteMetadata.map((guardMeta) => {
-    const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
-      metadata: useParam,
-      signature: functionSignature(useParam.decoratorName, useParam.args)
-    }));
-    return {
-      instance: container.resolve(guardMeta.guard),
-      args: guardMeta.args,
-      paramsMeta: paramsForGuardMetadata
-    }
-  });
+  const guardsInstance = guardForRouteMetadata.map(resolveGuardInstance);
+  const areaGuardsInstance = guardForAreaMetadata.map(resolveGuardInstance);
+
+  guardsInstance.unshift(...areaGuardsInstance);
 
   /**
    * Apply global guards

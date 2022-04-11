@@ -36,7 +36,7 @@ export function createArea (areaMetadata: AreaMetadataArgs, areaRouter: Router, 
     const controllerRouter = new Router({
       prefix: controllerMetadata.routeName
     });
-    createController(controllerMetadata, controllerRouter, applicationOptions);
+    createController(areaMetadata, controllerMetadata, controllerRouter, applicationOptions);
     areaRouter.use(controllerRouter.routes(),
       allowedMethods(controllerRouter)
     );

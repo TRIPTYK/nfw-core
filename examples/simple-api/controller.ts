@@ -1,5 +1,4 @@
-import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseGuard, UseResponseHandler } from '@triptyk/nfw-core';
-import { IpGuard } from './guard.js';
+import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseResponseHandler } from '@triptyk/nfw-core';
 import { Middleware } from './middleware.js';
 import { MetaResponseHandler } from './response-handler.js';
 import type { User } from './service.js';
@@ -7,7 +6,6 @@ import { UsersService } from './service.js';
 
 @Controller('/users')
 @UseMiddleware(Middleware)
-@UseGuard(IpGuard, '::1')
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
 @injectable()
 export class UsersController {
