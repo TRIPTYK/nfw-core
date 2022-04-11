@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import createApplication from '@triptyk/nfw-core';
-import { UsersController } from './controller/user.controller.js';
 import { MikroORM } from '@mikro-orm/core';
 import { UserModel } from './model/user.model.js';
+import { MainArea } from './area/main.area.js';
+import Koa from 'koa';
 
 async function init () {
   const orm = await MikroORM.init({
@@ -25,7 +26,8 @@ async function init () {
    * Create the app
    */
   const koaApp = await createApplication({
-    controllers: [UsersController],
+    areas: [MainArea],
+    server: new Koa(),
     globalGuards: [],
     mikroORMConnection: orm,
     globalMiddlewares: [],
