@@ -8,7 +8,7 @@ import {
   PATCH,
   POST,
   PUT
-} from '../../../../src/index.js';
+} from '../../../../../src/index.js';
 
 @Controller('/methods')
 export class MethodsController {

@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 import createApplication from '../../../../src/index.js';
-import { UsersController } from './controller.js';
-import { DecoratorsController } from './decorators-controller.js';
-import { MethodsController } from './methods-controller.js';
 import Koa from 'koa';
+import { MainArea } from './areas/area.js';
 
 export async function createDummyAcceptanceApp (port: number) {
   /**
@@ -11,7 +9,9 @@ export async function createDummyAcceptanceApp (port: number) {
    */
   const koaApp = await createApplication({
     server: new Koa(),
-    areas: [UsersController, DecoratorsController, MethodsController],
+    areas: [
+      MainArea
+    ],
     globalGuards: [],
     globalMiddlewares: [],
     baseRoute: '/api/v1'

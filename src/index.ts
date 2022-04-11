@@ -20,7 +20,7 @@ export * from './decorators/params/router-context.decorator.js'
 export * from './decorators/use-middleware.decorator.js';
 export * from './decorators/use-guard.decorator.js';
 export * from './decorators/inject-repository.decorator.js';
-export * from './decorators/use-response-handler.js';
+export * from './decorators/use-response-handler.decorator.js';
 export * from './decorators/use-error-handler.decorator.js';
 export * from './decorators/use-not-found-middleware.decorator.js';
 

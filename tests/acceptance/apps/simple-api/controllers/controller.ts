@@ -1,11 +1,11 @@
-import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware, UseMiddleware, ALL } from '../../../../src/index.js';
-import { ErrorHandler } from './error-handler.js';
-import { HeadersGuard } from './guard.js';
-import { NotFoundMiddleware } from './not-found-handler.js';
-import { createPassMiddleware } from './pass-middleware.js';
-import { MetaResponseHandler } from './response-handler.js';
-import type { User } from './service.js';
-import { UsersService } from './service.js';
+import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware, UseMiddleware, ALL } from '../../../../../src/index.js';
+import { ErrorHandler } from '../error-handler.js';
+import { HeadersGuard } from '../guard.js';
+import { NotFoundMiddleware } from '../not-found-handler.js';
+import { createPassMiddleware } from '../pass-middleware.js';
+import { MetaResponseHandler } from '../response-handler.js';
+import type { User } from '../service.js';
+import { UsersService } from '../service.js';
 
 @Controller('/users')
 @UseGuard(HeadersGuard, 'authorization', '123', 'wrong auth')

@@ -1,6 +1,6 @@
 import type { RouterContext } from '@koa/router';
-import { Params } from '../../../../src/decorators/params/params.decorator.js';
-import type { ControllerContextInterface } from '../../../../src/index.js';
+import { Params } from '../../../../../src/decorators/params/params.decorator.js';
+import type { ControllerContextInterface } from '../../../../../src/index.js';
 import {
   Body,
   Controller,
@@ -13,7 +13,7 @@ import {
   Param,
   Query,
   QueryParam
-} from '../../../../src/index.js';
+} from '../../../../../src/index.js';
 import type { UsersController } from './controller.js';
 
 @Controller('/decorators')
