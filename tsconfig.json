@@ -8,6 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "declaration": true,
     "outDir": "./dist",
