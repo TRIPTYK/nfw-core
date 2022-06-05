@@ -5,9 +5,10 @@ import { resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 import { createController } from './controller-routing.factory.js';
 
-export function createRouting (app: Application, applicationOptions: CreateApplicationOptions) {
+export async function createApplicationRouting (app: Application, applicationOptions: CreateApplicationOptions) {
   const applicationRouter = new Router({
-    prefix: applicationOptions.baseRoute
+    prefix: applicationOptions.baseRoute,
+    sensitive: true
   });
 
   const resolvedMiddlewares = (applicationOptions.globalMiddlewares ?? []).map(resolveMiddleware);

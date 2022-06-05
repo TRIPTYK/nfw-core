@@ -11,12 +11,8 @@ export class MetadataStorage {
    * Singleton
    */
   private static _instance?: MetadataStorage;
-  private static _locked: boolean = false;
 
   public static get instance () {
-    if (this._locked) {
-      throw new Error('Cannot access metadata storage after application initialization');
-    }
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
     }
@@ -28,7 +24,6 @@ export class MetadataStorage {
    */
   public static clear () {
     this._instance = undefined;
-    this._locked = true;
   }
 
   /**

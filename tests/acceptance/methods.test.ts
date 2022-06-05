@@ -14,7 +14,7 @@ async function requests (mustNotFail: string) {
     const response = await fetch(url, {
       method: httpMethod
     });
-    expect(response.status).toStrictEqual(404);
+    expect(response.status).toStrictEqual(405);
   }
 }
 

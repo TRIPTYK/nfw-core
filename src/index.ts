@@ -1,5 +1,4 @@
 export { createApplication as default } from './factories/application.factory.js';
-export { databaseInjectionToken } from './factories/application.factory.js';
 export * from './factories/custom-decorator.factory.js';
 
 export * from './decorators/controller.decorator.js';
@@ -18,7 +17,6 @@ export * from './decorators/params/router-context.decorator.js'
 
 export * from './decorators/use-middleware.decorator.js';
 export * from './decorators/use-guard.decorator.js';
-export * from './decorators/inject-repository.decorator.js';
 export * from './decorators/use-response-handler.decorator.js';
 export * from './decorators/use-error-handler.decorator.js';
 

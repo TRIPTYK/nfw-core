@@ -1,10 +1,9 @@
 
-import { Controller, injectable } from '../../../../../src/index.js';
+import { Controller } from '../../../../../src/index.js';
 import { UsersController } from '../controllers/controller.js';
 import { DecoratorsController } from '../controllers/decorators-controller.js';
 import { MethodsController } from '../controllers/methods-controller.js';
 
-@injectable()
 @Controller({
   controllers: [
     UsersController,
@@ -12,6 +11,4 @@ import { MethodsController } from '../controllers/methods-controller.js';
     MethodsController
   ]
 })
-export class MainArea {
-
-}
+export class MainArea {}

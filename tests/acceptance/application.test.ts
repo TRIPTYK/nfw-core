@@ -117,19 +117,3 @@ test('Middlewares are used in order', async () => {
   expect(body.meta.state.tab[1]).toStrictEqual('route-list');
   await new Promise((resolve, _reject) => server.close(resolve));
 });
-
-test('Not found middleware is used', async () => {
-  const server = await createDummyAcceptanceApp(8001);
-
-  const response = await fetch('http://localhost:8001/api/v1/users/aaaa/bbbb/2222', {
-    headers: {
-      Authorization: '123',
-      'User-Agent': 'nfw-test'
-    }
-  });
-
-  expect(response.status).toStrictEqual(404);
-  const body = await response.json() as Record<string, unknown>;
-  expect(body.message).toStrictEqual('Subroute not found');
-  await new Promise((resolve, _reject) => server.close(resolve));
-});
