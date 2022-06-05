@@ -15,10 +15,10 @@
     "declaration": true,
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
+    "composite": true,
     "paths": {
-      "@triptyk/nfw-core": ["./packages/nfw-core"],
-      "@triptyk/nfw-core/*": ["./packages/nfw-core/*"],
-    }
+      "@triptyk/nfw-*": ["packages/*/src"]
+    },
   },
   "exclude": ["**/examples/**/*", "node_modules", "dist"],
   "include": ["packages/**/*"]
