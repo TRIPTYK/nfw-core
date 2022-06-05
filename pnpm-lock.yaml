@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@types/jest': ^28.1.1
       '@typescript-eslint/eslint-plugin': ^5.27.0
       '@typescript-eslint/parser': ^5.27.0
       eslint: ^8.17.0
@@ -16,6 +17,7 @@ importers:
       eslint-plugin-unused-imports: ^2.0.0
       typescript: ~4.7.3
     devDependencies:
+      '@types/jest': 28.1.1
       '@typescript-eslint/eslint-plugin': 5.27.0_kor2e3kwnnzugzo3aovmfcq2la
       '@typescript-eslint/parser': 5.27.0_ud6rd4xtew5bv4yhvkvu24pzm4
       eslint: 8.17.0

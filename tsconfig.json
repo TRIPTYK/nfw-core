@@ -5,13 +5,21 @@
     "strict": true,
     "moduleResolution": "node",
     "module": "ES2022",
+    "baseUrl": ".",
+    "rootDir": ".",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "declaration": true,
     "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@triptyk/nfw-core": ["./packages/nfw-core"],
+      "@triptyk/nfw-core/*": ["./packages/nfw-core/*"],
+    }
   },
-  "exclude": [ "dist" , "examples/**/*"]
+  "exclude": ["**/examples/**/*", "node_modules", "dist"],
+  "include": ["packages/**/*"]
 }
