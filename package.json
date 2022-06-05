@@ -1,45 +1,12 @@
 {
-  "name": "@triptyk/nfw-core",
-  "version": "3.0.0-beta.4",
-  "description": "A NodeJS Typescript framework using Koa !",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "name": "nfw-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "prepublishOnly": "tsc",
-    "lint": "eslint \"./{src,examples,tests}/**/*.ts\"",
-    "lint:fix": "eslint \"./{src,examples,tests}/**/*.ts\" --fix",
-    "jscpd": "jscpd --pattern \"src/**/*.ts\"",
-    "postpublish": "rm -rf dist",
-    "test": "tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-    "docs:deploy": "mkdocs gh-deploy --ignore-version",
-    "docs:serve": "mkdocs serve"
+    "lint": "eslint 'packages/**/**.ts'"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/TRIPTYK/nfw-core.git"
-  },
-  "type": "module",
-  "author": "TRIPTYK",
-  "engines": {
-    "node": ">=16.3.1"
-  },
-  "contributors": [
-    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
-    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
-    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/TRIPTYK/nfw-core/issues"
-  },
-  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "^5.0.1",
-    "@types/http-errors": "^1.8.2",
-    "@types/jest": "^28.1.1",
-    "@types/koa": "^2.13.4",
-    "@types/koa__router": "^8.0.11",
-    "@types/node": "^17.0.40",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.17.0",
@@ -50,20 +17,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "jest": "^28.1.0",
-    "jscpd": "^3.4.5",
-    "koa": "^2.13.4",
-    "node-fetch": "^3.2.5",
-    "reflect-metadata": "^0.1.13",
     "typescript": "~4.7.3"
   },
-  "optionalDependencies": {
-    "@mikro-orm/core": "^5.1.5"
-  },
-  "dependencies": {
-    "@koa/router": "^10.1.1",
-    "http-errors": "^2.0.0",
-    "is-class": "^0.0.9",
-    "tsyringe": "^4.7.0"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

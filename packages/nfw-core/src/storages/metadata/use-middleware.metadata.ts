@@ -1,4 +1,4 @@
-import { AnyMiddleware } from '../../types/any-middleware.js';
+import type { AnyMiddleware } from '../../types/any-middleware.js';
 import type { Class } from '../../types/class.js';
 
 export interface UseMiddlewareMetadataArgs {
