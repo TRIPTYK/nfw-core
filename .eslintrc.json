@@ -15,6 +15,10 @@
     "semi": "off",
     "no-console": "error",
     "no-return-assign": "off",
+    "no-use-before-define":"off", 
+    "no-useless-constructor":"off", 
+    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-useless-constructor": "error",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",

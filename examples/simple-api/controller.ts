@@ -4,12 +4,13 @@ import { MetaResponseHandler } from './response-handler.js';
 import type { User } from './service.js';
 import { UsersService } from './service.js';
 
-@Controller('/users')
+@Controller({
+  routeName: '/users'
+})
 @UseMiddleware(Middleware)
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
 @injectable()
 export class UsersController {
-  // eslint-disable-next-line no-useless-constructor
   constructor (@inject(UsersService) private usersService: UsersService) {}
 
   @GET('/')

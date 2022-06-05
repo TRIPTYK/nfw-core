@@ -6,5 +6,4 @@ export interface UseMiddlewareMetadataArgs {
     target: Class<any> | any,
     propertyName?: string,
     middleware: Class<MiddlewareInterface> | Middleware,
-    type: 'classic' | 'not-found',
 }

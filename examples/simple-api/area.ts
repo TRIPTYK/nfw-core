@@ -1,12 +1,12 @@
-import { Area, UseGuard } from '@triptyk/nfw-core';
+import { Controller, ALL } from '@triptyk/nfw-core';
 import { UsersController } from './controller.js';
-import { IpGuard } from './guard.js';
 
-@Area({
+@Controller({
   controllers: [UsersController]
 })
-@UseGuard(IpGuard, '::1')
-export class MainArea {
-  // eslint-disable-next-line no-useless-constructor
-  constructor () {}
+export class Area {
+  @ALL('/sub')
+  public sub () {
+    return 'sub';
+  }
 }

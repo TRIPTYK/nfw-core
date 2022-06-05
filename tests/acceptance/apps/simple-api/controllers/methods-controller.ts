@@ -10,7 +10,9 @@ import {
   PUT
 } from '../../../../../src/index.js';
 
-@Controller('/methods')
+@Controller({
+  routeName: '/methods'
+})
 export class MethodsController {
   @GET('/get')
   get () {}

@@ -5,7 +5,6 @@ import { container } from 'tsyringe';
 import type { ControllerContextInterface, ResponseHandlerInterface } from '../index.js';
 import { functionSignature } from '../index.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
 import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.metadata.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
@@ -51,7 +50,7 @@ async function resolveParam (e: {
   return paramResult;
 }
 
-export function handleRouteControllerAction (controllerInstance: any, areaMetadata: AreaMetadataArgs, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
+export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
@@ -72,10 +71,6 @@ export function handleRouteControllerAction (controllerInstance: any, areaMetada
        */
     return respHandlerMetadata.target.constructor === controllerMetadata.target && respHandlerMetadata.propertyName === routeMetadata.propertyName;
   });
-
-  const guardForAreaMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
-    return guardMeta.target === areaMetadata.target;
-  }).reverse(); // reverse guards because route-level are pushed first
 
   const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
     /**
@@ -117,9 +112,6 @@ export function handleRouteControllerAction (controllerInstance: any, areaMetada
   }
 
   const guardsInstance = guardForRouteMetadata.map(resolveGuardInstance);
-  const areaGuardsInstance = guardForAreaMetadata.map(resolveGuardInstance);
-
-  guardsInstance.unshift(...areaGuardsInstance);
 
   /**
    * Apply global guards

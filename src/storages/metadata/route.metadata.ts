@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 export enum RouteMethod {
     GET = 'get',
     PUT = 'put',

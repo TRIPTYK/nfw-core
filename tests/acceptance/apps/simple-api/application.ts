@@ -9,7 +9,7 @@ export async function createDummyAcceptanceApp (port: number) {
    */
   const koaApp = await createApplication({
     server: new Koa(),
-    areas: [
+    controllers: [
       MainArea
     ],
     globalGuards: [],

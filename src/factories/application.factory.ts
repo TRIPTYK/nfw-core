@@ -1,4 +1,3 @@
-import Router from '@koa/router';
 import type { MikroORM } from '@mikro-orm/core';
 import type { Middleware } from 'koa';
 import { container } from 'tsyringe';
@@ -7,7 +6,7 @@ import type { ErrorHandlerInterface, GuardInterface } from '../index.js';
 import type { Class } from '../types/class.js';
 import { createRouting } from './application-routing.factory.js';
 import type Koa from 'koa';
-import { allowedMethods } from '../utils/allowed-methods.util.js';
+import { MetadataStorage } from '../storages/metadata-storage.js';
 
 interface GuardOptions {
   guard: Class<GuardInterface>,
@@ -15,7 +14,7 @@ interface GuardOptions {
 }
 
 export interface CreateApplicationOptions {
-  areas: Class<unknown>[],
+  controllers: Class<unknown>[],
   /**
    * Create an injection in the container with databaseInjectionToken and returns mikroORMConnection
    */
@@ -25,7 +24,6 @@ export interface CreateApplicationOptions {
   globalMiddlewares?: (Class<MiddlewareInterface> | Middleware)[],
   globalGuards?: GuardOptions[],
   globalErrorhandler?: Class<ErrorHandlerInterface>,
-  globalNotFoundMiddleware?: Class<MiddlewareInterface>,
   /**
    * Apply https://mikro-orm.io/docs/identity-map to each route
    */
@@ -36,37 +34,24 @@ export const databaseInjectionToken = Symbol('database-connection');
 
 export async function createApplication (options: CreateApplicationOptions) {
   const app = options.server;
-  const applicationRouter = new Router({
-    prefix: options.baseRoute
-  });
 
   container.register(databaseInjectionToken, {
     useValue: options.mikroORMConnection
   });
-
   /**
    * MikroORM is optionnal
    * Use context for each request for MikroORM, see https://mikro-orm.io/docs/identity-map
    */
   if (options.mikroORMConnection && (options.mikroORMContext ?? true)) {
-    try {
-      const { RequestContext } = await import('@mikro-orm/core');
-      app.use(async (_, next) => {
-        await RequestContext.createAsync(options.mikroORMConnection!.em, next);
-      });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(
-        'An error has been thrown trying to import @mikro-orm, check your dependencies !'
-      );
-    }
+    const { RequestContext } = await import('@mikro-orm/core');
+    app.use(async (_, next) => {
+      await RequestContext.createAsync(options.mikroORMConnection!.em, next);
+    });
   }
 
-  createRouting(applicationRouter, options);
-  app.use(applicationRouter.routes())
-  app.use(
-    allowedMethods(applicationRouter)
-  );
+  createRouting(app, options);
+
+  MetadataStorage.clear();
 
   return app;
 }

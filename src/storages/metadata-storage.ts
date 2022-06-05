@@ -1,4 +1,3 @@
-import type { AreaMetadataArgs } from './metadata/area.metadata.js';
 import type { ControllerMetadataArgs } from './metadata/controller.metadata.js';
 import type { RouteMetadataArgs } from './metadata/route.metadata.js';
 import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
@@ -11,10 +10,13 @@ export class MetadataStorage {
   /**
    * Singleton
    */
-  // eslint-disable-next-line no-use-before-define
   private static _instance?: MetadataStorage;
+  private static _locked: boolean = false;
 
   public static get instance () {
+    if (this._locked) {
+      throw new Error('Cannot access metadata storage after application initialization');
+    }
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
     }
@@ -26,6 +28,7 @@ export class MetadataStorage {
    */
   public static clear () {
     this._instance = undefined;
+    this._locked = true;
   }
 
   /**
@@ -33,11 +36,6 @@ export class MetadataStorage {
    * Metadatas storage
    * ==================
    */
-
-  /**
-   * Controllers decorator metadata
-  */
-  public areas: AreaMetadataArgs[] = [];
 
   /**
    * Controllers decorator metadata

@@ -16,7 +16,7 @@ import {
 } from '../../../../../src/index.js';
 import type { UsersController } from './controller.js';
 
-@Controller('/decorators')
+@Controller({ routeName: '/decorators' })
 export class DecoratorsController {
   @GET('/:param1/:param2')
   ip (

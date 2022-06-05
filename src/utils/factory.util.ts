@@ -53,14 +53,3 @@ export function useErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
     }
   }
 }
-
-export function useNotFoundMiddleware (middlewareNotFound: Class<MiddlewareInterface> | Middleware) {
-  const middlewareInstance = resolveMiddleware(middlewareNotFound);
-  return async (context: RouterContext, next: Next) => {
-    await next();
-    if (context.status === 404) {
-      context.status = 404;
-      await middlewareInstance(context, next);
-    }
-  }
-}

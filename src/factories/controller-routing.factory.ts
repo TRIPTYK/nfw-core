@@ -1,30 +1,38 @@
-import type Router from '@koa/router';
+import Router from '@koa/router';
+import type Application from 'koa';
 import { container } from 'tsyringe';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { AreaMetadataArgs } from '../storages/metadata/area.metadata.js';
-import type { ControllerMetadataArgs } from '../storages/metadata/controller.metadata.js';
-import { resolveMiddleware, useErrorHandler, useNotFoundMiddleware } from '../utils/factory.util.js';
+import type { Class } from '../types/class.js';
+import { allowedMethods } from '../utils/allowed-methods.util.js';
+import { resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 import { createRoute } from './controller-routes.factory.js';
 
 /**
  * Handles creating controller-level route
  */
-export function createController (areaMetadata: AreaMetadataArgs, controllerMetadata: ControllerMetadataArgs, controllerRouter: Router, applicationOptions: CreateApplicationOptions) {
+export function createController (parentRoute: Router | Application, controller: Class<unknown>, applicationOptions: CreateApplicationOptions) {
+  const controllerMetadata = MetadataStorage.instance.controllers.find((controllerMeta) => controllerMeta.target === controller);
+
+  if (!controllerMetadata) {
+    throw new Error(`Please decorate ${controller.constructor.name} with @Controller`);
+  }
+
+  const controllerRouter = new Router({
+    prefix: controllerMetadata.routeName,
+    sensitive: true
+  });
+
   container.registerSingleton(controllerMetadata.target);
   const controllerInstance = container.resolve(controllerMetadata.target);
   const controllerRoutesMeta = MetadataStorage.instance.routes.filter((rMetadata) => rMetadata.target.constructor === controllerMetadata.target);
-
-  const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'classic').reverse();
-  const notFoundMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target && middlewareMeta.type === 'not-found').reverse();
+  const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target).reverse();
 
   /**
-     * Only one error handler per controller route
+     * Only one error handler per controller
      */
   const errorHandlerMeta = MetadataStorage.instance.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target);
-
   const applyMiddlewares = controllerMiddlewares.map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
-  const applyNotFoundMiddlewares = notFoundMiddlewares.map((middlewareMeta) => useNotFoundMiddleware(middlewareMeta.middleware));
 
   if (errorHandlerMeta) {
     applyMiddlewares.unshift(useErrorHandler(errorHandlerMeta.errorHandler));
@@ -33,11 +41,12 @@ export function createController (areaMetadata: AreaMetadataArgs, controllerMeta
   controllerRouter.use(...applyMiddlewares);
 
   for (const routeMetadata of controllerRoutesMeta) {
-    createRoute(areaMetadata, controllerRouter, controllerInstance, controllerMetadata, routeMetadata, applicationOptions);
+    createRoute(controllerMetadata, controllerRouter, controllerInstance, routeMetadata, applicationOptions);
   }
 
-  /**
-     * Catch all route for not found
-     */
-  controllerRouter.all('(.*)', ...applyNotFoundMiddlewares);
+  for (const controllerClass of controllerMetadata.controllers ?? []) {
+    createController(controllerRouter, controllerClass, applicationOptions);
+  }
+
+  parentRoute.use(controllerRouter.routes(), allowedMethods(controllerRouter));
 }

@@ -1,17 +1,15 @@
-import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseNotFoundMiddleware, UseMiddleware, ALL } from '../../../../../src/index.js';
+import { Controller, GET, DELETE, POST, Param, Body, injectable, inject, UseGuard, UseResponseHandler, UseErrorHandler, UseMiddleware, ALL } from '../../../../../src/index.js';
 import { ErrorHandler } from '../error-handler.js';
 import { HeadersGuard } from '../guard.js';
-import { NotFoundMiddleware } from '../not-found-handler.js';
 import { createPassMiddleware } from '../pass-middleware.js';
 import { MetaResponseHandler } from '../response-handler.js';
 import type { User } from '../service.js';
 import { UsersService } from '../service.js';
 
-@Controller('/users')
+@Controller({ routeName: '/users' })
 @UseGuard(HeadersGuard, 'authorization', '123', 'wrong auth')
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
 @UseErrorHandler(ErrorHandler)
-@UseNotFoundMiddleware(NotFoundMiddleware)
 @UseMiddleware(createPassMiddleware('controller'))
 @injectable()
 export class UsersController {

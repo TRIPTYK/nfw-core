@@ -8,8 +8,7 @@ export function UseMiddleware (middleware: Class<MiddlewareInterface> | Middlewa
     MetadataStorage.instance.useMiddlewares.push({
       target,
       propertyName,
-      middleware,
-      type: 'classic'
+      middleware
     })
   }
 }
