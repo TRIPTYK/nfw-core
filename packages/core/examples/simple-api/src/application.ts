@@ -9,10 +9,7 @@ async function init () {
    */
   const koaApp = await createApplication({
     server: new Koa(),
-    controllers: [Area],
-    globalGuards: [],
-    globalMiddlewares: [],
-    baseRoute: '/api/v1'
+    controllers: [Area]
   });
 
   const port = 8001;

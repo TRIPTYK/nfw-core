@@ -113,28 +113,6 @@ export function handleRouteControllerAction (controllerInstance: any, controller
 
   const guardsInstance = guardForRouteMetadata.map(resolveGuardInstance);
 
-  /**
-   * Apply global guards
-   */
-  if ((applicationOptions.globalGuards ?? []).length) {
-    const resolvedGlobalGuards = (applicationOptions.globalGuards ?? []).map((e) => {
-      const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === e).sort((a, b) => a.index - b.index).map((useParam) => ({
-        metadata: useParam,
-        signature: functionSignature(useParam.decoratorName, useParam.args)
-      }));
-
-      return {
-        instance: container.resolve(e.guard),
-        args: e.args,
-        paramsMeta: paramsForGuardMetadata
-      }
-    });
-      /**
-       * Add global guards before other guards
-       */
-    guardsInstance.unshift(...resolvedGlobalGuards);
-  }
-
   return async (ctx: RouterContext, _next: Next) => {
     const sharedParams: Record<string, unknown> = {};
     /**

@@ -17,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "composite": true,
     "paths": {
-      "@triptyk/nfw-*": ["packages/*/src"]
+      "@triptyk/nfw-core": ["packages/core/src"]
     },
   },
   "exclude": ["**/examples/**/*", "node_modules", "dist"],

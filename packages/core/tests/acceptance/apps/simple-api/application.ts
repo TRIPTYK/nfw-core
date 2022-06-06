@@ -11,10 +11,7 @@ export async function createDummyAcceptanceApp (port: number) {
     server: new Koa(),
     controllers: [
       MainArea
-    ],
-    globalGuards: [],
-    globalMiddlewares: [],
-    baseRoute: '/api/v1'
+    ]
   });
 
   const httpServer = koaApp.listen(port, () => {
