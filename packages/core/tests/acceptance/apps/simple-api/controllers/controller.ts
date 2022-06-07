@@ -6,7 +6,7 @@ import { MetaResponseHandler } from '../response-handler.js';
 import type { User } from '../service.js';
 import { UsersService } from '../service.js';
 
-@Controller({ routeName: '/users' })
+@Controller({ routing: { prefix: '/users' } })
 @UseGuard(HeadersGuard, 'authorization', '123', 'wrong auth')
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
 @UseErrorHandler(ErrorHandler)

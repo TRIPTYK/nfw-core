@@ -18,19 +18,24 @@ export function createController (parentRoute: Router | Application, controller:
     throw new Error(`Please decorate ${controller.constructor.name} with @Controller`);
   }
 
-  const controllerRouter = new Router({
-    prefix: controllerMetadata.routeName,
-    sensitive: true
-  });
+  const controllerRouter = new Router(controllerMetadata.routing);
 
+  /**
+   * The controller is always a singleton
+   */
   container.registerSingleton(controllerMetadata.target);
+
+  /**
+   * Create instance of the singleton
+   */
   const controllerInstance = container.resolve(controllerMetadata.target);
+
   const controllerRoutesMeta = MetadataStorage.instance.routes.filter((rMetadata) => rMetadata.target.constructor === controllerMetadata.target);
   const controllerMiddlewares = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target).reverse();
 
   /**
-     * Only one error handler per controller
-     */
+   * Only one error handler per controller
+  */
   const errorHandlerMeta = MetadataStorage.instance.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target);
   const applyMiddlewares = controllerMiddlewares.map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
 
@@ -41,9 +46,12 @@ export function createController (parentRoute: Router | Application, controller:
   controllerRouter.use(...applyMiddlewares);
 
   for (const routeMetadata of controllerRoutesMeta) {
-    createRoute(controllerMetadata, controllerRouter, controllerInstance, routeMetadata, applicationOptions);
+    createRoute(controllerMetadata, controllerRouter, controllerInstance, routeMetadata);
   }
 
+  /**
+   * Recursive controller
+   */
   for (const controllerClass of controllerMetadata.controllers ?? []) {
     createController(controllerRouter, controllerClass, applicationOptions);
   }

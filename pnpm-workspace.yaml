@@ -1,4 +1,3 @@
 packages: 
   - packages/*
-  - '!**/test/**'
-  - '!**/examples/**'
+  - packages/core/examples/*

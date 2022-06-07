@@ -16,7 +16,11 @@ import {
 } from '../../../../../src/index.js';
 import type { UsersController } from './controller.js';
 
-@Controller({ routeName: '/decorators' })
+@Controller({
+  routing: {
+    prefix: 'decorators'
+  }
+})
 export class DecoratorsController {
   @GET('/:param1/:param2')
   ip (

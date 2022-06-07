@@ -11,7 +11,9 @@ import {
 } from '../../../../../src/index.js';
 
 @Controller({
-  routeName: '/methods'
+  routing: {
+    prefix: '/methods'
+  }
 })
 export class MethodsController {
   @GET('/get')

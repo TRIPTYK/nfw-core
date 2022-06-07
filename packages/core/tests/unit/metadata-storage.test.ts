@@ -4,8 +4,7 @@ import { MetadataStorage } from '../../src/index.js'
 test('Metadata storage is cleared', async () => {
   const instance = MetadataStorage.instance;
   MetadataStorage.instance.controllers.push({
-    target: class {},
-    routeName: '/test'
+    target: class {}
   });
   expect(instance.controllers.length).toStrictEqual(1);
   expect(MetadataStorage.instance).toStrictEqual(instance);

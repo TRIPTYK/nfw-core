@@ -1,15 +1,16 @@
-import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, injectable, inject, UseResponseHandler } from '@triptyk/nfw-core';
+import { Controller, GET, DELETE, POST, Param, Body, UseMiddleware, inject, UseResponseHandler } from '@triptyk/nfw-core';
 import { Middleware } from './middleware.js';
 import { MetaResponseHandler } from './response-handler.js';
 import type { User } from './service.js';
 import { UsersService } from './service.js';
 
 @Controller({
-  routeName: '/users'
+  routing: {
+    prefix: '/users'
+  }
 })
 @UseMiddleware(Middleware)
 @UseResponseHandler(MetaResponseHandler, 'Nothing to say')
-@injectable()
 export class UsersController {
   constructor (@inject(UsersService) private usersService: UsersService) {}
 

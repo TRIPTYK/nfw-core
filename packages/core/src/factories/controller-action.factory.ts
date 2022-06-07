@@ -11,7 +11,6 @@ import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metada
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
 import { debug } from '../utils/debug.util.js';
 import { applyParam } from '../utils/factory.util.js';
-import type { CreateApplicationOptions } from './application.factory.js';
 
 const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
   const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
@@ -50,7 +49,7 @@ async function resolveParam (e: {
   return paramResult;
 }
 
-export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs, applicationOptions: CreateApplicationOptions) {
+export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: ControllerMetadataArgs, routeMetadata: RouteMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
@@ -173,9 +172,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
         }
         return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata, sharedParams)
       }));
-      resolvedHandlerParams.unshift(controllerActionResult);
-      // we need to anonymise the function because we get a Typescript Error ?
-      await (responseHandlerInstance.handle as Function)(...resolvedHandlerParams);
+      await responseHandlerInstance.handle(controllerActionResult, ...resolvedHandlerParams);
     } else {
       ctx.response.body = controllerActionResult;
     }
