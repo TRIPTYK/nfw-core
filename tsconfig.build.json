@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "lib": ["ES2022"],
+      "target": "ES2022",
+      "strict": true,
+      "moduleResolution": "node",
+      "module": "ES2022",
+      "noEmitOnError": true,
+      "allowSyntheticDefaultImports": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "skipLibCheck": true,
+      "declaration": true,
+      "incremental": true,
+      "composite": true,
+      "forceConsistentCasingInFileNames": true,
+        "noEmit": false
+    },
+    "exclude": [ "node_modules", "dist"],
+  }

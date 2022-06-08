@@ -1,20 +1,6 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["ES2022"],
-    "target": "ES2022",
-    "strict": true,
-    "moduleResolution": "node",
-    "module": "ES2022",
-    "baseUrl": ".",
-    "rootDir": ".",
-    "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true
-  },
-  "exclude": ["**/examples/**/*", "node_modules", "dist"],
+    "esModuleInterop": true
+  }
 }

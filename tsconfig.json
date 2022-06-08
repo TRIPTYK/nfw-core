@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "paths": {
+      "@triptyk/nfw-core/*": ["packages/core/src"]
+    },
+    "baseUrl": ".",
+    "noEmit": true
+  }
+}
