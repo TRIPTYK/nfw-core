@@ -10,7 +10,7 @@
     "lint:fix": "eslint \"./{src,examples,tests}/**/*.ts\" --fix",
     "jscpd": "jscpd --pattern \"src/**/*.ts\"",
     "postpublish": "rm -rf dist",
-    "test": "tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test": "tsc -p tsconfig.build.json && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
     "docs:serve": "mkdocs serve"
   },
