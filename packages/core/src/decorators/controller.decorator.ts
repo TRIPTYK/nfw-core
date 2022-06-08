@@ -8,7 +8,7 @@ export interface ControllerDecoratorOptions {
     prefix?: string,
     sensitive? : boolean,
     strict?: boolean,
-  },
+  } | string,
 }
 
 export function Controller (options?: ControllerDecoratorOptions) {
@@ -17,7 +17,11 @@ export function Controller (options?: ControllerDecoratorOptions) {
     injectable()(target);
     MetadataStorage.instance.controllers.push({
       target,
-      routing: options?.routing,
+      routing: typeof options?.routing === 'string'
+        ? {
+            prefix: options?.routing
+          }
+        : options?.routing,
       controllers: options?.controllers
     })
   }
