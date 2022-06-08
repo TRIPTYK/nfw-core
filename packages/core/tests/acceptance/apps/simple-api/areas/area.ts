@@ -9,6 +9,7 @@ import { MethodsController } from '../controllers/methods-controller.js';
     UsersController,
     DecoratorsController,
     MethodsController
-  ]
+  ],
+  routing: '/api/v1'
 })
 export class MainArea {}

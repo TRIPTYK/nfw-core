@@ -18,7 +18,7 @@ import type { UsersController } from './controller.js';
 
 @Controller({
   routing: {
-    prefix: 'decorators'
+    prefix: '/decorators'
   }
 })
 export class DecoratorsController {

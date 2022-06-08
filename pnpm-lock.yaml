@@ -44,12 +44,14 @@ importers:
       jscpd: ^3.4.5
       koa: ^2.13.4
       node-fetch: ^3.2.5
+      reflect-metadata: ^0.1.13
       tsyringe: ^4.7.0
       typescript: ~4.7.3
     dependencies:
       '@koa/router': 10.1.1
       http-errors: 2.0.0
       is-class: 0.0.9
+      reflect-metadata: 0.1.13
       tsyringe: 4.7.0
     devDependencies:
       '@types/http-errors': 1.8.2

@@ -56,5 +56,7 @@ export function createController (parentRoute: Router | Application, controller:
     createController(controllerRouter, controllerClass, applicationOptions);
   }
 
-  parentRoute.use(controllerRouter.routes(), allowedMethods(controllerRouter));
+  parentRoute
+    .use(controllerRouter.routes())
+    .use(allowedMethods(controllerRouter));
 }
