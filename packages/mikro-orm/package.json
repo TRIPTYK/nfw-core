@@ -1,0 +1,51 @@
+{
+  "name": "@triptyk/nfw-core-mikro-orm",
+  "version": "3.0.0-beta.4",
+  "description": "Mikro-ORM module for NFW-CORE",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc -p tsconfig.build.json",
+    "lint": "eslint \"./{src,examples,tests}/**/*.ts\"",
+    "lint:fix": "eslint \"./{src,examples,tests}/**/*.ts\" --fix",
+    "jscpd": "jscpd --pattern \"src/**/*.ts\"",
+    "postpublish": "rm -rf dist",
+    "test": "tsc -p tsconfig.build.json && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "docs:deploy": "mkdocs gh-deploy --ignore-version",
+    "docs:serve": "mkdocs serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TRIPTYK/nfw-core.git"
+  },
+  "type": "module",
+  "author": "TRIPTYK",
+  "engines": {
+    "node": ">=16.3.1"
+  },
+  "contributors": [
+    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
+    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
+    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TRIPTYK/nfw-core/issues"
+  },
+  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
+  "devDependencies": {
+    "@types/node": "16",
+    "jest": "^28.1.0",
+    "typescript": "~4.7.3",
+    "@triptyk/nfw-core": "workspace:*",
+    "tsyringe": "4.7.0",
+    "@mikro-orm/core": "^5.1.5"
+  },
+  "peerDependencies": {
+    "@triptyk/nfw-core": "workspace:*",
+    "@mikro-orm/core": "^5.1.5"
+  },
+  "dependencies": {
+    
+  }
+}
