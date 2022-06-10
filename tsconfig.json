@@ -5,7 +5,6 @@
       "@triptyk/nfw-core/*": ["packages/core/src"],
       "@triptyk/nfw-core-mikro-orm/*": ["packages/mikro-orm/src"]
     },
-    "baseUrl": ".",
     "noEmit": true
   }
 }

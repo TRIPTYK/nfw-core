@@ -1,4 +1,4 @@
-import type { BaseEntity, EntityRepository } from '@mikro-orm/core';
+import type { AnyEntity, EntityRepository } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { Class } from '@triptyk/nfw-core';
 import { injectWithTransform, container } from '@triptyk/nfw-core';
@@ -17,6 +17,6 @@ class RepositoryTransformer<T> implements Transform<Class<T>, EntityRepository<a
   }
 }
 
-export function InjectRepository (entity: Class<BaseEntity<any, any>>) {
+export function InjectRepository (entity: Class<AnyEntity>) {
   return injectWithTransform(entity, RepositoryTransformer, entity.name);
 }
