@@ -5,9 +5,14 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint 'packages/**/**.ts'",
-    "build": "pnpm recursive build"
+    "test": "pnpm build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "build": "pnpm recursive run build"
   },
+  "type": "module",
   "devDependencies": {
+    "@types/jest": "^28.1.1",
+    "@jest/globals": "^28.1.1",
+    "jest": "^28.1.0",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.17.0",
@@ -16,7 +21,6 @@
     "eslint-plugin-jest": "^26.5.1",
     "eslint-plugin-n": "^15.2.1",
     "eslint-plugin-node": "^11.1.0",
-    "@types/jest": "^28.1.1",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "typescript": "~4.7.3"
