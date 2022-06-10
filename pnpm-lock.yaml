@@ -17,6 +17,7 @@ importers:
       eslint-plugin-promise: ^6.0.0
       eslint-plugin-unused-imports: ^2.0.0
       jest: ^28.1.0
+      jscpd: ^3.4.5
       typescript: ~4.7.3
     devDependencies:
       '@jest/globals': 28.1.1
@@ -32,6 +33,7 @@ importers:
       eslint-plugin-promise: 6.0.0_eslint@8.17.0
       eslint-plugin-unused-imports: 2.0.0_eflndcevt7v5sq6xfy3x34abbq
       jest: 28.1.0
+      jscpd: 3.4.5
       typescript: 4.7.3
 
   examples/mikro-orm:
@@ -91,7 +93,6 @@ importers:
       '@types/node': '16'
       http-errors: ^2.0.0
       is-class: ^0.0.9
-      jscpd: ^3.4.5
       koa: ^2.13.4
       node-fetch: ^3.2.5
       reflect-metadata: ^0.1.13
@@ -108,7 +109,6 @@ importers:
       '@types/koa': 2.13.4
       '@types/koa__router': 8.0.11
       '@types/node': 16.11.38
-      jscpd: 3.4.5
       koa: 2.13.4
       node-fetch: 3.2.5
       typescript: 4.7.3
@@ -5096,12 +5096,12 @@ packages:
     dev: true
 
   /repeat-string/1.6.1:
-    resolution: {integrity: sha1-jcrkcOHIirwtYA//Sndihtp15jc=}
+    resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
     engines: {node: '>=0.10'}
     dev: true
 
   /reprism/0.0.11:
-    resolution: {integrity: sha1-52C4XgriQXIgMsuJQqK8q5kqkIM=}
+    resolution: {integrity: sha512-VsxDR5QxZo08M/3nRypNlScw5r3rKeSOPdU/QhDmu3Ai3BJxHn/qgfXGWQp/tAxUtzwYNo9W6997JZR0tPLZsA==}
     dev: true
 
   /require-directory/2.1.1:

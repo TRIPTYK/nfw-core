@@ -8,7 +8,6 @@
     "prepublishOnly": "build",
     "build": "tsc -p tsconfig.build.json",
     "build:clean": "rm -rf dist",
-    "jscpd": "jscpd --pattern \"src/**/*.ts\"",
     "postpublish": "build:clean"
   },
   "repository": {
