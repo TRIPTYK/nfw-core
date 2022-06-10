@@ -5,12 +5,13 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "prepublishOnly": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "build",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint \"./{src,examples,tests}/**/*.ts\"",
     "lint:fix": "eslint \"./{src,examples,tests}/**/*.ts\" --fix",
     "jscpd": "jscpd --pattern \"src/**/*.ts\"",
     "postpublish": "rm -rf dist",
-    "test": "tsc -p tsconfig.build.json && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test": "build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
     "docs:serve": "mkdocs serve"
   },
@@ -39,11 +40,12 @@
     "typescript": "~4.7.3",
     "@triptyk/nfw-core": "workspace:*",
     "tsyringe": "4.7.0",
-    "@mikro-orm/core": "^5.1.5"
+    "@mikro-orm/core": "^5.2.0",
+    "@types/koa": "^2.13.4"
   },
   "peerDependencies": {
     "@triptyk/nfw-core": "workspace:*",
-    "@mikro-orm/core": "^5.1.5"
+    "@mikro-orm/core": "^5.2.0"
   },
   "dependencies": {
     

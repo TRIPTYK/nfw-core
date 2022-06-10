@@ -1,9 +1,10 @@
 {
   "extends": "./tsconfig.build.json",
+  "exclude": ["./examples/*"],
   "compilerOptions": {
     "paths": {
-      "@triptyk/nfw-core/*": ["packages/core/src"],
-      "@triptyk/nfw-core-mikro-orm/*": ["packages/mikro-orm/src"]
+      "@triptyk/nfw-core/*": ["./packages/core/src"],
+      "@triptyk/nfw-core-mikro-orm/*": ["./packages/mikro-orm/src"]
     },
     "noEmit": true
   }
