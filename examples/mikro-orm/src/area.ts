@@ -1,6 +1,6 @@
 import type { EntityRepository } from '@mikro-orm/core';
 import { Controller, GET, UseMiddleware } from '@triptyk/nfw-core';
-import { injectRepository, requestContext } from '@triptyk/nfw-core-mikro-orm';
+import { injectRepository, requestContext } from '@triptyk/nfw-mikro-orm';
 import { UserModel } from './models/user.model.js';
 
 @Controller({

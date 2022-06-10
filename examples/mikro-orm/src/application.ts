@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import createApplication from '@triptyk/nfw-core';
 import Koa from 'koa';
 import { Area } from './area.js';
-import { init } from '@triptyk/nfw-core-mikro-orm';
+import { init } from '@triptyk/nfw-mikro-orm';
 import { UserModel } from './models/user.model.js';
 
 async function main () {

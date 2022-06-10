@@ -41,7 +41,7 @@ importers:
       '@mikro-orm/core': ^5.2.0
       '@mikro-orm/sqlite': ^5.2.0
       '@triptyk/nfw-core': workspace:*
-      '@triptyk/nfw-core-mikro-orm': workspace:*
+      '@triptyk/nfw-mikro-orm': workspace:*
       '@types/koa': ^2.13.4
       '@types/node': ^16
       koa: ^2.13.4
@@ -53,7 +53,7 @@ importers:
       '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
       '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
       '@triptyk/nfw-core': link:../../packages/core
-      '@triptyk/nfw-core-mikro-orm': link:../../packages/mikro-orm
+      '@triptyk/nfw-mikro-orm': link:../../packages/mikro-orm
       koa: 2.13.4
       reflect-metadata: 0.1.13
     devDependencies:
@@ -111,6 +111,28 @@ importers:
       '@types/node': 16.11.38
       koa: 2.13.4
       node-fetch: 3.2.5
+      typescript: 4.7.3
+
+  packages/jsonapi:
+    specifiers:
+      '@mikro-orm/core': ^5.2.0
+      '@mikro-orm/sqlite': ^5.2.0
+      '@triptyk/nfw-core': workspace:*
+      '@triptyk/nfw-mikro-orm': workspace:*
+      '@types/koa': ^2.13.4
+      '@types/node': '16'
+      reflect-metadata: ^0.1.13
+      tsyringe: 4.7.0
+      typescript: ~4.7.3
+    devDependencies:
+      '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
+      '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
+      '@triptyk/nfw-core': link:../core
+      '@triptyk/nfw-mikro-orm': link:../mikro-orm
+      '@types/koa': 2.13.4
+      '@types/node': 16.11.38
+      reflect-metadata: 0.1.13
+      tsyringe: 4.7.0
       typescript: 4.7.3
 
   packages/mikro-orm:
