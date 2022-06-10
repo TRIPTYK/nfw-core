@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint 'packages/**/**.ts'",
-    "test": "pnpm build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-    "build": "pnpm recursive run build"
+    "lint": "eslint packages/*/src/**/*.ts",
+    "lint:fix": "eslint packages/*/src/**/*.ts --fix",
+    "test": "pnpm run build:clean && pnpm run build  && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "build": "pnpm recursive run build",
+    "build:clean": "pnpm recursive run build:clean",
+    "docs:deploy": "mkdocs gh-deploy --ignore-version",
+    "docs:serve": "mkdocs serve"
   },
   "type": "module",
   "devDependencies": {

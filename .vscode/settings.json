@@ -1,9 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "eslint.workingDirectories": [
-      "packages/**",
-      "examples/**"
-    ],
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "[typescript]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"

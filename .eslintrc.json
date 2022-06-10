@@ -4,11 +4,13 @@
     "es2021": true,
     "jest/globals": true
   },
+  "root": true,
   "extends": ["standard"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 12,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": ["./packages/*/tsconfig.json","tsconfig.json"]
   },
   "plugins": ["@typescript-eslint", "unused-imports", "jest"],
   "rules": {

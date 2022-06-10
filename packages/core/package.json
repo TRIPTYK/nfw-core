@@ -7,6 +7,7 @@
   "scripts": {
     "prepublishOnly": "build",
     "build": "tsc -p tsconfig.build.json",
+    "build:clean": "rm -rf dist",
     "lint": "eslint \"./{src,examples,tests}/**/*.ts\"",
     "lint:fix": "eslint \"./{src,examples,tests}/**/*.ts\" --fix",
     "jscpd": "jscpd --pattern \"src/**/*.ts\"",
@@ -36,11 +37,9 @@
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
     "@types/http-errors": "^1.8.2",
-    "@types/jest": "^28.1.1",
     "@types/koa": "^2.13.4",
     "@types/koa__router": "^8.0.11",
     "@types/node": "16",
-    "jest": "^28.1.0",
     "jscpd": "^3.4.5",
     "koa": "^2.13.4",
     "node-fetch": "^3.2.5",
