@@ -5,7 +5,8 @@
     "paths": {
       "@triptyk/nfw-core/*": ["./packages/core/src"],
       "@triptyk/nfw-jsonapi/*": ["./packages/jsonapi/src"],
-      "@triptyk/nfw-mikro-orm/*": ["./packages/mikro-orm/src"]
+      "@triptyk/nfw-mikro-orm/*": ["./packages/mikro-orm/src"],
+      "*" : ["./node_modules/*"]
     },
     "noEmit": true
   }

@@ -8,16 +8,15 @@
     "lint:fix": "eslint packages/*/{src,tests}/**/*.ts --fix",
     "test": "pnpm run build:clean && pnpm run build  && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "jscpd": "jscpd --pattern \"packages/*/src/**/*.ts\"",
-    "build": "pnpm recursive run build",
+    "build": "pnpm  recursive run build",
     "build:clean": "pnpm recursive run build:clean",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
     "docs:serve": "mkdocs serve"
   },
   "type": "module",
   "devDependencies": {
-    "@types/jest": "^28.1.1",
     "@jest/globals": "^28.1.1",
-    "jest": "^28.1.0",
+    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.17.0",
@@ -28,8 +27,10 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "typescript": "~4.7.3",
-    "jscpd": "^3.4.5"
+    "jest": "^28.1.0",
+    "jscpd": "^3.4.5",
+    "npm-run-all": "^4.1.5",
+    "typescript": "~4.7.3"
   },
   "keywords": [],
   "author": "",

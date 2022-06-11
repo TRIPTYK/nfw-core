@@ -6,5 +6,8 @@ export default {
   }, {
     displayName: 'nfw-core',
     testMatch: ['<rootDir>/packages/core/dist/tests/**/*.test.js']
+  }, {
+    displayName: 'nfw-jsonapi',
+    testMatch: ['<rootDir>/packages/jsonapi/dist/tests/**/*.test.js']
   }]
 };
