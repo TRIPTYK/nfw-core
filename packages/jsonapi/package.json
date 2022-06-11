@@ -31,6 +31,7 @@
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*",
     "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.11",
     "@types/node": "16",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "4.7.0",
