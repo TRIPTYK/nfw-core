@@ -4,6 +4,7 @@ import { MetadataStorage } from '../storage/metadata-storage.js';
 
 export interface ResourceOptions<T> {
   entity : EntityName<T>,
+  entityName : string,
 }
 
 export function JsonApiResource<T> (options: ResourceOptions<T>) {

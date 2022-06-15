@@ -1,17 +1,10 @@
-import type { EntityRepository } from '@mikro-orm/core';
-import { Controller, GET, UseMiddleware } from '@triptyk/nfw-core';
-import { injectRepository, requestContext } from '@triptyk/nfw-mikro-orm';
-import { UserModel } from './models/user.model.js';
+import { Controller, UseMiddleware } from '@triptyk/nfw-core';
+import { requestContext } from '@triptyk/nfw-mikro-orm';
+import { UserController } from './controllers/user.controller.js';
 
 @Controller({
-  routing: '/users'
+  routing: '/api/v1',
+  controllers: [UserController]
 })
 @UseMiddleware(requestContext)
-export class Area {
-  constructor (@injectRepository(UserModel) private repo: EntityRepository<UserModel>) {}
-
-  @GET('/')
-  async list () {
-    return this.repo.findAll();
-  }
-}
+export class Area {}

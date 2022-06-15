@@ -4,7 +4,8 @@ import { UserModel } from '../models/user.model.js';
 import type { ArticleResource } from './article.resource.js';
 
 @JsonApiResource({
-  entity: UserModel
+  entity: UserModel,
+  entityName: 'user'
 })
 export class UserResource implements Resource<UserModel> {
    @Attribute()

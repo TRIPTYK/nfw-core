@@ -1,10 +1,7 @@
 import type { ControllerMetadataArgs } from './metadata/controller.metadata.js';
 import type { RouteMetadataArgs } from './metadata/route.metadata.js';
 import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
-import type { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
-import type { UseParamsMetadataArgs } from './metadata/use-param.metadata.js';
-import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.metadata.js';
 
 export class MetadataStorage {
   /**
@@ -43,24 +40,9 @@ export class MetadataStorage {
   public routes: RouteMetadataArgs[] = [];
 
   /**
-   * Use parameters in controller route
-   */
-  public useParams: UseParamsMetadataArgs[] = [];
-
-  /**
    * Middleware uses for controllers/routes
    */
   public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
-
-  /**
-   * Use guards for controllers/routes
-   */
-  public useGuards: UseGuardMetadataArgs[] = [];
-
-  /**
-   * Use guards for controllers/routes
-   */
-  public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
   /**
    * Error handling
