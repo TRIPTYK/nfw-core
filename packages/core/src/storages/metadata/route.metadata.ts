@@ -1,13 +1,6 @@
 import type Router from '@koa/router';
 import type Application from 'koa';
 import type { Class } from '../../types/class.js';
-import type { EndpointMetadataArgs } from './endpoint.metadata.js';
-import type { UseMiddlewareMetadataArgs } from './use-middleware.metadata.js';
-
-export interface EndpointMetaParams {
-    endpointMiddlewaresMeta: UseMiddlewareMetadataArgs[],
-    endpointMeta: EndpointMetadataArgs,
- }
 
 export interface RouteBuilderInterface {
     context: {
@@ -15,18 +8,13 @@ export interface RouteBuilderInterface {
         meta: RouteMetadataArgs<unknown>,
     },
     /**
-     * Build the router
+     * Build the routing
      */
-    build({ controllerMiddlewaresMeta } : { controllerMiddlewaresMeta: UseMiddlewareMetadataArgs[] }) : Promise<Router>,
-
-    /**
-     *
-     */
-    endpoint(router: Router, params : EndpointMetaParams) : Promise<void>,
+    build() : Promise<Router>,
     /**
      * After all endpoints and sub-routers have been built
      */
-    routing(parentRouter: Router | Application, router: Router) : Promise<void>,
+    bindRouting(parentRouter: Router | Application, router: Router) : Promise<void>,
 }
 
 export interface RouteMetadataArgs<T> {

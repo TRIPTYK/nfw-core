@@ -1,4 +1,5 @@
-import { MetadataStorage, RouteMethod } from '@triptyk/nfw-core';
+import { RouteMethod } from '../interfaces/endpoint.metadata.js';
+import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function GET (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {

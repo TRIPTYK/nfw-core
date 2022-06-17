@@ -1,6 +1,4 @@
-import type { EndpointMetadataArgs } from './metadata/endpoint.metadata.js';
 import type { RouteMetadataArgs } from './metadata/route.metadata.js';
-import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
 
 export class MetadataStorage {
   /**
@@ -23,17 +21,7 @@ export class MetadataStorage {
   }
 
   /**
-   * Controllers decorator metadata
-   */
-  public endpoints: EndpointMetadataArgs[] = [];
-
-  /**
    * Controller Routes decorator metadata
    */
   public routes: RouteMetadataArgs<unknown>[] = [];
-
-  /**
-   * Controller Routes decorator metadata
-   */
-  public useMiddleware: UseMiddlewareMetadataArgs[] = [];
 }

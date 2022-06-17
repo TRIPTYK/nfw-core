@@ -1,14 +1,15 @@
 import type { RouterContext } from '@koa/router';
-import type { EndpointMetadataArgs, RouteMetadataArgs } from '@triptyk/nfw-core';
+import type { RouteMetadataArgs } from '@triptyk/nfw-core';
+import { debug } from '@triptyk/nfw-core';
 import createHttpError from 'http-errors';
 import type { Next } from 'koa';
 import { container } from 'tsyringe';
 import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
+import type { EndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { ResponseHandlerInterface } from '../interfaces/response-handler.interface.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
-import { debug } from '../utils/debug.util.js';
 import { applyParam } from '../utils/factory.util.js';
 import { functionSignature } from '../utils/function-signature.util.js';
 

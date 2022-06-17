@@ -28,6 +28,7 @@
   "devDependencies": {
     "@mikro-orm/core": "^5.2.0",
     "@mikro-orm/sqlite": "^5.2.0",
+    "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*",
     "@types/koa": "^2.13.4",
@@ -43,7 +44,7 @@
     "pluralize": "^8.0.0"
   },
   "peerDependencies": {
-    "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*"
   }
 }

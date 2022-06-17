@@ -13,7 +13,7 @@ export async function createRoute (parentRoute: Router | Application, controller
   const controllerMetadata = MetadataStorage.instance.routes.find((controllerMeta) => controllerMeta.target === controller);
 
   if (!controllerMetadata) {
-    throw new Error(`Please decorate ${controller.constructor.name} with @Route`);
+    throw new Error(`Please register ${controller.constructor.name} in the metadata-storage`);
   }
 
   /**
@@ -32,22 +32,15 @@ export async function createRoute (parentRoute: Router | Application, controller
     meta: controllerMetadata
   };
 
-  const endpointsMeta = MetadataStorage.instance.endpoints.filter((rMetadata) => (rMetadata.target as Class<unknown>).constructor === controllerMetadata.target);
-  const controllerMiddlewaresMeta = MetadataStorage.instance.useMiddleware.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === controllerMetadata.target).reverse();
-
-  const controllerRouter = await builder.build({ controllerMiddlewaresMeta });
-
-  for (const endpointMeta of endpointsMeta) {
-    const endpointMiddlewaresMeta = MetadataStorage.instance.useMiddleware.filter((middlewareMeta) => (middlewareMeta.target as Class<unknown>).constructor === controllerMetadata.target && middlewareMeta.propertyName === endpointMeta.propertyName).reverse(); // reverse because decorators call are inversed
-    await builder.endpoint(controllerRouter, { endpointMiddlewaresMeta, endpointMeta });
-  }
+  const controllerRouter = await builder.build();
 
   /**
    * Recursive controller
    */
-  for (const controllerClass of controllerMetadata.controllers ?? []) {
-    createRoute(controllerRouter, controllerClass, applicationOptions);
-  }
+  await Promise.all((controllerMetadata.controllers ?? []).map((c) => createRoute(controllerRouter, c, applicationOptions)));
 
-  await builder.routing(parentRoute, controllerRouter);
+  /**
+   * After all sub-controllers
+   */
+  await builder.bindRouting(parentRoute, controllerRouter);
 }

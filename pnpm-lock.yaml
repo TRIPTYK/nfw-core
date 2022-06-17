@@ -43,6 +43,7 @@ importers:
       '@mikro-orm/core': ^5.2.0
       '@mikro-orm/sqlite': ^5.2.0
       '@triptyk/nfw-core': workspace:*
+      '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-jsonapi': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
       '@types/koa': ^2.13.4
@@ -59,6 +60,7 @@ importers:
       '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
       '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
       '@triptyk/nfw-core': link:../../packages/core
+      '@triptyk/nfw-http': link:../../packages/http
       '@triptyk/nfw-jsonapi': link:../../packages/jsonapi
       '@triptyk/nfw-mikro-orm': link:../../packages/mikro-orm
       koa: 2.13.4
@@ -137,7 +139,6 @@ importers:
       '@types/koa__router': ^8.0.11
       '@types/node': '16'
       http-errors: ^2.0.0
-      is-class: ^0.0.9
       koa: ^2.13.4
       node-fetch: ^3.2.5
       reflect-metadata: ^0.1.13
@@ -146,7 +147,6 @@ importers:
     dependencies:
       '@koa/router': 10.1.1
       http-errors: 2.0.0
-      is-class: 0.0.9
       reflect-metadata: 0.1.13
       tsyringe: 4.7.0
     devDependencies:
@@ -167,12 +167,14 @@ importers:
       '@types/koa__router': ^8.0.11
       '@types/node': '16'
       http-errors: ^2.0.0
+      is-class: ^0.0.9
       koa: ^2.13.4
       node-fetch: ^3.2.5
       typescript: ~4.7.3
     dependencies:
       '@koa/router': 10.1.1
       http-errors: 2.0.0
+      is-class: 0.0.9
     devDependencies:
       '@triptyk/nfw-core': link:../core
       '@types/http-errors': 1.8.2
@@ -189,6 +191,7 @@ importers:
       '@mikro-orm/core': ^5.2.0
       '@mikro-orm/sqlite': ^5.2.0
       '@triptyk/nfw-core': workspace:*
+      '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
       '@types/koa': ^2.13.4
       '@types/koa__router': ^8.0.11
@@ -205,6 +208,7 @@ importers:
       '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
       '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
       '@triptyk/nfw-core': link:../core
+      '@triptyk/nfw-http': link:../http
       '@triptyk/nfw-mikro-orm': link:../mikro-orm
       '@types/koa': 2.13.4
       '@types/koa__router': 8.0.11

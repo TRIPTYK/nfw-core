@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "is-class": "^0.0.9",
     "http-errors": "^2.0.0"
   }
 }

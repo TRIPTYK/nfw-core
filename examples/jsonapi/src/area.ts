@@ -1,10 +1,11 @@
-import { Controller, UseMiddleware } from '@triptyk/nfw-core';
+import { UseMiddleware } from '@triptyk/nfw-core';
+import { Controller } from '@triptyk/nfw-http';
 import { requestContext } from '@triptyk/nfw-mikro-orm';
 import { UserController } from './controllers/user.controller.js';
 
 @Controller({
-  routing: '/api/v1',
-  controllers: [UserController]
+  controllers: [UserController],
+  routeName: '/api/v1'
 })
 @UseMiddleware(requestContext)
 export class Area {}

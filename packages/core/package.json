@@ -41,7 +41,6 @@
   "dependencies": {
     "@koa/router": "^10.1.1",
     "http-errors": "^2.0.0",
-    "is-class": "^0.0.9",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0"
   }
