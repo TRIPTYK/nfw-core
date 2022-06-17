@@ -103,6 +103,7 @@ importers:
   examples/simple-api:
     specifiers:
       '@triptyk/nfw-core': workspace:*
+      '@triptyk/nfw-http': workspace:*
       '@types/koa': ^2.13.4
       '@types/koa__router': ^8.0.11
       '@types/node': ^16
@@ -114,6 +115,7 @@ importers:
       typescript: ^4.5.4
     dependencies:
       '@triptyk/nfw-core': link:../../packages/core
+      '@triptyk/nfw-http': link:../../packages/http
       koa: 2.13.4
       reflect-metadata: 0.1.13
     devDependencies:
@@ -146,6 +148,31 @@ importers:
       reflect-metadata: 0.1.13
       tsyringe: 4.7.0
     devDependencies:
+      '@types/http-errors': 1.8.2
+      '@types/koa': 2.13.4
+      '@types/koa__router': 8.0.11
+      '@types/node': 16.11.38
+      koa: 2.13.4
+      node-fetch: 3.2.6
+      typescript: 4.7.3
+
+  packages/http:
+    specifiers:
+      '@koa/router': ^10.1.1
+      '@triptyk/nfw-core': workspace:*
+      '@types/http-errors': ^1.8.2
+      '@types/koa': ^2.13.4
+      '@types/koa__router': ^8.0.11
+      '@types/node': '16'
+      http-errors: ^2.0.0
+      koa: ^2.13.4
+      node-fetch: ^3.2.5
+      typescript: ~4.7.3
+    dependencies:
+      '@koa/router': 10.1.1
+      http-errors: 2.0.0
+    devDependencies:
+      '@triptyk/nfw-core': link:../core
       '@types/http-errors': 1.8.2
       '@types/koa': 2.13.4
       '@types/koa__router': 8.0.11

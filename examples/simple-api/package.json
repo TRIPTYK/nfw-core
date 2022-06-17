@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http": "workspace:*",
     "koa": "^2.13.4",
     "reflect-metadata": "^0.1.13"
   },

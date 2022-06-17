@@ -1,5 +1,5 @@
+import type { Class } from '@triptyk/nfw-core';
 import type { ErrorHandlerInterface } from '../../interfaces/error-middleware.interface.js';
-import type { Class } from '../../types/class.js';
 
 export interface UseErrorHandlerMetadataArgs {
     target: Class<any> | any,

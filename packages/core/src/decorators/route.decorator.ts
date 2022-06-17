@@ -1,89 +1,14 @@
-import { MetadataStorage } from '../storages/metadata-storage.js';
-import { RouteMethod } from '../storages/metadata/route.metadata.js';
+import { MetadataStorage } from '../storages/metadata-storage.js'
+import type { RouteBuilderInterface } from '../storages/metadata/route.metadata.js'
+import type { Class } from '../types/class.js'
 
-export function GET (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
+export function Route (builder: Class<RouteBuilderInterface>, controllers: Class<unknown>[]) {
+  return function <TC extends Class<unknown>> (target: TC) {
     MetadataStorage.instance.routes.push({
       target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.GET
-    });
-  }
-}
-
-export function POST (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.POST
-    });
-  }
-}
-
-export function PATCH (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.PATCH
-    });
-  }
-}
-export function DELETE (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.DELETE
-    });
-  }
-}
-
-export function OPTIONS (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.OPTIONS
-    });
-  }
-}
-
-export function PUT (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.PUT
-    });
-  }
-}
-
-export function HEAD (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.HEAD
-    });
-  }
-}
-
-export function ALL (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.routes.push({
-      target,
-      propertyName: propertyKey,
-      routeName,
-      method: RouteMethod.ALL
-    });
+      builder,
+      controllers,
+      args: undefined
+    })
   }
 }

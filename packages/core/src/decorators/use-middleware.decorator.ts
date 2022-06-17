@@ -4,7 +4,7 @@ import type { Class } from '../types/class.js';
 
 export function UseMiddleware (middleware: AnyMiddleware) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {
-    MetadataStorage.instance.useMiddlewares.push({
+    MetadataStorage.instance.useMiddleware.push({
       target,
       propertyName,
       middleware

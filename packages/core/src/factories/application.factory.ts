@@ -1,6 +1,6 @@
 import type { Class } from '../types/class.js';
 import type Koa from 'koa';
-import { createController } from './controller-routing.factory.js';
+import { createRoute } from './controller-routing.factory.js';
 
 export interface CreateApplicationOptions {
   /**
@@ -17,7 +17,7 @@ export async function createApplication (options: CreateApplicationOptions) {
   const app = options.server;
 
   for (const controller of options.controllers) {
-    createController(app, controller, options);
+    createRoute(app, controller, options);
   }
 
   return app;

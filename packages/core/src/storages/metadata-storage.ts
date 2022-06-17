@@ -1,6 +1,5 @@
-import type { ControllerMetadataArgs } from './metadata/controller.metadata.js';
+import type { EndpointMetadataArgs } from './metadata/endpoint.metadata.js';
 import type { RouteMetadataArgs } from './metadata/route.metadata.js';
-import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
 
 export class MetadataStorage {
@@ -24,28 +23,17 @@ export class MetadataStorage {
   }
 
   /**
-   * ==================
-   * Metadatas storage
-   * ==================
-   */
-
-  /**
    * Controllers decorator metadata
    */
-  public controllers: ControllerMetadataArgs[] = [];
+  public endpoints: EndpointMetadataArgs[] = [];
 
   /**
    * Controller Routes decorator metadata
    */
-  public routes: RouteMetadataArgs[] = [];
+  public routes: RouteMetadataArgs<unknown>[] = [];
 
   /**
-   * Middleware uses for controllers/routes
+   * Controller Routes decorator metadata
    */
-  public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
-
-  /**
-   * Error handling
-   */
-  public useErrorHandler: UseErrorHandlerMetadataArgs[] = [];
+  public useMiddleware: UseMiddlewareMetadataArgs[] = [];
 }

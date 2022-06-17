@@ -4,6 +4,7 @@
   "compilerOptions": {
     "paths": {
       "@triptyk/nfw-core/*": ["./packages/core/src"],
+      "@triptyk/nfw-http/*": ["./packages/http/src"],
       "@triptyk/nfw-jsonapi/*": ["./packages/jsonapi/src"],
       "@triptyk/nfw-mikro-orm/*": ["./packages/mikro-orm/src"],
       "*" : ["./node_modules/*"]

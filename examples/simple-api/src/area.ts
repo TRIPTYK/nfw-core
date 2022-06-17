@@ -1,10 +1,11 @@
-import { Controller } from '@triptyk/nfw-core';
+
+import { Controller } from '@triptyk/nfw-http';
+import { injectable } from 'tsyringe';
 import { UsersController } from './controller.js';
 
 @Controller({
   controllers: [UsersController],
-  routing: {
-    prefix: '/api/v1'
-  }
+  routeName: '/api/v1'
 })
+@injectable()
 export class Area {}

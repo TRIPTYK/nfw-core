@@ -1,0 +1,49 @@
+{
+  "name": "@triptyk/nfw-http",
+  "version": "3.0.0-beta.4",
+  "description": "A NodeJS Typescript framework using Koa !",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "build",
+    "build": "tsc -p tsconfig.build.json",
+    "build:clean": "rm -rf dist",
+    "postpublish": "build:clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TRIPTYK/nfw-core.git"
+  },
+  "type": "module",
+  "author": "TRIPTYK",
+  "engines": {
+    "node": ">=16.3.1"
+  },
+  "contributors": [
+    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
+    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
+    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TRIPTYK/nfw-core/issues"
+  },
+  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
+  "devDependencies": {
+    "@types/http-errors": "^1.8.2",
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.11",
+    "@types/node": "16",
+    "koa": "^2.13.4",
+    "node-fetch": "^3.2.5",
+    "typescript": "~4.7.3",
+    "@triptyk/nfw-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@triptyk/nfw-core": "workspace:*"
+  },
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "http-errors": "^2.0.0"
+  }
+}
