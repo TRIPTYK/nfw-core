@@ -1,4 +1,5 @@
 import type { EntityAttributesMetadataArgs } from './metadata/attributes.metadata.js';
+import type { EndpointMetadataArgs } from './metadata/endpoint.metadata.js';
 import type { RelationshipMetadataArgs } from './metadata/relationship.metadata.js';
 import type { ResourceMetadataArgs } from './metadata/resource.metadata.js';
 
@@ -25,4 +26,5 @@ export class MetadataStorage {
   public attributes: EntityAttributesMetadataArgs[] = [];
   public relationships: RelationshipMetadataArgs[] = [];
   public resources: ResourceMetadataArgs[] = [];
+  public endpoints: EndpointMetadataArgs[] = [];
 }

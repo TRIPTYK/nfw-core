@@ -1,14 +1,13 @@
 
-import type { Class } from '@triptyk/nfw-core';
-import { MetadataStorage, RouteMethod } from '@triptyk/nfw-http';
+import { HttpMethod } from '@triptyk/nfw-http';
+import { MetadataStorage } from '../storage/metadata-storage.js';
 
 export function JsonApiGet () {
-  return function (target: Class<unknown>, propertyName: string) {
+  return function (target: unknown, propertyName: string) {
     MetadataStorage.instance.endpoints.push({
       target,
       propertyName,
-      method: RouteMethod.GET,
-      args: 
+      method: HttpMethod.GET
     });
   }
 }

@@ -34,7 +34,7 @@ export class HttpBuilder implements RouteBuilderInterface {
     return controllerRouter;
   }
 
-  private setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
+  protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
     const middlewaresForEndpoint =
       MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName)
         .map((m) => resolveMiddleware(m.middleware))

@@ -1,13 +1,12 @@
 import Router from '@koa/router';
 import type { AnyEntity } from '@mikro-orm/core';
-import type { Class, UseMiddlewareMetadataArgs } from '@triptyk/nfw-core';
-import { resolveMiddleware } from '@triptyk/nfw-core';
-import { useErrorHandler, MetadataStorage, HttpBuilder } from '@triptyk/nfw-http';
+import type { Class } from '@triptyk/nfw-core';
+import { useErrorHandler, MetadataStorage, HttpBuilder, resolveMiddleware } from '@triptyk/nfw-http';
 import pluralize from 'pluralize';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 
 export class JsonApiBuilder extends HttpBuilder {
-  async build ({ controllerMiddlewaresMeta }: { controllerMiddlewaresMeta: UseMiddlewareMetadataArgs[] }): Promise<Router> {
+  async build (): Promise<Router> {
     const resource = JsonApiDatastorage.instance.resources.find((v) => v.target === (this.context.meta.args as Class<AnyEntity>));
 
     if (!resource) {
@@ -18,14 +17,28 @@ export class JsonApiBuilder extends HttpBuilder {
       prefix: `/${pluralize(resource.options.entityName)}`
     });
 
-    const errorHandlerMeta = MetadataStorage.instance.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === this.context.meta.target);
-    const applyMiddlewares = controllerMiddlewaresMeta.map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
+    const endpointsMeta = MetadataStorage.instance.getEndpointsForTarget(this.context.meta.target);
+    const jsonApiEndpoints = JsonApiDatastorage.instance.endpoints.filter((e) => e.target === this.context.meta.target.prototype);
+    const applyMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target)
+      .map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
+
+    const errorHandlerMeta = MetadataStorage.instance.getErrorHandlerForTarget(this.context.meta.target);
+
+    console.log(jsonApiEndpoints);
 
     if (errorHandlerMeta) {
       applyMiddlewares.unshift(useErrorHandler(errorHandlerMeta.errorHandler));
     }
 
     controllerRouter.use(...applyMiddlewares);
+
+    for (const endPointMeta of endpointsMeta) {
+      this.setupEndpoint(controllerRouter, endPointMeta);
+    }
+
+    for (const endpoint of jsonApiEndpoints) {
+      console.log(endpoint);
+    }
 
     return controllerRouter;
   }
