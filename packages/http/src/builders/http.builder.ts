@@ -1,7 +1,8 @@
 import Router from '@koa/router';
-import type { Class, RouteBuilderInterface, RouteMetadataArgs } from '@triptyk/nfw-core';
+import type { RouteBuilderInterface, RouteMetadataArgs } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.decorator.js';
-import type { EndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
+import { handleRouteControllerAction } from '../factories/controller-action.factory.js';
+import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.util.js';
 import { resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
@@ -14,11 +15,11 @@ export class HttpBuilder implements RouteBuilderInterface {
       prefix: (this.context.meta.args as ControllerMetaArgs).routeName
     });
 
-    const endpointsMeta = MetadataStorage.instance.endpoints.filter((rMetadata) => (rMetadata.target as Class<unknown>).constructor === this.context.meta.target);
-    const controllerMiddlewaresMeta = MetadataStorage.instance.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === this.context.meta.target).reverse();
+    const endpointsMeta = MetadataStorage.instance.getEndpointsForTarget(this.context.meta.target);
+    const applyMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target)
+      .map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
 
-    const errorHandlerMeta = MetadataStorage.instance.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === undefined && middlewareMeta.target === this.context.meta.target);
-    const applyMiddlewares = controllerMiddlewaresMeta.map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
+    const errorHandlerMeta = MetadataStorage.instance.getErrorHandlerForTarget(this.context.meta.target);
 
     if (errorHandlerMeta) {
       applyMiddlewares.unshift(useErrorHandler(errorHandlerMeta.errorHandler));
@@ -27,14 +28,27 @@ export class HttpBuilder implements RouteBuilderInterface {
     controllerRouter.use(...applyMiddlewares);
 
     for (const endPointMeta of endpointsMeta) {
-      this.setupRoute(endPointMeta);
+      this.setupEndpoint(controllerRouter, endPointMeta);
     }
 
     return controllerRouter;
   }
 
-  private setupRoute (endPointMeta: EndpointMetadataArgs) {
-    console.log(endPointMeta)
+  private setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
+    const middlewaresForEndpoint =
+      MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName)
+        .map((m) => resolveMiddleware(m.middleware))
+
+    /**
+   * Only one error handler per controller route
+   */
+    const errorHandlerForRouteMeta = MetadataStorage.instance.getErrorHandlerForTarget(this.context.meta.target, endPointMeta.propertyName);
+
+    if (errorHandlerForRouteMeta) {
+      middlewaresForEndpoint.unshift(useErrorHandler(errorHandlerForRouteMeta.errorHandler));
+    }
+
+    router[endPointMeta.method](endPointMeta.args.routeName, ...middlewaresForEndpoint, handleRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
   }
 
   async bindRouting (parentRouter: Router, router: Router): Promise<void> {

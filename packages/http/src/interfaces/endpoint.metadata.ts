@@ -1,5 +1,5 @@
 
-export enum RouteMethod {
+export enum HttpMethod {
     GET = 'get',
     PUT = 'put',
     POST = 'post',
@@ -10,9 +10,11 @@ export enum RouteMethod {
     ALL = 'all'
 }
 
-export interface EndpointMetadataArgs<T = unknown> {
+export interface HttpEndpointMetadataArgs {
     target: unknown,
     propertyName: string,
-    method: RouteMethod,
-    args: T,
+    method: HttpMethod,
+    args: {
+        routeName: string,
+    },
 }

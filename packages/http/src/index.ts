@@ -9,6 +9,8 @@ export * from './decorators/use-response-handler.decorator.js'
 export * from './decorators/use-middleware.decorator.js';
 export * from './interfaces/endpoint.metadata.js';
 
+export * from './interfaces/middleware.interface.js';
+
 export * from './decorators/params/args.decorator.js'
 export * from './decorators/params/body.decorator.js'
 export * from './decorators/params/controller-context.decorator.js'

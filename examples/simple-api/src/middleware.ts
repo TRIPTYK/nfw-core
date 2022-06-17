@@ -1,5 +1,5 @@
 import type { RouterContext } from '@koa/router'
-import type { MiddlewareInterface } from '@triptyk/nfw-core';
+import type { MiddlewareInterface } from '@triptyk/nfw-http';
 import type { Next } from 'koa';
 
 export class Middleware implements MiddlewareInterface {

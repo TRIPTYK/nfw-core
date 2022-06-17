@@ -1,4 +1,4 @@
-import { RouteMethod } from '../interfaces/endpoint.metadata.js';
+import { HttpMethod } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function GET (routeName: `/${string}`) {
@@ -9,7 +9,7 @@ export function GET (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.GET
+      method: HttpMethod.GET
     });
   }
 }
@@ -22,7 +22,7 @@ export function POST (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.POST
+      method: HttpMethod.POST
     });
   }
 }
@@ -35,7 +35,7 @@ export function PATCH (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.PATCH
+      method: HttpMethod.PATCH
     });
   }
 }
@@ -47,7 +47,7 @@ export function DELETE (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.DELETE
+      method: HttpMethod.DELETE
     });
   }
 }
@@ -60,7 +60,7 @@ export function OPTIONS (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.OPTIONS
+      method: HttpMethod.OPTIONS
     });
   }
 }
@@ -73,7 +73,7 @@ export function PUT (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.PUT
+      method: HttpMethod.PUT
     });
   }
 }
@@ -86,7 +86,7 @@ export function HEAD (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.HEAD
+      method: HttpMethod.HEAD
     });
   }
 }
@@ -99,7 +99,7 @@ export function ALL (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: RouteMethod.ALL
+      method: HttpMethod.ALL
     });
   }
 }

@@ -8,7 +8,7 @@ export function JsonApiGet () {
       target,
       propertyName,
       method: RouteMethod.GET,
-      args: jsonapiGet
+      args: 
     });
   }
 }

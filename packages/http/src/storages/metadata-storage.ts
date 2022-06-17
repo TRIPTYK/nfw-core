@@ -1,4 +1,5 @@
-import type { EndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
+import type { Class } from '@triptyk/nfw-core';
+import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
@@ -31,10 +32,18 @@ export class MetadataStorage {
    * ==================
    */
 
+  public getEndpointsForTarget (target: unknown) {
+    return this.endpoints.filter((rMetadata) => (rMetadata.target as Class<unknown>).constructor === target);
+  }
+
   /**
    * Use parameters in controller route
    */
-  public endpoints: EndpointMetadataArgs[] = [];
+  public endpoints: HttpEndpointMetadataArgs[] = [];
+
+  public getMiddlewaresForTarget (target: unknown, propertyName?: string) {
+    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target).reverse();
+  }
 
   /**
    * Use parameters in controller route
@@ -55,6 +64,10 @@ export class MetadataStorage {
    * Use guards for controllers/routes
    */
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
+
+  public getErrorHandlerForTarget (target: unknown, propertyName?: string) {
+    return this.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target);
+  }
 
   /**
    * Error handling

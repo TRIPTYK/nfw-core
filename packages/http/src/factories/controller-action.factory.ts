@@ -5,7 +5,7 @@ import createHttpError from 'http-errors';
 import type { Next } from 'koa';
 import { container } from 'tsyringe';
 import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
-import type { EndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
+import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { ResponseHandlerInterface } from '../interfaces/response-handler.interface.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
@@ -28,7 +28,7 @@ const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
 async function resolveParam (e: {
   metadata: UseParamsMetadataArgs,
   signature: string,
-}, controllerInstance: any, ctx: RouterContext, endpointMetadata: EndpointMetadataArgs, sharedParams: Record<string, unknown>) {
+}, controllerInstance: any, ctx: RouterContext, endpointMetadata: HttpEndpointMetadataArgs, sharedParams: Record<string, unknown>) {
   // if param has already been used
   if (sharedParams[e.signature] && e.metadata.cache) {
     debug?.('info', 'reusing shared param ', e.signature);
@@ -50,7 +50,7 @@ async function resolveParam (e: {
   return paramResult;
 }
 
-export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: EndpointMetadataArgs) {
+export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: HttpEndpointMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
