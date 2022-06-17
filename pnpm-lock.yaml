@@ -78,6 +78,7 @@ importers:
       '@mikro-orm/core': ^5.2.0
       '@mikro-orm/sqlite': ^5.2.0
       '@triptyk/nfw-core': workspace:*
+      '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
       '@types/koa': ^2.13.4
       '@types/node': ^16
@@ -90,6 +91,7 @@ importers:
       '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
       '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
       '@triptyk/nfw-core': link:../../packages/core
+      '@triptyk/nfw-http': link:../../packages/http
       '@triptyk/nfw-mikro-orm': link:../../packages/mikro-orm
       koa: 2.13.4
       reflect-metadata: 0.1.13

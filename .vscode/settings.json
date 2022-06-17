@@ -9,5 +9,6 @@
         "typescript"
     ],
     "eslint.format.enable": true,
-    "typescript.preferences.importModuleSpecifierEnding": "js"
+    "typescript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.importModuleSpecifier": "project-relative"
 }

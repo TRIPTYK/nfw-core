@@ -14,6 +14,7 @@
     "@mikro-orm/core": "^5.2.0",
     "@mikro-orm/sqlite": "^5.2.0",
     "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*",
     "koa": "^2.13.4",
     "reflect-metadata": "^0.1.13"
