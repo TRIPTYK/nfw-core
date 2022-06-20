@@ -1,6 +1,5 @@
 import type { RouterContext } from '@koa/router';
 import type { RouteMetadataArgs } from '@triptyk/nfw-core';
-import { debug } from '@triptyk/nfw-core';
 import createHttpError from 'http-errors';
 import type { Next } from 'koa';
 import { container } from 'tsyringe';
@@ -11,12 +10,10 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
 import { applyParam } from '../utils/factory.util.js';
-import { functionSignature } from '../utils/function-signature.util.js';
 
 const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
   const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
-    metadata: useParam,
-    signature: functionSignature(useParam.decoratorName, useParam.args)
+    metadata: useParam
   }));
   return {
     instance: container.resolve(guardMeta.guard),
@@ -27,35 +24,24 @@ const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
 
 async function resolveParam (e: {
   metadata: UseParamsMetadataArgs,
-  signature: string,
-}, controllerInstance: any, ctx: RouterContext, endpointMetadata: HttpEndpointMetadataArgs, sharedParams: Record<string, unknown>) {
-  // if param has already been used
-  if (sharedParams[e.signature] && e.metadata.cache) {
-    debug?.('info', 'reusing shared param ', e.signature);
-    return sharedParams[e.signature];
-  }
-
+}, controllerInstance: any, ctx: RouterContext, endpointMetadata: HttpEndpointMetadataArgs) {
   /**
    * Apply guard params
    */
   const paramResult = await applyParam(e.metadata, {
     controllerAction: endpointMetadata.propertyName,
     controllerInstance,
-    ctx,
-    sharedParams
+    ctx
   });
-
-  sharedParams[e.signature] = paramResult;
 
   return paramResult;
 }
 
-export function handleRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: HttpEndpointMetadataArgs) {
+export function handleHttpRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: HttpEndpointMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
   const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
     return ({
-      metadata: useParam,
-      signature: functionSignature(useParam.decoratorName, useParam.args)
+      metadata: useParam
     })
   });
 
@@ -94,15 +80,13 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     args?: unknown[],
     paramsMeta: {
       metadata: UseParamsMetadataArgs,
-      signature: string,
     }[],
   };
 
   if (responsehandlerForRouteMetadata) {
     responseHandlerInstance = container.resolve(responsehandlerForRouteMetadata.responseHandler);
     const params = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === responsehandlerForRouteMetadata.responseHandler).sort((a, b) => a.index - b.index).map((useParam) => ({
-      metadata: useParam,
-      signature: functionSignature(useParam.decoratorName, useParam.args)
+      metadata: useParam
     }));
     responseHandlerUseParams = {
       instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
@@ -114,7 +98,6 @@ export function handleRouteControllerAction (controllerInstance: any, controller
   const guardsInstance = guardForRouteMetadata.map(resolveGuardInstance);
 
   return async (ctx: RouterContext, _next: Next) => {
-    const sharedParams: Record<string, unknown> = {};
     /**
        * Guards are executed one at a time
        */
@@ -133,7 +116,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
             controllerInstance
           } as ControllerContextInterface
         }
-        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata, sharedParams);
+        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata);
       }));
 
       const guardRes = await instance.can(...resolvedGuardParams);
@@ -150,7 +133,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
     /**
      * Apply controller params , should resolve cached middleware
      */
-    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => resolveParam(e, controllerInstance, ctx, routeMetadata, sharedParams)));
+    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => resolveParam(e, controllerInstance, ctx, routeMetadata)));
 
     /**
      * Call main controller action and apply decorator params
@@ -171,7 +154,7 @@ export function handleRouteControllerAction (controllerInstance: any, controller
             controllerInstance
           } as ControllerContextInterface
         }
-        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata, sharedParams)
+        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata)
       }));
       await responseHandlerInstance.handle(controllerActionResult, ...resolvedHandlerParams);
     } else {

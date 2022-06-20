@@ -199,11 +199,13 @@ importers:
       '@types/pluralize': ^0.0.29
       pluralize: ^8.0.0
       reflect-metadata: ^0.1.13
+      ts-japi: ^1.6.1
       tsyringe: 4.7.0
       typescript: ~4.7.3
     dependencies:
       '@koa/router': 10.1.1
       pluralize: 8.0.0
+      ts-japi: 1.6.1
     devDependencies:
       '@mikro-orm/core': 5.2.0_@mikro-orm+sqlite@5.2.0
       '@mikro-orm/sqlite': 5.2.0_@mikro-orm+core@5.2.0
@@ -5571,6 +5573,11 @@ packages:
 
   /tr46/0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
+  /ts-japi/1.6.1:
+    resolution: {integrity: sha512-UkJo9b+k/Xi+ZfHkTWe6wTfMErPL0f6WGsM6KCtoI7Sg12IZ47aCsWOxDfV8XvXzpV3A07U3cxUeNIg1uHj1rg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /ts-node/10.8.1_xrrid5ahylip6fa4hrbwh6apl4:
     resolution: {integrity: sha512-Wwsnao4DQoJsN034wePSg5nZiw4YKXf56mPIAeD6wVmiv+RytNSWqc2f3fKvcUoV+Yn2+yocD71VOfQHbmVX4g==}

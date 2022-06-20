@@ -6,5 +6,5 @@ import { createCustomDecorator } from '../../factories/custom-decorator.factory.
 export function Param (this: unknown, name: string) {
   return createCustomDecorator(({ ctx }) => {
     return ctx.params[name];
-  }, 'param', false);
+  }, 'param');
 }

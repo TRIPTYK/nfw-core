@@ -11,8 +11,7 @@ export function Args (this: unknown) {
       index,
       handle: 'args',
       decoratorName: 'args', // args will never be shared or cached, i just don't want Typescript to be angry at me,
-      args: [],
-      cache: false
+      args: []
     });
   }
 }

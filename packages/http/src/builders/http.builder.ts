@@ -1,7 +1,7 @@
 import Router from '@koa/router';
 import type { RouteBuilderInterface, RouteMetadataArgs } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.decorator.js';
-import { handleRouteControllerAction } from '../factories/controller-action.factory.js';
+import { handleHttpRouteControllerAction } from '../factories/controller-action.factory.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.util.js';
@@ -48,7 +48,7 @@ export class HttpBuilder implements RouteBuilderInterface {
       middlewaresForEndpoint.unshift(useErrorHandler(errorHandlerForRouteMeta.errorHandler));
     }
 
-    router[endPointMeta.method](endPointMeta.args.routeName, ...middlewaresForEndpoint, handleRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
+    router[endPointMeta.method](endPointMeta.args.routeName, ...middlewaresForEndpoint, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
   }
 
   async bindRouting (parentRouter: Router, router: Router): Promise<void> {

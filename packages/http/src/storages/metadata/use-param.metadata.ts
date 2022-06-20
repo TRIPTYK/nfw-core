@@ -5,7 +5,6 @@ export interface ControllerParamsContext {
     controllerAction: string,
     ctx: RouterContext,
     args?: unknown[],
-    sharedParams : Record<string, unknown>,
 }
 
 export interface UseParamsMetadataArgs {
@@ -15,5 +14,4 @@ export interface UseParamsMetadataArgs {
     index: number,
     handle: ((ctx: ControllerParamsContext) => Promise<unknown> | unknown) | 'args' | 'controller-context',
     args: unknown[],
-    cache: boolean,
 }

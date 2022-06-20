@@ -1,6 +1,8 @@
+import type { ResourceMeta } from '../jsonapi.registry.js';
 
 export type ResourceContext = Record<string, unknown>;
 
-type Methods<T> = { [P in keyof T as T[P] extends Function ? never : P]?: T[P] };
-
-export type Resource<T extends unknown> = Methods<T>;
+export abstract class Resource<T> {
+  declare meta: ResourceMeta;
+  declare id: string;
+}

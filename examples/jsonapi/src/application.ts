@@ -1,18 +1,37 @@
 import 'reflect-metadata';
-import createApplication from '@triptyk/nfw-core';
+import createApplication, { container } from '@triptyk/nfw-core';
 import Koa from 'koa';
 import { Area } from './area.js';
 import { init } from '@triptyk/nfw-mikro-orm';
 import { UserModel } from './models/user.model.js';
+import { ArticleModel } from './models/article.model.js';
+import { JsonApiRegistry } from '@triptyk/nfw-jsonapi';
+import './resources/article.resource.js';
 
 async function main () {
   const mikro = await init({
     dbName: ':memory:',
     type: 'sqlite',
-    entities: [UserModel]
+    entities: [UserModel, ArticleModel]
   });
 
+  await container.resolve(JsonApiRegistry).init();
   await mikro.getSchemaGenerator().updateSchema();
+
+  const em = mikro.em.fork();
+
+  const user = em.getRepository(UserModel).create({
+    id: '12',
+    username: 'Amaury',
+    articles: [
+      em.getRepository(ArticleModel).create({
+        id: '122',
+        title: 'bonjour'
+      } as any)
+    ]
+  });
+
+  em.persistAndFlush(user);
 
   /**
    * Create the app

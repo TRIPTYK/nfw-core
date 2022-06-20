@@ -1,7 +1,13 @@
-import type { HttpMethod } from '@triptyk/nfw-http';
+export enum JsonApiMethod {
+    GET,
+    CREATE,
+    UPDATE,
+    LIST,
+    DELETE
+}
 
 export interface EndpointMetadataArgs {
     target: unknown,
     propertyName: string,
-    method: HttpMethod,
+    method: JsonApiMethod,
 }

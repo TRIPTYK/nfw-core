@@ -1,5 +1,5 @@
-import type { Resource } from '@triptyk/nfw-jsonapi';
-import { Relationship, Attribute, JsonApiResource } from '@triptyk/nfw-jsonapi';
+
+import { Relationship, Attribute, JsonApiResource, Resource } from '@triptyk/nfw-jsonapi';
 import { UserModel } from '../models/user.model.js';
 import type { ArticleResource } from './article.resource.js';
 
@@ -7,7 +7,7 @@ import type { ArticleResource } from './article.resource.js';
   entity: UserModel,
   entityName: 'user'
 })
-export class UserResource implements Resource<UserModel> {
+export class UserResource extends Resource<UserModel> {
    @Attribute()
   declare id: string;
 

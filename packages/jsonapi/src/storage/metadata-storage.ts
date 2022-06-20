@@ -23,6 +23,14 @@ export class MetadataStorage {
     this._instance = undefined;
   }
 
+  public getAllowedAttributesFor (resource: unknown) {
+    return this.attributes.filter((e) => e.target === resource);
+  }
+
+  public getAllowedRelationshipsFor (resource: unknown) {
+    return this.relationships.filter((e) => e.target === resource);
+  }
+
   public attributes: EntityAttributesMetadataArgs[] = [];
   public relationships: RelationshipMetadataArgs[] = [];
   public resources: ResourceMetadataArgs[] = [];

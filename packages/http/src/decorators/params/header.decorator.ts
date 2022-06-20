@@ -3,5 +3,5 @@ import { createCustomDecorator } from '../../factories/custom-decorator.factory.
 export function Header (this: unknown) {
   return createCustomDecorator(({ ctx }) => {
     return ctx.header;
-  }, 'header', false);
+  }, 'header');
 }

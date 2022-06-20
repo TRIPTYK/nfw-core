@@ -1,15 +1,10 @@
-import { EntityRepository } from '@mikro-orm/core';
-import { JsonApiController, JsonApiGet } from '@triptyk/nfw-jsonapi';
-import { injectRepository } from '@triptyk/nfw-mikro-orm';
-import { UserModel } from '../models/user.model.js';
+import { JsonApiController, JsonApiList } from '@triptyk/nfw-jsonapi';
 import { UserResource } from '../resources/user.resource.js';
 
 @JsonApiController(UserResource)
 export class UserController {
-  constructor (@injectRepository(UserModel) private repo: EntityRepository<UserModel>) {}
-
-  @JsonApiGet()
+  @JsonApiList()
   async list () {
-    return this.repo.findAll();
+    return [];
   }
 }

@@ -4,7 +4,7 @@ import type { ControllerParamsContext } from '../storages/metadata/use-param.met
 /**
  * Register custom decorator for controller
  */
-export function createCustomDecorator (handle: (ctx: ControllerParamsContext) => unknown, name: string, cache = false, args: unknown[] = []) {
+export function createCustomDecorator (handle: (ctx: ControllerParamsContext) => unknown, name: string, args: unknown[] = []) {
   return function (target: unknown, propertyName: string, index: number) {
     MetadataStorage.instance.useParams.push({
       target,
@@ -12,8 +12,7 @@ export function createCustomDecorator (handle: (ctx: ControllerParamsContext) =>
       index,
       decoratorName: name,
       handle,
-      args,
-      cache
+      args
     })
   }
 }
