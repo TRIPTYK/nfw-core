@@ -25,8 +25,16 @@ async function main () {
     username: 'Amaury',
     articles: [
       em.getRepository(ArticleModel).create({
-        id: '122',
-        title: 'bonjour'
+        id: 'ccccccc',
+        title: 'ccc'
+      } as any),
+      em.getRepository(ArticleModel).create({
+        id: 'bbbbbbb',
+        title: 'bbbb'
+      } as any),
+      em.getRepository(ArticleModel).create({
+        id: 'aaaaaaa',
+        title: 'aaaa'
       } as any)
     ]
   });

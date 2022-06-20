@@ -7,7 +7,9 @@ import { UserResource } from './user.resource.js';
   entity: ArticleModel
 })
 export class ArticleResource extends Resource<ArticleModel> {
-  @Attribute()
+  @Attribute({
+    updateable: true
+  })
   declare id: string;
 
   @Attribute()

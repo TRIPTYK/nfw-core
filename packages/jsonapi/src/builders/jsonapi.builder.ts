@@ -12,11 +12,12 @@ import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-stora
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 import type { ResourceMetadataArgs } from '../storage/metadata/resource.metadata.js';
-import type { ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { QueryParser } from '../query-parser/query-parser.js';
 import { createResourceFrom } from '../utils/create-resource.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
+import { validateContentType } from '../utils/content-type.js';
+import { BadContentTypeError } from '../errors/bad-content-type.js';
 
 export const routeMap: Record<JsonApiMethod, { routeName: string; method: HttpMethod }> = {
   [JsonApiMethod.GET]: {
@@ -97,33 +98,29 @@ export class JsonApiBuilder extends HttpBuilder {
     const resource = this.registry.resources.get(resourceMeta.target)!;
 
     router[routeInfo.method](routeInfo.routeName, async (ctx: RouterContext) => {
-      const jsonApiContext = {
-        resource,
-        koaContext: ctx
-      } as JsonApiContext<unknown>;
-      const query = ctx.query as Record<string, any>;
-      const parser = new QueryParser(query);
-      parser.context = jsonApiContext;
-      const all = await repository.jsonApiList(parser, jsonApiContext);
-      const asResource = all.map(e => createResourceFrom(e.toJSON(), resource));
-      const serialized = resource.serializer.serialize(asResource);
-      ctx.body = serialized;
+      try {
+        const jsonApiContext = {
+          resource,
+          koaContext: ctx
+        } as JsonApiContext<unknown>;
+        if (!validateContentType(ctx.headers['content-type'] ?? '')) {
+          throw new BadContentTypeError('Bad content type');
+        }
+        if (ctx.headers['content-type'] !== ctx.header.accept) {
+          throw new BadContentTypeError('Bad content type');
+        }
+        const query = ctx.query as Record<string, any>;
+        const parser = new QueryParser(query);
+        parser.context = jsonApiContext;
+        const all = await repository.jsonApiList(parser, jsonApiContext);
+        const asResource = all.map(e => createResourceFrom(e.toJSON(), resource));
+        const serialized = resource.serializer.serialize(asResource);
+        ctx.body = serialized;
+        ctx.type = 'application/vnd.api+json';
+      } catch (e: any) {
+        ctx.body = e.message;
+        ctx.status = e.status;
+      }
     });
-  }
-
-  private recurseIncludes (relations: string[], parentResource: ResourceMeta) {
-    for (const relation of relations) {
-      const splitted = relation.split('.');
-      const parentRel = splitted[0];
-
-      const parentRelAsResource = parentResource.allowedRelationships.some(r => r.name === parentRel);
-      if (!parentRelAsResource) {
-        throw new Error(`No relationship for ${parentRel}`);
-      }
-      if (splitted.length > 1) {
-        this.recurseIncludes(splitted.slice(1), parentResource)
-      }
-    }
-    return relations;
   }
 }

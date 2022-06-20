@@ -6,7 +6,13 @@ export class QueryParser {
   public declare context: JsonApiContext<unknown>;
 
   constructor (public originalQuery: Record<string, any>) {
-    this.includes = originalQuery.include.split(',')
+    this.includes = originalQuery.include.split(',');
+    this.fields = originalQuery.include.split(',');
+    this.sort = originalQuery.sort.split(',');
+    this.pagination = {
+      page: originalQuery.page.number,
+      size: originalQuery.page.size
+    }
   }
 
   public includes: string[] = [];
@@ -15,21 +21,5 @@ export class QueryParser {
   public pagination?: {
     page: number,
     size: number,
-  }
-
-  protected parseIncludes () {
-
-  }
-
-  protected parseFields () {
-
-  }
-
-  protected parseSorting () {
-
-  }
-
-  protected parsePagination () {
-
   }
 }
