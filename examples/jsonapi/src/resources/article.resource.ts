@@ -3,20 +3,15 @@ import { ArticleModel } from '../models/article.model.js';
 import { UserResource } from './user.resource.js';
 
 @JsonApiResource({
-  entityName: 'article',
+  entityName: 'articles',
   entity: ArticleModel
 })
 export class ArticleResource extends Resource<ArticleModel> {
-  @Attribute({
-    updateable: true
-  })
-  declare id: string;
-
   @Attribute()
   declare title: string;
 
   @Relationship({
     otherResource: 'UserResource'
   })
-  declare author: UserResource;
+  declare writer: UserResource;
 }

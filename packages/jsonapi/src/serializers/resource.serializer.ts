@@ -1,11 +1,13 @@
+import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { JsonApiModelInterface } from '../interfaces/model.interface.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { Resource } from '../resource/base.resource.js';
+import type { AttributesObject, JsonApiTopLevel, RelationshipsObject, ResourceObject } from './spec.interface.js';
 
-export class JsonApiSerializer<T extends JsonApiModelInterface> {
+export class ResourceSerializer<T extends JsonApiModelInterface> {
   public declare resource: ResourceMeta;
 
-  public serialize (resource: Resource<T> | Resource<T>[]) {
+  public serialize (resource: Resource<T> | Resource<T>[], context: JsonApiContext<T>): JsonApiTopLevel {
     const included = new Map<string, any>();
     return {
       jsonapi: {
@@ -16,23 +18,28 @@ export class JsonApiSerializer<T extends JsonApiModelInterface> {
     }
   }
 
-  protected serializeDocument (resource: Resource<unknown>, included: Map<string, any>) {
-    const fetchableFields = resource.meta.allowedAttributes.filter((aa) => aa.fetchable);
+  protected serializeDocument (resource: Resource<unknown>, included: Map<string, any>): ResourceObject {
+    const fetchableFields = resource.meta.attributes;
 
-    const attributes: Record<string, any> = {};
+    const attributes: AttributesObject = {};
 
     for (const field of fetchableFields) {
       attributes[field.name] = resource[field.name as keyof Resource<unknown>];
     }
 
-    const relationships: Record<string, any> = {};
+    const relationships: RelationshipsObject = {};
 
-    for (const rel of resource.meta.allowedRelationships) {
+    for (const rel of resource.meta.relationships) {
       const relation = resource[rel.name as keyof Resource<unknown>] as unknown as Resource<unknown> | Resource<unknown>[];
+
       if (relation) {
-        const ids = Array.isArray(relation) ? relation.map((e) => e.id) : relation.id;
+        const ids = Array.isArray(relation) ? relation.map((e) => ({ type: rel.resource.name, id: e.id })) : { type: rel.resource.name, id: relation.id };
+
         relationships[rel.name] = {
-          type: rel.resource.name,
+          links: {
+            self: `${resource.meta.name}/${resource.id}/relationships/${rel.name}`,
+            related: `${resource.meta.name}/${resource.id}/${rel.name}`
+          },
           data: ids
         }
 
@@ -46,6 +53,9 @@ export class JsonApiSerializer<T extends JsonApiModelInterface> {
 
     return {
       id: resource.id,
+      links: {
+        self: `${resource.meta.name}/${resource.id}`
+      },
       type: resource.meta.name,
       attributes,
       relationships

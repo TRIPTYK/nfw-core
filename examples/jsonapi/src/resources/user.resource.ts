@@ -5,14 +5,11 @@ import type { ArticleResource } from './article.resource.js';
 
 @JsonApiResource({
   entity: UserModel,
-  entityName: 'user'
+  entityName: 'users'
 })
 export class UserResource extends Resource<UserModel> {
-   @Attribute()
-  declare id: string;
-
   @Attribute()
-   declare username: string;
+  declare username: string;
 
    @Relationship({
      otherResource: 'ArticleResource'

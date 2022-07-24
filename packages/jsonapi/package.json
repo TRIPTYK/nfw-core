@@ -27,24 +27,28 @@
   "license": "MIT",
   "devDependencies": {
     "@mikro-orm/core": "^5.2.0",
+    "@mikro-orm/knex": "^5.2.1",
     "@mikro-orm/sqlite": "^5.2.0",
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*",
     "@types/koa": "^2.13.4",
+    "@types/koa-qs": "^2.0.0",
     "@types/koa__router": "^8.0.11",
     "@types/node": "16",
     "@types/pluralize": "^0.0.29",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "4.7.0",
-    "typescript": "~4.7.3"
+    "typescript": "~4.7.3",
+    "@nestjs/class-validator": "^0.13.4"
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
-    "pluralize": "^8.0.0",
-    "ts-japi": "^1.6.1"
+    "koa-qs": "^3.0.0",
+    "pluralize": "^8.0.0"
   },
   "peerDependencies": {
+    "@nestjs/class-validator": "^0.13.4",
     "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*"
   }

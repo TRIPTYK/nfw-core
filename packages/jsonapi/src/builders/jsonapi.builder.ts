@@ -1,4 +1,3 @@
-import type { RouterContext } from '@koa/router';
 import Router from '@koa/router';
 import { AnyEntity } from '@mikro-orm/core';
 import type { MikroORM, EntityRepository } from '@mikro-orm/core';
@@ -13,11 +12,8 @@ import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 import type { ResourceMetadataArgs } from '../storage/metadata/resource.metadata.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
-import { QueryParser } from '../query-parser/query-parser.js';
-import { createResourceFrom } from '../utils/create-resource.js';
-import type { JsonApiContext } from '../interfaces/json-api-context.js';
-import { validateContentType } from '../utils/content-type.js';
-import { BadContentTypeError } from '../errors/bad-content-type.js';
+import { findAll } from './methods/find-all.method.js';
+import { ErrorSerializer } from '../serializers/error.serializer.js';
 
 export const routeMap: Record<JsonApiMethod, { routeName: string; method: HttpMethod }> = {
   [JsonApiMethod.GET]: {
@@ -96,31 +92,17 @@ export class JsonApiBuilder extends HttpBuilder {
     }
 
     const resource = this.registry.resources.get(resourceMeta.target)!;
+    const errorSerializer = container.resolve(ErrorSerializer);
 
-    router[routeInfo.method](routeInfo.routeName, async (ctx: RouterContext) => {
+    router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {
-        const jsonApiContext = {
-          resource,
-          koaContext: ctx
-        } as JsonApiContext<unknown>;
-        if (!validateContentType(ctx.headers['content-type'] ?? '')) {
-          throw new BadContentTypeError('Bad content type');
-        }
-        if (ctx.headers['content-type'] !== ctx.header.accept) {
-          throw new BadContentTypeError('Bad content type');
-        }
-        const query = ctx.query as Record<string, any>;
-        const parser = new QueryParser(query);
-        parser.context = jsonApiContext;
-        const all = await repository.jsonApiList(parser, jsonApiContext);
-        const asResource = all.map(e => createResourceFrom(e.toJSON(), resource));
-        const serialized = resource.serializer.serialize(asResource);
+        await next();
+      } catch (e: any) {
+        const serialized = errorSerializer.serialize(e);
+        ctx.status = 500;
         ctx.body = serialized;
         ctx.type = 'application/vnd.api+json';
-      } catch (e: any) {
-        ctx.body = e.message;
-        ctx.status = e.status;
       }
-    });
+    }, findAll(resource, repository));
   }
 }

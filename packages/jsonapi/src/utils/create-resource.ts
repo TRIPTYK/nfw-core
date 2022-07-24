@@ -6,11 +6,13 @@ export function createResourceFrom (json: Record<string, any>, resourceMeta: Res
   const newResource = new resourceMeta.resource() as any;
   newResource.meta = resourceMeta;
 
-  for (const attr of resourceMeta.allowedAttributes) {
+  for (const attr of resourceMeta.attributes) {
     newResource[attr.name] = json[attr.name];
   }
 
-  for (const attr of resourceMeta.allowedRelationships) {
+  newResource.id = json.id;
+
+  for (const attr of resourceMeta.relationships) {
     if (json[attr.name]) {
       newResource[attr.name] = Array.isArray(json[attr.name]) ? json[attr.name].map((e: Loaded<AnyEntity>) => createResourceFrom(e, attr.resource)) : createResourceFrom(json[attr.name], attr.resource);
     }

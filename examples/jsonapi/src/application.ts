@@ -7,12 +7,14 @@ import { UserModel } from './models/user.model.js';
 import { ArticleModel } from './models/article.model.js';
 import { JsonApiRegistry } from '@triptyk/nfw-jsonapi';
 import './resources/article.resource.js';
+import koaQs from 'koa-qs';
 
 async function main () {
   const mikro = await init({
     dbName: ':memory:',
     type: 'sqlite',
-    entities: [UserModel, ArticleModel]
+    entities: [UserModel, ArticleModel],
+    debug: true
   });
 
   await container.resolve(JsonApiRegistry).init();
@@ -38,8 +40,18 @@ async function main () {
       } as any)
     ]
   });
+  const seb = em.getRepository(UserModel).create({
+    id: '2',
+    username: 'seb',
+    articles: [
+      em.getRepository(ArticleModel).create({
+        id: 'ddddd',
+        title: 'ddddddd'
+      } as any)
+    ]
+  });
 
-  em.persistAndFlush(user);
+  em.persistAndFlush([user, seb]);
 
   /**
    * Create the app
@@ -49,7 +61,9 @@ async function main () {
     controllers: [Area]
   });
 
-  const port = 8001;
+  koaQs(koaApp, 'extended');
+
+  const port = 8000;
 
   koaApp.listen(port, () => {
     // eslint-disable-next-line no-console
