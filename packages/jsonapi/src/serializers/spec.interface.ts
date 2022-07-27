@@ -41,7 +41,6 @@ export interface LinkObject {
   meta?: Record<string, unknown>,
 }
 
-export type AttributesObject = Record<string, unknown>;
 export type RelationshipsObject = Record<string, RelationshipObject>;
 
 export interface RelationshipObject {
@@ -58,7 +57,7 @@ export type ResourceLinkage =
 export interface ResourceObject {
   id?: string,
   type?: string,
-  attributes?: AttributesObject,
+  attributes?: Record<string, unknown>,
   relationships?: unknown,
   links?: LinksObject<string>,
   meta?: unknown,

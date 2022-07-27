@@ -7,8 +7,6 @@ export * from './builders/jsonapi.builder.js';
 
 export * from './decorators/jsonapi-controller.decorator.js';
 
-export * from './repository/jsonapi.repository.js';
-
 export * from './decorators/jsonapi-endpoints.decorator.js';
 
 export * from './jsonapi.registry.js';

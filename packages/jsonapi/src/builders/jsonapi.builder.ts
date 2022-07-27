@@ -1,12 +1,9 @@
 import Router from '@koa/router';
-import { AnyEntity } from '@mikro-orm/core';
-import type { MikroORM, EntityRepository } from '@mikro-orm/core';
+import type { AnyEntity } from '@mikro-orm/core';
 import type { Class } from '@triptyk/nfw-core';
 import { inject, injectable, container } from '@triptyk/nfw-core';
 import { useErrorHandler, MetadataStorage, HttpBuilder, resolveMiddleware, HttpMethod } from '@triptyk/nfw-http';
-import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import pluralize from 'pluralize';
-import { JsonApiRepository } from '../repository/jsonapi.repository.js';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
@@ -84,13 +81,6 @@ export class JsonApiBuilder extends HttpBuilder {
 
   setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs) {
     const routeInfo = routeMap[endpoint.method];
-    const orm = container.resolve(databaseInjectionToken) as MikroORM;
-    const repository = orm.em.getRepository(resourceMeta.options.entity) as EntityRepository<AnyEntity>;
-
-    if (!(repository instanceof JsonApiRepository<AnyEntity>)) {
-      throw new Error('Please inherit your repository with JsonApiRepository');
-    }
-
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorSerializer = container.resolve(ErrorSerializer);
 
@@ -98,11 +88,12 @@ export class JsonApiBuilder extends HttpBuilder {
       try {
         await next();
       } catch (e: any) {
+        console.log(e);
         const serialized = errorSerializer.serialize(e);
         ctx.status = 500;
         ctx.body = serialized;
         ctx.type = 'application/vnd.api+json';
       }
-    }, findAll(resource, repository));
+    }, findAll(resource));
   }
 }

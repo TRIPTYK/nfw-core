@@ -10,6 +10,9 @@ export class ArticleResource extends Resource<ArticleModel> {
   @Attribute()
   declare title: string;
 
+  @Attribute()
+  declare type: string;
+
   @Relationship({
     otherResource: 'UserResource'
   })

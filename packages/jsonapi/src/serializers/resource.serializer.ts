@@ -1,36 +1,36 @@
+import type { BaseEntity } from '@mikro-orm/core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
-import type { JsonApiModelInterface } from '../interfaces/model.interface.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { Resource } from '../resource/base.resource.js';
-import type { AttributesObject, JsonApiTopLevel, RelationshipsObject, ResourceObject } from './spec.interface.js';
+import type { JsonApiTopLevel, RelationshipsObject, ResourceObject } from './spec.interface.js';
 
-export class ResourceSerializer<T extends JsonApiModelInterface> {
-  public declare resource: ResourceMeta;
+export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
+  public declare resource: ResourceMeta<TModel, TResource>;
 
-  public serialize (resource: Resource<T> | Resource<T>[], context: JsonApiContext<T>): JsonApiTopLevel {
+  public serialize (resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>): JsonApiTopLevel {
     const included = new Map<string, any>();
     return {
       jsonapi: {
         version: '1.1'
       },
-      data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r, included)) : this.serializeDocument(resource, included),
+      data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included)) : this.serializeDocument(resource as any, included),
       included: Array.from(included.values())
     }
   }
 
-  protected serializeDocument (resource: Resource<unknown>, included: Map<string, any>): ResourceObject {
+  protected serializeDocument (resource: TResource, included: Map<string, any>): ResourceObject {
     const fetchableFields = resource.meta.attributes;
 
-    const attributes: AttributesObject = {};
+    const attributes = {} as Record<keyof TResource, any>;
 
     for (const field of fetchableFields) {
-      attributes[field.name] = resource[field.name as keyof Resource<unknown>];
+      attributes[field.name] = resource[field.name as keyof TResource];
     }
 
     const relationships: RelationshipsObject = {};
 
     for (const rel of resource.meta.relationships) {
-      const relation = resource[rel.name as keyof Resource<unknown>] as unknown as Resource<unknown> | Resource<unknown>[];
+      const relation = resource[rel.name as keyof typeof resource] as any;
 
       if (relation) {
         const ids = Array.isArray(relation) ? relation.map((e) => ({ type: rel.resource.name, id: e.id })) : { type: rel.resource.name, id: relation.id };

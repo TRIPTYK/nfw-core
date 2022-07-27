@@ -1,20 +1,16 @@
-/* eslint-disable new-cap */
-import type { AnyEntity, QueryOrderMap } from '@mikro-orm/core';
-import { EntityRepository } from '@mikro-orm/knex';
+import type { BaseEntity, EntityRepository, QueryOrderMap } from '@mikro-orm/core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { Include, QueryParser, Sort } from '../query-parser/query-parser.js';
 
-/**
- * The repository choose how use the data from the request with the database
- */
-export abstract class JsonApiRepository<T extends AnyEntity<T>> extends EntityRepository<T> {
-  declare meta: ResourceMeta;
+export class ResourceService<TModel extends BaseEntity<TModel, any>> {
+  public declare repository: EntityRepository<TModel>;
+  public declare resourceMeta: ResourceMeta<TModel>;
 
-  async jsonApiList (query: QueryParser, jsonApiContext: JsonApiContext<T>) {
+  public findAll (query: QueryParser<TModel>, jsonApiContext: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
-    const orderBy : QueryOrderMap<T> = {};
+    const orderBy : QueryOrderMap<TModel> = {};
 
     for (const include of query.includes.values()) {
       if (query.fields.has(jsonApiContext.resource.name)) {
@@ -30,7 +26,7 @@ export abstract class JsonApiRepository<T extends AnyEntity<T>> extends EntityRe
 
     const size = query.size ?? 20;
 
-    return this.find({} as any, {
+    return this.repository.find({} as any, {
       populate: populate as any,
       fields: fields as any,
       orderBy,
@@ -39,10 +35,7 @@ export abstract class JsonApiRepository<T extends AnyEntity<T>> extends EntityRe
     });
   }
 
-  /**
-   * Apply (nested) sort
-   */
-  protected applySort (sort: Sort, parentStructure: Record<string, any>) {
+  protected applySort (sort: Sort<TModel>, parentStructure: Record<string, any>) {
     for (const [key, value] of sort.attributes) {
       const sortOrder = value.direction === 'ASC' ? 1 : -1;
       parentStructure[key] = sortOrder;
@@ -57,14 +50,14 @@ export abstract class JsonApiRepository<T extends AnyEntity<T>> extends EntityRe
   /**
    * Re-map the query to FindOptions
    */
-  protected applyIncludes (populate: string[], fields: string[], queryFields: Map<string, AttributeMeta[]>, parentInclude: Include, parentsPath: string[]) {
+  protected applyIncludes (populate: string[], fields: string[], queryFields: Map<string, AttributeMeta<TModel>[]>, parentInclude: Include<any>, parentsPath: string[]) {
     const joinPath = parentsPath.length ? `${parentsPath?.join('.')}.${parentInclude.relationMeta.name}` : parentInclude.relationMeta.name;
 
     populate.push(joinPath);
 
     if (queryFields.has(parentInclude.relationMeta.resource.name)) {
       const attributes = queryFields.get(parentInclude.relationMeta.resource.name)!;
-      fields.push(...attributes.map((attr) => `${joinPath}.${attr.name}`));
+      fields.push(...attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
     } else {
       fields.push(`${joinPath}.*`)
     }

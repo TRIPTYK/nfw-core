@@ -1,41 +1,44 @@
-import type { AnyEntity, EntityClass, EntityProperty } from '@mikro-orm/core';
+import type { BaseEntity, EntityClass, EntityProperty } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { Class } from '@triptyk/nfw-core';
 import { inject, singleton } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
-import type { JsonApiModelInterface } from './interfaces/model.interface.js';
 import type { Resource } from './resource/base.resource.js';
 import { ResourceSerializer } from './serializers/resource.serializer.js';
+import { ResourceService } from './services/resource.service.js';
 import { MetadataStorage } from './storage/metadata-storage.js';
 
-export interface AttributeMeta {
-    name: string,
-    mikroMeta: EntityProperty,
-    resource: ResourceMeta,
+export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
+    name: keyof TResource,
+    mikroMeta: EntityProperty<TModel>,
+    resource: ResourceMeta<TModel, TResource>,
 }
 
-export interface RelationMeta {
-    resource: ResourceMeta,
-    mikroMeta: EntityProperty,
+export interface RelationMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
+    resource: ResourceMeta<TModel, TResource>,
+    mikroMeta: EntityProperty<TModel>,
     name :string,
 }
 
-export interface ResourceMeta {
-    resource: Class<Resource<unknown>>,
+export type ResourceModel<T extends Resource<any>> = T extends Resource<infer K> ? K : never;
+
+export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
+    resource: Class<Resource<TModel>>,
     /**
      * The name of the entity for JSON:API
      * Will be pluralized for endpoints
     */
     name: string,
-    mikroEntity: AnyEntity,
-    attributes: AttributeMeta[],
-    relationships: RelationMeta[],
-    serializer: ResourceSerializer<JsonApiModelInterface>,
+    mikroEntity: TModel,
+    attributes: AttributeMeta<TModel, TResource>[],
+    relationships: RelationMeta<TModel, TResource>[],
+    serializer: Class<ResourceSerializer<TModel>>,
+    service: Class<ResourceService<TModel>>,
 }
 
 @singleton()
 export class JsonApiRegistry {
-  public resources = new Map<Class<Resource<unknown>>, ResourceMeta>([]);
+  public resources = new Map<Class<Resource<any>>, ResourceMeta<any, any>>([]);
 
   constructor (@inject(databaseInjectionToken) private orm: MikroORM) {}
 
@@ -75,7 +78,7 @@ export class JsonApiRegistry {
 
       const resourceTargetPrototype = (resource.target as Class<unknown>).prototype;
 
-      const allowedAttributes: AttributeMeta[] = MetadataStorage.instance.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
+      const allowedAttributes: AttributeMeta<any, any>[] = MetadataStorage.instance.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
         const mikroMeta = Object.values(mikroEntity.properties).find((p) => p.name === e.propertyName);
         if (!mikroMeta) throw new Error('Cannot find meta for property ' + e.propertyName);
         return {
@@ -84,7 +87,7 @@ export class JsonApiRegistry {
           resource: resourceRef
         }
       });
-      const allowedRelations : RelationMeta[] = MetadataStorage.instance.getAllowedRelationshipsFor(resourceTargetPrototype)
+      const allowedRelations : RelationMeta<any, any>[] = MetadataStorage.instance.getAllowedRelationshipsFor(resourceTargetPrototype)
         .map((e) => {
           const resource = this.getResourceByClassName(e.options.otherResource);
           const mikroMeta = mikroEntity.relations.find((r) => r.name === e.propertyName);
@@ -96,20 +99,18 @@ export class JsonApiRegistry {
           }
         })
 
-      const serializer = new ResourceSerializer();
-
       resourceRef.mikroEntity = mikroEntity;
       resourceRef.name = resource.options.entityName;
       resourceRef.attributes = allowedAttributes;
       resourceRef.relationships = allowedRelations;
-      resourceRef.serializer = serializer;
+      resourceRef.serializer = ResourceSerializer;
+      resourceRef.service = ResourceService;
       resourceRef.resource = resource.target
 
       Object.defineProperty(repository, 'meta', {
         value: resourceRef,
         writable: false
       });
-      serializer.resource = resourceRef;
 
       Object.freeze(resourceRef);
     }

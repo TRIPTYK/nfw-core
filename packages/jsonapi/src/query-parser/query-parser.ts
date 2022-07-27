@@ -1,20 +1,20 @@
+import type { BaseEntity } from '@mikro-orm/core';
 import { container, injectable } from '@triptyk/nfw-core';
-import pluralize from 'pluralize';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 
-export interface Sort {
+export interface Sort<TModel extends BaseEntity<TModel, any>> {
   attributes: Map<string, {
-    meta: AttributeMeta,
+    meta: AttributeMeta<any>,
     direction: 'ASC' | 'DESC',
   }>,
-  nested: Map<string, Sort>,
+  nested: Map<string, Sort<any>>,
 }
 
-export interface Include {
-  relationMeta: RelationMeta,
-  includes: Map<string, Include>,
+export interface Include<TModel extends BaseEntity<TModel, any>> {
+  relationMeta: RelationMeta<any>,
+  includes: Map<string, Include<any>>,
 }
 
 export interface RawQuery {
@@ -29,11 +29,11 @@ export interface RawQuery {
 }
 
 @injectable()
-export class QueryParser {
-  public declare context: JsonApiContext<unknown>;
-  public fields: Map<string, AttributeMeta[]> = new Map();
-  public includes: Map<string, Include> = new Map();
-  public sort: Sort = {
+export class QueryParser<TModel extends BaseEntity<TModel, any>> {
+  public declare context: JsonApiContext<TModel>;
+  public fields: Map<string, AttributeMeta<any>[]> = new Map();
+  public includes: Map<string, Include<any>> = new Map();
+  public sort: Sort<any> = {
     attributes: new Map(),
     nested: new Map()
   }
@@ -45,11 +45,6 @@ export class QueryParser {
     const registry = container.resolve(JsonApiRegistry);
     this.page = query.page ? parseInt(query.page) : undefined;
     this.size = query.size ? parseInt(query.size) : undefined;
-
-    /**
-     *
-     */
-    const rootEntityName = pluralize(this.context.resource.name);
 
     /**
      * Allowed fields for resources types
@@ -86,7 +81,7 @@ export class QueryParser {
 
   parseInclude (
     relations: string[],
-    parentInclude: Map<string, Include> | Include
+    parentInclude: Map<string, Include<any>> | Include<any>
   ) {
     for (const relation of relations) {
       const splitted = relation.split('.');
@@ -123,8 +118,8 @@ export class QueryParser {
 
   parseSort (
     sort: string,
-    parentSort: Sort,
-    parentResource: ResourceMeta,
+    parentSort: Sort<any>,
+    parentResource: ResourceMeta<TModel>,
     direction: 'ASC'| 'DESC'
   ) {
     const splitted = sort.split('.');
@@ -145,7 +140,7 @@ export class QueryParser {
       return;
     }
 
-    const newParent: Sort = {
+    const newParent: Sort<any> = {
       attributes: new Map(),
       nested: new Map()
     };
