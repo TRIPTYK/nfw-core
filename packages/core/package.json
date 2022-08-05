@@ -31,15 +31,15 @@
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
     "@types/http-errors": "^1.8.2",
-    "@types/koa": "^2.13.4",
+    "@types/koa": "^2.13.5",
     "@types/koa__router": "^8.0.11",
-    "@types/node": "16",
+    "@types/node": "^18.6.3",
     "koa": "^2.13.4",
-    "node-fetch": "^3.2.5",
-    "typescript": "~4.7.3"
+    "node-fetch": "^3.2.10",
+    "typescript": "~4.7.4"
   },
   "dependencies": {
-    "@koa/router": "^10.1.1",
+    "@koa/router": "^12.0.0",
     "http-errors": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0"

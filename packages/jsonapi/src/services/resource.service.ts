@@ -1,24 +1,30 @@
-import type { BaseEntity, EntityRepository, QueryOrderMap } from '@mikro-orm/core';
+import { MikroORM } from '@mikro-orm/core';
+import type { BaseEntity, QueryOrderMap } from '@mikro-orm/core';
+import { inject, injectable } from '@triptyk/nfw-core';
+import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { Include, QueryParser, Sort } from '../query-parser/query-parser.js';
 
+@injectable()
 export class ResourceService<TModel extends BaseEntity<TModel, any>> {
-  public declare repository: EntityRepository<TModel>;
   public declare resourceMeta: ResourceMeta<TModel>;
+
+  constructor (@inject(databaseInjectionToken) private orm: MikroORM) {}
 
   public findAll (query: QueryParser<TModel>, jsonApiContext: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
+    if (query.fields.has(jsonApiContext.resource.name)) {
+      const attributes = query.fields.get(jsonApiContext.resource.name)!;
+      fields.push(...attributes.map((attr) => attr.name));
+    } else {
+      fields.push(...this.resourceMeta.attributes.map((a) => a.name));
+    }
+
     for (const include of query.includes.values()) {
-      if (query.fields.has(jsonApiContext.resource.name)) {
-        const attributes = query.fields.get(jsonApiContext.resource.name)!;
-        fields.push(...attributes.map((attr) => attr.name));
-      } else {
-        fields.push('*');
-      }
       this.applyIncludes(populate, fields, query.fields, include, [])
     }
 
@@ -26,7 +32,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
 
     const size = query.size ?? 20;
 
-    return this.repository.find({} as any, {
+    return this.orm.em.getRepository(this.resourceMeta.mikroEntity as any).find({} as any, {
       populate: populate as any,
       fields: fields as any,
       orderBy,
@@ -59,7 +65,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       const attributes = queryFields.get(parentInclude.relationMeta.resource.name)!;
       fields.push(...attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
     } else {
-      fields.push(`${joinPath}.*`)
+      fields.push(...parentInclude.relationMeta.resource.attributes.map((attr) => `${joinPath}.${attr.name.toString()}`))
     }
 
     parentsPath.push(parentInclude.relationMeta.name);

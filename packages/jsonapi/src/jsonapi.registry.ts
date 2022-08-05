@@ -1,7 +1,7 @@
 import type { BaseEntity, EntityClass, EntityProperty } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { Class } from '@triptyk/nfw-core';
-import { inject, singleton } from '@triptyk/nfw-core';
+import { instanceCachingFactory, container, inject, singleton } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import type { Resource } from './resource/base.resource.js';
 import { ResourceSerializer } from './serializers/resource.serializer.js';
@@ -32,8 +32,6 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
     mikroEntity: TModel,
     attributes: AttributeMeta<TModel, TResource>[],
     relationships: RelationMeta<TModel, TResource>[],
-    serializer: Class<ResourceSerializer<TModel>>,
-    service: Class<ResourceService<TModel>>,
 }
 
 @singleton()
@@ -73,9 +71,6 @@ export class JsonApiRegistry {
       if (!mikroEntity) {
         throw new Error(`Entity data ${entityName} not found, is it registered in mikro-orm ?`);
       }
-
-      const repository = this.orm.em.getRepository(mikroEntity.class);
-
       const resourceTargetPrototype = (resource.target as Class<unknown>).prototype;
 
       const allowedAttributes: AttributeMeta<any, any>[] = MetadataStorage.instance.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
@@ -97,20 +92,39 @@ export class JsonApiRegistry {
             resource,
             name: e.propertyName
           }
+        });
+
+      // register service
+      container.register(`service:${resource.options.entityName}`, {
+        useFactory: instanceCachingFactory(c => {
+          const instance = c.resolve(resource.options.service ?? ResourceService);
+          instance.resourceMeta = resourceRef;
+          return instance;
         })
+      });
+
+      // register serializer
+      container.register(`serializer:${resource.options.entityName}`, {
+        useFactory: instanceCachingFactory(c => {
+          const instance = c.resolve(resource.options.serializer ?? ResourceSerializer);
+          instance.resource = resourceRef;
+          return instance;
+        })
+      });
+
+      // register repository
+      container.register(`repository:${resource.options.entityName}`, {
+        /**
+         * Mikro Orm repository should behave like a scoped singleton
+         */
+        useFactory: () => this.orm.em.getRepository(mikroEntity.class)
+      });
 
       resourceRef.mikroEntity = mikroEntity;
       resourceRef.name = resource.options.entityName;
       resourceRef.attributes = allowedAttributes;
       resourceRef.relationships = allowedRelations;
-      resourceRef.serializer = ResourceSerializer;
-      resourceRef.service = ResourceService;
       resourceRef.resource = resource.target
-
-      Object.defineProperty(repository, 'meta', {
-        value: resourceRef,
-        writable: false
-      });
 
       Object.freeze(resourceRef);
     }

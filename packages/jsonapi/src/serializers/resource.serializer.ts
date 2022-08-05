@@ -1,9 +1,11 @@
 import type { BaseEntity } from '@mikro-orm/core';
+import { injectable } from '@triptyk/nfw-core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { Resource } from '../resource/base.resource.js';
 import type { JsonApiTopLevel, RelationshipsObject, ResourceObject } from './spec.interface.js';
 
+@injectable()
 export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
   public declare resource: ResourceMeta<TModel, TResource>;
 

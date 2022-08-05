@@ -12,26 +12,33 @@ import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { findAll } from './methods/find-all.method.js';
 import { ErrorSerializer } from '../serializers/error.serializer.js';
 
-export const routeMap: Record<JsonApiMethod, { routeName: string; method: HttpMethod }> = {
+export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
+
+export const routeMap: Record<JsonApiMethod, RouteInfo> = {
   [JsonApiMethod.GET]: {
     routeName: '/:id',
-    method: HttpMethod.GET
+    method: HttpMethod.GET,
+    function: findAll
   },
   [JsonApiMethod.LIST]: {
     routeName: '/',
-    method: HttpMethod.GET
+    method: HttpMethod.GET,
+    function: findAll
   },
   [JsonApiMethod.CREATE]: {
     routeName: '/',
-    method: HttpMethod.POST
+    method: HttpMethod.POST,
+    function: findAll
   },
   [JsonApiMethod.DELETE]: {
     routeName: '/:id',
-    method: HttpMethod.DELETE
+    method: HttpMethod.DELETE,
+    function: findAll
   },
   [JsonApiMethod.UPDATE]: {
     routeName: '/:id',
-    method: HttpMethod.PATCH
+    method: HttpMethod.PATCH,
+    function: findAll
   }
 }
 
@@ -88,12 +95,11 @@ export class JsonApiBuilder extends HttpBuilder {
       try {
         await next();
       } catch (e: any) {
-        console.log(e);
         const serialized = errorSerializer.serialize(e);
         ctx.status = 500;
         ctx.body = serialized;
         ctx.type = 'application/vnd.api+json';
       }
-    }, findAll(resource));
+    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo));
   }
 }
