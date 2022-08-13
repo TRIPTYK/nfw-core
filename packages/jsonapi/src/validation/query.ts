@@ -2,13 +2,24 @@ import {
   Schema,
   String,
   Custom,
-  Field
+  Field,
+  Number,
+  Nested
 } from 'fastest-validator-decorators';
+
+@Schema(true)
+export class PageQuery {
+  @Number()
+  declare number: number;
+
+  @Number()
+  declare size: number;
+}
 
 @Schema(true)
 export class JsonApiQueryValidation {
     @String({ optional: true })
-  declare include: string;
+  declare include?: string;
 
   @Custom({
     optional: true,
@@ -29,11 +40,14 @@ export class JsonApiQueryValidation {
       return value;
     }
   })
-    declare fields: Record<string, string>;
+    declare fields?: Record<string, string>;
 
   @Field({ optional: true, type: 'object' })
-  declare filter: Record<string, unknown>;
+  declare filter?: Record<string, unknown>;
+
+  @Nested({ optional: true })
+  declare page?: PageQuery;
 
   @String({ optional: true })
-  declare sort: string;
+  declare sort?: string;
 }

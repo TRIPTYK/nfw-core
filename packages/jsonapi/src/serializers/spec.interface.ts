@@ -19,10 +19,10 @@ export interface ErrorObject {
 
 export type CompoundDocuments = ResourceObject[];
 
-export type LinksObject<Keys extends string> = Record<
+export type LinksObject<Keys extends string> = Partial<Record<
   Keys,
   string | LinkObject | null
->;
+>>;
 
 export interface ResourceIdentifierObject {
   type: string,

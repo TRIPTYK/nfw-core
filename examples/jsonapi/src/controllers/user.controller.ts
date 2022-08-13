@@ -1,5 +1,4 @@
-import { JsonApiController, JsonApiGet, JsonApiList, ServiceResponse } from '@triptyk/nfw-jsonapi';
-import type { UserModel } from '../models/user.model.js';
+import { JsonApiController, JsonApiGet, JsonApiList } from '@triptyk/nfw-jsonapi';
 import { UserResource } from '../resources/user.resource.js';
 
 /**
@@ -18,12 +17,8 @@ import { UserResource } from '../resources/user.resource.js';
 @JsonApiController(UserResource)
 export class UserController {
   @JsonApiList()
-  async list (@ServiceResponse() serviceResponse: UserModel[]) {
-    return serviceResponse;
-  }
+  async list () {}
 
   @JsonApiGet()
-  async get () {
-    return [];
-  }
+  async get () {}
 }

@@ -17,7 +17,9 @@ async function main () {
     debug: true
   });
 
-  await container.resolve(JsonApiRegistry).init();
+  await container.resolve(JsonApiRegistry).init({
+    apiPath: 'api/v1'
+  });
   await mikro.getSchemaGenerator().updateSchema();
 
   const em = mikro.em.fork();

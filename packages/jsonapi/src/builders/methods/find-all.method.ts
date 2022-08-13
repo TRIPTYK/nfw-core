@@ -22,18 +22,20 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
   const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
 
   return async (ctx: RouterContext) => {
+    const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
+
     /**
      * Specific request context
      */
     const jsonApiContext = {
       resource,
-      koaContext: ctx
+      koaContext: ctx,
+      query: parser
     } as JsonApiContext<TModel>;
 
     /**
      * Resolve instance
      */
-    const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
 
     /**
      * Validate content type negociation
@@ -56,7 +58,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the service method
      */
-    const all = await service.findAll(parser);
+    const [all, count] = await service.findAll(parser);
 
     const evaluatedParams = routeParams.map((rp) => {
       if (rp.decoratorName === 'koa-context') {
@@ -79,7 +81,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
      */
     const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
-    if (!Array.isArray(res)) {
+    if (res && !Array.isArray(res)) {
       throw new Error('findAll must return an array !');
     }
 
@@ -91,7 +93,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext);
+    const serialized = serializer.serialize(asResource, jsonApiContext, count);
     ctx.body = serialized;
     ctx.type = 'application/vnd.api+json';
   }

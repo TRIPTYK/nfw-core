@@ -36,7 +36,10 @@ export interface RawQuery {
   fields?: Record<string, string>,
   filter?: Record<string, unknown>,
   sort?: string,
-  page?: string,
+  page?: {
+    size: string,
+    number: string,
+  },
   size?: string,
   // may contains unknown members
   [key: string]: unknown,
@@ -72,8 +75,9 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
 
   public parse (query: RawQuery): Promise<void> | void {
     const registry = container.resolve(JsonApiRegistry);
-    this.page = query.page ? parseInt(query.page) : undefined;
-    this.size = query.size ? parseInt(query.size) : undefined;
+
+    this.page = query.page?.number ? query.page.number as unknown as number : undefined;
+    this.size = query.page?.size ? query.page.size as unknown as number : undefined;
 
     /**
      * Allowed fields for resources types

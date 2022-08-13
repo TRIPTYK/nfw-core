@@ -31,7 +31,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
 
     const size = query.size ?? 20;
 
-    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).find(
+    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findAndCount(
       this.applyFilter(query.filters), {
         populate: populate as any,
         fields: fields as any,

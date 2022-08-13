@@ -41,6 +41,7 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
 @singleton()
 export class JsonApiRegistry {
   public resources = new Map<Class<Resource<any>>, ResourceMeta<any, any>>([]);
+  public declare apiPath: string;
 
   constructor (@inject(databaseInjectionToken) private orm: MikroORM) {}
 
@@ -62,7 +63,13 @@ export class JsonApiRegistry {
     return undefined;
   }
 
-  public init () {
+  public init ({
+    apiPath
+  } : {
+    apiPath: string,
+  }) {
+    this.apiPath = apiPath;
+
     for (const resource of MetadataStorage.instance.resources) {
       this.resources.set(resource.target, {} as any);
     }

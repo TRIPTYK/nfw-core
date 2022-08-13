@@ -8,12 +8,13 @@ import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import type { ResourceSerializer } from '../../serializers/resource.serializer.js';
 import type { ResourceService } from '../../services/resource.service.js';
+import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/controller-params.metadata.js';
 import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 
-export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo) {
+export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[]) {
   /**
    * Resolve before call, they should be singletons
    */
@@ -61,15 +62,32 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
       throw new Error('Not found');
     }
 
-    /**
-     * Transform the result from the service
-     */
-    const asResource = createResourceFrom(one.toJSON(), resource);
+    const evaluatedParams = routeParams.map((rp) => {
+      if (rp.decoratorName === 'koa-context') {
+        return ctx;
+      }
+
+      if (rp.decoratorName === 'jsonapi-context') {
+        return jsonApiContext;
+      }
+
+      if (rp.decoratorName === 'service-response') {
+        return one;
+      }
+
+      throw new Error(`Unknown decorator ${rp.decoratorName}`);
+    });
 
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance);
+    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+
+    if (res && !(res instanceof resource.mikroEntity.class)) {
+      throw new Error('findOne must return an instance of entity !');
+    }
+
+    const asResource = createResourceFrom((res || one).toJSON(), resource);
 
     /**
      * Serialize result and res to client
