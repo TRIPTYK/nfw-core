@@ -1,10 +1,13 @@
 import { BaseEntity, Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { UserModel } from './user.model.js';
+import { v4 } from 'uuid';
 
 @Entity()
 export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
-    @PrimaryKey()
-  declare id : string;
+    @PrimaryKey({
+      type: 'uuid'
+    })
+      id : string = v4();
 
     @Property()
     declare title : string;

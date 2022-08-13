@@ -48,8 +48,10 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       });
   }
 
-  public async createOne (resource: Resource<TModel>, { query }: JsonApiContext<TModel>) {
-    const entity = this.repository.create({} as any);
+  public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
+    const entity = this.repository.create(resource.toMikroPojo());
+    await this.repository.persistAndFlush(entity);
+
     return entity;
   }
 

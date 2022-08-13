@@ -88,7 +88,7 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
       throw new Error('findOne must return an instance of entity !');
     }
 
-    const asResource = createResourceFrom((res || one).toJSON(), resource);
+    const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
 
     /**
      * Serialize result and res to client

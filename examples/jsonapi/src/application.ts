@@ -19,7 +19,7 @@ async function main () {
   });
 
   await container.resolve(JsonApiRegistry).init({
-    apiPath: 'api/v1'
+    apiPath: '/api/v1'
   });
   await mikro.getSchemaGenerator().updateSchema();
 

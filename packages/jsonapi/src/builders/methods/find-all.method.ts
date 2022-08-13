@@ -89,7 +89,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Transform the result from the service
      */
-    const asResource = (res || all).map((e: any) => createResourceFrom(e.toJSON(), resource));
+    const asResource = (res || all).map((e: any) => createResourceFrom(e.toJSON(), resource, jsonApiContext));
 
     /**
      * Serialize result and res to client
