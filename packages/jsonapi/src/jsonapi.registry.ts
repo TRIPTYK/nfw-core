@@ -1,5 +1,6 @@
 import type { BaseEntity, EntityClass, EntityProperty } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
+import type { EntityMetadata, OperatorMap } from '@mikro-orm/core/typings.js';
 import type { Class } from '@triptyk/nfw-core';
 import { instanceCachingFactory, container, inject, singleton } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
@@ -12,6 +13,9 @@ export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource
     name: keyof TResource,
     mikroMeta: EntityProperty<TModel>,
     resource: ResourceMeta<TModel, TResource>,
+    isFetchable: boolean,
+    allowedSortDirections: ('ASC' | 'DESC')[],
+    allowedFilters: false | Partial<Record<keyof OperatorMap<TModel>, unknown>>,
 }
 
 export interface RelationMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
@@ -29,7 +33,7 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
      * Will be pluralized for endpoints
     */
     name: string,
-    mikroEntity: TModel,
+    mikroEntity: EntityMetadata<TModel>,
     attributes: AttributeMeta<TModel, TResource>[],
     relationships: RelationMeta<TModel, TResource>[],
 }
@@ -76,12 +80,27 @@ export class JsonApiRegistry {
       const allowedAttributes: AttributeMeta<any, any>[] = MetadataStorage.instance.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
         const mikroMeta = Object.values(mikroEntity.properties).find((p) => p.name === e.propertyName);
         if (!mikroMeta) throw new Error('Cannot find meta for property ' + e.propertyName);
+
+        let sortable = e.options?.sortable ?? [];
+
+        if (sortable === true) {
+          sortable = ['ASC', 'DESC'];
+        }
+
+        if (sortable === false) {
+          sortable = [];
+        }
+
         return {
           mikroMeta,
           name: e.propertyName,
-          resource: resourceRef
+          resource: resourceRef,
+          allowedFilters: e.options?.filterable ?? {},
+          isFetchable: e.options?.fetchable ?? true,
+          allowedSortDirections: sortable as ('ASC' | 'DESC')[]
         }
       });
+
       const allowedRelations : RelationMeta<any, any>[] = MetadataStorage.instance.getAllowedRelationshipsFor(resourceTargetPrototype)
         .map((e) => {
           const resource = this.getResourceByClassName(e.options.otherResource);

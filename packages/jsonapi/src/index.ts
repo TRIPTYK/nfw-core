@@ -3,7 +3,11 @@ export * from './resource/base.resource.js';
 export * from './decorators/attribute.decorator.js';
 export * from './decorators/resource.decorator.js';
 export * from './decorators/relationship.decorator.js';
+
 export * from './builders/jsonapi.builder.js';
+
+export * from './decorators/parameters/context.decorator.js';
+export * from './decorators/parameters/ctx.decorator.js';
 
 export * from './decorators/jsonapi-controller.decorator.js';
 

@@ -1,7 +1,7 @@
 import type { BaseEntity } from '@mikro-orm/core';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 
-export class Resource<T extends BaseEntity<T, any>> {
+export abstract class Resource<T extends BaseEntity<T, any>> {
   /**
    * The meta linked with the resource
    */
@@ -9,5 +9,5 @@ export class Resource<T extends BaseEntity<T, any>> {
   /**
  * The identifier key will always be 'id' in this framework
  */
-  declare id: string;
+  abstract id: string;
 }

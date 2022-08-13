@@ -19,12 +19,17 @@ export function JsonApiGet (options?: JsonApiGetOptions) {
   }
 }
 
-export function JsonApiList () {
+export interface JsonApiListOptions {
+  queryParser: Class< QueryParser<any>>,
+}
+
+export function JsonApiList (options?: JsonApiListOptions) {
   return function (target: unknown, propertyName: string) {
     MetadataStorage.instance.endpoints.push({
       target,
       propertyName,
-      method: JsonApiMethod.LIST
+      method: JsonApiMethod.LIST,
+      queryParser: options?.queryParser
     });
   }
 }

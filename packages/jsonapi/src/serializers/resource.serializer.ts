@@ -16,7 +16,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
         version: '1.1'
       },
       data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included)) : this.serializeDocument(resource as any, included),
-      included: Array.from(included.values())
+      included: included.size > 0 ? Array.from(included.values()) : undefined
     }
   }
 

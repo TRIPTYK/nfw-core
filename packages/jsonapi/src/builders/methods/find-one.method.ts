@@ -13,7 +13,7 @@ import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 
-export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo) {
+export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo) {
   /**
    * Resolve before call, they should be singletons
    */
@@ -55,12 +55,16 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the service method
      */
-    const all = await service.findAll(parser);
+    const one = await service.findOne(parser);
+
+    if (!one) {
+      throw new Error('Not found');
+    }
 
     /**
      * Transform the result from the service
      */
-    const asResource = all.map((e: any) => createResourceFrom(e.toJSON(), resource));
+    const asResource = createResourceFrom(one.toJSON(), resource);
 
     /**
      * Call the controller's method

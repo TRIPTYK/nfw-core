@@ -11,6 +11,7 @@ import type { ResourceMetadataArgs } from '../storage/metadata/resource.metadata
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { findAll } from './methods/find-all.method.js';
 import { ErrorSerializer } from '../serializers/error.serializer.js';
+import { findOne } from './methods/find-one.method.js';
 
 export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
 
@@ -18,7 +19,7 @@ export const routeMap: Record<JsonApiMethod, RouteInfo> = {
   [JsonApiMethod.GET]: {
     routeName: '/:id',
     method: HttpMethod.GET,
-    function: findAll
+    function: findOne
   },
   [JsonApiMethod.LIST]: {
     routeName: '/',
@@ -91,10 +92,17 @@ export class JsonApiBuilder extends HttpBuilder {
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorSerializer = container.resolve(ErrorSerializer);
 
+    const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
+
+    const evaluatedEndpoints = routeParams.map((rp) => {
+
+    })
+
     router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {
         await next();
       } catch (e: any) {
+        console.log(e);
         const serialized = errorSerializer.serialize(e);
         ctx.status = 500;
         ctx.body = serialized;

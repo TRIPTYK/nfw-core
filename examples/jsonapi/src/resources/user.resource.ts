@@ -8,6 +8,12 @@ import type { ArticleResource } from './article.resource.js';
   entityName: 'users'
 })
 export class UserResource extends Resource<UserModel> {
+  @Attribute({
+    filterable: false,
+    sortable: ['ASC']
+  })
+  declare id: string;
+
   @Attribute()
   declare username: string;
 
