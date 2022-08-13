@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import createApplication, { container } from '@triptyk/nfw-core';
 import Koa from 'koa';
+import body from 'koa-body';
 import { Area } from './area.js';
 import { init } from '@triptyk/nfw-mikro-orm';
 import { UserModel } from './models/user.model.js';
@@ -55,11 +56,16 @@ async function main () {
 
   em.persistAndFlush([user, seb]);
 
+  const server = new Koa();
+  server.use(body({
+    json: true
+  }));
+
   /**
    * Create the app
    */
   const koaApp = await createApplication({
-    server: new Koa(),
+    server,
     controllers: [Area]
   });
 

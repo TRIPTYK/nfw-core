@@ -1,4 +1,4 @@
-import { JsonApiController, JsonApiGet, JsonApiList } from '@triptyk/nfw-jsonapi';
+import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate } from '@triptyk/nfw-jsonapi';
 import { UserResource } from '../resources/user.resource.js';
 
 /**
@@ -21,4 +21,7 @@ export class UserController {
 
   @JsonApiGet()
   async get () {}
+
+  @JsonApiCreate()
+  async create () {}
 }

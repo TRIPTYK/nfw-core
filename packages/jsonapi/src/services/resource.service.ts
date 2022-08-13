@@ -3,64 +3,76 @@ import type { BaseEntity, QueryOrderMap, ObjectQuery } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
-import type { Filter, Include, QueryParser, Sort } from '../query-parser/query-parser.js';
+import type { Filter, Include, Sort } from '../query-parser/query-parser.js';
+import type { JsonApiContext } from '../interfaces/json-api-context.js';
+import type { Resource } from '../resource/base.resource.js';
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<TModel, any>> {
   public declare resourceMeta: ResourceMeta<TModel>;
 
-  constructor (@inject(databaseInjectionToken) private orm: MikroORM) {}
+  get repository () {
+    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
+  }
 
-  public findAll (query: QueryParser<TModel>) {
+  constructor (@inject(databaseInjectionToken) private orm: MikroORM) {
+  }
+
+  public findAll ({ query }: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    if (query.fields.has(this.resourceMeta.name)) {
-      const attributes = query.fields.get(this.resourceMeta.name)!;
+    if (query!.fields.has(this.resourceMeta.name)) {
+      const attributes = query!.fields.get(this.resourceMeta.name)!;
       fields.push(...attributes.map((attr) => attr.name));
     } else {
       fields.push(...this.resourceMeta.attributes.map((a) => a.name));
     }
 
-    for (const include of query.includes.values()) {
-      this.applyIncludes(populate, fields, query.fields, include, [])
+    for (const include of query!.includes.values()) {
+      this.applyIncludes(populate, fields, query!.fields, include, [])
     }
 
-    this.applySort(query.sort, orderBy);
+    this.applySort(query!.sort, orderBy);
 
-    const size = query.size ?? 20;
+    const size = query!.size ?? 20;
 
-    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findAndCount(
-      this.applyFilter(query.filters), {
+    return this.repository.findAndCount(
+      this.applyFilter(query!.filters), {
         populate: populate as any,
         fields: fields as any,
         orderBy,
         limit: size,
-        offset: query.page ? (query.page * size) - 1 : undefined
+        offset: query!.page ? (query!.page * size) - 1 : undefined
       });
   }
 
-  public findOne (query: QueryParser<TModel>) {
+  public async createOne (resource: Resource<TModel>, { query }: JsonApiContext<TModel>) {
+    const entity = this.repository.create({} as any);
+    return entity;
+  }
+
+  public findOne ({ query }: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    if (query.fields.has(this.resourceMeta.name)) {
-      const attributes = query.fields.get(this.resourceMeta.name)!;
+    if (query!.fields.has(this.resourceMeta.name)) {
+      const attributes = query!.fields.get(this.resourceMeta.name)!;
       fields.push(...attributes.map((attr) => attr.name));
     } else {
       fields.push(...this.resourceMeta.attributes.map((a) => a.name));
     }
 
-    for (const include of query.includes.values()) {
-      this.applyIncludes(populate, fields, query.fields, include, [])
+    for (const include of query!.includes.values()) {
+      this.applyIncludes(populate, fields, query!.fields, include, [])
     }
 
-    this.applySort(query.sort, orderBy);
+    this.applySort(query!.sort, orderBy);
 
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
-      { id: query.context.koaContext.params.id, ...this.applyFilter(query.filters) }, {
+      { id: query!.context.koaContext.params.id, ...this.applyFilter(query!.filters) }, {
         populate: populate as any,
         fields: fields as any,
         orderBy

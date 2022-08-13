@@ -15,3 +15,4 @@ export * from './decorators/jsonapi-controller.decorator.js';
 export * from './decorators/jsonapi-endpoints.decorator.js';
 
 export * from './jsonapi.registry.js';
+export * from 'fastest-validator-decorators';

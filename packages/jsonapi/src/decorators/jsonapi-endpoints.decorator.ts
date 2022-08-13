@@ -19,6 +19,17 @@ export function JsonApiGet (options?: JsonApiGetOptions) {
   }
 }
 
+export function JsonApiCreate (options?: JsonApiGetOptions) {
+  return function (target: unknown, propertyName: string) {
+    MetadataStorage.instance.endpoints.push({
+      target,
+      propertyName,
+      method: JsonApiMethod.CREATE,
+      queryParser: options?.queryParser
+    });
+  }
+}
+
 export interface JsonApiListOptions {
   queryParser: Class< QueryParser<any>>,
 }

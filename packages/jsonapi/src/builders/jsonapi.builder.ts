@@ -12,6 +12,7 @@ import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { findAll } from './methods/find-all.method.js';
 import { ErrorSerializer } from '../serializers/error.serializer.js';
 import { findOne } from './methods/find-one.method.js';
+import { createOne } from './methods/create-one.js';
 
 export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
 
@@ -29,7 +30,7 @@ export const routeMap: Record<JsonApiMethod, RouteInfo> = {
   [JsonApiMethod.CREATE]: {
     routeName: '/',
     method: HttpMethod.POST,
-    function: findAll
+    function: createOne
   },
   [JsonApiMethod.DELETE]: {
     routeName: '/:id',

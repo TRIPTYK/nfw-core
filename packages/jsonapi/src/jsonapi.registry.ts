@@ -4,6 +4,7 @@ import type { EntityMetadata, OperatorMap } from '@mikro-orm/core/typings.js';
 import type { Class } from '@triptyk/nfw-core';
 import { instanceCachingFactory, container, inject, singleton } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
+import { ResourceDeserializer } from './deserializers/resource.deserializer.js';
 import type { Resource } from './resource/base.resource.js';
 import { ResourceSerializer } from './serializers/resource.serializer.js';
 import { ResourceService } from './services/resource.service.js';
@@ -15,6 +16,8 @@ export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource
     resource: ResourceMeta<TModel, TResource>,
     isFetchable: boolean,
     allowedSortDirections: ('ASC' | 'DESC')[],
+    updateable: boolean,
+    createable: boolean,
     allowedFilters: false | Partial<Record<keyof OperatorMap<TModel>, unknown>>,
 }
 
@@ -102,6 +105,8 @@ export class JsonApiRegistry {
           mikroMeta,
           name: e.propertyName,
           resource: resourceRef,
+          updateable: e.options?.updateable ?? true,
+          createable: e.options?.createable ?? true,
           allowedFilters: e.options?.filterable ?? {},
           isFetchable: e.options?.fetchable ?? true,
           allowedSortDirections: sortable as ('ASC' | 'DESC')[]
@@ -133,6 +138,15 @@ export class JsonApiRegistry {
       container.register(`serializer:${resource.options.entityName}`, {
         useFactory: instanceCachingFactory(c => {
           const instance = c.resolve(resource.options.serializer ?? ResourceSerializer);
+          instance.resource = resourceRef;
+          return instance;
+        })
+      });
+
+      // register deserializer
+      container.register(`deserializer:${resource.options.entityName}`, {
+        useFactory: instanceCachingFactory(c => {
+          const instance = c.resolve(resource.options.deserializer ?? ResourceDeserializer);
           instance.resource = resourceRef;
           return instance;
         })

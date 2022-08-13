@@ -27,6 +27,7 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
      */
     const jsonApiContext = {
       resource,
+      method: endpointsMeta.method,
       koaContext: ctx
     } as JsonApiContext<TModel>;
 
@@ -56,7 +57,7 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the service method
      */
-    const one = await service.findOne(parser);
+    const one = await service.findOne(jsonApiContext);
 
     if (!one) {
       throw new Error('Not found');
