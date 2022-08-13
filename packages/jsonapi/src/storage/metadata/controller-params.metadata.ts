@@ -1,5 +1,5 @@
 export interface ControllerActionParamsMetadataArgs {
-    decoratorName: string,
+    decoratorName: 'koa-context' | 'jsonapi-context' | 'service-response',
     target: any,
     propertyName: string,
     index: number,

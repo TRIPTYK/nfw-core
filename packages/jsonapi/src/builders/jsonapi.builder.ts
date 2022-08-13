@@ -94,10 +94,6 @@ export class JsonApiBuilder extends HttpBuilder {
 
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
 
-    const evaluatedEndpoints = routeParams.map((rp) => {
-
-    })
-
     router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {
         await next();
@@ -108,6 +104,6 @@ export class JsonApiBuilder extends HttpBuilder {
         ctx.body = serialized;
         ctx.type = 'application/vnd.api+json';
       }
-    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo));
+    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams));
   }
 }

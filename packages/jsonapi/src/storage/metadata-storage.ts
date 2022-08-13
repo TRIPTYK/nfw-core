@@ -33,7 +33,7 @@ export class MetadataStorage {
   }
 
   public getParamsFor (resource: unknown) {
-    return this.useParams.filter((e) => e.target === resource);
+    return this.useParams.filter((e) => e.target === resource).sort((a, b) => a.index - b.index);
   }
 
   /**

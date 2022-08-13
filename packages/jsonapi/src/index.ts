@@ -8,6 +8,7 @@ export * from './builders/jsonapi.builder.js';
 
 export * from './decorators/parameters/context.decorator.js';
 export * from './decorators/parameters/ctx.decorator.js';
+export * from './decorators/parameters/service-response.decorator.js';
 
 export * from './decorators/jsonapi-controller.decorator.js';
 
