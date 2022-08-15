@@ -1,11 +1,8 @@
 import type { BaseEntity } from '@mikro-orm/core';
 import { container, injectable } from '@triptyk/nfw-core';
-import Validator from 'fastest-validator';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
-import { getSchema } from 'fastest-validator-decorators';
-import { JsonApiQueryValidation } from '../validation/query.js';
 import type { OperatorMap } from '@mikro-orm/core/typings.js';
 
 export interface Sort<TModel extends BaseEntity<TModel, any>> {
@@ -65,12 +62,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   public size?: number;
 
   public validate (query: RawQuery): Promise<void> | void {
-    const v = new Validator();
 
-    const check = v.compile(getSchema(JsonApiQueryValidation))(query);
-    if (check !== true) {
-      throw check;
-    }
   }
 
   public parse (query: RawQuery): Promise<void> | void {

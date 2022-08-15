@@ -1,5 +1,5 @@
 
-import { Relationship, Attribute, JsonApiResource, Resource, Number } from '@triptyk/nfw-jsonapi';
+import { Relationship, Attribute, JsonApiResource, Resource } from '@triptyk/nfw-jsonapi';
 import { UserModel } from '../models/user.model.js';
 import type { ArticleResource } from './article.resource.js';
 
@@ -8,6 +8,8 @@ import type { ArticleResource } from './article.resource.js';
   entityName: 'users'
 })
 export class UserResource extends Resource<UserModel> {
+  validate (): void {}
+
   @Attribute({
     filterable: false,
     sortable: ['ASC']
@@ -15,7 +17,6 @@ export class UserResource extends Resource<UserModel> {
   declare id: string;
 
   @Attribute()
-  @Number()
   declare username: string;
 
    @Relationship({

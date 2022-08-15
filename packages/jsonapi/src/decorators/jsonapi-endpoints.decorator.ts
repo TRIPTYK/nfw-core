@@ -44,3 +44,18 @@ export function JsonApiList (options?: JsonApiListOptions) {
     });
   }
 }
+
+export interface JsonApiUpdateOptions {
+  queryParser: Class< QueryParser<any>>,
+}
+
+export function JsonApiUpdate (options?: JsonApiUpdateOptions) {
+  return function (target: unknown, propertyName: string) {
+    MetadataStorage.instance.endpoints.push({
+      target,
+      propertyName,
+      method: JsonApiMethod.UPDATE,
+      queryParser: options?.queryParser
+    });
+  }
+}

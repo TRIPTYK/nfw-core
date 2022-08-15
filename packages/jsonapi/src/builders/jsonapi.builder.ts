@@ -10,9 +10,10 @@ import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 import type { ResourceMetadataArgs } from '../storage/metadata/resource.metadata.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { findAll } from './methods/find-all.method.js';
-import { ErrorSerializer } from '../serializers/error.serializer.js';
+import { ErrorHandler } from '../serializers/error.serializer.js';
 import { findOne } from './methods/find-one.method.js';
 import { createOne } from './methods/create-one.js';
+import { updateOne } from './methods/update-one.js';
 
 export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
 
@@ -35,12 +36,12 @@ export const routeMap: Record<JsonApiMethod, RouteInfo> = {
   [JsonApiMethod.DELETE]: {
     routeName: '/:id',
     method: HttpMethod.DELETE,
-    function: findAll
+    function: updateOne
   },
   [JsonApiMethod.UPDATE]: {
     routeName: '/:id',
     method: HttpMethod.PATCH,
-    function: findAll
+    function: updateOne
   }
 }
 
@@ -91,7 +92,7 @@ export class JsonApiBuilder extends HttpBuilder {
   setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs) {
     const routeInfo = routeMap[endpoint.method];
     const resource = this.registry.resources.get(resourceMeta.target)!;
-    const errorSerializer = container.resolve(ErrorSerializer);
+    const errorSerializer = container.resolve(ErrorHandler);
 
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
 
@@ -99,11 +100,7 @@ export class JsonApiBuilder extends HttpBuilder {
       try {
         await next();
       } catch (e: any) {
-        console.log(e);
-        const serialized = errorSerializer.serialize(e);
-        ctx.status = 500;
-        ctx.body = serialized;
-        ctx.type = 'application/vnd.api+json';
+        errorSerializer.handle(e, ctx);
       }
     }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams));
   }

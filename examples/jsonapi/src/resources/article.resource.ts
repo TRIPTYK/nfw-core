@@ -1,4 +1,4 @@
-import { Resource, Relationship, Attribute, JsonApiResource, String } from '@triptyk/nfw-jsonapi';
+import { Resource, Relationship, Attribute, JsonApiResource } from '@triptyk/nfw-jsonapi';
 import { ArticleModel } from '../models/article.model.js';
 import { UserResource } from './user.resource.js';
 
@@ -7,6 +7,8 @@ import { UserResource } from './user.resource.js';
   entity: ArticleModel
 })
 export class ArticleResource extends Resource<ArticleModel> {
+  validate (): void {}
+
   @Attribute({
     filterable: {
       $eq: (value: unknown) => (value as string) === 'a'
@@ -22,16 +24,13 @@ export class ArticleResource extends Resource<ArticleModel> {
     },
     sortable: ['ASC']
   })
-  @String()
   declare title: string;
 
   @Attribute()
-  @String()
   declare type: string;
 
   @Relationship({
     otherResource: 'UserResource'
   })
-  @String()
   declare writer: UserResource;
 }

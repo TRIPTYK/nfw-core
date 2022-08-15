@@ -16,7 +16,11 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       throw new Error('Not a json-api payload');
     }
 
-    const data = payload.data as Record<'attributes' | 'relationships', Record<string, any>>;
+    const data = payload.data as {
+      attributes?: Record<string, unknown>,
+      relationships?: Record<string, Record<'data', unknown>>,
+      id?: string,
+    };
 
     if (!data?.attributes) {
       throw new Error('Not attributes specified');
@@ -26,6 +30,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
 
     // eslint-disable-next-line new-cap
     const newResource = new this.resource.resource();
+    newResource.id = data.id;
     newResource.resourceMeta = this.resource;
 
     for (const property of Object.keys(jsonApiBody)) {
@@ -67,7 +72,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
 
         // eslint-disable-next-line new-cap
         const r = new relationMeta.resource.resource();
-        r.id = data.id;
+        r.id = (data as Record<'id', string>).id;
 
         (newResource as any)[key] = r;
       }

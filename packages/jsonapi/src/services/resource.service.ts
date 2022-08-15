@@ -1,5 +1,5 @@
-import { MikroORM } from '@mikro-orm/core';
-import type { BaseEntity, QueryOrderMap, ObjectQuery } from '@mikro-orm/core';
+import { MikroORM, wrap } from '@mikro-orm/core';
+import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
@@ -50,9 +50,18 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
 
   public async createOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
     await resource.validate();
-    const entity = this.repository.create(resource.toMikroPojo());
+    const entity = this.repository.create(resource.toMikroPojo() as unknown as RequiredEntityData<TModel>);
     await this.repository.persistAndFlush(entity);
+    // re-fetch entity to apply include, sorting, sparse fields, ...
+    return this.findOne((entity as any).id, ctx);
+  }
 
+  public async updateOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
+    const entity = await this.repository.findOneOrFail({ id: resource.id } as any);
+    wrap(entity).assign(resource.toMikroPojo());
+    // await resource.validate();
+    await this.repository.persistAndFlush(entity);
+    // re-fetch entity to apply include, sorting, sparse fields, ...
     return this.findOne((entity as any).id, ctx);
   }
 

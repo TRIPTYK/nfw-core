@@ -3,7 +3,7 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
-import { BadContentTypeError } from '../../errors/specific/bad-content-type.js';
+import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -40,10 +40,10 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
      * Validate content type negociation
      */
     if (!validateContentType(ctx.headers['content-type'] ?? '')) {
-      throw new BadContentTypeError();
+      throw new UnsupportedMediaTypeError();
     }
     if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new BadContentTypeError();
+      throw new UnsupportedMediaTypeError();
     }
 
     const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
@@ -52,6 +52,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
      */
     const query = ctx.query as Record<string, any>;
     parser.context = jsonApiContext;
+
     await parser.validate(query);
     await parser.parse(query);
 
@@ -82,7 +83,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
     if (res && !(res instanceof resource.mikroEntity.class)) {
-      throw new Error('findOne must return an instance of entity !');
+      throw new Error('createOne must return an instance of entity !');
     }
 
     const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);

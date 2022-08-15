@@ -1,34 +1,48 @@
 
-import { JsonapiErrorCollection } from '../errors/error-collection.js';
-import type { JsonapiError } from '../errors/error.js';
+import type { RouterContext } from '@koa/router';
+import { JsonapiError } from '../errors/error.js';
 import type { JsonApiErrorObject } from './spec.interface.js';
 
-export class ErrorSerializer {
-  public serialize (err: Error | JsonapiError | JsonapiErrorCollection) {
+export class ErrorHandler {
+  private getGeneralErrorCode (errors: JsonApiErrorObject[]) {
+    if (errors.length === 1) {
+      return errors[0].status ? parseInt(errors[0].status) : 500;
+    }
+    const maxStatus = Math.max(
+      ...errors.map((c) => +(c.status ?? 400))
+    );
+    return Math.floor(maxStatus / 100) * 100;
+  }
+
+  public handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {
     const out : JsonApiErrorObject[] = [];
-    if (err instanceof JsonapiErrorCollection) {
-      out.push(...err.errors.map((e) => this.serializeError(e)));
+    if (Array.isArray(err)) {
+      out.push(...err.map((e) => this.serializeError(e)));
     } else {
       out.push(this.serializeError(err));
     }
 
-    return {
+    ctx.status = this.getGeneralErrorCode(out);
+
+    ctx.body = {
       errors: out
-    }
+    };
+    ctx.type = 'application/vnd.api+json';
   }
 
   protected serializeError (error: JsonapiError | Error): JsonApiErrorObject {
-    if (error instanceof Error) {
+    if (error instanceof JsonapiError) {
       return {
-        status: '500',
-        detail: error.message,
-        code: error.name
+        status: error.status,
+        detail: error.detail,
+        code: error.code
       };
     }
 
     return {
-      detail: error.detail,
-      code: error.code
+      detail: error.message,
+      code: error.name,
+      status: '500'
     }
   }
 }

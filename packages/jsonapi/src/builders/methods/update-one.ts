@@ -2,6 +2,7 @@ import type { RouterContext } from '@koa/router';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
+import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
 import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
@@ -14,24 +15,25 @@ import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 
-export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[]) {
+export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[]) {
   /**
    * Resolve before call, they should be singletons
    */
   const serializer = container.resolve<ResourceSerializer<TModel>>(`serializer:${resource.name}`) as ResourceSerializer<TModel>;
+  const deserializer = container.resolve<ResourceDeserializer<TModel>>(`deserializer:${resource.name}`) as ResourceDeserializer<TModel>;
   const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
 
   return async (ctx: RouterContext) => {
+    /**
+     * Resolve instance
+     */
     const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
 
-    /**
-     * Specific request context
-     */
     const jsonApiContext = {
       resource,
-      koaContext: ctx,
+      query: parser,
       method: endpointsMeta.method,
-      query: parser
+      koaContext: ctx
     } as JsonApiContext<TModel>;
 
     /**
@@ -44,18 +46,20 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
       throw new UnsupportedMediaTypeError();
     }
 
+    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
     /**
      * Parse the query
      */
     const query = ctx.query as Record<string, any>;
     parser.context = jsonApiContext;
+
     await parser.validate(query);
     await parser.parse(query);
 
     /**
      * Call the service method
      */
-    const [all, count] = await service.findAll(jsonApiContext);
+    const one = await service.updateOne(bodyAsResource, jsonApiContext);
 
     const evaluatedParams = routeParams.map((rp) => {
       if (rp.decoratorName === 'koa-context') {
@@ -67,7 +71,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
       }
 
       if (rp.decoratorName === 'service-response') {
-        return all;
+        return one;
       }
 
       throw new Error(`Unknown decorator ${rp.decoratorName}`);
@@ -76,23 +80,19 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as InstanceType<any>)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
-    if (res && !Array.isArray(res)) {
-      throw new Error('findAll must return an array !');
+    if (res && !(res instanceof resource.mikroEntity.class)) {
+      throw new Error('updateOne must return an instance of entity !');
     }
 
-    /**
-     * Transform the result from the service
-     */
-    const asResource = (res || all).map((e: any) => createResourceFrom(e.toObject(), resource, jsonApiContext));
+    const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
 
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext, count);
+    const serialized = serializer.serialize(asResource, jsonApiContext);
     ctx.body = serialized;
-    // must never change
     ctx.type = 'application/vnd.api+json';
   }
 }

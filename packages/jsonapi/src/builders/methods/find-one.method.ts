@@ -2,7 +2,7 @@ import type { RouterContext } from '@koa/router';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
-import { BadContentTypeError } from '../../errors/specific/bad-content-type.js';
+import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -41,10 +41,10 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
      * Validate content type negociation
      */
     if (!validateContentType(ctx.headers['content-type'] ?? '')) {
-      throw new BadContentTypeError();
+      throw new UnsupportedMediaTypeError();
     }
     if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new BadContentTypeError();
+      throw new UnsupportedMediaTypeError();
     }
 
     /**

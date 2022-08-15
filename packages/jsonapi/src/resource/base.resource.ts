@@ -1,6 +1,4 @@
-import type { BaseEntity, RequiredEntityData } from '@mikro-orm/core';
-import { Reference } from '@mikro-orm/core';
-import { validateOrReject } from 'fastest-validator-decorators';
+import type { BaseEntity, EntityDTO, Loaded } from '@mikro-orm/core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 
@@ -23,34 +21,26 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
   /**
  * The identifier key will always be 'id' in this framework
  */
-  abstract id: string;
+  abstract id?: string;
 
   metaObject?: Record<string, unknown> | undefined;
   linksObject?: Record<string, unknown> | undefined;
 
-  async validate () {
-    return validateOrReject(this);
-  }
+  abstract validate (): void;
 
   toMikroPojo () {
-    const pojo = {} as RequiredEntityData<T>;
+    const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
 
     for (const attr of this.resourceMeta.attributes) {
       const valueOfProperty = this[attr.name];
       if (valueOfProperty !== undefined) {
-        pojo[attr.name as keyof RequiredEntityData<T>] = valueOfProperty as any;
+        pojo[attr.name as keyof Partial<EntityDTO<Loaded<T, never>>>] = valueOfProperty as any;
       }
     }
     for (const attr of this.resourceMeta.relationships) {
-      const valueOfProperty = this[attr.name as keyof Resource<T>];
+      const valueOfProperty = (this as any)[attr.name] as Resource<any>;
       if (valueOfProperty !== undefined) {
-        if (Array.isArray(valueOfProperty)) {
-          (pojo as any)[attr.name as any] = valueOfProperty.map((e) => {
-            return Reference.createFromPK(attr.mikroMeta.targetMeta?.class!, e.id);
-          }) as any;
-        } else {
-          (pojo as any)[attr.name as any] = Reference.createFromPK(attr.mikroMeta.targetMeta?.class!, (valueOfProperty as any).id);
-        }
+        pojo[attr.name as keyof Partial<EntityDTO<Loaded<T, never>>>] = (Array.isArray(valueOfProperty) ? valueOfProperty.map((e) => e.id) : valueOfProperty.id) as any;
       }
     }
     return pojo;
