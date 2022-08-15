@@ -23,18 +23,19 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
 
   return async (ctx: RouterContext) => {
     /**
+     * Resolve instance
+     */
+    const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
+
+    /**
      * Specific request context
      */
     const jsonApiContext = {
       resource,
       method: endpointsMeta.method,
-      koaContext: ctx
+      koaContext: ctx,
+      query: parser
     } as JsonApiContext<TModel>;
-
-    /**
-     * Resolve instance
-     */
-    const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
 
     /**
      * Validate content type negociation
@@ -57,7 +58,7 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the service method
      */
-    const one = await service.findOne(jsonApiContext);
+    const one = await service.findOne(jsonApiContext.koaContext.params.id, jsonApiContext);
 
     if (!one) {
       throw new Error('Not found');

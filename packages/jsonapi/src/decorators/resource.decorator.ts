@@ -3,6 +3,7 @@ import type { Class } from '@triptyk/nfw-core';
 import type { ResourceSerializer } from '../serializers/resource.serializer.js';
 import type { ResourceService } from '../services/resource.service.js';
 import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
+import { Schema } from 'fastest-validator-decorators';
 
 export interface ResourceOptions {
   entity : any,
@@ -18,5 +19,6 @@ export function JsonApiResource (options: ResourceOptions) {
       target,
       options
     })
+    return Schema()(target);
   };
 }

@@ -48,14 +48,15 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       });
   }
 
-  public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
+  public async createOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
+    await resource.validate();
     const entity = this.repository.create(resource.toMikroPojo());
     await this.repository.persistAndFlush(entity);
 
-    return entity;
+    return this.findOne((entity as any).id, ctx);
   }
 
-  public findOne ({ query }: JsonApiContext<TModel>) {
+  public findOne (id :string, { query }: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
@@ -74,7 +75,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     this.applySort(query!.sort, orderBy);
 
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
-      { id: query!.context.koaContext.params.id, ...this.applyFilter(query!.filters) }, {
+      { id, ...this.applyFilter(query!.filters) }, {
         populate: populate as any,
         fields: fields as any,
         orderBy

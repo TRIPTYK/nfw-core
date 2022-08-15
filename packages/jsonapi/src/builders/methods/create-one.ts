@@ -25,22 +25,16 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
 
   return async (ctx: RouterContext) => {
     /**
-     * Specific request context
-     */
-    const jsonApiContext = {
-      resource,
-      method: endpointsMeta.method,
-      koaContext: ctx
-    } as JsonApiContext<TModel>;
-
-    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
-
-    console.log(bodyAsResource);
-
-    /**
      * Resolve instance
      */
     const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
+
+    const jsonApiContext = {
+      resource,
+      query: parser,
+      method: endpointsMeta.method,
+      koaContext: ctx
+    } as JsonApiContext<TModel>;
 
     /**
      * Validate content type negociation
@@ -52,6 +46,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
       throw new BadContentTypeError();
     }
 
+    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
     /**
      * Parse the query
      */
@@ -64,10 +59,6 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
      * Call the service method
      */
     const one = await service.createOne(bodyAsResource, jsonApiContext);
-
-    if (!one) {
-      throw new Error('Not found');
-    }
 
     const evaluatedParams = routeParams.map((rp) => {
       if (rp.decoratorName === 'koa-context') {

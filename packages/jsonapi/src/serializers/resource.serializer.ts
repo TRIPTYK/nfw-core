@@ -3,6 +3,7 @@ import { container, injectable } from '@triptyk/nfw-core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
+import type { Include } from '../query-parser/query-parser.js';
 import type { Resource } from '../resource/base.resource.js';
 import type { JsonApiTopLevel, LinkObject, PaginationLinksKeys, RelationshipsObject, ResourceObject } from './spec.interface.js';
 
@@ -54,7 +55,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     return {}
   }
 
-  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel, TResource>, totalRecords?: number): JsonApiTopLevel {
+  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords?: number): JsonApiTopLevel {
     const included = new Map<string, any>();
     return {
       jsonapi: {
@@ -65,13 +66,13 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
         self: jsonApiContext.koaContext.URL.pathname
       },
       meta: this.topMeta(resource, jsonApiContext),
-      data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included)) : this.serializeDocument(resource as any, included),
+      data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes),
       included: included.size > 0 ? Array.from(included.values()) : undefined
     } as JsonApiTopLevel
   }
 
-  protected serializeDocument (resource: TResource, included: Map<string, any>): ResourceObject {
-    const fetchableFields = resource.meta.attributes;
+  protected serializeDocument (resource: TResource, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>): ResourceObject {
+    const fetchableFields = resource.resourceMeta.attributes.filter((f) => f.isFetchable);
 
     const attributes = {} as Record<keyof TResource, any>;
 
@@ -81,23 +82,27 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
 
     const relationships: RelationshipsObject = {};
 
-    for (const rel of resource.meta.relationships) {
+    for (const rel of resource.resourceMeta.relationships) {
       const relation = resource[rel.name as keyof typeof resource] as any;
 
-      if (relation) {
-        const ids = Array.isArray(relation) ? relation.map((e) => ({ type: rel.resource.name, id: e.id })) : { type: rel.resource.name, id: relation.id };
-
-        relationships[rel.name] = {
-          links: {
-            self: `${this.baseURL}/${resource.meta.name}/${resource.id}/relationships/${rel.name}`,
-            related: `${this.baseURL}/${resource.meta.name}/${resource.id}/${rel.name}`
-          },
-          data: ids
+      relationships[rel.name] = {
+        links: {
+          self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/relationships/${rel.name}`,
+          related: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/${rel.name}`
         }
+      };
 
+      /**
+       * ONLY RETURNS RELATIONSHIPS THAT ARE REQUESTED TO BE INCLUDED
+       */
+      const includes = includeLevel.get(rel.name);
+
+      if (relation && includes) {
+        const ids = Array.isArray(relation) ? relation.map((e) => ({ type: rel.resource.name, id: e.id })) : { type: rel.resource.name, id: relation.id };
+        relationships[rel.name].data = ids;
         for (const r of Array.isArray(relation) ? relation : [relation]) {
           if (r.id && !included.has(r.id)) {
-            included.set(r.id, this.serializeDocument(r, included));
+            included.set(r.id, this.serializeDocument(r, included, jsonApiContext, includes.includes));
           }
         }
       }
@@ -106,9 +111,9 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     return {
       id: resource.id,
       links: {
-        self: `${this.baseURL}/${resource.meta.name}/${resource.id}`
+        self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}`
       },
-      type: resource.meta.name,
+      type: resource.resourceMeta.name,
       attributes,
       relationships
     }

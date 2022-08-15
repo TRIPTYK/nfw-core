@@ -1,5 +1,5 @@
-import { BaseEntity, Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { UserModel } from './user.model.js';
+import { BaseEntity, Entity, IdentifiedReference, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import type { UserModel } from './user.model.js';
 import { v4 } from 'uuid';
 
 @Entity()
@@ -17,6 +17,9 @@ export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
     })
     declare type? : string;
 
-    @ManyToOne('UserModel', 'articles')
-    declare writer: UserModel;
+    @ManyToOne('UserModel', {
+      inversedBy: 'articles',
+      wrappedReference: true
+    })
+    declare writer: IdentifiedReference<UserModel>;
 }

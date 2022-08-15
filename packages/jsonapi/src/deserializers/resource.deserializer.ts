@@ -22,11 +22,11 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       throw new Error('Not attributes specified');
     }
 
-    const jsonApiBody = data.attributes;
+    const jsonApiBody = data.attributes ?? {};
 
     // eslint-disable-next-line new-cap
     const newResource = new this.resource.resource();
-    newResource.meta = this.resource;
+    newResource.resourceMeta = this.resource;
 
     for (const property of Object.keys(jsonApiBody)) {
       if (!this.resource.attributes.some((p) => {
@@ -36,7 +36,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       }
     }
 
-    const relationships = data.relationships;
+    const relationships = data.relationships ?? {};
 
     for (const [key, value] of Object.entries(relationships)) {
       const relationMeta = this.resource.relationships.find((p) => p.name === key);
@@ -56,7 +56,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
         (newResource as any)[key] = data.map((d) => {
           // eslint-disable-next-line new-cap
           const r = new relationMeta.resource.resource();
-          r.meta = relationMeta.resource;
+          r.resourceMeta = relationMeta.resource;
           r.id = d.id;
           return r;
         });

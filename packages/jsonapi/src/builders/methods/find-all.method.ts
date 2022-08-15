@@ -35,10 +35,6 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     } as JsonApiContext<TModel>;
 
     /**
-     * Resolve instance
-     */
-
-    /**
      * Validate content type negociation
      */
     if (!validateContentType(ctx.headers['content-type'] ?? '')) {
@@ -80,7 +76,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+    const res = await ((this.instance as InstanceType<any>)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
     if (res && !Array.isArray(res)) {
       throw new Error('findAll must return an array !');
@@ -89,7 +85,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Transform the result from the service
      */
-    const asResource = (res || all).map((e: any) => createResourceFrom(e.toJSON(), resource, jsonApiContext));
+    const asResource = (res || all).map((e: any) => createResourceFrom(e.toObject(), resource, jsonApiContext));
 
     /**
      * Serialize result and res to client

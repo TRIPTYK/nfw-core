@@ -46,7 +46,7 @@ export type RelationshipsObject = Record<string, RelationshipObject>;
 export interface RelationshipObject {
   links?: LinksObject<'related' | 'self'>,
   meta?: Record<string, unknown>,
-  data: ResourceLinkage,
+  data?: ResourceLinkage,
 }
 
 export type ResourceLinkage =
