@@ -1,13 +1,7 @@
 import type { BaseEntity, EntityDTO, Loaded } from '@mikro-orm/core';
+import type { EntityDTOProp } from '@mikro-orm/core/typings.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
-
-// can Amaury read User1
-// can Amaury read User2
-// can Amaury read User3
-
-// can Amaury create User1
-// can Amaury add Article1 to User1
 
 export abstract class Resource<T extends BaseEntity<T, any>> {
   /**
@@ -32,15 +26,23 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
     const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
 
     for (const attr of this.resourceMeta.attributes) {
-      const valueOfProperty = this[attr.name];
+      const valueOfProperty = (this as unknown as T & Partial<T>)[attr.name as keyof T];
       if (valueOfProperty !== undefined) {
-        pojo[attr.name as keyof Partial<EntityDTO<Loaded<T, never>>>] = valueOfProperty as any;
+        pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = valueOfProperty as EntityDTOProp<any>;
       }
     }
     for (const attr of this.resourceMeta.relationships) {
-      const valueOfProperty = (this as any)[attr.name] as Resource<any>;
+      const valueOfProperty = (this as unknown as T & Partial<T>)[attr.name as keyof T];
+      if (Array.isArray(valueOfProperty)) {
+        if (!valueOfProperty.some((v) => v instanceof Resource)) {
+          throw new Error(`${valueOfProperty} must be instanceof Resource`)
+        }
+      } else if (!(valueOfProperty instanceof Resource)) {
+        throw new Error(`${valueOfProperty} must be instanceof Resource`)
+      }
       if (valueOfProperty !== undefined) {
-        pojo[attr.name as keyof Partial<EntityDTO<Loaded<T, never>>>] = (Array.isArray(valueOfProperty) ? valueOfProperty.map((e) => e.id) : valueOfProperty.id) as any;
+        const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : valueOfProperty.id;
+        pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = transformedValue as EntityDTOProp<any>;
       }
     }
     return pojo;

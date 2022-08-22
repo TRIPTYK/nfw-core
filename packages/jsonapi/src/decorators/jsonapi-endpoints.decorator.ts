@@ -1,5 +1,5 @@
 
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import type { QueryParser } from '../query-parser/query-parser.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';

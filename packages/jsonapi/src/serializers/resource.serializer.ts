@@ -74,10 +74,10 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
   protected serializeDocument (resource: TResource, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>): ResourceObject {
     const fetchableFields = resource.resourceMeta.attributes.filter((f) => f.isFetchable);
 
-    const attributes = {} as Record<keyof TResource, any>;
+    const attributes = {} as Partial<TResource>;
 
     for (const field of fetchableFields) {
-      attributes[field.name] = resource[field.name as keyof TResource];
+      attributes[field.name as keyof TResource] = resource[field.name as keyof TResource];
     }
 
     const relationships: RelationshipsObject = {};

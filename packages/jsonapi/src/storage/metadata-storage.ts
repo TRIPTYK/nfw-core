@@ -43,6 +43,6 @@ export class MetadataStorage {
 
   public attributes: EntityAttributesMetadataArgs[] = [];
   public relationships: RelationshipMetadataArgs[] = [];
-  public resources: ResourceMetadataArgs[] = [];
+  public resources: ResourceMetadataArgs<any>[] = [];
   public endpoints: EndpointMetadataArgs[] = [];
 }

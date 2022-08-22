@@ -1,11 +1,13 @@
 
 import { Relationship, Attribute, JsonApiResource, Resource } from '@triptyk/nfw-jsonapi';
+import { UserAuthorizer } from '../authorizers/user.authorizer.js';
 import { UserModel } from '../models/user.model.js';
 import type { ArticleResource } from './article.resource.js';
 
 @JsonApiResource({
   entity: UserModel,
-  entityName: 'users'
+  entityName: 'users',
+  authorizer: UserAuthorizer
 })
 export class UserResource extends Resource<UserModel> {
   validate (): void {}

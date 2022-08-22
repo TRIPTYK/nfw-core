@@ -6,6 +6,8 @@ export * from './decorators/relationship.decorator.js';
 
 export * from './builders/jsonapi.builder.js';
 
+export * from './services/role-authorizer.service.js';
+
 export * from './decorators/parameters/context.decorator.js';
 export * from './decorators/parameters/ctx.decorator.js';
 export * from './decorators/parameters/service-response.decorator.js';

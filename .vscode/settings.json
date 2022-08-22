@@ -1,5 +1,7 @@
 {
     "editor.formatOnSave": true,
+    "gitscrum.company": "triptyk",
+    "gitscrum.project-slug": "ecosysteme-nfw",
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "[typescript]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"

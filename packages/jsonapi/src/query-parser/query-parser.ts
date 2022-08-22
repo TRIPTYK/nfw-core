@@ -61,7 +61,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   public page?: number;
   public size?: number;
 
-  public validate (query: RawQuery): Promise<void> | void {
+  public validate (_query: RawQuery): Promise<void> | void {
 
   }
 

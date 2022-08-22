@@ -1,6 +1,6 @@
 import type Router from '@koa/router';
 import type Application from 'koa';
-import type { Class } from '../../types/class.js';
+import type { Class } from 'type-fest';
 
 export interface RouteBuilderInterface {
     context: {

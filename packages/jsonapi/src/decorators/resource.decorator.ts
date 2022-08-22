@@ -1,18 +1,21 @@
 import { MetadataStorage } from '../storage/metadata-storage.js';
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import type { ResourceSerializer } from '../serializers/resource.serializer.js';
 import type { ResourceService } from '../services/resource.service.js';
 import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
+import type { RoleServiceAuthorizer } from '../services/role-authorizer.service.js';
+import type { BaseEntity } from '@mikro-orm/core';
 
-export interface ResourceOptions {
+export interface ResourceOptions<T extends BaseEntity<T, any>> {
   entity : any,
   entityName : string,
-  serializer?: Class<ResourceSerializer<any>>,
-  deserializer?: Class<ResourceDeserializer<any>>,
-  service?: Class<ResourceService<any>>,
+  serializer?: Class<ResourceSerializer<T>>,
+  deserializer?: Class<ResourceDeserializer<T>>,
+  service?: Class<ResourceService<T>>,
+  authorizer?: Class<RoleServiceAuthorizer<any, T>>,
 }
 
-export function JsonApiResource (options: ResourceOptions) {
+export function JsonApiResource (options: ResourceOptions<any>) {
   return function (target: Class<any>) {
     MetadataStorage.instance.resources.push({
       target,

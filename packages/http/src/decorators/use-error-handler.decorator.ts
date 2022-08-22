@@ -1,4 +1,5 @@
-import type { Class } from '@triptyk/nfw-core'
+
+import type { Class } from 'type-fest'
 import type { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js'
 import { MetadataStorage } from '../storages/metadata-storage.js'
 

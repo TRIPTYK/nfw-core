@@ -1,5 +1,5 @@
 
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import type { AnyMiddleware } from '../../types/any-middleware.js';
 
 export interface UseMiddlewareMetadataArgs {

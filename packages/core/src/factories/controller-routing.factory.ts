@@ -1,9 +1,9 @@
 import type Router from '@koa/router';
 import type Application from 'koa';
 import { container } from 'tsyringe';
+import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { RouteBuilderInterface } from '../storages/metadata/route.metadata.js';
-import type { Class } from '../types/class.js';
 import type { CreateApplicationOptions } from './application.factory.js';
 
 /**

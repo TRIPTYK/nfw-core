@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import type { AnyEntity } from '@mikro-orm/core';
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import { inject, injectable, container } from '@triptyk/nfw-core';
 import { useErrorHandler, MetadataStorage, HttpBuilder, resolveMiddleware, HttpMethod } from '@triptyk/nfw-http';
 import pluralize from 'pluralize';
@@ -14,6 +14,7 @@ import { ErrorHandler } from '../serializers/error.serializer.js';
 import { findOne } from './methods/find-one.method.js';
 import { createOne } from './methods/create-one.js';
 import { updateOne } from './methods/update-one.js';
+import type { JsonApiControllerOptions } from '../decorators/jsonapi-controller.decorator.js';
 
 export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
 
@@ -52,7 +53,8 @@ export class JsonApiBuilder extends HttpBuilder {
   }
 
   async build (): Promise<Router> {
-    const resource = JsonApiDatastorage.instance.resources.find((v) => v.target === (this.context.meta.args as Class<AnyEntity>));
+    const [entity, options] = this.context.meta.args as any[];
+    const resource = JsonApiDatastorage.instance.resources.find((v) => v.target === (entity as Class<AnyEntity>));
 
     if (!resource) {
       throw new Error(`Resource not found for controller ${(this.context.instance as Function).name}`);
@@ -83,13 +85,13 @@ export class JsonApiBuilder extends HttpBuilder {
     }
 
     for (const endpoint of jsonApiEndpoints) {
-      this.setupJsonApiEndpoint(controllerRouter, endpoint, resource);
+      this.setupJsonApiEndpoint(controllerRouter, endpoint, resource, options);
     }
 
     return controllerRouter;
   }
 
-  setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs) {
+  setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs<any>, options: JsonApiControllerOptions) {
     const routeInfo = routeMap[endpoint.method];
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorSerializer = container.resolve(ErrorHandler);
@@ -100,8 +102,10 @@ export class JsonApiBuilder extends HttpBuilder {
       try {
         await next();
       } catch (e: any) {
+        console.log(e);
+
         errorSerializer.handle(e, ctx);
       }
-    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams));
+    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams, options));
   }
 }

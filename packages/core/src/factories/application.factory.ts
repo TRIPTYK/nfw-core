@@ -1,6 +1,6 @@
-import type { Class } from '../types/class.js';
 import type Koa from 'koa';
 import { createRoute } from './controller-routing.factory.js';
+import type { Class } from 'type-fest';
 
 export interface CreateApplicationOptions {
   /**

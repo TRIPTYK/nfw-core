@@ -1,7 +1,6 @@
 import { MikroORM, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
-import { databaseInjectionToken } from '@triptyk/nfw-mikro-orm';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { Filter, Include, Sort } from '../query-parser/query-parser.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
@@ -15,7 +14,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
   }
 
-  constructor (@inject(databaseInjectionToken) private orm: MikroORM) {
+  constructor (@inject(MikroORM) private orm: MikroORM) {
   }
 
   public findAll ({ query }: JsonApiContext<TModel>) {
@@ -48,21 +47,16 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       });
   }
 
-  public async createOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
-    await resource.validate();
+  public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
     const entity = this.repository.create(resource.toMikroPojo() as unknown as RequiredEntityData<TModel>);
-    await this.repository.persistAndFlush(entity);
     // re-fetch entity to apply include, sorting, sparse fields, ...
-    return this.findOne((entity as any).id, ctx);
+    return entity;
   }
 
-  public async updateOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
+  public async updateOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
     const entity = await this.repository.findOneOrFail({ id: resource.id } as any);
     wrap(entity).assign(resource.toMikroPojo());
-    // await resource.validate();
-    await this.repository.persistAndFlush(entity);
-    // re-fetch entity to apply include, sorting, sparse fields, ...
-    return this.findOne((entity as any).id, ctx);
+    return entity;
   }
 
   public findOne (id :string, { query }: JsonApiContext<TModel>) {

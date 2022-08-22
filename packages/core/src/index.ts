@@ -5,6 +5,4 @@ export * from './utils/debug.util.js';
 export * from './storages/metadata-storage.js';
 export * from './storages/metadata/route.metadata.js';
 
-export { Class } from './types/class.js';
-
 export * from 'tsyringe';

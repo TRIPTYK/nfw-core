@@ -1,4 +1,4 @@
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import { injectable, MetadataStorage } from '@triptyk/nfw-core';
 import { HttpBuilder } from '../builders/http.builder.js';
 

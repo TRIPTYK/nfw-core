@@ -1,6 +1,6 @@
-import { EntitySchema } from '@mikro-orm/core';
+import { EntitySchema, MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
-import { databaseInjectionToken, init } from '../../src/index.js';
+import { init } from '../../src/index.js';
 import { jest } from '@jest/globals';
 import('reflect-metadata');
 
@@ -24,5 +24,5 @@ test('database instance is registered and resolved correctly', async () => {
     entities: [schema]
   });
 
-  expect(mikro).toStrictEqual(container.resolve(databaseInjectionToken));
+  expect(mikro).toStrictEqual(container.resolve(MikroORM));
 });

@@ -1,4 +1,4 @@
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import type { GuardInterface } from '../../interfaces/guard.interface.js';
 
 export interface UseGuardMetadataArgs {

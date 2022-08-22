@@ -2,24 +2,28 @@ import type { RouterContext } from '@koa/router';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
+import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
 import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import type { ResourceSerializer } from '../../serializers/resource.serializer.js';
 import type { ResourceService } from '../../services/resource.service.js';
+import type { RoleServiceAuthorizer } from '../../services/role-authorizer.service.js';
 import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/controller-params.metadata.js';
 import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
+import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
-export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[]) {
+export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
   /**
    * Resolve before call, they should be singletons
    */
   const serializer = container.resolve<ResourceSerializer<TModel>>(`serializer:${resource.name}`) as ResourceSerializer<TModel>;
   const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
+  const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<TModel, any> | undefined;
 
   return async (ctx: RouterContext) => {
     const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
@@ -52,26 +56,14 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     await parser.validate(query);
     await parser.parse(query);
 
+    const currentUser = await options?.currentUser?.(jsonApiContext);
+
     /**
      * Call the service method
      */
     const [all, count] = await service.findAll(jsonApiContext);
 
-    const evaluatedParams = routeParams.map((rp) => {
-      if (rp.decoratorName === 'koa-context') {
-        return ctx;
-      }
-
-      if (rp.decoratorName === 'jsonapi-context') {
-        return jsonApiContext;
-      }
-
-      if (rp.decoratorName === 'service-response') {
-        return all;
-      }
-
-      throw new Error(`Unknown decorator ${rp.decoratorName}`);
-    });
+    const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, [all, count]);
 
     /**
      * Call the controller's method
@@ -80,6 +72,15 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
 
     if (res && !Array.isArray(res)) {
       throw new Error('findAll must return an array !');
+    }
+
+    if (authorizer) {
+      for (const r of res) {
+        const can = await authorizer.read(currentUser as any, r, jsonApiContext);
+        if (!can) {
+          throw new Error('Unauthorized');
+        }
+      }
     }
 
     /**

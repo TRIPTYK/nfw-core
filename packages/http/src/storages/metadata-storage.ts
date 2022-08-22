@@ -1,4 +1,4 @@
-import type { Class } from '@triptyk/nfw-core';
+import type { Class } from 'type-fest';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
