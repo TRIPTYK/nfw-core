@@ -46,11 +46,13 @@ importers:
       '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-jsonapi': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
+      '@types/formidable': ^2.0.5
       '@types/koa': ^2.13.5
       '@types/koa-qs': ^2.0.0
       '@types/koa__router': ^8.0.11
       '@types/node': ^18.6.3
       '@types/uuid': ^8.3.4
+      formidable: ^3.0.1
       koa: ^2.13.4
       koa-body: ^5.0.0
       koa-qs: ^3.0.0
@@ -68,6 +70,7 @@ importers:
       '@triptyk/nfw-http': link:../../packages/http
       '@triptyk/nfw-jsonapi': link:../../packages/jsonapi
       '@triptyk/nfw-mikro-orm': link:../../packages/mikro-orm
+      formidable: 3.2.4
       koa: 2.13.4
       koa-body: 5.0.0
       koa-qs: 3.0.0
@@ -76,6 +79,7 @@ importers:
       reflect-metadata: 0.1.13
       uuid: 8.3.2
     devDependencies:
+      '@types/formidable': 2.0.5
       '@types/koa': 2.13.5
       '@types/koa-qs': 2.0.0
       '@types/koa__router': 8.0.11
@@ -1315,7 +1319,6 @@ packages:
     resolution: {integrity: sha512-uvMcdn/KK3maPOaVUAc3HEYbCEhjaGFwww4EsX6IJfWIJ1tzHtDHczuImH3GKdusPnAAmzB07St90uabZeCKPA==}
     dependencies:
       '@types/node': 18.6.3
-    dev: false
 
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
@@ -2912,6 +2915,14 @@ packages:
       hexoid: 1.0.0
       once: 1.4.0
       qs: 6.9.3
+    dev: false
+
+  /formidable/3.2.4:
+    resolution: {integrity: sha512-8/5nJsq+o2o1+Dryx1k5gLTDaw0dNE9kL4P3srKArO6zhoerGm42/R8zq+L5EkV7kckNTvJpJke0kI8JseL3RQ==}
+    dependencies:
+      dezalgo: 1.0.3
+      hexoid: 1.0.0
+      once: 1.4.0
     dev: false
 
   /fresh/0.5.2:

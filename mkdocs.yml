@@ -1,23 +1,10 @@
-site_name: NFW-core
+site_name: NFW Ecosystem
 extra:
   version:
     provider: mike
-nav:
-  - Home: index.md
-  - Getting started:
-    - Installation: getting-started/installation.md
-    - Creating the Web server: getting-started/web-server.md
-    - Controller: getting-started/controller.md
-    - Middleware: getting-started/middleware.md
-    - Service: getting-started/service.md
-    - Guard: getting-started/guard.md
-    - Response handler: getting-started/response-handler.md
-  - Advanced:
-    - Controller context: advanced/controller-context.md
-    - Parameters decorators: advanced/decorators.md
-    - MikroORM: advanced/mikro-orm.md
 markdown_extensions:
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences

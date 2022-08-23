@@ -13,9 +13,10 @@ import type { RoleServiceAuthorizer } from '../../services/role-authorizer.servi
 import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/controller-params.metadata.js';
 import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
-import type { RouteInfo } from '../jsonapi.builder.js';
+import type { RouteInfo } from '../route-map.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import { UnauthorizedError } from '../../errors/unauthorized.js';
+import { NotAcceptableError } from '../../errors/not-acceptable.js';
 
 export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
   /**
@@ -43,11 +44,11 @@ export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Validate content type negociation
      */
-    if (!validateContentType(ctx.headers['content-type'] ?? '')) {
+    if (!validateContentType(ctx.headers['content-type'] ?? '', options.allowedContentType)) {
       throw new UnsupportedMediaTypeError();
     }
     if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new UnsupportedMediaTypeError();
+      throw new NotAcceptableError();
     }
 
     const currentUser = await options?.currentUser?.(jsonApiContext);

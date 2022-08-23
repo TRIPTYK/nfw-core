@@ -5,7 +5,7 @@ import { handleHttpRouteControllerAction } from '../factories/controller-action.
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.util.js';
-import { resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
+import { middlewaresForTarget, resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
 
 export class HttpBuilder implements RouteBuilderInterface {
   declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
@@ -35,20 +35,8 @@ export class HttpBuilder implements RouteBuilderInterface {
   }
 
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
-    const middlewaresForEndpoint =
-      MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName)
-        .map((m) => resolveMiddleware(m.middleware))
-
-    /**
-   * Only one error handler per controller route
-   */
-    const errorHandlerForRouteMeta = MetadataStorage.instance.getErrorHandlerForTarget(this.context.meta.target, endPointMeta.propertyName);
-
-    if (errorHandlerForRouteMeta) {
-      middlewaresForEndpoint.unshift(useErrorHandler(errorHandlerForRouteMeta.errorHandler));
-    }
-
-    router[endPointMeta.method](endPointMeta.args.routeName, ...middlewaresForEndpoint, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
+    const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
   }
 
   async bindRouting (parentRouter: Router, router: Router): Promise<void> {

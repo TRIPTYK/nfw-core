@@ -56,7 +56,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     return {}
   }
 
-  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): JsonApiTopLevel {
+  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): Promise<JsonApiTopLevel> | JsonApiTopLevel {
     const included = new Map<string, any>();
     return {
       jsonapi: {

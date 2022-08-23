@@ -1,5 +1,6 @@
 import { MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
+import { UseMiddleware } from '@triptyk/nfw-http';
 import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate, JsonApiUpdate, JsonApiDelete, JsonApiGetRelationships, JsonApiGetRelated } from '@triptyk/nfw-jsonapi';
 import { UserModel } from '../models/user.model.js';
 import { UserResource } from '../resources/user.resource.js';
@@ -24,6 +25,9 @@ import { UserResource } from '../resources/user.resource.js';
   }
 })
 export class UserController {
+  @UseMiddleware(async (_, next) => {
+    await next();
+  })
   @JsonApiList()
   async list () {}
 

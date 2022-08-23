@@ -14,7 +14,7 @@ export class ErrorHandler {
     return Math.floor(maxStatus / 100) * 100;
   }
 
-  public handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {
+  public async handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {
     const out : JsonApiErrorObject[] = [];
     if (Array.isArray(err)) {
       out.push(...err.map((e) => this.serializeError(e)));

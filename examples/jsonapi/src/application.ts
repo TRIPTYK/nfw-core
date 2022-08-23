@@ -8,20 +8,22 @@ import { UserModel } from './models/user.model.js';
 import { ArticleModel } from './models/article.model.js';
 import { JsonApiRegistry } from '@triptyk/nfw-jsonapi';
 import './resources/article.resource.js';
+import './controllers/document.controller.js';
 import koaQs from 'koa-qs';
+import { DocumentModel } from './models/document.model.js';
 
 async function main () {
   const mikro = await init({
     dbName: 'nfw-core-jsonapi',
     type: 'sqlite',
-    entities: [UserModel, ArticleModel],
-    debug: true
+    entities: [UserModel, ArticleModel, DocumentModel],
+    debug: false
   });
 
   await container.resolve(JsonApiRegistry).init({
     apiPath: '/api/v1'
   });
-  const generator = await mikro.getSchemaGenerator();
+  const generator = mikro.getSchemaGenerator();
   await generator.dropSchema();
   await generator.updateSchema();
 

@@ -12,7 +12,7 @@ export enum JsonApiMethod {
 }
 
 export interface EndpointMetadataArgs {
-    target: unknown,
+    target:unknown,
     propertyName: string,
     method: JsonApiMethod,
     queryParser?: Class<QueryParser<any>>,

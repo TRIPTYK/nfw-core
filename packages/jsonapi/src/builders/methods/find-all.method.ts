@@ -3,6 +3,7 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
+import { NotAcceptableError } from '../../errors/not-acceptable.js';
 import { UnauthorizedError } from '../../errors/unauthorized.js';
 import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
@@ -15,7 +16,7 @@ import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/
 import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
-import type { RouteInfo } from '../jsonapi.builder.js';
+import type { RouteInfo } from '../route-map.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
 export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
@@ -42,11 +43,11 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Validate content type negociation
      */
-    if (!validateContentType(ctx.headers['content-type'] ?? '')) {
+    if (!validateContentType(ctx.headers['content-type'] ?? '', options.allowedContentType, options.ignoreMedia)) {
       throw new UnsupportedMediaTypeError();
     }
     if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new UnsupportedMediaTypeError();
+      throw new NotAcceptableError();
     }
 
     /**
@@ -98,7 +99,7 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext, count);
+    const serialized = await serializer.serialize(asResource, jsonApiContext, count);
     ctx.body = serialized;
     // must never change
     ctx.type = 'application/vnd.api+json';

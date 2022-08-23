@@ -10,7 +10,7 @@ import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
   public declare resource: ResourceMeta<TModel>;
 
-  deserialize (payload: Record<string, unknown>, context: JsonApiContext<TModel>): Resource<TModel> {
+  deserialize (payload: Record<string, unknown>, context: JsonApiContext<TModel>): Promise<Resource<TModel>> | Resource<TModel> {
     // eslint-disable-next-line new-cap
     if (!payload.data) {
       throw new Error('Not a json-api payload');

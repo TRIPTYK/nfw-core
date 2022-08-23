@@ -4,6 +4,7 @@ import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
 import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
+import { NotAcceptableError } from '../../errors/not-acceptable.js';
 import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
@@ -15,7 +16,7 @@ import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/
 import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
-import type { RouteInfo } from '../jsonapi.builder.js';
+import type { RouteInfo } from '../route-map.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
 export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
@@ -43,14 +44,14 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Validate content type negociation
      */
-    if (!validateContentType(ctx.headers['content-type'] ?? '')) {
+    if (!validateContentType(ctx.headers['content-type'] ?? '', options.allowedContentType, options.ignoreMedia)) {
       throw new UnsupportedMediaTypeError();
     }
-    if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new UnsupportedMediaTypeError();
+    if (ctx.headers.accept !== 'application/vnd.api+json') {
+      throw new NotAcceptableError();
     }
 
-    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
+    const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
     /**
      * Parse the query
      */
@@ -94,7 +95,7 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext);
+    const serialized = await serializer.serialize(asResource, jsonApiContext);
     ctx.body = serialized;
     ctx.type = 'application/vnd.api+json';
   }

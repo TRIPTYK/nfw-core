@@ -14,7 +14,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
   }
 
-  constructor (@inject(MikroORM) private orm: MikroORM) {}
+  public constructor (@inject(MikroORM) private orm: MikroORM) {}
 
   /**
    * Loads all entities, also applies sorting, includes, filters,... to the database request using context query

@@ -1,11 +1,13 @@
-export function validateContentType (contentTypeStr: string) {
+export function validateContentType (contentTypeStr: string, allowed = 'application/vnd.api+json', ignoreMedia = false) {
   const contentType = contentTypeStr.split(';');
 
-  if (contentType[0] !== 'application/vnd.api+json') {
+  console.log(contentType);
+
+  if (contentType[0] !== allowed) {
     return false;
   }
 
-  if (contentType.length > 1) {
+  if (!ignoreMedia && contentType.length > 1) {
     return contentType.slice(1).every((v) => ['ext', 'profile'].includes(v.split('=')[0].trim()));
   }
 

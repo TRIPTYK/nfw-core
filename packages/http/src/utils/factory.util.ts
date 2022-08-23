@@ -7,6 +7,7 @@ import type { MiddlewareInterface } from '../interfaces/middleware.interface.js'
 import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
+import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
   /**
@@ -52,4 +53,19 @@ export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInte
   }
   const instance = container.resolve(middleware);
   return instance.use.bind(instance);
+}
+
+export function middlewaresForTarget (target: Class<unknown>, propertyName?: string) {
+  const endpointMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(target.prototype, propertyName)
+    .map((m) => resolveMiddleware(m.middleware));
+
+  /**
+   * Only one error handler per controller route
+   */
+  const errorHandlerForRouteMeta = MetadataStorage.instance.getErrorHandlerForTarget(target, propertyName);
+
+  if (errorHandlerForRouteMeta) {
+    endpointMiddlewares.unshift(useErrorHandler(errorHandlerForRouteMeta.errorHandler));
+  }
+  return endpointMiddlewares;
 }
