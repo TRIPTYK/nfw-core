@@ -7,18 +7,18 @@ import type { UserModel } from '../models/user.model.js';
 @injectable()
 export class UserAuthorizer extends RoleServiceAuthorizer<UserModel, UserModel> {
   read (user: UserModel | undefined, r: UserModel, c: JsonApiContext<any, Resource<any>>): boolean | Promise<boolean> {
-    return user?.username === 'Amaury';
+    return true;
   }
 
   create (user: UserModel | undefined, r: UserModel, c: JsonApiContext<any, Resource<any>>): boolean | Promise<boolean> {
-    return user?.username === 'Amaury';
+    return true;
   }
 
   update (user: UserModel | undefined, r: UserModel, c: JsonApiContext<any, Resource<any>>): boolean | Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return true;
   }
 
   remove (user: UserModel | undefined, r: UserModel, c: JsonApiContext<any, Resource<any>>): boolean | Promise<boolean> {
-    throw new Error('Method not implemented.');
+    return true;
   }
 }

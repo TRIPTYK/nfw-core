@@ -6,7 +6,9 @@ export enum JsonApiMethod {
     CREATE,
     UPDATE,
     LIST,
-    DELETE
+    DELETE,
+    GET_RELATIONSHIPS,
+    GET_RELATED
 }
 
 export interface EndpointMetadataArgs {

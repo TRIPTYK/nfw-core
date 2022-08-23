@@ -19,7 +19,8 @@ export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
 
     @ManyToOne('UserModel', {
       inversedBy: 'articles',
-      wrappedReference: true
+      wrappedReference: true,
+      nullable: true
     })
     declare writer: IdentifiedReference<UserModel>;
 }

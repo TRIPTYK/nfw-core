@@ -14,4 +14,8 @@ export class JsonapiError implements JsonApiErrorObject {
     };
 
   meta?: Record<string, unknown>;
+
+  constructor (message?: string) {
+    this.detail = message;
+  }
 }

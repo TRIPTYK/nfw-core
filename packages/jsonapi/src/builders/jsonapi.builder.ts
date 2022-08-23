@@ -13,12 +13,20 @@ import { findAll } from './methods/find-all.method.js';
 import { ErrorHandler } from '../serializers/error.serializer.js';
 import { findOne } from './methods/find-one.method.js';
 import { createOne } from './methods/create-one.js';
-import { updateOne } from './methods/update-one.js';
+import { updateOne } from './methods/update-one.method.js';
 import type { JsonApiControllerOptions } from '../decorators/jsonapi-controller.decorator.js';
+import { getRelationships } from './methods/relationships.method.js';
+import { getRelated } from './methods/related.method.js';
+import { deleteOne } from './methods/delete-one.method.js';
 
 export interface RouteInfo { routeName: string; method: HttpMethod; function: Function };
 
 export const routeMap: Record<JsonApiMethod, RouteInfo> = {
+  [JsonApiMethod.GET_RELATED]: {
+    routeName: '/:id/:relation',
+    method: HttpMethod.GET,
+    function: getRelated
+  },
   [JsonApiMethod.GET]: {
     routeName: '/:id',
     method: HttpMethod.GET,
@@ -37,12 +45,17 @@ export const routeMap: Record<JsonApiMethod, RouteInfo> = {
   [JsonApiMethod.DELETE]: {
     routeName: '/:id',
     method: HttpMethod.DELETE,
-    function: updateOne
+    function: deleteOne
   },
   [JsonApiMethod.UPDATE]: {
     routeName: '/:id',
     method: HttpMethod.PATCH,
     function: updateOne
+  },
+  [JsonApiMethod.GET_RELATIONSHIPS]: {
+    routeName: '/:id/relationships/:relation',
+    method: HttpMethod.GET,
+    function: getRelationships
   }
 }
 
@@ -103,7 +116,6 @@ export class JsonApiBuilder extends HttpBuilder {
         await next();
       } catch (e: any) {
         console.log(e);
-
         errorSerializer.handle(e, ctx);
       }
     }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams, options));

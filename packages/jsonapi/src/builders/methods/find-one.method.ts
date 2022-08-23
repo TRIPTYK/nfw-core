@@ -3,7 +3,8 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
-import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
+import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
+import { ResourceNotFoundError } from '../../errors/specific/resource-not-found.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -16,6 +17,7 @@ import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
+import { UnauthorizedError } from '../../errors/unauthorized.js';
 
 export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
   /**
@@ -67,13 +69,13 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     const one = await service.findOne(jsonApiContext.koaContext.params.id, jsonApiContext);
 
     if (!one) {
-      throw new Error('Not found');
+      throw new ResourceNotFoundError();
     }
 
     if (authorizer) {
       const can = await authorizer.read(currentUser as any, one, jsonApiContext);
       if (!can) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError();
       }
     }
 
@@ -81,7 +83,7 @@ export function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+    const res: TModel | undefined = await ((this.instance as Function)[endpointsMeta.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
 
     if (res && !(res instanceof resource.mikroEntity.class)) {
       throw new Error('findOne must return an instance of entity !');

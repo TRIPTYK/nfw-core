@@ -59,3 +59,48 @@ export function JsonApiUpdate (options?: JsonApiUpdateOptions) {
     });
   }
 }
+
+export interface JsonApiDeleteOptions {
+  queryParser: Class< QueryParser<any>>,
+}
+
+export function JsonApiDelete (options?: JsonApiDeleteOptions) {
+  return function (target: unknown, propertyName: string) {
+    MetadataStorage.instance.endpoints.push({
+      target,
+      propertyName,
+      method: JsonApiMethod.DELETE,
+      queryParser: options?.queryParser
+    });
+  }
+}
+
+export interface JsonApiGetRelationshipsOptions {
+  queryParser: Class< QueryParser<any>>,
+}
+
+export function JsonApiGetRelationships (options?: JsonApiGetRelationshipsOptions) {
+  return function (target: unknown, propertyName: string) {
+    MetadataStorage.instance.endpoints.push({
+      target,
+      propertyName,
+      method: JsonApiMethod.GET_RELATIONSHIPS,
+      queryParser: options?.queryParser
+    });
+  }
+}
+
+export interface JsonApiGetRelatedOptions {
+  queryParser: Class< QueryParser<any>>,
+}
+
+export function JsonApiGetRelated (options?: JsonApiGetRelatedOptions) {
+  return function (target: unknown, propertyName: string) {
+    MetadataStorage.instance.endpoints.push({
+      target,
+      propertyName,
+      method: JsonApiMethod.GET_RELATED,
+      queryParser: options?.queryParser
+    });
+  }
+}

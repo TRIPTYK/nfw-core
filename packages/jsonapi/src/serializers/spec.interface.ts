@@ -58,7 +58,7 @@ export interface ResourceObject {
   id?: string,
   type?: string,
   attributes?: Record<string, unknown>,
-  relationships?: unknown,
+  relationships?: Record<string, RelationshipObject>,
   links?: LinksObject<string>,
   meta?: unknown,
 }

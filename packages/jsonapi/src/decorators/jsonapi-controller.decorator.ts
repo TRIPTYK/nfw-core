@@ -6,7 +6,7 @@ import { JsonApiBuilder } from '../builders/jsonapi.builder.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 
 export interface JsonApiControllerOptions {
-  currentUser?: <T extends BaseEntity<T, any>>(context: JsonApiContext<any>) => Promise<T>,
+  currentUser?: <TModel extends BaseEntity<TModel, any>>(context: JsonApiContext<any>) => Promise<TModel>,
 }
 
 export function JsonApiController (resource: Class<any>, options?: JsonApiControllerOptions) {

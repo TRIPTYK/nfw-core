@@ -3,8 +3,8 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
-import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
-import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
+import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
+import { ResourceNotFoundError } from '../../errors/specific/resource-not-found.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -17,15 +17,16 @@ import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
+import { UnauthorizedError } from '../../errors/unauthorized.js';
+import { RelationshipNotFoundError } from '../../errors/specific/relationship-not-found.js';
 
-export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
+export function getRelated<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
   /**
    * Resolve before call, they should be singletons
    */
   const serializer = container.resolve<ResourceSerializer<TModel>>(`serializer:${resource.name}`) as ResourceSerializer<TModel>;
-  const deserializer = container.resolve<ResourceDeserializer<TModel>>(`deserializer:${resource.name}`) as ResourceDeserializer<TModel>;
   const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
-  const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<TModel, any> | undefined;
+  const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, TModel> | undefined;
 
   return async (ctx: RouterContext) => {
     /**
@@ -33,11 +34,14 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
      */
     const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
 
+    /**
+     * Specific request context
+     */
     const jsonApiContext = {
       resource,
-      query: parser,
       method: endpointsMeta.method,
-      koaContext: ctx
+      koaContext: ctx,
+      query: parser
     } as JsonApiContext<TModel>;
 
     /**
@@ -50,43 +54,47 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
       throw new UnsupportedMediaTypeError();
     }
 
-    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
+    const currentUser = await options?.currentUser?.(jsonApiContext);
+    const { id, relation } = ctx.params;
+
     /**
      * Parse the query
      */
     const query = ctx.query as Record<string, any>;
     parser.context = jsonApiContext;
-
     await parser.validate(query);
     await parser.parse(query);
 
-    await bodyAsResource.validate();
+    const relMeta = resource.relationships.find((r) => r.name === relation);
 
-    const currentUser = await options?.currentUser?.(jsonApiContext);
+    if (!relMeta) {
+      throw new RelationshipNotFoundError();
+    }
 
     /**
      * Call the service method
      */
-    let one: any = await service.updateOne(bodyAsResource, jsonApiContext);
+    const one = await service.getOneWithRelation(id, jsonApiContext, relation);
+
+    if (!one) {
+      throw new ResourceNotFoundError();
+    }
 
     if (authorizer) {
-      const can = await authorizer.update(currentUser as any, one, jsonApiContext);
+      const can = await authorizer.read(currentUser, one, jsonApiContext);
       if (!can) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError();
       }
     }
-    await service.repository.persistAndFlush(one as any);
-    one = await service.findOne((one as any).id, jsonApiContext)!;
 
     const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
-
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+    const res: TModel | undefined = await ((this.instance as Function)[endpointsMeta.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
 
     if (res && !(res instanceof resource.mikroEntity.class)) {
-      throw new Error('updateOne must return an instance of entity !');
+      throw new Error('Related must return an instance of entity !');
     }
 
     const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
@@ -94,7 +102,7 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext);
+    const serialized = serializer.serialize((asResource as any)[relation], jsonApiContext, undefined, jsonApiContext.query?.includes.get(relation)?.includes);
     ctx.body = serialized;
     ctx.type = 'application/vnd.api+json';
   }

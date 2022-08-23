@@ -4,7 +4,8 @@ import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
 import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
-import { UnsupportedMediaTypeError } from '../../errors/specific/bad-content-type.js';
+import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
+import { NotAcceptableError } from '../../errors/not-acceptable.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -47,7 +48,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
       throw new UnsupportedMediaTypeError();
     }
     if (ctx.headers['content-type'] !== ctx.header.accept) {
-      throw new UnsupportedMediaTypeError();
+      throw new NotAcceptableError();
     }
 
     const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
@@ -67,7 +68,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Call the service method
      */
-    let one: any = await service.createOne(bodyAsResource, jsonApiContext);
+    let one = await service.createOne(bodyAsResource, jsonApiContext);
 
     if (authorizer) {
       const can = await authorizer.create(currentUser as any, one, jsonApiContext);
@@ -76,14 +77,14 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
       }
     }
     await service.repository.persistAndFlush(one as any);
-    one = await service.findOne((one as any).id, jsonApiContext)!;
+    one = (await service.findOne((one as any).id, jsonApiContext))!;
 
     const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
 
     /**
      * Call the controller's method
      */
-    const res = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
+    const res : TModel | undefined = await ((this.instance as any)[endpointsMeta.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
     if (res && !(res instanceof resource.mikroEntity.class)) {
       throw new Error('createOne must return an instance of entity !');

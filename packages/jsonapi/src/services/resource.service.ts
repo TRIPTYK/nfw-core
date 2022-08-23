@@ -1,4 +1,4 @@
-import { MikroORM, wrap } from '@mikro-orm/core';
+import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
@@ -14,9 +14,13 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
   }
 
-  constructor (@inject(MikroORM) private orm: MikroORM) {
-  }
+  constructor (@inject(MikroORM) private orm: MikroORM) {}
 
+  /**
+   * Loads all entities, also applies sorting, includes, filters,... to the database request using context query
+   * @param ctx The JsonApiContext
+   * @returns
+   */
   public findAll ({ query }: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
@@ -47,42 +51,86 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       });
   }
 
+  /**
+   * Creates an entity using a resource and persists it to the ORM, nothing special
+   * @param resource The Resource object
+   * @param _ctx The JsonApiContext
+   * @returns
+   */
   public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
-    const entity = this.repository.create(resource.toMikroPojo() as unknown as RequiredEntityData<TModel>);
-    // re-fetch entity to apply include, sorting, sparse fields, ...
+    const pojo = resource.toMikroPojo() as unknown as RequiredEntityData<TModel>;
+    const entity = this.repository.create(pojo);
+    this.repository.persist(entity);
     return entity;
   }
 
   public async updateOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
     const entity = await this.repository.findOneOrFail({ id: resource.id } as any);
-    wrap(entity).assign(resource.toMikroPojo());
+    const pojo = resource.toMikroPojo();
+    for (const relationMeta of resource.resourceMeta.relationships) {
+      const relationProperty = entity[relationMeta.name as keyof typeof entity];
+      if (resource[relationMeta.name] && (relationMeta.mikroMeta.reference === ReferenceType.ONE_TO_MANY || relationMeta.mikroMeta.reference === ReferenceType.MANY_TO_MANY) && relationProperty instanceof Collection) {
+        /**
+         * Load and reset relation for to-many
+         * "If a relationship is provided in the relationships member of a resource object in a PATCH request, its value MUST be a relationship object with a data member. The relationship’s value will be replaced with the value specified in this member."
+         */
+        await relationProperty.init();
+        relationProperty.set([]);
+      }
+    }
+    wrap(entity).assign(pojo);
+    // persists to ORM but does not save to database
+    this.repository.persist(entity);
     return entity;
   }
 
-  public findOne (id :string, { query }: JsonApiContext<TModel>) {
+  /**
+   * Loads an entity by his id, also applies sorting, includes, filters,... to the database request using context query
+   * @param id The primary key value
+   * @param ctx The JsonApiContext
+   * @returns
+   */
+  public findOne (id :string, ctx: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    if (query!.fields.has(this.resourceMeta.name)) {
-      const attributes = query!.fields.get(this.resourceMeta.name)!;
+    if (ctx.query!.fields.has(this.resourceMeta.name)) {
+      const attributes = ctx.query!.fields.get(this.resourceMeta.name)!;
       fields.push(...attributes.map((attr) => attr.name));
     } else {
       fields.push(...this.resourceMeta.attributes.map((a) => a.name));
     }
 
-    for (const include of query!.includes.values()) {
-      this.applyIncludes(populate, fields, query!.fields, include, [])
+    for (const include of ctx.query!.includes.values()) {
+      this.applyIncludes(populate, fields, ctx.query!.fields, include, [])
     }
 
-    this.applySort(query!.sort, orderBy);
+    this.applySort(ctx.query!.sort, orderBy);
 
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
-      { id, ...this.applyFilter(query!.filters) }, {
+      { id, ...this.applyFilter(ctx.query!.filters) }, {
         populate: populate as any,
         fields: fields as any,
         orderBy
       });
+  }
+
+  /**
+   * Used by related routes to get the entity with a specific relation loaded
+   * Use this.findOne internaly
+   * @param id The primary key
+   * @param ctx The JsonApiContext
+   * @param relation The relation name
+   * @returns
+   */
+  public async getOneWithRelation (id :string, ctx: JsonApiContext<TModel>, relation: string) {
+    const one = await this.findOne(id, ctx);
+    // load the relation, need to be loaded anyway
+    if (one) {
+      await this.orm.em.populate(one, [relation as any]);
+    }
+    return one;
   }
 
   protected applyFilter (filters: Filter<TModel>): ObjectQuery<TModel> {

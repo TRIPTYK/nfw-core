@@ -12,7 +12,7 @@ import koaQs from 'koa-qs';
 
 async function main () {
   const mikro = await init({
-    dbName: ':memory:',
+    dbName: 'nfw-core-jsonapi',
     type: 'sqlite',
     entities: [UserModel, ArticleModel],
     debug: true
@@ -21,7 +21,9 @@ async function main () {
   await container.resolve(JsonApiRegistry).init({
     apiPath: '/api/v1'
   });
-  await mikro.getSchemaGenerator().updateSchema();
+  const generator = await mikro.getSchemaGenerator();
+  await generator.dropSchema();
+  await generator.updateSchema();
 
   const em = mikro.em.fork();
 
@@ -44,7 +46,7 @@ async function main () {
     ]
   });
   const seb = em.getRepository(UserModel).create({
-    id: '2',
+    id: '2898',
     username: 'seb',
     articles: [
       em.getRepository(ArticleModel).create({

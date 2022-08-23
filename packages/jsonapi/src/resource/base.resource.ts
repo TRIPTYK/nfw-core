@@ -20,7 +20,7 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
   metaObject?: Record<string, unknown> | undefined;
   linksObject?: Record<string, unknown> | undefined;
 
-  abstract validate (): void;
+  abstract validate (): Promise<void> | void;
 
   toMikroPojo () {
     const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
@@ -33,16 +33,18 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
     }
     for (const attr of this.resourceMeta.relationships) {
       const valueOfProperty = (this as unknown as T & Partial<T>)[attr.name as keyof T];
-      if (Array.isArray(valueOfProperty)) {
-        if (!valueOfProperty.some((v) => v instanceof Resource)) {
+      if (valueOfProperty !== undefined) {
+        if (Array.isArray(valueOfProperty)) {
+          if (valueOfProperty.some((v) => !(v instanceof Resource))) {
+            throw new Error(`${valueOfProperty} must be instanceof Resource`)
+          }
+        } else if (!(valueOfProperty instanceof Resource)) {
           throw new Error(`${valueOfProperty} must be instanceof Resource`)
         }
-      } else if (!(valueOfProperty instanceof Resource)) {
-        throw new Error(`${valueOfProperty} must be instanceof Resource`)
-      }
-      if (valueOfProperty !== undefined) {
-        const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : valueOfProperty.id;
-        pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = transformedValue as EntityDTOProp<any>;
+        if (valueOfProperty !== undefined) {
+          const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : valueOfProperty.id;
+          pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = transformedValue as EntityDTOProp<any>;
+        }
       }
     }
     return pojo;

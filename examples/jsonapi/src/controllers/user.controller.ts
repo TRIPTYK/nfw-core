@@ -1,6 +1,6 @@
 import { MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
-import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate, JsonApiUpdate } from '@triptyk/nfw-jsonapi';
+import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate, JsonApiUpdate, JsonApiDelete, JsonApiGetRelationships, JsonApiGetRelated } from '@triptyk/nfw-jsonapi';
 import { UserModel } from '../models/user.model.js';
 import { UserResource } from '../resources/user.resource.js';
 
@@ -35,4 +35,13 @@ export class UserController {
 
   @JsonApiUpdate()
   async update () {}
+
+  @JsonApiDelete()
+  async delete () {}
+
+  @JsonApiGetRelationships()
+  async relationships () {}
+
+  @JsonApiGetRelated()
+  async related () {}
 }

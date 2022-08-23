@@ -20,10 +20,10 @@ export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource
     allowedFilters: false | Partial<Record<keyof OperatorMap<TModel>, unknown>>,
 }
 
-export interface RelationMeta<TModel extends BaseEntity<TModel, any>> {
+export interface RelationMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
     resource: ResourceMeta<TModel>,
     mikroMeta: EntityProperty<TModel>,
-    name :string,
+    name : keyof TResource,
 }
 
 export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
@@ -118,7 +118,7 @@ export class JsonApiRegistry {
           return {
             mikroMeta,
             resource,
-            name: e.propertyName
+            name: e.propertyName as any
           }
         });
 

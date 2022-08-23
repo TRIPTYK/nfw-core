@@ -3,7 +3,7 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
+import type { ResourceDeserializer } from '../../deserializers/resource.deserializer.js';
 import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../../jsonapi.registry.js';
@@ -18,25 +18,26 @@ import { createResourceFrom } from '../../utils/create-resource.js';
 import type { RouteInfo } from '../jsonapi.builder.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
-export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
+export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
   /**
    * Resolve before call, they should be singletons
    */
-  const serializer = container.resolve<ResourceSerializer<TModel>>(`serializer:${resource.name}`) as ResourceSerializer<TModel>;
+  const serializer = container.resolve(`serializer:${resource.name}`) as ResourceSerializer<TModel>;
+  const deserializer = container.resolve(`deserializer:${resource.name}`) as ResourceDeserializer<TModel>;
   const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
   const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, TModel> | undefined;
 
   return async (ctx: RouterContext) => {
+    /**
+     * Resolve instance
+     */
     const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
 
-    /**
-     * Specific request context
-     */
     const jsonApiContext = {
       resource,
-      koaContext: ctx,
+      query: parser,
       method: endpointsMeta.method,
-      query: parser
+      koaContext: ctx
     } as JsonApiContext<TModel>;
 
     /**
@@ -49,58 +50,52 @@ export function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuild
       throw new UnsupportedMediaTypeError();
     }
 
+    const bodyAsResource = deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
     /**
      * Parse the query
      */
     const query = ctx.query as Record<string, any>;
     parser.context = jsonApiContext;
+
     await parser.validate(query);
     await parser.parse(query);
+
+    await bodyAsResource.validate();
 
     const currentUser = await options?.currentUser?.(jsonApiContext);
 
     /**
      * Call the service method
      */
-    const [all, count] = await service.findAll(jsonApiContext);
+    let one = await service.updateOne(bodyAsResource, jsonApiContext);
 
-    const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, [all, count]);
+    if (authorizer) {
+      const can = await authorizer.update(currentUser, one, jsonApiContext);
+      if (!can) {
+        throw new Error('Unauthorized');
+      }
+    }
+    await service.repository.flush();
+    one = (await service.findOne((one as unknown as Record<'id', string>).id, jsonApiContext))!;
+
+    const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
 
     /**
      * Call the controller's method
      */
-    const res: TModel[] | undefined = await ((this.instance as Function)[endpointsMeta.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
+    const res: TModel | undefined = await ((this.instance as Function)[endpointsMeta.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
 
-    if (res && !Array.isArray(res)) {
-      throw new Error('findAll must return an array !');
+    if (res && !(res instanceof resource.mikroEntity.class)) {
+      throw new Error('updateOne must return an instance of entity !');
     }
 
-    const finalServiceResponse = (res || all);
-
-    if (finalServiceResponse.some((v) => !(v instanceof resource.mikroEntity.class))) {
-      throw new Error('findAll must return an array of instances of entity !');
-    }
-
-    if (authorizer) {
-      for (const r of finalServiceResponse) {
-        const can = await authorizer.read(currentUser, r, jsonApiContext);
-        if (!can) {
-          throw new UnauthorizedError();
-        }
-      }
-    }
-
-    /**
-     * Transform the result from the service
-     */
-    const asResource = finalServiceResponse.map((e) => createResourceFrom(e.toObject(), resource, jsonApiContext));
+    const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
 
     /**
      * Serialize result and res to client
      */
-    const serialized = serializer.serialize(asResource, jsonApiContext, count);
+    const serialized = serializer.serialize(asResource, jsonApiContext);
     ctx.body = serialized;
-    // must never change
     ctx.type = 'application/vnd.api+json';
   }
 }
