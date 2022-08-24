@@ -34,14 +34,14 @@ export class HttpBuilder implements RouteBuilderInterface {
     return controllerRouter;
   }
 
-  protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
-    const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
-    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
-  }
-
   async bindRouting (parentRouter: Router, router: Router): Promise<void> {
     parentRouter
       .use(router.routes())
       .use(allowedMethods(router));
+  }
+
+  protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
+    const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
   }
 }

@@ -10,10 +10,10 @@ import type { ArticleResource } from './article.resource.js';
   authorizer: UserAuthorizer
 })
 export class UserResource extends Resource<UserModel> {
-  validate (): void {}
-
   @Attribute({
-    filterable: false,
+    filterable: {
+      $eq: true
+    },
     sortable: ['ASC']
   })
   declare id: string;
@@ -25,4 +25,6 @@ export class UserResource extends Resource<UserModel> {
      otherResource: 'ArticleResource'
    })
   declare articles: ArticleResource[];
+
+   validate (): void {}
 }

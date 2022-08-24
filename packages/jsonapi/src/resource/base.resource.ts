@@ -4,6 +4,9 @@ import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 
 export abstract class Resource<T extends BaseEntity<T, any>> {
+  metaObject?: Record<string, unknown> | undefined;
+  linksObject?: Record<string, unknown> | undefined;
+
   /**
    * The meta linked with the resource
    */
@@ -16,11 +19,6 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
  * The identifier key will always be 'id' in this framework
  */
   abstract id?: string;
-
-  metaObject?: Record<string, unknown> | undefined;
-  linksObject?: Record<string, unknown> | undefined;
-
-  abstract validate (): Promise<void> | void;
 
   toMikroPojo () {
     const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
@@ -49,4 +47,6 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
     }
     return pojo;
   }
+
+  abstract validate (): Promise<void> | void;
 }

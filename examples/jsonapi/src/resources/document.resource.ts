@@ -11,8 +11,6 @@ import { DocumentResourceService } from '../services/documents.service.js';
   service: DocumentResourceService
 })
 export class DocumentResource extends Resource<DocumentModel> {
-  validate (): void {}
-
   @Attribute({
     filterable: false,
     sortable: ['ASC']
@@ -21,4 +19,6 @@ export class DocumentResource extends Resource<DocumentModel> {
 
   @Attribute()
   declare filename: string;
+
+  validate (): void {}
 }

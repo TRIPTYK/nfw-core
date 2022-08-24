@@ -17,7 +17,7 @@ async function main () {
     dbName: 'nfw-core-jsonapi',
     type: 'sqlite',
     entities: [UserModel, ArticleModel, DocumentModel],
-    debug: false
+    debug: true
   });
 
   await container.resolve(JsonApiRegistry).init({

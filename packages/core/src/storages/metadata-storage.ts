@@ -6,6 +6,11 @@ export class MetadataStorage {
    */
   private static _instance?: MetadataStorage;
 
+  /**
+   * Controller Routes decorator metadata
+   */
+  public routes: RouteMetadataArgs<unknown>[] = [];
+
   public static get instance () {
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
@@ -19,9 +24,4 @@ export class MetadataStorage {
   public static clear () {
     this._instance = undefined;
   }
-
-  /**
-   * Controller Routes decorator metadata
-   */
-  public routes: RouteMetadataArgs<unknown>[] = [];
 }

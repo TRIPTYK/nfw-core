@@ -7,11 +7,9 @@ import { UserResource } from './user.resource.js';
   entity: ArticleModel
 })
 export class ArticleResource extends Resource<ArticleModel> {
-  validate (): void {}
-
   @Attribute({
     filterable: {
-      $eq: (value: unknown) => (value as string) === 'a'
+      $eq: true
     },
     sortable: ['ASC']
   })
@@ -19,8 +17,9 @@ export class ArticleResource extends Resource<ArticleModel> {
 
   @Attribute({
     filterable: {
-      $eq: (value: unknown) => (value as string).includes('amaury'),
-      $contains: true
+      $eq: true,
+      $contains: true,
+      $in: true
     },
     sortable: ['ASC']
   })
@@ -33,4 +32,6 @@ export class ArticleResource extends Resource<ArticleModel> {
     otherResource: 'UserResource'
   })
   declare writer: UserResource;
+
+  validate (): void {}
 }

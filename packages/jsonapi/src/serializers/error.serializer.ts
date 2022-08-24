@@ -4,16 +4,6 @@ import { JsonapiError } from '../errors/error.js';
 import type { JsonApiErrorObject } from './spec.interface.js';
 
 export class ErrorHandler {
-  private getGeneralErrorCode (errors: JsonApiErrorObject[]) {
-    if (errors.length === 1) {
-      return errors[0].status ? parseInt(errors[0].status) : 500;
-    }
-    const maxStatus = Math.max(
-      ...errors.map((c) => +(c.status ?? 400))
-    );
-    return Math.floor(maxStatus / 100) * 100;
-  }
-
   public async handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {
     const out : JsonApiErrorObject[] = [];
     if (Array.isArray(err)) {
@@ -44,5 +34,15 @@ export class ErrorHandler {
       code: error.name,
       status: '500'
     }
+  }
+
+  private getGeneralErrorCode (errors: JsonApiErrorObject[]) {
+    if (errors.length === 1) {
+      return errors[0].status ? parseInt(errors[0].status) : 500;
+    }
+    const maxStatus = Math.max(
+      ...errors.map((c) => +(c.status ?? 400))
+    );
+    return Math.floor(maxStatus / 100) * 100;
   }
 }

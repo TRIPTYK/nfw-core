@@ -18,6 +18,7 @@ export interface Filter<TModel extends BaseEntity<TModel, any>> {
     meta: AttributeMeta<any>,
     operator: keyof OperatorMap<any>,
     value: any,
+    path: string,
   }>,
   logical: '$and' | '$or' | '$not',
   nested: Set<Filter<any>>,
@@ -29,6 +30,8 @@ export interface Include<TModel extends BaseEntity<TModel, any>> {
 }
 
 export interface RawQuery {
+    // may contains unknown members
+  [key: string]: unknown,
   include?: string,
   fields?: Record<string, string>,
   filter?: Record<string, unknown>,
@@ -38,8 +41,6 @@ export interface RawQuery {
     number: string,
   },
   size?: string,
-  // may contains unknown members
-  [key: string]: unknown,
 }
 
 @injectable()
@@ -108,10 +109,10 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parentKey?:string) {
+  parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
     if (Array.isArray(filterObject)) {
       for (const filter of filterObject) {
-        this.parseFilters(parentFilter, filter as any, parentEntity, parentKey);
+        this.parseFilters(parentFilter, filter as any, parentEntity, parents);
       }
       return;
     }
@@ -125,10 +126,11 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
             filters: new Set()
           };
           parentFilter.nested.add(nested);
-          this.parseFilters(nested, value as any, parentEntity, parentKey);
+          this.parseFilters(nested, value as any, parentEntity, parents);
         } else {
-          const meta: any = parentEntity.attributes.find((a) => a.name === parentKey)!;
+          const meta: any = parentEntity.attributes.find((a) => a.name === parents[parents.length - 1])!;
           parentFilter.filters.add({
+            path: parents.join('.'),
             meta,
             operator: key as any,
             value
@@ -156,7 +158,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         const found = attrAndRel.find((e) => e.name === key);
 
         if (found) {
-          this.parseFilters(parentFilter, value as any, found.resource, key);
+          this.parseFilters(parentFilter, value as any, found.resource, [...parents, key]);
         } else {
           throw new Error(`Resource attribute/relation ${key} of ${parentEntity.name} does not exists`);
         }

@@ -137,16 +137,28 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
+  private expandObject (obj: Record<string, any>, path: string) {
+    for (const opath of path.split('.')) {
+      obj[opath] = {};
+      obj = obj[opath];
+    }
+    return obj;
+  }
+
   /**
    * Generates the filter object
    */
   protected applyFilter (filters: Filter<TModel>): ObjectQuery<TModel> {
-    const finalObject = {} as any; ;
+    const finalObject = {} as any;
+
     finalObject[filters.logical] = [];
     for (const iterator of filters.filters) {
-      finalObject[filters.logical].push({
-        [iterator.operator]: [iterator.value]
-      })
+      const filterObj = {};
+      const expanded = this.expandObject(filterObj, iterator.path);
+      expanded[iterator.operator] = iterator.value;
+      console.log(filterObj);
+
+      finalObject[filters.logical].push(filterObj)
     }
 
     return finalObject;

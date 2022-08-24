@@ -1,8 +1,6 @@
 export function validateContentType (contentTypeStr: string, allowed = 'application/vnd.api+json', ignoreMedia = false) {
   const contentType = contentTypeStr.split(';');
 
-  console.log(contentType);
-
   if (contentType[0] !== allowed) {
     return false;
   }

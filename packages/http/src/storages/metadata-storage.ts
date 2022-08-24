@@ -12,39 +12,10 @@ export class MetadataStorage {
    */
   private static _instance?: MetadataStorage;
 
-  public static get instance () {
-    if (MetadataStorage._instance) {
-      return MetadataStorage._instance;
-    }
-    return (MetadataStorage._instance = new MetadataStorage());
-  }
-
-  /**
-   * Clear the MetadataStorage instance which is often useless after CreateApplication
-   */
-  public static clear () {
-    this._instance = undefined;
-  }
-
-  /**
-   * ==================
-   * Metadatas storage
-   * ==================
-   */
-
-  public getEndpointsForTarget (target: unknown) {
-    return this.endpoints.filter((rMetadata) => (rMetadata.target as Class<unknown>).constructor === target);
-  }
-
   /**
    * Use parameters in controller route
    */
   public endpoints: HttpEndpointMetadataArgs[] = [];
-
-  public getMiddlewaresForTarget (target: unknown, propertyName?: string) {
-    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target).reverse();
-  }
-
   /**
    * Use parameters in controller route
    */
@@ -65,12 +36,34 @@ export class MetadataStorage {
    */
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
-  public getErrorHandlerForTarget (target: unknown, propertyName?: string) {
-    return this.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target);
-  }
-
   /**
    * Error handling
    */
   public useErrorHandler: UseErrorHandlerMetadataArgs[] = [];
+
+  public static get instance () {
+    if (MetadataStorage._instance) {
+      return MetadataStorage._instance;
+    }
+    return (MetadataStorage._instance = new MetadataStorage());
+  }
+
+  /**
+   * Clear the MetadataStorage instance which is often useless after CreateApplication
+   */
+  public static clear () {
+    this._instance = undefined;
+  }
+
+  public getMiddlewaresForTarget (target: unknown, propertyName?: string) {
+    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target).reverse();
+  }
+
+  public getErrorHandlerForTarget (target: unknown, propertyName?: string) {
+    return this.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target);
+  }
+
+  public getEndpointsForTarget (target: unknown) {
+    return this.endpoints.filter((rMetadata) => (rMetadata.target as Class<unknown>).constructor === target);
+  }
 }
