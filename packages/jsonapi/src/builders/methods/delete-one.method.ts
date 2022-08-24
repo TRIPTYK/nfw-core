@@ -2,41 +2,29 @@ import type { RouterContext } from '@koa/router';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
-import type { JsonApiControllerOptions } from '../../decorators/jsonapi-controller.decorator.js';
 import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
 import { ResourceNotFoundError } from '../../errors/specific/resource-not-found.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
-import type { ResourceMeta } from '../../jsonapi.registry.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
-import type { ResourceService } from '../../services/resource.service.js';
-import type { RoleServiceAuthorizer } from '../../services/role-authorizer.service.js';
-import type { ControllerActionParamsMetadataArgs } from '../../storage/metadata/controller-params.metadata.js';
-import type { EndpointMetadataArgs } from '../../storage/metadata/endpoint.metadata.js';
 import { validateContentType } from '../../utils/content-type.js';
-import type { RouteInfo } from '../route-map.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import { UnauthorizedError } from '../../errors/unauthorized.js';
 import { NotAcceptableError } from '../../errors/not-acceptable.js';
+import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 
-export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], resource: ResourceMeta<TModel>, endpointsMeta: EndpointMetadataArgs, routeInfo: RouteInfo, routeParams: ControllerActionParamsMetadataArgs[], options: JsonApiControllerOptions) {
-  /**
-   * Resolve before call, they should be singletons
-   */
-  const service = container.resolve(`service:${resource.name}`) as ResourceService<TModel>;
-  const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, TModel> | undefined;
-
+export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, service, authorizer }: JsonApiBuilderRouteParams) {
   return async (ctx: RouterContext) => {
     /**
      * Resolve instance
      */
-    const parser = container.resolve<QueryParser<TModel>>(endpointsMeta.queryParser ?? QueryParser);
+    const parser = container.resolve<QueryParser<TModel>>(endpoint.options?.queryParser ?? QueryParser);
 
     /**
      * Specific request context
      */
     const jsonApiContext = {
       resource,
-      method: endpointsMeta.method,
+      method: endpoint.method,
       koaContext: ctx,
       query: parser
     } as JsonApiContext<TModel>;
@@ -44,10 +32,10 @@ export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Validate content type negociation
      */
-    if (!validateContentType(ctx.headers['content-type'] ?? '', options.allowedContentType)) {
+    if (!validateContentType(ctx.headers['content-type'] ?? '', endpoint.options?.allowedContentType, endpoint.options?.ignoreMedia)) {
       throw new UnsupportedMediaTypeError();
     }
-    if (ctx.headers['content-type'] !== ctx.header.accept) {
+    if (ctx.headers.accept !== 'application/vnd.api+json') {
       throw new NotAcceptableError();
     }
 
@@ -83,7 +71,7 @@ export function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     /**
      * Call the controller's method
      */
-    const res: any = await ((this.instance as Function)[endpointsMeta.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
+    const res: any = await ((this.instance as Function)[endpoint.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
 
     /**
      * Serialize result and res to client

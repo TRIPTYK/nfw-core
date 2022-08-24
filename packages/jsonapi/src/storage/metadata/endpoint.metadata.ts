@@ -1,5 +1,4 @@
-import type { Class } from 'type-fest';
-import type { QueryParser } from '../../query-parser/query-parser.js';
+import type { JsonApiOptions } from '../../decorators/jsonapi-endpoints.decorator.js';
 
 export enum JsonApiMethod {
     GET,
@@ -15,5 +14,5 @@ export interface EndpointMetadataArgs {
     target:unknown,
     propertyName: string,
     method: JsonApiMethod,
-    queryParser?: Class<QueryParser<any>>,
+    options?: JsonApiOptions,
 }

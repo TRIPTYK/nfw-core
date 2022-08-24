@@ -7,11 +7,6 @@ import type { JsonApiContext } from '../interfaces/json-api-context.js';
 
 export interface JsonApiControllerOptions {
   currentUser?: <TModel extends BaseEntity<TModel, any>>(context: JsonApiContext<any>) => Promise<TModel>,
-  /**
-   * Use in case of absolute necessity, break the spec
-   */
-  allowedContentType?: string,
-  ignoreMedia?: boolean,
 }
 
 export function JsonApiController (resource: Class<any>, options?: JsonApiControllerOptions) {

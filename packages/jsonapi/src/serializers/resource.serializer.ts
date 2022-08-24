@@ -2,7 +2,7 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container, injectable } from '@triptyk/nfw-core';
 import type { StringKeyOf } from 'type-fest';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
-import type { ResourceMeta } from '../jsonapi.registry.js';
+import type { RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import type { Include } from '../query-parser/query-parser.js';
 import type { Resource } from '../resource/base.resource.js';
@@ -15,6 +15,19 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
   protected get baseURL () {
     const registry = container.resolve(JsonApiRegistry);
     return registry.apiPath;
+  }
+
+  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): Promise<JsonApiTopLevel> | JsonApiTopLevel {
+    const included = new Map<string, any>();
+    return this.serializeBase(resource, jsonApiContext, totalRecords, Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes))
+  }
+
+  public async serializeRelationships (resource: TResource, jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, relation: StringKeyOf<TResource>): Promise<JsonApiTopLevel> {
+    const included = new Map<string, any>();
+
+    return this.serializeBase(resource, jsonApiContext, totalRecords,
+      this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes, relation as any)
+    );
   }
 
   protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>): JsonApiTopLevel['meta'] {
@@ -56,7 +69,10 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     return {}
   }
 
-  public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): Promise<JsonApiTopLevel> | JsonApiTopLevel {
+  /**
+   * Setups JsonApiTopLevel object with @data
+   */
+  protected serializeBase (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined, data: JsonApiTopLevel['data']) {
     const included = new Map<string, any>();
     return {
       jsonapi: {
@@ -67,7 +83,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
         self: jsonApiContext.koaContext.URL.pathname
       },
       meta: this.topMeta(resource, jsonApiContext),
-      data: Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes),
+      data,
       included: included.size > 0 ? Array.from(included.values()) : undefined
     } as JsonApiTopLevel
   }
@@ -82,22 +98,6 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     }
   }
 
-  public serializeRelationships (resource: TResource, jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, relation: StringKeyOf<TResource>): JsonApiTopLevel {
-    const included = new Map<string, any>();
-    return {
-      jsonapi: {
-        version: '1.0'
-      },
-      links: {
-        ...this.paginationLinks(resource, jsonApiContext, totalRecords),
-        self: jsonApiContext.koaContext.URL.pathname
-      },
-      meta: this.topMeta(resource, jsonApiContext),
-      data: this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes, relation as any),
-      included: included.size > 0 ? Array.from(included.values()) : undefined
-    } as JsonApiTopLevel
-  }
-
   protected serializeRelationshipsDocument<T extends BaseEntity<T, any>> (resource: Resource<T>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>, relation: StringKeyOf<Resource<T>>): ResourceIdentifierObject | ResourceIdentifierObject[] {
     for (const rel of resource.resourceMeta.relationships!) {
       const relation = resource[rel.name as keyof typeof resource] as unknown as Resource<any> | Resource<any>[];
@@ -108,14 +108,32 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       const includes = includeLevel.get(rel.name);
 
       if (relation && includes) {
-        for (const r of Array.isArray(relation) ? relation : [relation]) {
-          if (r.id && !included.has(r.id)) {
-            included.set(r.id, this.serializeDocument(r, included, jsonApiContext, includes.includes));
-          }
-        }
+        this.processRelation(undefined, includes, included, relation, rel, jsonApiContext);
       }
     }
     return this.serializeResourceIdentifiers(resource[relation] as any);
+  }
+
+  /**
+   *
+   * @param relationships The relationships object to add
+   * @param includes the includes of query
+   * @param included the included Map
+   * @param relation the relation name
+   * @param rel the relation metadata
+   * @param jsonApiContext the context
+   */
+  protected processRelation (relationships: RelationshipsObject | undefined, includes: Include<any>, included: Map<string, any>, relation : Resource<any> | Resource<any>[], rel : RelationMeta<any, Resource<any>>, jsonApiContext: JsonApiContext<any>) {
+    const resourceIndentifiers = this.serializeResourceIdentifiers(relation);
+    if (relationships) {
+      relationships[rel.name].data = resourceIndentifiers;
+    }
+    for (const r of Array.isArray(relation) ? relation : [relation]) {
+      if (r.id && !included.has(r.id)) {
+        included.set(r.id, this.serializeDocument(r, included, jsonApiContext, includes.includes));
+      }
+    }
+    return resourceIndentifiers;
   }
 
   protected serializeDocument (resource: Resource<any>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>): ResourceObject {
@@ -145,13 +163,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       const includes = includeLevel.get(rel.name);
 
       if (relation && includes) {
-        const resourceIndentifiers = this.serializeResourceIdentifiers(relation);
-        relationships[rel.name].data = resourceIndentifiers;
-        for (const r of Array.isArray(relation) ? relation : [relation]) {
-          if (r.id && !included.has(r.id)) {
-            included.set(r.id, this.serializeDocument(r, included, jsonApiContext, includes.includes));
-          }
-        }
+        this.processRelation(relationships, includes, included, relation, rel, jsonApiContext);
       }
     }
 

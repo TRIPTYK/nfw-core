@@ -7,10 +7,29 @@ import pluralize from 'pluralize';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
 import type { ResourceMetadataArgs } from '../storage/metadata/resource.metadata.js';
+import type { ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import { ErrorHandler } from '../serializers/error.serializer.js';
 import type { JsonApiControllerOptions } from '../decorators/jsonapi-controller.decorator.js';
+import type { RouteInfo } from './route-map.js';
 import { routeMap } from './route-map.js';
+import type { ControllerActionParamsMetadataArgs } from '../storage/metadata/controller-params.metadata.js';
+import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
+import type { ResourceSerializer } from '../serializers/resource.serializer.js';
+import type { ResourceService } from '../services/resource.service.js';
+import type { RoleServiceAuthorizer } from '../services/role-authorizer.service.js';
+
+export interface JsonApiBuilderRouteParams {
+  resource: ResourceMeta<any, any>,
+  endpoint: EndpointMetadataArgs,
+  routeInfo: RouteInfo,
+  routeParams: ControllerActionParamsMetadataArgs[],
+  options: JsonApiControllerOptions,
+  serializer : ResourceSerializer<any>,
+  deserializer: ResourceDeserializer<any>,
+  service : ResourceService<any>,
+  authorizer? : RoleServiceAuthorizer<any, any>,
+}
 
 @injectable()
 export class JsonApiBuilder extends HttpBuilder {
@@ -59,6 +78,14 @@ export class JsonApiBuilder extends HttpBuilder {
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
     const middlewares = middlewaresForTarget(this.context.meta.target, endpoint.propertyName);
 
+    /**
+   * Resolve before call, they should be singletons
+   */
+    const serializer = container.resolve(`serializer:${resource.name}`) as ResourceSerializer<any>;
+    const deserializer = container.resolve(`deserializer:${resource.name}`) as ResourceDeserializer<any>;
+    const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
+    const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, any> | undefined;
+
     router[routeInfo.method](routeInfo.routeName, ...middlewares, async (ctx, next) => {
       try {
         await next();
@@ -66,6 +93,16 @@ export class JsonApiBuilder extends HttpBuilder {
         console.log(e);
         await errorSerializer.handle(e, ctx);
       }
-    }, routeInfo.function.call(this.context, resource, endpoint, routeInfo, routeParams, options));
+    }, routeInfo.function.call(this.context, {
+      resource,
+      endpoint,
+      routeInfo,
+      routeParams,
+      options,
+      serializer,
+      deserializer,
+      service,
+      authorizer
+    }));
   }
 }

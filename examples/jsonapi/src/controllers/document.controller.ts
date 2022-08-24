@@ -3,10 +3,7 @@ import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate, JsonApiUpdat
 import koaBody from 'koa-body';
 import { DocumentResource } from '../resources/document.resource.js';
 
-@JsonApiController(DocumentResource, {
-  allowedContentType: 'multipart/form-data',
-  ignoreMedia: true
-})
+@JsonApiController(DocumentResource)
 export class DocumentController {
   @JsonApiList()
   async list () {}
@@ -14,7 +11,10 @@ export class DocumentController {
   @JsonApiGet()
   async get () {}
 
-  @JsonApiCreate()
+  @JsonApiCreate({
+    allowedContentType: 'multipart/form-data',
+    ignoreMedia: true
+  })
   @UseMiddleware(koaBody({
     multipart: true,
     json: false
@@ -27,7 +27,10 @@ export class DocumentController {
     multipart: true,
     json: false
   }))
-  @JsonApiUpdate()
+  @JsonApiUpdate({
+    allowedContentType: 'multipart/form-data',
+    ignoreMedia: true
+  })
   async update () {}
 
   @JsonApiDelete()

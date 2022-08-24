@@ -46,6 +46,7 @@
           "requireLast": false
         }
       }
-    ]
+    ],
+    "@typescript-eslint/member-ordering": "warn"
   }
 }

@@ -10,45 +10,32 @@ import type { Resource } from '../resource/base.resource.js';
 export class ResourceService<TModel extends BaseEntity<TModel, any>> {
   public declare resourceMeta: ResourceMeta<TModel>;
 
+  public constructor (@inject(MikroORM) private orm: MikroORM) {}
+
+  /**
+   * Get the current repository for the service
+   */
   get repository () {
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
   }
-
-  public constructor (@inject(MikroORM) private orm: MikroORM) {}
 
   /**
    * Loads all entities, also applies sorting, includes, filters,... to the database request using context query
    * @param ctx The JsonApiContext
    * @returns
    */
-  public findAll ({ query }: JsonApiContext<TModel>) {
-    const populate : string[] = [];
-    const fields : string[] = [];
-    const orderBy : QueryOrderMap<TModel> = {};
+  public findAll (ctx: JsonApiContext<TModel>) {
+    const { populate, fields, orderBy, filters } = this.setupRequestObjects(ctx);
 
-    if (query!.fields.has(this.resourceMeta.name)) {
-      const attributes = query!.fields.get(this.resourceMeta.name)!;
-      fields.push(...attributes.map((attr) => attr.name));
-    } else {
-      fields.push(...this.resourceMeta.attributes.map((a) => a.name));
-    }
+    const size = ctx.query!.size ?? 20;
 
-    for (const include of query!.includes.values()) {
-      this.applyIncludes(populate, fields, query!.fields, include, [])
-    }
-
-    this.applySort(query!.sort, orderBy);
-
-    const size = query!.size ?? 20;
-
-    return this.repository.findAndCount(
-      this.applyFilter(query!.filters), {
-        populate: populate as any,
-        fields: fields as any,
-        orderBy,
-        limit: size,
-        offset: query!.page ? (query!.page * size) - 1 : undefined
-      });
+    return this.repository.findAndCount(filters, {
+      populate: populate as any,
+      fields: fields as any,
+      orderBy,
+      limit: size,
+      offset: ctx.query!.page ? (ctx.query!.page * size) - 1 : undefined
+    });
   }
 
   /**
@@ -64,6 +51,9 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     return entity;
   }
 
+  /**
+   * Updates a model from a resource
+   */
   public async updateOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
     const entity = await this.repository.findOneOrFail({ id: resource.id } as any);
     const pojo = resource.toMikroPojo();
@@ -91,6 +81,37 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
    * @returns
    */
   public findOne (id :string, ctx: JsonApiContext<TModel>) {
+    const { populate, fields, orderBy, filters } = this.setupRequestObjects(ctx);
+    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
+      { id, ...filters }, {
+        populate: populate as any,
+        fields: fields as any,
+        orderBy
+      });
+  }
+
+  /**
+     * Used by related routes to get the entity with a specific relation loaded
+     * Use this.findOne internaly
+     * @param id The primary key
+     * @param ctx The JsonApiContext
+     * @param relation The relation name
+     * @returns
+     */
+  public async getOneWithRelation (id :string, ctx: JsonApiContext<TModel>, relation: string) {
+    const one = await this.findOne(id, ctx);
+    // load the relation, need to be loaded anyway
+    if (one) {
+      await this.orm.em.populate(one, [relation as any]);
+    }
+    return one;
+  }
+
+  /**
+   * Setups all the informations needed for an ORM query from the context
+   * @param ctx The JsonApiContext
+   */
+  protected setupRequestObjects (ctx: JsonApiContext<TModel>) {
     const populate : string[] = [];
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
@@ -108,31 +129,17 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
 
     this.applySort(ctx.query!.sort, orderBy);
 
-    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
-      { id, ...this.applyFilter(ctx.query!.filters) }, {
-        populate: populate as any,
-        fields: fields as any,
-        orderBy
-      });
+    return {
+      populate,
+      fields,
+      orderBy,
+      filters: this.applyFilter(ctx.query!.filters)
+    }
   }
 
   /**
-   * Used by related routes to get the entity with a specific relation loaded
-   * Use this.findOne internaly
-   * @param id The primary key
-   * @param ctx The JsonApiContext
-   * @param relation The relation name
-   * @returns
+   * Generates the filter object
    */
-  public async getOneWithRelation (id :string, ctx: JsonApiContext<TModel>, relation: string) {
-    const one = await this.findOne(id, ctx);
-    // load the relation, need to be loaded anyway
-    if (one) {
-      await this.orm.em.populate(one, [relation as any]);
-    }
-    return one;
-  }
-
   protected applyFilter (filters: Filter<TModel>): ObjectQuery<TModel> {
     const finalObject = {} as any; ;
     finalObject[filters.logical] = [];
@@ -145,6 +152,9 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     return finalObject;
   }
 
+  /**
+   * Generates the sort object
+   */
   protected applySort (sort: Sort<TModel>, parentStructure: Record<string, any>) {
     for (const [key, value] of sort.attributes) {
       const sortOrder = value.direction === 'ASC' ? 1 : -1;

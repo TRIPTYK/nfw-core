@@ -10,6 +10,12 @@ export class MetadataStorage {
    */
   private static _instance?: MetadataStorage;
 
+  public useParams: ControllerActionParamsMetadataArgs[] = [];
+  public attributes: EntityAttributesMetadataArgs[] = [];
+  public relationships: RelationshipMetadataArgs[] = [];
+  public resources: ResourceMetadataArgs<any>[] = [];
+  public endpoints: EndpointMetadataArgs[] = [];
+
   public static get instance () {
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
@@ -35,14 +41,4 @@ export class MetadataStorage {
   public getParamsFor (resource: unknown) {
     return this.useParams.filter((e) => e.target === resource).sort((a, b) => a.index - b.index);
   }
-
-  /**
-   * Use parameters in controller route
-   */
-  public useParams: ControllerActionParamsMetadataArgs[] = [];
-
-  public attributes: EntityAttributesMetadataArgs[] = [];
-  public relationships: RelationshipMetadataArgs[] = [];
-  public resources: ResourceMetadataArgs<any>[] = [];
-  public endpoints: EndpointMetadataArgs[] = [];
 }
