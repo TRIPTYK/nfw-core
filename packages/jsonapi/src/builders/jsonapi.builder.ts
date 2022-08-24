@@ -86,14 +86,13 @@ export class JsonApiBuilder extends HttpBuilder {
     const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
     const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, any> | undefined;
 
-    router[routeInfo.method](routeInfo.routeName, ...middlewares, async (ctx, next) => {
+    router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {
         await next();
       } catch (e: any) {
-        console.log(e);
         await errorSerializer.handle(e, ctx);
       }
-    }, routeInfo.function.call(this.context, {
+    }, ...middlewares, routeInfo.function.call(this.context, {
       resource,
       endpoint,
       routeInfo,

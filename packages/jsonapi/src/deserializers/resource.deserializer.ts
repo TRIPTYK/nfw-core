@@ -1,6 +1,7 @@
 import type { BaseEntity } from '@mikro-orm/core';
 import { ReferenceType } from '@mikro-orm/core';
 import { injectable } from '@triptyk/nfw-core';
+import { BadRequestError } from '../errors/bad-request.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { Resource } from '../resource/base.resource.js';
@@ -13,7 +14,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
   deserialize (payload: Record<string, unknown>, context: JsonApiContext<TModel>): Promise<Resource<TModel>> | Resource<TModel> {
     // eslint-disable-next-line new-cap
     if (!payload.data) {
-      throw new Error('Not a json-api payload');
+      throw new BadRequestError('Not a json-api payload');
     }
 
     const data = payload.data as {
@@ -21,10 +22,6 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       relationships?: Record<string, Record<'data', unknown>>,
       id?: string,
     };
-
-    if (!data?.attributes) {
-      throw new Error('Not attributes specified');
-    }
 
     const jsonApiBody = data.attributes ?? {};
 
@@ -37,7 +34,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       if (!this.resource.attributes.some((p) => {
         return p.name === property && (context.method === JsonApiMethod.CREATE ? p.createable : p.updateable)
       })) {
-        throw new Error(`Property ${property} is not allowed in body`);
+        throw new BadRequestError(`Property ${property} is not allowed in body`);
       }
     }
 
@@ -46,16 +43,16 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
     for (const [key, value] of Object.entries(relationships)) {
       const relationMeta = this.resource.relationships.find((p) => p.name === key);
       if (!relationMeta) {
-        throw new Error(`Relationship ${key} does not exists in ${this.resource.name}`);
+        throw new BadRequestError(`Relationship ${key} does not exists in ${this.resource.name}`);
       }
       const data = value.data;
       if (!data) {
-        throw new Error('Please provide some data');
+        throw new BadRequestError(`Please provide data to relationships object ${key}`);
       }
 
       if (relationMeta.mikroMeta.reference === ReferenceType.MANY_TO_MANY || relationMeta.mikroMeta.reference === ReferenceType.ONE_TO_MANY) {
         if (!Array.isArray(data)) {
-          throw new Error(`Relationship data for ${key} must be an array`);
+          throw new BadRequestError(`Relationship data for ${key} must be an array`);
         }
 
         (newResource as any)[key] = data.map((d) => {
@@ -67,7 +64,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
         });
       } else {
         if (typeof data !== 'object' && data !== null) {
-          throw new Error(`Relationship data for ${key} must be an null or an object`);
+          throw new BadRequestError(`Relationship data for ${key} must be an null or an object`);
         }
 
         // eslint-disable-next-line new-cap

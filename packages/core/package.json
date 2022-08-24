@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-core",
-  "version": "3.0.0-beta.4",
+  "version": "4.0.0-alpha.0",
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

@@ -4,6 +4,7 @@ import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
 import type { OperatorMap } from '@mikro-orm/core/typings.js';
+import { BadRequestError } from '../errors/bad-request.js';
 
 export interface Sort<TModel extends BaseEntity<TModel, any>> {
   attributes: Map<string, {
@@ -78,7 +79,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     for (const fieldName in query.fields) {
       const resource = registry.getResourceByName(fieldName);
       if (!resource) {
-        throw new Error(`Resource ${fieldName} not found`);
+        throw new BadRequestError(`Resource ${fieldName} not found`);
       }
 
       this.fields.set(
@@ -86,12 +87,12 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         query.fields[fieldName].split(',').map((field) => {
           const attr = resource.attributes.find((f) => f.name === field);
           if (!attr) {
-            throw new Error(
+            throw new BadRequestError(
               `Attribute ${field} not found in resource ${resource.name}`
             );
           }
           if (!attr.isFetchable) {
-            throw new Error(`Attribute ${field} is not fetchable`);
+            throw new BadRequestError(`Attribute ${field} is not fetchable`);
           }
           return attr;
         })
@@ -140,16 +141,16 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
           }
 
           if (meta.allowedFilters === false) {
-            throw new Error(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
+            throw new BadRequestError(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
           }
 
           if (!meta.allowedFilters[key]) {
-            throw new Error(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
+            throw new BadRequestError(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
           }
 
           if (typeof meta.allowedFilters[key] === 'function') {
             if (meta.allowedFilters[key](value) !== true) {
-              throw new Error(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
+              throw new BadRequestError(`${meta.name} of ${parentEntity.name} is not allowed to be filtered with ${key}`);
             }
           }
         }
@@ -160,7 +161,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         if (found) {
           this.parseFilters(parentFilter, value as any, found.resource, [...parents, key]);
         } else {
-          throw new Error(`Resource attribute/relation ${key} of ${parentEntity.name} does not exists`);
+          throw new BadRequestError(`Resource attribute/relation ${key} of ${parentEntity.name} does not exists`);
         }
       }
     }
@@ -177,7 +178,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
       if (parentInclude instanceof Map) {
         const relationMeta = this.context.resource.relationships.find((rel) => rel.name === parentRel);
         if (!relationMeta) {
-          throw new Error(`Relation ${parentRel} not found`);
+          throw new BadRequestError(`Relation ${parentRel} not found`);
         }
         parentInclude.set(parentRel, {
           relationMeta,
@@ -190,7 +191,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         const relationMeta =
           parentInclude.relationMeta.resource.relationships.find((rel) => rel.name === parentRel);
         if (!relationMeta) {
-          throw new Error(`Relation ${parentRel} not found`);
+          throw new BadRequestError(`Relation ${parentRel} not found`);
         }
         parentInclude.includes.set(parentRel, {
           relationMeta,
@@ -217,11 +218,11 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
       const meta = parentResource.attributes.find((r) => r.name === parentRel);
 
       if (!meta) {
-        throw new Error(`Field ${parentRel} not found in sort`)
+        throw new BadRequestError(`Field ${parentRel} not found in sort`)
       }
 
       if (!meta.allowedSortDirections.includes(direction)) {
-        throw new Error(`Field ${parentRel} is not allowed to be sorted by ${direction}`);
+        throw new BadRequestError(`Field ${parentRel} is not allowed to be sorted by ${direction}`);
       }
 
       parentSort.attributes.set(parentRel, {
@@ -240,7 +241,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     const newParentResource = parentResource.relationships.find((r) => r.name === parentRel);
 
     if (!newParentResource) {
-      throw new Error(`Unknown relationship in sort fields ${parentRel}`);
+      throw new BadRequestError(`Unknown relationship in sort fields ${parentRel}`);
     }
 
     for (const sort of splitted) {

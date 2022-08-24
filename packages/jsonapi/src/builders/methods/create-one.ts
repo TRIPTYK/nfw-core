@@ -10,6 +10,7 @@ import { validateContentType } from '../../utils/content-type.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
+import { UnauthorizedError } from '../../errors/unauthorized.js';
 
 export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, service, authorizer, deserializer, serializer }: JsonApiBuilderRouteParams) {
   return async (ctx: RouterContext) => {
@@ -57,7 +58,7 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     if (authorizer) {
       const can = await authorizer.create(currentUser as any, one, jsonApiContext);
       if (!can) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError();
       }
     }
     await service.repository.persistAndFlush(one as any);

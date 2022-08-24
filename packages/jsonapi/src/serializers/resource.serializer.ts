@@ -137,7 +137,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
   }
 
   protected serializeDocument (resource: Resource<any>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>): ResourceObject {
-    const fetchableFields = resource.resourceMeta.attributes.filter((f) => f.isFetchable);
+    const fetchableFields = resource.resourceMeta.attributes.filter((f) => f.isFetchable && f.name !== 'id');
 
     const attributes = {} as any;
 

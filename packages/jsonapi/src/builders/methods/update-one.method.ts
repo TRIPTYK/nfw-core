@@ -3,6 +3,7 @@ import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import { NotAcceptableError } from '../../errors/not-acceptable.js';
+import { UnauthorizedError } from '../../errors/unauthorized.js';
 import { UnsupportedMediaTypeError } from '../../errors/unsupported-media-type.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
@@ -57,7 +58,7 @@ export function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     if (authorizer) {
       const can = await authorizer.update(currentUser, one, jsonApiContext);
       if (!can) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError();
       }
     }
     await service.repository.flush();
