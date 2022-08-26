@@ -2,10 +2,11 @@ import type { BaseEntity, EntityDTO, Loaded } from '@mikro-orm/core';
 import type { EntityDTOProp } from '@mikro-orm/core/typings.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
+import type { LinksObject } from '../serializers/spec.interface.js';
 
 export abstract class Resource<T extends BaseEntity<T, any>> {
   metaObject?: Record<string, unknown> | undefined;
-  linksObject?: Record<string, unknown> | undefined;
+  linksObject?: LinksObject<string>;
 
   /**
    * The meta linked with the resource
@@ -20,6 +21,9 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
  */
   abstract id?: string;
 
+  /**
+   * Transforms the resource to a MikroORM POJO
+   */
   toMikroPojo () {
     const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
 

@@ -2,6 +2,6 @@ import type { RelationshipOptions } from '../../decorators/relationship.decorato
 
 export interface RelationshipMetadataArgs {
   target: unknown,
-  options: RelationshipOptions,
+  options: RelationshipOptions<unknown>,
   propertyName: string,
 }

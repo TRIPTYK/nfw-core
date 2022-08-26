@@ -8,6 +8,7 @@ import type { Resource } from './resource/base.resource.js';
 import { ResourceSerializer } from './serializers/resource.serializer.js';
 import { ResourceService } from './services/resource.service.js';
 import { MetadataStorage } from './storage/metadata-storage.js';
+import type { LinksObject } from './serializers/spec.interface.js';
 
 export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
     name: StringKeyOf<TResource>,
@@ -23,6 +24,7 @@ export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource
 export interface RelationMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
     resource: ResourceMeta<TModel>,
     mikroMeta: EntityProperty<TModel>,
+    links?: (this: TResource) => LinksObject<string>,
     name : keyof TResource,
 }
 
@@ -118,6 +120,7 @@ export class JsonApiRegistry {
           return {
             mikroMeta,
             resource,
+            links: e.options.links,
             name: e.propertyName as any
           }
         });

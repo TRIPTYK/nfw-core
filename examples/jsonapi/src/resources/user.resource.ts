@@ -21,10 +21,10 @@ export class UserResource extends Resource<UserModel> {
   @Attribute()
   declare username: string;
 
-   @Relationship({
-     otherResource: 'ArticleResource'
-   })
+  @Relationship({
+    otherResource: 'ArticleResource'
+  })
   declare articles: ArticleResource[];
 
-   validate (): void {}
+  validate (): void {}
 }

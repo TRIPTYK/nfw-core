@@ -19,9 +19,7 @@ export class DocumentController {
     multipart: true,
     json: false
   }))
-  async create () {
-
-  }
+  async create () {}
 
   @UseMiddleware(koaBody({
     multipart: true,

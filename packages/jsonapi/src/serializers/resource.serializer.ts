@@ -19,14 +19,13 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
 
   public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): Promise<JsonApiTopLevel> | JsonApiTopLevel {
     const included = new Map<string, any>();
-    return this.serializeBase(resource, jsonApiContext, totalRecords, Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes))
+    return this.serializeBase(resource, jsonApiContext, totalRecords, Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes), included)
   }
 
   public async serializeRelationships (resource: TResource, jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, relation: StringKeyOf<TResource>): Promise<JsonApiTopLevel> {
     const included = new Map<string, any>();
-
     return this.serializeBase(resource, jsonApiContext, totalRecords,
-      this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes, relation as any)
+      this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes, relation as any), included
     );
   }
 
@@ -72,15 +71,14 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
   /**
    * Setups JsonApiTopLevel object with @data
    */
-  protected serializeBase (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined, data: JsonApiTopLevel['data']) {
-    const included = new Map<string, any>();
+  protected serializeBase (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined, data: JsonApiTopLevel['data'], included: Map<string, any>) {
     return {
       jsonapi: {
         version: '1.0'
       },
       links: {
         ...this.paginationLinks(resource, jsonApiContext, totalRecords),
-        self: jsonApiContext.koaContext.URL.pathname
+        self: jsonApiContext.koaContext.url
       },
       meta: this.topMeta(resource, jsonApiContext),
       data,
@@ -151,10 +149,12 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       const relation = resource[rel.name as keyof typeof resource] as unknown as Resource<any> | Resource<any>[];
 
       relationships[rel.name] = {
-        links: {
-          self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/relationships/${rel.name}`,
-          related: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/${rel.name}`
-        }
+        links: rel.links
+          ? rel.links.call(resource)
+          : {
+              self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/relationships/${rel.name}`,
+              related: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/${rel.name}`
+            }
       };
 
       /**
@@ -169,7 +169,8 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
 
     return {
       id: resource.id,
-      links: {
+      meta: resource.metaObject,
+      links: resource.linksObject ?? {
         self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}`
       },
       type: resource.resourceMeta.name,

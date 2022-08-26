@@ -28,7 +28,7 @@ export class ArticleResource extends Resource<ArticleModel> {
   @Attribute()
   declare type: string;
 
-  @Relationship({
+  @Relationship<ArticleResource>({
     otherResource: 'UserResource'
   })
   declare writer: UserResource;
