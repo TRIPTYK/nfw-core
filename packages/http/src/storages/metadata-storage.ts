@@ -1,6 +1,5 @@
 import type { Class } from 'type-fest';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
-import type { UseErrorHandlerMetadataArgs } from './metadata/use-error-handler.metadata.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.metadata.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.metadata.js';
 import type { UseParamsMetadataArgs } from './metadata/use-param.metadata.js';
@@ -36,11 +35,6 @@ export class MetadataStorage {
    */
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
-  /**
-   * Error handling
-   */
-  public useErrorHandler: UseErrorHandlerMetadataArgs[] = [];
-
   public static get instance () {
     if (MetadataStorage._instance) {
       return MetadataStorage._instance;
@@ -57,10 +51,6 @@ export class MetadataStorage {
 
   public getMiddlewaresForTarget (target: unknown, propertyName?: string) {
     return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target).reverse();
-  }
-
-  public getErrorHandlerForTarget (target: unknown, propertyName?: string) {
-    return this.useErrorHandler.find((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target);
   }
 
   public getEndpointsForTarget (target: unknown) {

@@ -5,7 +5,7 @@ import { handleHttpRouteControllerAction } from '../factories/controller-action.
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.util.js';
-import { middlewaresForTarget, resolveMiddleware, useErrorHandler } from '../utils/factory.util.js';
+import { middlewaresForTarget, resolveMiddleware } from '../utils/factory.util.js';
 
 export class HttpBuilder implements RouteBuilderInterface {
   declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
@@ -18,12 +18,6 @@ export class HttpBuilder implements RouteBuilderInterface {
     const endpointsMeta = MetadataStorage.instance.getEndpointsForTarget(this.context.meta.target);
     const applyMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(this.context.meta.target)
       .map((controllerMiddlewareMeta) => resolveMiddleware(controllerMiddlewareMeta.middleware));
-
-    const errorHandlerMeta = MetadataStorage.instance.getErrorHandlerForTarget(this.context.meta.target);
-
-    if (errorHandlerMeta) {
-      applyMiddlewares.unshift(useErrorHandler(errorHandlerMeta.errorHandler));
-    }
 
     controllerRouter.use(...applyMiddlewares);
 

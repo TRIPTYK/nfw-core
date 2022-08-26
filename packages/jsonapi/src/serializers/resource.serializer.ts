@@ -12,7 +12,7 @@ import type { JsonApiTopLevel, LinkObject, PaginationLinksKeys, RelationshipsObj
 export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
   public declare resource: ResourceMeta<TModel, TResource>;
 
-  protected get baseURL () {
+  public get baseURL () {
     const registry = container.resolve(JsonApiRegistry);
     return registry.apiPath;
   }

@@ -75,13 +75,21 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
       throw new Error('createOne must return an instance of entity !');
     }
 
-    const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
+    const finalResponse = res || one;
+
+    const asResource = createResourceFrom(finalResponse.toJSON(), resource, jsonApiContext);
 
     /**
      * Serialize result and res to client
      */
     const serialized = await serializer.serialize(asResource, jsonApiContext);
+
+    const url = ctx.URL;
+    url.pathname += url.pathname.endsWith('/') ? finalResponse.id : `/${finalResponse.id}`;
+
+    ctx.set('Location', url.pathname);
     ctx.body = serialized;
+    ctx.status = 201;
     ctx.type = 'application/vnd.api+json';
   }
 }

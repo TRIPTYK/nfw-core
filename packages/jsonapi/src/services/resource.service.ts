@@ -5,6 +5,7 @@ import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { Filter, Include, Sort } from '../query-parser/query-parser.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { Resource } from '../resource/base.resource.js';
+import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<TModel, any>> {
@@ -55,7 +56,10 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
    * Updates a model from a resource
    */
   public async updateOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
-    const entity = await this.repository.findOneOrFail({ id: resource.id } as any);
+    const entity = await this.repository.findOne({ id: resource.id } as any);
+    if (!entity) {
+      throw new ResourceNotFoundError();
+    }
     const pojo = resource.toMikroPojo();
     for (const relationMeta of resource.resourceMeta.relationships) {
       const relationProperty = entity[relationMeta.name as keyof typeof entity];
@@ -137,14 +141,6 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  private expandObject (obj: Record<string, any>, path: string) {
-    for (const opath of path.split('.')) {
-      obj[opath] = {};
-      obj = obj[opath];
-    }
-    return obj;
-  }
-
   /**
    * Generates the filter object
    */
@@ -156,7 +152,6 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       const filterObj = {};
       const expanded = this.expandObject(filterObj, iterator.path);
       expanded[iterator.operator] = iterator.value;
-      console.log(filterObj);
 
       finalObject[filters.logical].push(filterObj)
     }
@@ -199,5 +194,13 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     for (const include of parentInclude.includes.values()) {
       this.applyIncludes(populate, fields, queryFields, include, parentsPath)
     }
+  }
+
+  private expandObject (obj: Record<string, any>, path: string) {
+    for (const opath of path.split('.')) {
+      obj[opath] = {};
+      obj = obj[opath];
+    }
+    return obj;
   }
 }

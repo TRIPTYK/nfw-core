@@ -1,6 +1,5 @@
-import { JsonapiError } from '../error.js';
+import { NotFoundError } from '../not-found.js';
 
-export class RelationshipNotFoundError extends JsonapiError {
-  status = '404';
+export class RelationshipNotFoundError extends NotFoundError {
   code = this.constructor.name;
 }

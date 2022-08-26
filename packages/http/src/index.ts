@@ -2,14 +2,18 @@
 export * from './builders/http.builder.js'
 export * from './decorators/verbs.decorator.js'
 export * from './decorators/controller.decorator.js'
-export * from './decorators/use-error-handler.decorator.js'
 export * from './decorators/use-guard.decorator.js'
 export * from './decorators/use-response-handler.decorator.js'
 export * from './decorators/use-response-handler.decorator.js'
 export * from './decorators/use-middleware.decorator.js';
-export * from './interfaces/endpoint.metadata.js';
 
+export * from './interfaces/endpoint.metadata.js';
 export * from './interfaces/middleware.interface.js';
+export * from './interfaces/error-middleware.interface.js';
+export * from './interfaces/response-handler.interface.js';
+export * from './interfaces/guard.interface.js';
+
+export * from './factories/custom-decorator.factory.js';
 
 export * from './decorators/params/args.decorator.js'
 export * from './decorators/params/body.decorator.js'
@@ -27,7 +31,6 @@ export * from './decorators/params/router-context.decorator.js';
 
 export * from './storages/metadata-storage.js';
 
-export * from './storages/metadata/use-error-handler.metadata.js';
 export * from './storages/metadata/use-guard.metadata.js';
 export * from './storages/metadata/use-param.metadata.js';
 export * from './storages/metadata/use-response-handler.metadata.js';

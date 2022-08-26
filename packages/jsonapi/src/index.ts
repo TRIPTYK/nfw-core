@@ -20,6 +20,8 @@ export * from './deserializers/resource.deserializer.js';
 export * from './serializers/resource.serializer.js';
 export * from './serializers/error.serializer.js';
 
+export * from './utils/create-resource.js';
+
 export * from './decorators/jsonapi-endpoints.decorator.js';
 
 export * from './jsonapi.registry.js';
