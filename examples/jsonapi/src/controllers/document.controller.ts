@@ -6,10 +6,10 @@ import { DocumentResource } from '../resources/document.resource.js';
 @JsonApiController(DocumentResource)
 export class DocumentController {
   @JsonApiList()
-  async list () {}
+  public async list () {}
 
   @JsonApiGet()
-  async get () {}
+  public async get () {}
 
   @JsonApiCreate({
     allowedContentType: 'multipart/form-data',
@@ -19,7 +19,7 @@ export class DocumentController {
     multipart: true,
     json: false
   }))
-  async create () {}
+  public async create () {}
 
   @UseMiddleware(koaBody({
     multipart: true,
@@ -29,14 +29,14 @@ export class DocumentController {
     allowedContentType: 'multipart/form-data',
     ignoreMedia: true
   })
-  async update () {}
+  public async update () {}
 
   @JsonApiDelete()
-  async delete () {}
+  public async delete () {}
 
   @JsonApiGetRelationships()
-  async relationships () {}
+  public async relationships () {}
 
   @JsonApiGetRelated()
-  async related () {}
+  public async related () {}
 }

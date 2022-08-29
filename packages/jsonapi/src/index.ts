@@ -34,7 +34,7 @@ export * from './query-parser/query-parser.js';
 
 export * from './deserializers/resource.deserializer.js';
 export * from './serializers/resource.serializer.js';
-export * from './serializers/error.serializer.js';
+export * from './errors/error-handler.js';
 
 export * from './utils/create-resource.js';
 

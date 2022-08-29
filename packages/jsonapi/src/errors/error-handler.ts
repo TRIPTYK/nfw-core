@@ -1,7 +1,7 @@
 
 import type { RouterContext } from '@koa/router';
-import { JsonapiError } from '../errors/error.js';
-import type { JsonApiErrorObject } from './spec.interface.js';
+import { JsonapiError } from './error.js';
+import type { JsonApiErrorObject } from '../serializers/spec.interface.js';
 
 export class ErrorHandler {
   public async handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {

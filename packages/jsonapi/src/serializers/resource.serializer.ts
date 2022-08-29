@@ -152,8 +152,8 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
         links: rel.links
           ? rel.links.call(resource)
           : {
-              self: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/relationships/${rel.name}`,
-              related: `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/${rel.name}`
+              self: resource.resourceMeta.routes.hasRelationships ? `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/relationships/${rel.name}` : undefined,
+              related: resource.resourceMeta.routes.hasRelated ? `${this.baseURL}/${resource.resourceMeta.name}/${resource.id}/${rel.name}` : undefined
             }
       };
 

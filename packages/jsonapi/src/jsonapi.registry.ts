@@ -35,6 +35,15 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
      * Will be pluralized for endpoints
     */
     name: string,
+    routes: {
+      hasCreate?: boolean,
+      hasUpdate?: boolean,
+      hasList?: boolean,
+      hasDelete?: boolean,
+      hasGet?: boolean,
+      hasRelationships?: boolean,
+      hasRelated?: boolean,
+    },
     mikroEntity: EntityMetadata<TModel>,
     attributes: AttributeMeta<TModel, TResource>[],
     relationships: RelationMeta<TModel>[],
@@ -45,7 +54,7 @@ export class JsonApiRegistry {
   public resources = new Map<Class<Resource<any>>, ResourceMeta<any, any>>([]);
   public declare apiPath: string;
 
-  constructor (@inject(MikroORM) private orm: MikroORM) {}
+  public constructor (@inject(MikroORM) private orm: MikroORM) {}
 
   public getResourceByClassName (name: string) {
     for (const key of this.resources.keys()) {
@@ -71,14 +80,16 @@ export class JsonApiRegistry {
     apiPath: string,
   }) {
     this.apiPath = apiPath;
+    const mikroORMMetadataStorage = this.orm.getMetadata();
+    const jsonApiMetadataStorage = MetadataStorage.instance;
 
-    for (const resource of MetadataStorage.instance.resources) {
+    for (const resource of jsonApiMetadataStorage.resources) {
       this.resources.set(resource.target, {} as ResourceMeta<any, any>);
     }
 
-    for (const resource of MetadataStorage.instance.resources) {
+    for (const resource of jsonApiMetadataStorage.resources) {
       const entityName = (resource.options.entity as EntityClass<any>).name;
-      const mikroEntity = this.orm.getMetadata().find(entityName);
+      const mikroEntity = mikroORMMetadataStorage.find(entityName);
       const resourceRef = this.resources.get(resource.target)!;
 
       if (!mikroEntity) {
@@ -86,7 +97,7 @@ export class JsonApiRegistry {
       }
       const resourceTargetPrototype = (resource.target as Class<unknown>).prototype;
 
-      const allowedAttributes: AttributeMeta<any, any>[] = MetadataStorage.instance.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
+      const allowedAttributes: AttributeMeta<any, any>[] = jsonApiMetadataStorage.getAllowedAttributesFor(resourceTargetPrototype).map((e) => {
         const mikroMeta = Object.values(mikroEntity.properties).find((p) => p.name === e.propertyName);
         if (!mikroMeta) throw new Error('Cannot find meta for property ' + e.propertyName);
 
@@ -108,11 +119,12 @@ export class JsonApiRegistry {
           createable: e.options?.createable ?? true,
           allowedFilters: e.options?.filterable ?? {},
           isFetchable: e.options?.fetchable ?? true,
+
           allowedSortDirections: sortable as ('ASC' | 'DESC')[]
         }
       });
 
-      const allowedRelations : RelationMeta<any>[] = MetadataStorage.instance.getAllowedRelationshipsFor(resourceTargetPrototype)
+      const allowedRelations : RelationMeta<any>[] = jsonApiMetadataStorage.getAllowedRelationshipsFor(resourceTargetPrototype)
         .map((e) => {
           const resource = this.getResourceByClassName(e.options.otherResource);
           const mikroMeta = mikroEntity.relations.find((r) => r.name === e.propertyName);
@@ -172,6 +184,7 @@ export class JsonApiRegistry {
       });
 
       resourceRef.mikroEntity = mikroEntity;
+      resourceRef.routes = {};
       resourceRef.name = resource.options.entityName;
       resourceRef.attributes = allowedAttributes;
       resourceRef.relationships = allowedRelations;

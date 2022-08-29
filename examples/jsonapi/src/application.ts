@@ -23,6 +23,7 @@ async function main () {
   await container.resolve(JsonApiRegistry).init({
     apiPath: '/api/v1'
   });
+  // bound to entity, enabled by default
   const generator = mikro.getSchemaGenerator();
   await generator.dropSchema();
   await generator.updateSchema();
