@@ -76,7 +76,7 @@ export class JsonApiBuilder extends HttpBuilder {
     const errorSerializer = container.resolve(ErrorHandler);
 
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
-    const middlewares = middlewaresForTarget(this.context.meta.target, endpoint.propertyName);
+    const middlewares = middlewaresForTarget(this.context.meta.target.prototype, endpoint.propertyName);
 
     /**
    * Resolve before call, they should be singletons

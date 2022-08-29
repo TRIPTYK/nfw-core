@@ -50,9 +50,4 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
     }
     return pojo;
   }
-
-  /**
-   * @throws
-   */
-  public abstract validate (): void;
 }

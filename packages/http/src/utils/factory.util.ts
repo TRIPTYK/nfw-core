@@ -56,7 +56,7 @@ export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInte
 }
 
 export function middlewaresForTarget (target: Class<unknown>, propertyName?: string) {
-  const endpointMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(target.prototype, propertyName)
+  const endpointMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(target, propertyName)
     .map((m) => resolveMiddleware(m.middleware));
   return endpointMiddlewares;
 }

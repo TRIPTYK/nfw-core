@@ -25,7 +25,10 @@ export class ErrorHandler {
       return {
         status: error.status,
         detail: error.detail,
-        code: error.code
+        code: error.code,
+        source: error.source,
+        links: error.links,
+        meta: error.meta
       };
     }
 

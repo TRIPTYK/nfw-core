@@ -22,6 +22,14 @@ export * from './storage/metadata/resource.metadata.js';
 
 export * from './decorators/jsonapi-controller.decorator.js';
 
+export * from './errors/error.js';
+export * from './errors/bad-request.js';
+export * from './errors/forbidden.js';
+export * from './errors/not-acceptable.js';
+export * from './errors/not-found.js';
+export * from './errors/unauthorized.js';
+export * from './errors/unsupported-media-type.js';
+
 export * from './query-parser/query-parser.js';
 
 export * from './deserializers/resource.deserializer.js';
