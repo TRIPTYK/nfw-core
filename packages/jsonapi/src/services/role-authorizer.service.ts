@@ -8,20 +8,20 @@ export abstract class RoleServiceAuthorizer<U extends BaseEntity<U, any>, E exte
   /**
    * Can user read TR in context ?
    */
-  abstract read (user: U | undefined, r: E, c: JsonApiContext<any>) : Promise<boolean> | boolean;
+  public abstract read (user: U | undefined, r: E, c: JsonApiContext<any>) : Promise<boolean> | boolean;
 
   /**
    *
    */
-  abstract create (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
+   public abstract create (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
 
-  /**
+   /**
    *
    */
-  abstract update (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
+   public abstract update (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
 
-  /**
+   /**
    *
    */
-  abstract remove (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
+   public abstract remove (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
 }

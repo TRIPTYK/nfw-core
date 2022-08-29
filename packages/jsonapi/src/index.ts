@@ -14,7 +14,15 @@ export * from './interfaces/json-api-context.js';
 export * from './decorators/parameters/ctx.decorator.js';
 export * from './decorators/parameters/service-response.decorator.js';
 
+export * from './storage/metadata/endpoint.metadata.js';
+export * from './storage/metadata/attributes.metadata.js';
+export * from './storage/metadata/controller-params.metadata.js';
+export * from './storage/metadata/relationship.metadata.js';
+export * from './storage/metadata/resource.metadata.js';
+
 export * from './decorators/jsonapi-controller.decorator.js';
+
+export * from './query-parser/query-parser.js';
 
 export * from './deserializers/resource.deserializer.js';
 export * from './serializers/resource.serializer.js';

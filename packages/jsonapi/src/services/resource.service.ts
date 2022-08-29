@@ -16,7 +16,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
   /**
    * Get the current repository for the service
    */
-  get repository () {
+  public get repository () {
     return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class);
   }
 
@@ -46,7 +46,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
    * @returns
    */
   public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
-    const pojo = resource.toMikroPojo() as unknown as RequiredEntityData<TModel>;
+    const pojo = resource.toPojo() as unknown as RequiredEntityData<TModel>;
     const entity = this.repository.create(pojo);
     this.repository.persist(entity);
     return entity;
@@ -60,7 +60,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     if (!entity) {
       throw new ResourceNotFoundError();
     }
-    const pojo = resource.toMikroPojo();
+    const pojo = resource.toPojo();
     for (const relationMeta of resource.resourceMeta.relationships) {
       const relationProperty = entity[relationMeta.name as keyof typeof entity];
       if (resource[relationMeta.name] && (relationMeta.mikroMeta.reference === ReferenceType.ONE_TO_MANY || relationMeta.mikroMeta.reference === ReferenceType.MANY_TO_MANY) && relationProperty instanceof Collection) {

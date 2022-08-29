@@ -33,11 +33,11 @@ export interface JsonApiBuilderRouteParams {
 
 @injectable()
 export class JsonApiBuilder extends HttpBuilder {
-  constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {
+  public constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {
     super();
   }
 
-  async build (): Promise<Router> {
+  public async build (): Promise<Router> {
     const [entity, options] = this.context.meta.args as any[];
 
     const resource = JsonApiDatastorage.instance.resources.find((v) => v.target === (entity as Class<AnyEntity>));
@@ -70,7 +70,7 @@ export class JsonApiBuilder extends HttpBuilder {
     return controllerRouter;
   }
 
-  setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs<any>, options: JsonApiControllerOptions) {
+  public setupJsonApiEndpoint (router: Router, endpoint: EndpointMetadataArgs, resourceMeta: ResourceMetadataArgs<any>, options: JsonApiControllerOptions) {
     const routeInfo = routeMap[endpoint.method];
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorSerializer = container.resolve(ErrorHandler);

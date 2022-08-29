@@ -1,6 +1,6 @@
 import { JsonapiError } from './error.js';
 
 export class UnsupportedMediaTypeError extends JsonapiError {
-  status = '415';
-  code = this.constructor.name;
+  public status = '415';
+  public code = this.constructor.name;
 }

@@ -70,8 +70,8 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   public parse (query: RawQuery): Promise<void> | void {
     const registry = container.resolve(JsonApiRegistry);
 
-    this.page = query.page?.number ? query.page.number as unknown as number : undefined;
-    this.size = query.page?.size ? query.page.size as unknown as number : undefined;
+    this.page = query.page?.number ? parseInt(query.page.number, 10) : undefined;
+    this.size = query.page?.size ? parseInt(query.page.size, 10) : undefined;
 
     /**
      * Allowed fields for resources types
@@ -110,7 +110,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
+  public parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
     if (Array.isArray(filterObject)) {
       for (const filter of filterObject) {
         this.parseFilters(parentFilter, filter as any, parentEntity, parents);
@@ -167,7 +167,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  parseInclude (
+  public parseInclude (
     relations: string[],
     parentInclude: Map<string, Include<any>> | Include<any>
   ) {
@@ -204,7 +204,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  parseSort (
+  public parseSort (
     sort: string,
     parentSort: Sort<any>,
     parentResource: ResourceMeta<TModel>,

@@ -1,21 +1,21 @@
 import type { JsonApiErrorObject, LinksObject } from '../serializers/spec.interface.js';
 
 export class JsonapiError implements JsonApiErrorObject {
-  id?: string;
-  links?: LinksObject<'about' | 'type'>;
-  status?: string;
-  code?: string;
-  title?: string;
-  detail?: string;
-  source?: {
+  public id?: string;
+  public links?: LinksObject<'about' | 'type'>;
+  public status?: string;
+  public code?: string;
+  public title?: string;
+  public detail?: string;
+  public source?: {
         pointer?: `/${string}`,
         parameter?: string,
         header?: string,
     };
 
-  meta?: Record<string, unknown>;
+  public meta?: Record<string, unknown>;
 
-  constructor (message?: string) {
+  public constructor (message?: string) {
     this.detail = message;
   }
 }

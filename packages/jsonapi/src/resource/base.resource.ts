@@ -5,26 +5,25 @@ import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { LinksObject } from '../serializers/spec.interface.js';
 
 export abstract class Resource<T extends BaseEntity<T, any>> {
-  metaObject?: Record<string, unknown> | undefined;
-  linksObject?: LinksObject<string>;
+  public metaObject?: Record<string, unknown> | undefined;
+  public linksObject?: LinksObject<string>;
 
   /**
    * The meta linked with the resource
    */
-  declare resourceMeta: ResourceMeta<T, this>;
+  public declare resourceMeta: ResourceMeta<T, this>;
   /**
    * The context in which the resource was created
    */
-  declare context: JsonApiContext<T, this>;
+  public declare context: JsonApiContext<T, this>;
   /**
  * The identifier key will always be 'id' in this framework
  */
-  abstract id?: string;
-
+  public abstract id?: string;
   /**
-   * Transforms the resource to a MikroORM POJO
+   * Transforms the resource to a POJO
    */
-  toMikroPojo () {
+  public toPojo () {
     const pojo = {} as Partial<EntityDTO<Loaded<T, never>>>;
 
     for (const attr of this.resourceMeta.attributes) {
@@ -52,5 +51,8 @@ export abstract class Resource<T extends BaseEntity<T, any>> {
     return pojo;
   }
 
-  abstract validate (): Promise<void> | void;
+  /**
+   * @throws
+   */
+  public abstract validate (): void;
 }

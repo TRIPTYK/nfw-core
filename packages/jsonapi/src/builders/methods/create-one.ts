@@ -46,8 +46,6 @@ export function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBui
     await parser.validate(query);
     await parser.parse(query);
 
-    await bodyAsResource.validate();
-
     const currentUser = await options?.currentUser?.(jsonApiContext);
 
     /**

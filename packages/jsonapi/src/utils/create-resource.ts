@@ -6,6 +6,7 @@ import type { Resource } from '../resource/base.resource.js';
 export function createResourceFrom<TModel extends BaseEntity<TModel, any>> (json: EntityDTO<any>, resourceMeta: ResourceMeta<any>, context: JsonApiContext<any>) {
   // eslint-disable-next-line new-cap
   const newResource = new resourceMeta.resource();
+  newResource.context = context;
   newResource.resourceMeta = resourceMeta;
 
   for (const attr of resourceMeta.attributes) {

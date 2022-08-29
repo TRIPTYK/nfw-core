@@ -8,9 +8,9 @@ import { allowedMethods } from '../utils/allowed-methods.util.js';
 import { middlewaresForTarget, resolveMiddleware } from '../utils/factory.util.js';
 
 export class HttpBuilder implements RouteBuilderInterface {
-  declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
+  public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
 
-  async build (): Promise<Router> {
+  public async build (): Promise<Router> {
     const controllerRouter = new Router({
       prefix: (this.context.meta.args as ControllerMetaArgs).routeName
     });
@@ -28,7 +28,7 @@ export class HttpBuilder implements RouteBuilderInterface {
     return controllerRouter;
   }
 
-  async bindRouting (parentRouter: Router, router: Router): Promise<void> {
+  public async bindRouting (parentRouter: Router, router: Router): Promise<void> {
     parentRouter
       .use(router.routes())
       .use(allowedMethods(router));
