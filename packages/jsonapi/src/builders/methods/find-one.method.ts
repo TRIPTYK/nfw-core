@@ -22,20 +22,20 @@ export async function findOne<TModel extends BaseEntity<TModel, any>> (this: Htt
   const jsonApiContext = {
     resource,
     method: endpoint.method,
-    koaContext: ctx,
-    query: parser
+    koaContext: ctx
   } as JsonApiContext<TModel>;
+
+  /**
+   * Parse the query
+   */
+  const query = ctx.query as Record<string, any>;
+  parser.context = jsonApiContext;
+
+  await parser.validate(query);
+  jsonApiContext.query = await parser.parse(query);
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
   jsonApiContext.currentUser = currentUser;
-
-  /**
-     * Parse the query
-     */
-  const query = ctx.query as Record<string, any>;
-  parser.context = jsonApiContext;
-  await parser.validate(query);
-  await parser.parse(query);
 
   /**
      * Call the service method

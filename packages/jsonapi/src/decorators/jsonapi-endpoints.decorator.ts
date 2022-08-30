@@ -34,7 +34,12 @@ export function JsonApiGet (options?: JsonApiGetOptions) {
   }
 }
 
-export interface JsonApiCreateOptions extends JsonApiOptions {}
+export interface JsonApiCreateOptions extends JsonApiOptions {
+  /**
+   * The validation Schema from fastest-validator-decorators
+  */
+  validation?: Class<unknown>,
+}
 
 export function JsonApiCreate (options?: JsonApiCreateOptions) {
   return function (target: unknown, propertyName: string) {
@@ -60,7 +65,12 @@ export function JsonApiList (options?: JsonApiListOptions) {
   }
 }
 
-export interface JsonApiUpdateOptions extends JsonApiOptions {}
+export interface JsonApiUpdateOptions extends JsonApiOptions {
+    /**
+     * The validation Schema from fastest-validator-decorators
+    */
+    validation?: Class<unknown>,
+}
 
 export function JsonApiUpdate (options?: JsonApiUpdateOptions) {
   return function (target: unknown, propertyName: string) {

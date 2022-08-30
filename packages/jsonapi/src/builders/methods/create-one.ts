@@ -8,6 +8,8 @@ import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 import { subject } from '@casl/ability';
 import { ForbiddenError } from '../../errors/forbidden.js';
+import { validateObject } from './utils/validate.js';
+import type { JsonApiCreateOptions } from '../../decorators/jsonapi-endpoints.decorator.js';
 
 export async function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, deserializer, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   /**
@@ -17,23 +19,33 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
 
   const jsonApiContext = {
     resource,
-    query: parser,
     method: endpoint.method,
     koaContext: ctx
   } as JsonApiContext<TModel>;
 
-  const currentUser = await options?.currentUser?.(jsonApiContext);
-  jsonApiContext.currentUser = currentUser;
-
-  const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
   /**
-     * Parse the query
-     */
+   * Parse the query
+   */
   const query = ctx.query as Record<string, any>;
   parser.context = jsonApiContext;
 
   await parser.validate(query);
-  await parser.parse(query);
+  jsonApiContext.query = await parser.parse(query);
+
+  /**
+   * Load Current-User
+   */
+  const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
+
+  const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
+
+  const createOptions = endpoint.options as JsonApiCreateOptions;
+
+  if (createOptions.validation) {
+    // validate only the POJO, we don't want meta properties to be validated
+    await validateObject(createOptions.validation, bodyAsResource.toPojo());
+  }
 
   /**
      * Call the service method

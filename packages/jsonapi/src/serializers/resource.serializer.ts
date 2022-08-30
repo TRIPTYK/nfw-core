@@ -4,7 +4,7 @@ import type { StringKeyOf } from 'type-fest';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
-import type { Include } from '../query-parser/query-parser.js';
+import type { Include } from '../query-parser/query.js';
 import type { Resource } from '../resource/base.resource.js';
 import type { JsonApiTopLevel, LinkObject, PaginationLinksKeys, RelationshipsObject, ResourceIdentifierObject, ResourceObject } from './spec.interface.js';
 
@@ -19,13 +19,13 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
 
   public serialize (resource: TResource | TResource[], jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, includeLevel?: Map<string, Include<any>>): Promise<JsonApiTopLevel> | JsonApiTopLevel {
     const included = new Map<string, any>();
-    return this.serializeBase(resource, jsonApiContext, totalRecords, Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query!.includes), included)
+    return this.serializeBase(resource, jsonApiContext, totalRecords, Array.isArray(resource) ? resource.map((r) => this.serializeDocument(r as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query?.includes)) : this.serializeDocument(resource as any, included, jsonApiContext, includeLevel ?? jsonApiContext.query?.includes), included)
   }
 
   public async serializeRelationships (resource: TResource, jsonApiContext: JsonApiContext<TModel>, totalRecords: number | undefined = undefined, relation: StringKeyOf<TResource>): Promise<JsonApiTopLevel> {
     const included = new Map<string, any>();
     return this.serializeBase(resource, jsonApiContext, totalRecords,
-      this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query!.includes, relation as any), included
+      this.serializeRelationshipsDocument(resource as any, included, jsonApiContext, jsonApiContext.query?.includes, relation as any), included
     );
   }
 
@@ -96,14 +96,14 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     }
   }
 
-  protected serializeRelationshipsDocument<T extends BaseEntity<T, any>> (resource: Resource<T>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>, relation: StringKeyOf<Resource<T>>): ResourceIdentifierObject | ResourceIdentifierObject[] {
+  protected serializeRelationshipsDocument<T extends BaseEntity<T, any>> (resource: Resource<T>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>> | undefined, relation: StringKeyOf<Resource<T>>): ResourceIdentifierObject | ResourceIdentifierObject[] {
     for (const rel of resource.resourceMeta.relationships!) {
       const relation = resource[rel.name as keyof typeof resource] as unknown as Resource<any> | Resource<any>[];
 
       /**
        * ONLY RETURNS RELATIONSHIPS THAT ARE REQUESTED TO BE INCLUDED
        */
-      const includes = includeLevel.get(rel.name);
+      const includes = includeLevel?.get(rel.name);
 
       if (relation && includes) {
         this.processRelation(undefined, includes, included, relation, rel, jsonApiContext);
@@ -134,7 +134,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     return resourceIndentifiers;
   }
 
-  protected serializeDocument (resource: Resource<any>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>>): ResourceObject {
+  protected serializeDocument (resource: Resource<any>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel?: Map<string, Include<any>>): ResourceObject {
     const fetchableFields = resource.resourceMeta.attributes.filter((f) => f.isFetchable && f.name !== 'id');
 
     const attributes = {} as any;
@@ -160,7 +160,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       /**
        * ONLY RETURNS RELATIONSHIPS THAT ARE REQUESTED TO BE INCLUDED
        */
-      const includes = includeLevel.get(rel.name);
+      const includes = includeLevel?.get(rel.name);
 
       if (relation && includes) {
         this.processRelation(relationships, includes, included, relation, rel, jsonApiContext);

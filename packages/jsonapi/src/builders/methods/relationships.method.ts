@@ -23,21 +23,21 @@ export async function getRelationships<TModel extends BaseEntity<TModel, any>> (
   const jsonApiContext = {
     resource,
     method: endpoint.method,
-    koaContext: ctx,
-    query: parser
+    koaContext: ctx
   } as JsonApiContext<TModel>;
+
+  /**
+   * Parse the query
+   */
+  const query = ctx.query as Record<string, any>;
+  parser.context = jsonApiContext;
+
+  await parser.validate(query);
+  jsonApiContext.query = await parser.parse(query);
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
   jsonApiContext.currentUser = currentUser;
   const { id, relation } = ctx.params;
-
-  /**
-     * Parse the query
-     */
-  const query = ctx.query as Record<string, any>;
-  parser.context = jsonApiContext;
-  await parser.validate(query);
-  await parser.parse(query);
 
   const relMeta = resource.relationships.find((r) => r.name === relation);
 

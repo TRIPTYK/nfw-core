@@ -24,9 +24,7 @@ export class UserAuthorizer implements RoleServiceAuthorizer<UserModel['role']> 
     can('read', 'articles');
   };
 
-  public anonymous (context: CurrentContext, { can }: AbilityBuilder<NFWAbility>) {
-
-  }
+  public anonymous (context: CurrentContext, { can }: AbilityBuilder<NFWAbility>) {}
 
   public buildAbility (context: CurrentContext) {
     const builder = new AbilityBuilder(Ability<['create' | 'read' | 'update' | 'delete' | 'manage', any]>);

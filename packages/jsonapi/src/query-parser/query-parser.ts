@@ -3,75 +3,23 @@ import { container, injectable } from '@triptyk/nfw-core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { AttributeMeta, RelationMeta, ResourceMeta } from '../jsonapi.registry.js';
 import { JsonApiRegistry } from '../jsonapi.registry.js';
-import type { OperatorMap } from '@mikro-orm/core/typings.js';
 import { BadRequestError } from '../errors/bad-request.js';
-
-export interface Sort<TModel extends BaseEntity<TModel, any>> {
-  attributes: Map<string, {
-    meta: AttributeMeta<any>,
-    direction: 'ASC' | 'DESC',
-  }>,
-  nested: Map<string, Sort<any>>,
-}
-
-export interface Filter<TModel extends BaseEntity<TModel, any>> {
-  filters: Set< {
-    meta: AttributeMeta<any>,
-    operator: keyof OperatorMap<any>,
-    value: any,
-    path: string,
-  }>,
-  logical: '$and' | '$or' | '$not',
-  nested: Set<Filter<any>>,
-}
-
-export interface Include<TModel extends BaseEntity<TModel, any>> {
-  relationMeta: RelationMeta<any>,
-  includes: Map<string, Include<any>>,
-}
-
-export interface RawQuery {
-    // may contains unknown members
-  [key: string]: unknown,
-  include?: string,
-  fields?: Record<string, string>,
-  filter?: Record<string, unknown>,
-  sort?: string,
-  page?: {
-    size: string,
-    number: string,
-  },
-  size?: string,
-}
+import type { Filter, Include, RawQuery, Sort } from './query.js';
+import { JsonApiQuery } from './query.js';
 
 @injectable()
 export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   public declare context: JsonApiContext<TModel>;
-  public fields: Map<string, AttributeMeta<any>[]> = new Map();
-  public includes: Map<string, Include<any>> = new Map();
-  public filters: Filter<any> = {
-    filters: new Set(),
-    logical: '$and',
-    nested: new Set()
-  };
 
-  public sort: Sort<any> = {
-    attributes: new Map(),
-    nested: new Map()
-  }
+  public validate (_query: RawQuery): Promise<void> | void {}
 
-  public page?: number;
-  public size?: number;
-
-  public validate (_query: RawQuery): Promise<void> | void {
-
-  }
-
-  public parse (query: RawQuery): Promise<void> | void {
+  public parse (query: RawQuery): Promise<JsonApiQuery> | JsonApiQuery {
     const registry = container.resolve(JsonApiRegistry);
 
-    this.page = query.page?.number ? parseInt(query.page.number, 10) : undefined;
-    this.size = query.page?.size ? parseInt(query.page.size, 10) : undefined;
+    const jsonApiQuery = new JsonApiQuery();
+
+    jsonApiQuery.page = query.page?.number ? parseInt(query.page.number, 10) : undefined;
+    jsonApiQuery.size = query.page?.size ? parseInt(query.page.size, 10) : undefined;
 
     /**
      * Allowed fields for resources types
@@ -82,7 +30,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         throw new BadRequestError(`Resource ${fieldName} not found`);
       }
 
-      this.fields.set(
+      jsonApiQuery.fields.set(
         fieldName,
         query.fields[fieldName].split(',').map((field) => {
           const attr = resource.attributes.find((f) => f.name === field);
@@ -99,15 +47,17 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
       );
     }
 
-    this.parseInclude(query.include?.split(',') ?? [], this.includes);
-    this.parseFilters(this.filters, query.filter ?? {}, this.context.resource);
+    this.parseInclude(query.include?.split(',') ?? [], jsonApiQuery.includes);
+    this.parseFilters(jsonApiQuery.filters, query.filter ?? {}, this.context.resource);
 
     for (const sort of (query.sort?.split(',') ?? [])) {
       const startsWithDesc = sort.startsWith('-');
       const direction = startsWithDesc ? 'DESC' : 'ASC';
-      const realSortPath = startsWithDesc ? sort.slice(1) : sort;
-      this.parseSort(realSortPath, this.sort, this.context.resource, direction);
+      const sortDottedPath = startsWithDesc ? sort.slice(1) : sort;
+      this.parseSort(sortDottedPath, jsonApiQuery.sort, this.context.resource, direction);
     }
+
+    return jsonApiQuery;
   }
 
   public parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {

@@ -9,7 +9,7 @@ import { createResourceFrom } from '../../utils/create-resource.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
-export async function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, em, options, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
+export async function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   const parser = container.resolve<QueryParser<TModel>>(endpoint.options?.queryParser ?? QueryParser);
 
   /**
@@ -18,20 +18,20 @@ export async function findAll<TModel extends BaseEntity<TModel, any>> (this: Htt
   const jsonApiContext = {
     resource,
     koaContext: ctx,
-    method: endpoint.method,
-    query: parser
+    method: endpoint.method
   } as JsonApiContext<TModel>;
+
+  /**
+   * Parse the query
+   */
+  const query = ctx.query as Record<string, any>;
+  parser.context = jsonApiContext;
+
+  await parser.validate(query);
+  jsonApiContext.query = await parser.parse(query);
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
   jsonApiContext.currentUser = currentUser;
-
-  /**
-     * Parse the query
-     */
-  const query = ctx.query as Record<string, any>;
-  parser.context = jsonApiContext;
-  await parser.validate(query);
-  await parser.parse(query);
 
   /**
      * Call the service method

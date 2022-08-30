@@ -2,10 +2,10 @@ import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
-import type { Filter, Include, Sort } from '../query-parser/query-parser.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { Resource } from '../resource/base.resource.js';
 import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
+import type { Sort, Include, Filter } from '../query-parser/query.js';
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<TModel, any>> {
