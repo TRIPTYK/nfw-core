@@ -1,7 +1,8 @@
+import { subject } from '@casl/ability';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
+import { ForbiddenError } from '../../errors/forbidden.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
@@ -21,6 +22,9 @@ export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: H
     koaContext: ctx
   } as JsonApiContext<TModel>;
 
+  const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
+
   const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
   /**
      * Parse the query
@@ -31,19 +35,19 @@ export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: H
   await parser.validate(query);
   await parser.parse(query);
 
-  const currentUser = await options?.currentUser?.(jsonApiContext);
-
   /**
      * Call the service method
      */
   let one = await service.updateOne(bodyAsResource, jsonApiContext);
 
   if (authorizer) {
-    const can = await authorizer.update(currentUser, one, jsonApiContext);
+    const ability = authorizer.buildAbility(currentUser);
+    const can = ability.can('update', subject(resource.name, one));
     if (!can) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError(`Cannot update ${resource.name}`);
     }
   }
+
   await service.repository.flush();
   one = (await service.findOne((one as unknown as Record<'id', string>).id, jsonApiContext))!;
 

@@ -5,7 +5,7 @@ import type formidable from 'formidable';
 import type { DocumentModel } from '../models/document.model.js';
 
 export class DocumentDeserializer extends ResourceDeserializer<DocumentModel> {
-  async deserialize (payload: Record<string, unknown>, context: JsonApiContext<DocumentModel, Resource<DocumentModel>>): Promise<Resource<DocumentModel>> {
+  public async deserialize (payload: Record<string, unknown>, context: JsonApiContext<DocumentModel, Resource<DocumentModel>>): Promise<Resource<DocumentModel>> {
     payload.data = {
       id: payload?.id,
       attributes: {

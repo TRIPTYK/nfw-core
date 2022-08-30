@@ -6,9 +6,10 @@ import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
 import { RelationshipNotFoundError } from '../../errors/specific/relationship-not-found.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
+import { subject } from '@casl/ability';
+import { ForbiddenError } from '../../errors/forbidden.js';
 
 export async function getRelationships<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, service, authorizer, ctx }: JsonApiBuilderRouteParams) {
   /**
@@ -27,6 +28,7 @@ export async function getRelationships<TModel extends BaseEntity<TModel, any>> (
   } as JsonApiContext<TModel>;
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
   const { id, relation } = ctx.params;
 
   /**
@@ -53,9 +55,11 @@ export async function getRelationships<TModel extends BaseEntity<TModel, any>> (
   }
 
   if (authorizer) {
-    const can = await authorizer.read(currentUser, one, jsonApiContext);
+    const ability = authorizer.buildAbility(currentUser);
+
+    const can = ability.can('read', subject(resource.name, one));
     if (!can) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError(`Cannot read ${resource.name}`);
     }
   }
 

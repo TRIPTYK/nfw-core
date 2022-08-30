@@ -1,8 +1,16 @@
+# Resources
 
-import { Relationship, Attribute, JsonApiResource, Resource } from '@triptyk/nfw-jsonapi';
-import { UserModel } from '../models/user.model.js';
-import type { ArticleResource } from './article.resource.js';
+The resources are the main elements of this frameworks.
 
+## Purpose
+
+- A resource defines a jsonapi document.
+- A resource contains `attributes` and `relationships`.
+- A resource is based on a MikroORM `Model`.
+- A resource defines which fields should be serializable, deserializable, filterable, sortable and includeable.
+- A resource defines the relationships with other resources.
+
+```ts title="Example of a resource"
 @JsonApiResource({
   entity: UserModel,
   entityName: 'users'
@@ -27,3 +35,4 @@ export class UserResource extends Resource<UserModel> {
   })
   public declare articles: ArticleResource[];
 }
+```

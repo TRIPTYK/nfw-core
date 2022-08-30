@@ -10,3 +10,6 @@ The `@triptyk/nfw-jsonapi` contains a builder that setups jsonapi endpoints and 
 ```sh
 pnpm install @triptyk/nfw-jsonapi
 ```
+
+!!! danger
+    This module is experimental and subject to drastical changes

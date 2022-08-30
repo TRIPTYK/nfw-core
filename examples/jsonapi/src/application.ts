@@ -11,6 +11,7 @@ import './resources/article.resource.js';
 import './controllers/document.controller.js';
 import koaQs from 'koa-qs';
 import { DocumentModel } from './models/document.model.js';
+import { UserAuthorizer } from './authorizers/user.authorizer.js';
 
 async function main () {
   const mikro = await init({
@@ -21,7 +22,8 @@ async function main () {
   });
 
   await container.resolve(JsonApiRegistry).init({
-    apiPath: '/api/v1'
+    apiPath: '/api/v1',
+    authorizer: UserAuthorizer
   });
   // bound to entity, enabled by default
   const generator = mikro.getSchemaGenerator();
@@ -33,6 +35,7 @@ async function main () {
   const user = em.getRepository(UserModel).create({
     id: '12',
     username: 'Amaury',
+    role: 'admin',
     articles: [
       em.getRepository(ArticleModel).create({
         id: 'ccccccc',
@@ -51,6 +54,7 @@ async function main () {
   const seb = em.getRepository(UserModel).create({
     id: '2898',
     username: 'seb',
+    role: 'user',
     articles: [
       em.getRepository(ArticleModel).create({
         id: 'ddddd',

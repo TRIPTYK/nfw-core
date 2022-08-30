@@ -13,7 +13,7 @@ export class ArticleResource extends Resource<ArticleModel> {
     },
     sortable: ['ASC']
   })
-  declare id: string;
+  public declare id: string;
 
   @Attribute({
     filterable: {
@@ -23,15 +23,13 @@ export class ArticleResource extends Resource<ArticleModel> {
     },
     sortable: ['ASC']
   })
-  declare title: string;
+  public declare title: string;
 
   @Attribute()
-  declare type: string;
+  public declare type: string;
 
   @Relationship<ArticleResource>({
     otherResource: 'UserResource'
   })
-  declare writer: UserResource;
-
-  validate (): void {}
+  public declare writer: UserResource;
 }

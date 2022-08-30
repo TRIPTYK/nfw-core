@@ -1,14 +1,15 @@
+import { subject } from '@casl/ability';
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
+import { ForbiddenError } from '../../errors/forbidden.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 
-export async function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
+export async function findAll<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, em, options, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   const parser = container.resolve<QueryParser<TModel>>(endpoint.options?.queryParser ?? QueryParser);
 
   /**
@@ -21,6 +22,9 @@ export async function findAll<TModel extends BaseEntity<TModel, any>> (this: Htt
     query: parser
   } as JsonApiContext<TModel>;
 
+  const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
+
   /**
      * Parse the query
      */
@@ -28,8 +32,6 @@ export async function findAll<TModel extends BaseEntity<TModel, any>> (this: Htt
   parser.context = jsonApiContext;
   await parser.validate(query);
   await parser.parse(query);
-
-  const currentUser = await options?.currentUser?.(jsonApiContext);
 
   /**
      * Call the service method
@@ -55,9 +57,11 @@ export async function findAll<TModel extends BaseEntity<TModel, any>> (this: Htt
 
   if (authorizer) {
     for (const r of finalServiceResponse) {
-      const can = await authorizer.read(currentUser, r, jsonApiContext);
+      const ability = authorizer.buildAbility(currentUser);
+
+      const can = ability.can('read', subject(resource.name, r));
       if (!can) {
-        throw new UnauthorizedError();
+        throw new ForbiddenError(`Cannot read ${resource.name}`);
       }
     }
   }

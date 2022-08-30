@@ -15,10 +15,8 @@ export class DocumentResource extends Resource<DocumentModel> {
     filterable: false,
     sortable: ['ASC']
   })
-  declare id: string;
+  public declare id: string;
 
   @Attribute()
-  declare filename: string;
-
-  validate (): void {}
+  public declare filename: string;
 }

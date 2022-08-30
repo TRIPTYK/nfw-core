@@ -2,28 +2,15 @@ import { MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import { JsonApiController, JsonApiGet, JsonApiList, JsonApiCreate, JsonApiUpdate, JsonApiDelete, JsonApiGetRelationships, JsonApiGetRelated } from '@triptyk/nfw-jsonapi';
 import { UserModel } from '../models/user.model.js';
-import { UserResource } from '../resources/user.resource.js';
+import { ArticleResource } from '../resources/article.resource.js';
 
-/**
- * Validation of
- *  - query
- *  - body
- *
- * Fine grained authorization
- *  - From repository for read
- *  - For each update create
- *
- *  - custom content-type
- *  - custom serializer
- *
- */
-@JsonApiController(UserResource, {
+@JsonApiController(ArticleResource, {
   currentUser () {
     const mikroORM = container.resolve(MikroORM);
     return mikroORM.em.getRepository(UserModel).findAll().then((e) => e[1]) as any;
   }
 })
-export class UserController {
+export class ArticlesController {
   @JsonApiList()
   public async list () {}
 

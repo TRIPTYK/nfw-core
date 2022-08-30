@@ -1,27 +1,13 @@
-import type { BaseEntity } from '@mikro-orm/core';
-import type { JsonApiContext } from '../interfaces/json-api-context.js';
-import type { ResourceMeta } from '../jsonapi.registry.js';
+import type { Ability, AbilityBuilder } from '@casl/ability';
+import type { AnyEntity, BaseEntity, EntityManager } from '@mikro-orm/core';
 
-export abstract class RoleServiceAuthorizer<U extends BaseEntity<U, any>, E extends BaseEntity<E, any>> {
-  public declare resourceMeta: ResourceMeta<E>;
+export type NFWAbility = Ability<['create' | 'read' | 'update' | 'delete' | 'manage', any]>;
+export type DefinePermissions<T> = (user: T | undefined, builder: AbilityBuilder<NFWAbility>) => void;
+export type AccessPermisions<T> = Record<'admin' | 'user', DefinePermissions<T>>;
+export type EntityAbility<T extends AnyEntity> = (userReq: unknown | undefined | null, entity: T, entityManager: EntityManager) => Promise<NFWAbility>;
 
-  /**
-   * Can user read TR in context ?
-   */
-  public abstract read (user: U | undefined, r: E, c: JsonApiContext<any>) : Promise<boolean> | boolean;
-
-  /**
-   *
-   */
-   public abstract create (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
-
-   /**
-   *
-   */
-   public abstract update (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
-
-   /**
-   *
-   */
-   public abstract remove (user: U | undefined, r: E, c: JsonApiContext<any>): Promise<boolean> | boolean;
-}
+export type RoleServiceAuthorizer<U extends BaseEntity<any, any>, R extends string> = {
+  [K in R]: DefinePermissions<U>;
+} & {
+  buildAbility(context: U) : NFWAbility,
+};

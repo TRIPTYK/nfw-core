@@ -5,8 +5,9 @@ import { ResourceNotFoundError } from '../../errors/specific/resource-not-found.
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
+import { ForbiddenError } from '../../errors/forbidden.js';
+import { subject } from '@casl/ability';
 
 export async function deleteOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   /**
@@ -25,6 +26,7 @@ export async function deleteOne<TModel extends BaseEntity<TModel, any>> (this: H
   } as JsonApiContext<TModel>;
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
 
   /**
      * Parse the query
@@ -44,9 +46,11 @@ export async function deleteOne<TModel extends BaseEntity<TModel, any>> (this: H
   }
 
   if (authorizer) {
-    const can = await authorizer.remove(currentUser, one, jsonApiContext);
+    const ability = authorizer.buildAbility(currentUser);
+
+    const can = ability.can('delete', subject(resource.name, one));
     if (!can) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError(`Cannot delete ${resource.name}`);
     }
   }
 

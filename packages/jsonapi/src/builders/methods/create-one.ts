@@ -6,7 +6,8 @@ import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
+import { subject } from '@casl/ability';
+import { ForbiddenError } from '../../errors/forbidden.js';
 
 export async function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, deserializer, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   /**
@@ -21,6 +22,9 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
     koaContext: ctx
   } as JsonApiContext<TModel>;
 
+  const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
+
   const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
   /**
      * Parse the query
@@ -31,23 +35,24 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
   await parser.validate(query);
   await parser.parse(query);
 
-  const currentUser = await options?.currentUser?.(jsonApiContext);
-
   /**
      * Call the service method
      */
-  let one = await service.createOne(bodyAsResource, jsonApiContext);
+  const original = await service.createOne(bodyAsResource, jsonApiContext);
 
   if (authorizer) {
-    const can = await authorizer.create(currentUser as any, one, jsonApiContext);
+    const ability = authorizer.buildAbility(currentUser);
+
+    const can = ability.can('create', subject(resource.name, original));
     if (!can) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError(`Cannot create ${resource.name}`);
     }
   }
-  await service.repository.persistAndFlush(one as any);
-  one = (await service.findOne((one as any).id, jsonApiContext))!;
 
-  const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
+  await service.repository.persistAndFlush(original);
+  const fetched = (await service.findOne(original.id, jsonApiContext));
+
+  const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, fetched);
 
   /**
      * Call the controller's method
@@ -58,17 +63,20 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
     throw new Error('createOne must return an instance of entity !');
   }
 
-  const finalResponse = res || one;
+  const finalResponse = res || fetched;
 
-  const asResource = createResourceFrom(finalResponse.toJSON(), resource, jsonApiContext);
+  if (finalResponse) {
+    const asResource = createResourceFrom(finalResponse.toJSON(), resource, jsonApiContext);
 
-  const url = ctx.URL;
-  url.pathname += url.pathname.endsWith('/') ? finalResponse.id : `/${finalResponse.id}`;
+    const url = ctx.URL;
+    url.pathname += url.pathname.endsWith('/') ? original.id : `/${original.id}`;
 
-  ctx.set('Location', url.pathname);
+    ctx.set('Location', url.pathname);
 
-  /**
+    /**
      * Serialize result and res to client
      */
-  return serializer.serialize(asResource, jsonApiContext);
+    return serializer.serialize(asResource, jsonApiContext);
+  }
+  return undefined;
 }

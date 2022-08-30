@@ -7,20 +7,20 @@ export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
     @PrimaryKey({
       type: 'uuid'
     })
-      id : string = v4();
+  public id : string = v4();
 
     @Property()
-    declare title : string;
+    public declare title : string;
 
     @Property({
       default: 'truc'
     })
-    declare type? : string;
+    public declare type? : string;
 
     @ManyToOne('UserModel', {
       inversedBy: 'articles',
       wrappedReference: true,
       nullable: true
     })
-    declare writer: IdentifiedReference<UserModel>;
+    public declare writer: IdentifiedReference<UserModel>;
 }

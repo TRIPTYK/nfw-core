@@ -1,7 +1,7 @@
 import type { BaseEntity, EntityClass, EntityProperty } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { EntityMetadata, OperatorMap } from '@mikro-orm/core/typings.js';
-import type { Class, StringKeyOf } from 'type-fest';
+import type { Class, Constructor, StringKeyOf } from 'type-fest';
 import { instanceCachingFactory, container, inject, singleton } from '@triptyk/nfw-core';
 import { ResourceDeserializer } from './deserializers/resource.deserializer.js';
 import type { Resource } from './resource/base.resource.js';
@@ -9,6 +9,7 @@ import { ResourceSerializer } from './serializers/resource.serializer.js';
 import { ResourceService } from './services/resource.service.js';
 import { MetadataStorage } from './storage/metadata-storage.js';
 import type { LinksObject } from './serializers/spec.interface.js';
+import type { RoleServiceAuthorizer } from './services/role-authorizer.service.js';
 
 export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource extends Resource<TModel> = Resource<TModel>> {
     name: StringKeyOf<TResource>,
@@ -49,10 +50,20 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
     relationships: RelationMeta<TModel>[],
 }
 
+export interface JsonApiRegistryInitOptions<T extends RoleServiceAuthorizer<any, any>> {
+  apiPath: string,
+  authorizer?: Constructor<T>,
+}
+
 @singleton()
 export class JsonApiRegistry {
   public resources = new Map<Class<Resource<any>>, ResourceMeta<any, any>>([]);
+
+  /**
+   * Move this elsewhere ?
+   */
   public declare apiPath: string;
+  public authorizer?: JsonApiRegistryInitOptions<any>['authorizer'];
 
   public constructor (@inject(MikroORM) private orm: MikroORM) {}
 
@@ -75,10 +86,9 @@ export class JsonApiRegistry {
   }
 
   public init ({
+    authorizer,
     apiPath
-  } : {
-    apiPath: string,
-  }) {
+  } : JsonApiRegistryInitOptions<any>) {
     this.apiPath = apiPath;
     const mikroORMMetadataStorage = this.orm.getMetadata();
     const jsonApiMetadataStorage = MetadataStorage.instance;
@@ -172,19 +182,18 @@ export class JsonApiRegistry {
         useFactory: () => this.orm.em.getRepository(mikroEntity.class)
       });
 
-      container.register(`authorizer:${resource.options.entityName}`, {
+      container.register('authorizer', {
         useFactory: instanceCachingFactory(c => {
-          if (!resource.options.authorizer) {
+          if (!authorizer) {
             return undefined;
           }
-          const instance = c.resolve(resource.options.authorizer);
-          instance.resourceMeta = resourceRef;
+          const instance = c.resolve(authorizer);
           return instance;
         })
       });
 
       resourceRef.mikroEntity = mikroEntity;
-      resourceRef.routes = {};
+      resourceRef.routes = {}; // empty object because it is frozen after
       resourceRef.name = resource.options.entityName;
       resourceRef.attributes = allowedAttributes;
       resourceRef.relationships = allowedRelations;

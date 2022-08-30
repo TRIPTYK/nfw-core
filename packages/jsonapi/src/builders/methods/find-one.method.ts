@@ -6,8 +6,9 @@ import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
-import { UnauthorizedError } from '../../errors/unauthorized.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
+import { subject } from '@casl/ability';
+import { ForbiddenError } from '../../errors/forbidden.js';
 
 export async function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
   /**
@@ -26,6 +27,7 @@ export async function findOne<TModel extends BaseEntity<TModel, any>> (this: Htt
   } as JsonApiContext<TModel>;
 
   const currentUser = await options?.currentUser?.(jsonApiContext);
+  jsonApiContext.currentUser = currentUser;
 
   /**
      * Parse the query
@@ -45,9 +47,11 @@ export async function findOne<TModel extends BaseEntity<TModel, any>> (this: Htt
   }
 
   if (authorizer) {
-    const can = await authorizer.read(currentUser as any, one, jsonApiContext);
+    const ability = authorizer.buildAbility(currentUser);
+
+    const can = ability.can('read', subject(resource.name, one));
     if (!can) {
-      throw new UnauthorizedError();
+      throw new ForbiddenError(`Cannot read ${resource.name}`);
     }
   }
 

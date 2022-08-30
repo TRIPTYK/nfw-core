@@ -1,6 +1,7 @@
 import type { RouterContext } from '@koa/router';
 import Router from '@koa/router';
-import type { AnyEntity } from '@mikro-orm/core';
+import type { AnyEntity, EntityManager } from '@mikro-orm/core';
+import { MikroORM } from '@mikro-orm/core';
 import type { Class } from 'type-fest';
 import { inject, injectable, container } from '@triptyk/nfw-core';
 import { MetadataStorage, HttpBuilder, middlewaresForTarget } from '@triptyk/nfw-http';
@@ -29,6 +30,7 @@ export interface JsonApiBuilderRouteParams {
   endpoint: EndpointMetadataArgs,
   ctx: RouterContext,
   routeInfo: RouteInfo,
+  em: EntityManager,
   routeParams: ControllerActionParamsMetadataArgs[],
   options: JsonApiControllerOptions,
   serializer : ResourceSerializer<any>,
@@ -96,6 +98,7 @@ export class JsonApiBuilder extends HttpBuilder {
 
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
     const middlewares = middlewaresForTarget(this.context.meta.target.prototype, endpoint.propertyName);
+    const orm = container.resolve(MikroORM);
 
     /**
    * Resolve before call, they should be singletons
@@ -103,7 +106,7 @@ export class JsonApiBuilder extends HttpBuilder {
     const serializer = container.resolve(`serializer:${resource.name}`) as ResourceSerializer<any>;
     const deserializer = container.resolve(`deserializer:${resource.name}`) as ResourceDeserializer<any>;
     const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
-    const authorizer = container.resolve(`authorizer:${resource.name}`) as RoleServiceAuthorizer<any, any> | undefined;
+    const authorizer = container.resolve('authorizer') as RoleServiceAuthorizer<any, any> | undefined;
 
     router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {
@@ -129,6 +132,7 @@ export class JsonApiBuilder extends HttpBuilder {
         routeInfo,
         routeParams,
         options,
+        em: orm.em,
         serializer,
         deserializer,
         ctx,
@@ -136,8 +140,8 @@ export class JsonApiBuilder extends HttpBuilder {
         authorizer
       });
 
-      ctx.body = response;
       ctx.status = routeInfo.defaultStatus;
+      ctx.body = response;
       ctx.type = 'application/vnd.api+json';
     });
   }

@@ -6,8 +6,8 @@ export class DocumentModel extends BaseEntity<DocumentModel, 'id'> {
     @PrimaryKey({
       type: 'uuid'
     })
-      id : string = v4();
+  public id : string = v4();
 
     @Property()
-    declare filename : string;
+    public declare filename : string;
 }

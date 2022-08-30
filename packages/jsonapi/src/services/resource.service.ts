@@ -35,7 +35,12 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       fields: fields as any,
       orderBy,
       limit: size,
-      offset: ctx.query!.page ? (ctx.query!.page * size) - 1 : undefined
+      offset: ctx.query!.page ? (ctx.query!.page * size) - 1 : undefined,
+      filters: {
+        context: {
+          jsonApiContext: ctx
+        }
+      }
     });
   }
 
@@ -55,8 +60,14 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
   /**
    * Updates a model from a resource
    */
-  public async updateOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
-    const entity = await this.repository.findOne({ id: resource.id } as any);
+  public async updateOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
+    const entity = await this.repository.findOne({ id: resource.id } as any, {
+      filters: {
+        context: {
+          jsonApiContext: ctx
+        }
+      }
+    });
     if (!entity) {
       throw new ResourceNotFoundError();
     }
@@ -90,6 +101,11 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       { id, ...filters }, {
         populate: populate as any,
         fields: fields as any,
+        filters: {
+          context: {
+            jsonApiContext: ctx
+          }
+        },
         orderBy
       });
   }
