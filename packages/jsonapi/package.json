@@ -7,8 +7,7 @@
   "scripts": {
     "prepublishOnly": "pnpm run build",
     "build": "tsc -p tsconfig.build.json",
-    "build:clean": "rm -rf dist",
-    "postpublish": "pnpm run build:clean"
+    "build:clean": "rm -rf dist"
   },
   "repository": {
     "type": "git",
