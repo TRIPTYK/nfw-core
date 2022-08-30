@@ -9,6 +9,6 @@ export interface JsonApiContext<TModel extends BaseEntity<TModel, any>, TResourc
     koaContext : RouterContext,
     query?: QueryParser<TModel>,
     method: JsonApiMethod,
-    currentUser?: unknown,
+    currentUser?: any,
     resource: ResourceMeta<TModel, TResource>,
 }

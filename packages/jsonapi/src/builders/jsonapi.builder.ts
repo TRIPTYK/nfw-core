@@ -36,7 +36,7 @@ export interface JsonApiBuilderRouteParams {
   serializer : ResourceSerializer<any>,
   deserializer: ResourceDeserializer<any>,
   service : ResourceService<any>,
-  authorizer? : RoleServiceAuthorizer<any, any>,
+  authorizer? : RoleServiceAuthorizer<any>,
 }
 
 @injectable()
@@ -106,7 +106,7 @@ export class JsonApiBuilder extends HttpBuilder {
     const serializer = container.resolve(`serializer:${resource.name}`) as ResourceSerializer<any>;
     const deserializer = container.resolve(`deserializer:${resource.name}`) as ResourceDeserializer<any>;
     const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
-    const authorizer = container.resolve('authorizer') as RoleServiceAuthorizer<any, any> | undefined;
+    const authorizer = container.resolve('authorizer') as RoleServiceAuthorizer<any> | undefined;
 
     router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
       try {

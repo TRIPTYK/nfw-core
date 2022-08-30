@@ -41,7 +41,7 @@ export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: H
   let one = await service.updateOne(bodyAsResource, jsonApiContext);
 
   if (authorizer) {
-    const ability = authorizer.buildAbility(currentUser);
+    const ability = authorizer.buildAbility(jsonApiContext);
     const can = ability.can('update', subject(resource.name, one));
     if (!can) {
       throw new ForbiddenError(`Cannot update ${resource.name}`);

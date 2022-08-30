@@ -57,7 +57,7 @@ export async function findAll<TModel extends BaseEntity<TModel, any>> (this: Htt
 
   if (authorizer) {
     for (const r of finalServiceResponse) {
-      const ability = authorizer.buildAbility(currentUser);
+      const ability = authorizer.buildAbility(jsonApiContext);
 
       const can = ability.can('read', subject(resource.name, r));
       if (!can) {

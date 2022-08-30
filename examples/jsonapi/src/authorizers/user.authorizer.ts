@@ -1,31 +1,39 @@
 import { injectable } from '@triptyk/nfw-core';
-import type { NFWAbility, RoleServiceAuthorizer } from '@triptyk/nfw-jsonapi';
+import type { JsonApiContext, NFWAbility, RoleServiceAuthorizer } from '@triptyk/nfw-jsonapi';
 import type { UserModel } from '../models/user.model.js';
 import { Ability, AbilityBuilder } from '@casl/ability';
 
+interface CurrentContext extends JsonApiContext<any, any> {
+  currentUser?: UserModel,
+}
+
 @injectable()
-export class UserAuthorizer implements RoleServiceAuthorizer<UserModel, UserModel['role']> {
-  public admin (user: UserModel | undefined, { can }: AbilityBuilder<NFWAbility>) {
+export class UserAuthorizer implements RoleServiceAuthorizer<UserModel['role']> {
+  public admin (context: CurrentContext, { can }: AbilityBuilder<NFWAbility>) {
     can('manage', 'all');
   };
 
-  public user (user: UserModel | undefined, { can }: AbilityBuilder<NFWAbility>) {
+  public user (context: CurrentContext, { can }: AbilityBuilder<NFWAbility>) {
     can('read', 'users', {
-      id: user?.id
+      id: context?.currentUser?.id
     });
     can('update', 'users', {
-      id: user?.id
+      id: context?.currentUser?.id
     });
     can('create', 'users');
     can('read', 'articles');
   };
 
-  public buildAbility (userReq: UserModel | undefined) {
+  public anonymous (context: CurrentContext, { can }: AbilityBuilder<NFWAbility>) {
+
+  }
+
+  public buildAbility (context: CurrentContext) {
     const builder = new AbilityBuilder(Ability<['create' | 'read' | 'update' | 'delete' | 'manage', any]>);
-    const role = userReq?.role ?? 'user';
+    const role = context?.currentUser?.role ?? 'anonymous';
 
     if (typeof this[role] === 'function') {
-      this[role](userReq, builder as any);
+      this[role](context, builder as any);
       return builder.build();
     }
 

@@ -50,7 +50,7 @@ export interface ResourceMeta<TModel extends BaseEntity<TModel, any>, TResource 
     relationships: RelationMeta<TModel>[],
 }
 
-export interface JsonApiRegistryInitOptions<T extends RoleServiceAuthorizer<any, any>> {
+export interface JsonApiRegistryInitOptions<T extends RoleServiceAuthorizer<any>> {
   apiPath: string,
   authorizer?: Constructor<T>,
 }

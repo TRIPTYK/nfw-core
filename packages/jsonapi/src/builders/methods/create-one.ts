@@ -41,7 +41,7 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
   const original = await service.createOne(bodyAsResource, jsonApiContext);
 
   if (authorizer) {
-    const ability = authorizer.buildAbility(currentUser);
+    const ability = authorizer.buildAbility(jsonApiContext);
 
     const can = ability.can('create', subject(resource.name, original));
     if (!can) {

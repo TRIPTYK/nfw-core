@@ -46,7 +46,7 @@ export async function deleteOne<TModel extends BaseEntity<TModel, any>> (this: H
   }
 
   if (authorizer) {
-    const ability = authorizer.buildAbility(currentUser);
+    const ability = authorizer.buildAbility(jsonApiContext);
 
     const can = ability.can('delete', subject(resource.name, one));
     if (!can) {

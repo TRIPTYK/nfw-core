@@ -55,7 +55,7 @@ export async function getRelated<TModel extends BaseEntity<TModel, any>> (this: 
   }
 
   if (authorizer) {
-    const ability = authorizer.buildAbility(currentUser);
+    const ability = authorizer.buildAbility(jsonApiContext);
 
     const can = ability.can('read', subject(resource.name, one));
     if (!can) {
