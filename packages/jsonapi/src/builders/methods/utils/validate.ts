@@ -12,6 +12,12 @@ export async function validateObject (validationClass: Class<unknown>, object: R
       const thrown = new BadRequestError();
       thrown.code = 'ValidationError';
       thrown.detail = e.message;
+      thrown.meta = {
+        actual: e.actual,
+        expected: e.expected,
+        field: e.field,
+        type: e.type
+      };
       thrown.source = { pointer: `/data/attributes/${e.field}` };
       return thrown;
     });
