@@ -40,7 +40,8 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
         context: {
           jsonApiContext: ctx
         }
-      }
+      },
+      disableIdentityMap: true
     });
   }
 
@@ -106,6 +107,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
             jsonApiContext: ctx
           }
         },
+        disableIdentityMap: true,
         orderBy
       });
   }
