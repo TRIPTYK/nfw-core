@@ -98,7 +98,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
    */
   public findOne (id :string, ctx: JsonApiContext<TModel>) {
     const { populate, fields, orderBy, filters } = this.setupRequestObjects(ctx);
-    return this.orm.em.getRepository<TModel>(this.resourceMeta.mikroEntity.class).findOne(
+    return this.repository.findOne(
       { id, ...filters }, {
         populate: populate as any,
         fields: fields as any,
@@ -121,12 +121,13 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
      * @returns
      */
   public async getOneWithRelation (id :string, ctx: JsonApiContext<TModel>, relation: string) {
-    const one = await this.findOne(id, ctx);
-    // load the relation, need to be loaded anyway
-    if (one) {
-      await this.orm.em.populate(one, [relation as any]);
+    if (!ctx.query?.includes.has(relation)) {
+      ctx.query?.includes.set(relation, {
+        relationMeta: this.resourceMeta.relationships.find((rel) => rel.name === relation)!,
+        includes: new Map()
+      });
     }
-    return one;
+    return this.findOne(id, ctx);
   }
 
   /**
