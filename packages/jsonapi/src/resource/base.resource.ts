@@ -4,7 +4,7 @@ import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ResourceMeta } from '../jsonapi.registry.js';
 import type { LinksObject } from '../serializers/spec.interface.js';
 
-export abstract class Resource<T extends BaseEntity<T, any>> {
+export abstract class Resource<T extends BaseEntity<any, 'id'>> {
   public metaObject?: Record<string, unknown> | undefined;
   public linksObject?: LinksObject<string>;
 

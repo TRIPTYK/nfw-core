@@ -104,7 +104,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     };
   }
 
-  protected serializeRelationshipsDocument<T extends BaseEntity<T, any>> (resource: Resource<T>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>> | undefined, relation: StringKeyOf<Resource<T>>): ResourceIdentifierObject | ResourceIdentifierObject[] | null {
+  protected serializeRelationshipsDocument<T extends BaseEntity<any, 'id'>> (resource: Resource<T>, included: Map<string, any>, jsonApiContext: JsonApiContext<TModel>, includeLevel: Map<string, Include<any>> | undefined, relation: StringKeyOf<Resource<T>>): ResourceIdentifierObject | ResourceIdentifierObject[] | null {
     for (const rel of resource.resourceMeta.relationships!) {
       const relation = resource[rel.name as keyof typeof resource] as unknown as Resource<any> | Resource<any>[];
 

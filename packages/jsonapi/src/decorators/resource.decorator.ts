@@ -5,7 +5,7 @@ import type { ResourceService } from '../services/resource.service.js';
 import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
 import type { BaseEntity } from '@mikro-orm/core';
 
-export interface ResourceOptions<T extends BaseEntity<T, any>> {
+export interface ResourceOptions<T extends BaseEntity<any, 'id'>> {
   entity : any,
   entityName : string,
   serializer?: Class<ResourceSerializer<T>>,
