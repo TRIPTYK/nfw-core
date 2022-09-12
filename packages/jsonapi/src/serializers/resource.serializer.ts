@@ -94,7 +94,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
     } as JsonApiTopLevel;
   }
 
-  protected serializeResourceIdentifiers (data: Resource<any> | Resource<any>[] | undefined, rel: RelationMeta<any>): ResourceIdentifierObject | ResourceIdentifierObject[] | null {
+  protected serializeResourceIdentifiers (data: Resource<any> | Resource<any>[] | undefined | null, rel: RelationMeta<any>): ResourceIdentifierObject | ResourceIdentifierObject[] | null {
     if (!data) {
       // spec need null
       return null;
@@ -134,7 +134,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
    * @param rel the relation metadata
    * @param jsonApiContext the context
    */
-  protected processRelation (relationships: RelationshipsObject | undefined, includes: Include<any>, included: Map<string, any>, relation : Resource<any> | Resource<any>[], rel : RelationMeta<any, Resource<any>>, jsonApiContext: JsonApiContext<any>) {
+  protected processRelation (relationships: RelationshipsObject | undefined, includes: Include<any>, included: Map<string, any>, relation : Resource<any> | Resource<any>[] | null | undefined, rel : RelationMeta<any, Resource<any>>, jsonApiContext: JsonApiContext<any>) {
     const resourceIndentifiers = this.serializeResourceIdentifiers(relation, rel);
     if (relationships) {
       relationships[rel.name].data = resourceIndentifiers;
