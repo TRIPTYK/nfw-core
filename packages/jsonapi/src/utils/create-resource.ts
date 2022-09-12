@@ -38,7 +38,5 @@ export function createResourceFrom<TModel extends BaseEntity<TModel, any>> (json
     }
   }
 
-  console.log(newResource);
-
   return newResource;
 }

@@ -22,5 +22,5 @@ export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
       wrappedReference: true,
       nullable: true
     })
-    public declare writer: IdentifiedReference<UserModel>;
+    public declare writer?: IdentifiedReference<UserModel>;
 }

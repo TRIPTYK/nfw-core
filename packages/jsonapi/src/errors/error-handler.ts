@@ -5,6 +5,8 @@ import type { JsonApiErrorObject } from '../serializers/spec.interface.js';
 
 export class ErrorHandler {
   public async handle (err: Error | JsonapiError | JsonapiError[], ctx: RouterContext) {
+    console.log(err);
+
     const out : JsonApiErrorObject[] = [];
     if (Array.isArray(err)) {
       out.push(...err.map((e) => this.serializeError(e)));
