@@ -8,7 +8,7 @@ import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js'
 import type { Sort, Include, Filter } from '../query-parser/query.js';
 
 @injectable()
-export class ResourceService<TModel extends BaseEntity<TModel, any>> {
+export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
   public declare resourceMeta: ResourceMeta<TModel>;
 
   public constructor (@inject(MikroORM) private orm: MikroORM) {}
@@ -147,7 +147,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     }
 
     for (const include of ctx.query!.includes.values()) {
-      this.applyIncludes(populate, fields, ctx.query!.fields, include, [])
+      this.applyIncludes(populate, fields, ctx.query!.fields, include, []);
     }
 
     this.applySort(ctx.query!.sort, orderBy);
@@ -157,7 +157,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       fields,
       orderBy,
       filters: this.applyFilter(ctx.query!.filters)
-    }
+    };
   }
 
   /**
@@ -172,7 +172,7 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
       const expanded = this.expandObject(filterObj, iterator.path);
       expanded[iterator.operator] = iterator.value;
 
-      finalObject[filters.logical].push(filterObj)
+      finalObject[filters.logical].push(filterObj);
     }
 
     return finalObject;
@@ -200,18 +200,19 @@ export class ResourceService<TModel extends BaseEntity<TModel, any>> {
     const joinPath = parentsPath.length ? `${parentsPath?.join('.')}.${parentInclude.relationMeta.name}` : parentInclude.relationMeta.name;
 
     populate.push(joinPath);
+    fields.push(joinPath);
 
     if (queryFields.has(parentInclude.relationMeta.resource.name)) {
       const attributes = queryFields.get(parentInclude.relationMeta.resource.name)!;
       fields.push(...attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
     } else {
-      fields.push(...parentInclude.relationMeta.resource.attributes.map((attr) => `${joinPath}.${attr.name.toString()}`))
+      fields.push(...parentInclude.relationMeta.resource.attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
     }
 
     parentsPath.push(parentInclude.relationMeta.name);
 
     for (const include of parentInclude.includes.values()) {
-      this.applyIncludes(populate, fields, queryFields, include, parentsPath)
+      this.applyIncludes(populate, fields, queryFields, include, parentsPath);
     }
   }
 
