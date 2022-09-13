@@ -25,9 +25,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@mikro-orm/core": "~5.3.0",
-    "@mikro-orm/knex": "~5.3.0",
-    "@mikro-orm/sqlite": "~5.3.0",
+    "@mikro-orm/core": "~5.4.0",
+    "@mikro-orm/knex": "~5.4.0",
+    "@mikro-orm/sqlite": "~5.4.0",
     "@nestjs/class-validator": "^0.13.4",
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
