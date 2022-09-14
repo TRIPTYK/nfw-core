@@ -1,11 +1,13 @@
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
-import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData } from '@mikro-orm/core';
+import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository, IdentifiedReference } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { Resource } from '../resource/base.resource.js';
 import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
 import type { Sort, Include, Filter } from '../query-parser/query.js';
+import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
+import { ForbiddenError } from '../errors/forbidden.js';
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
@@ -53,6 +55,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
    */
   public async createOne (resource: Resource<TModel>, _ctx: JsonApiContext<TModel>) {
     const pojo = resource.toPojo() as unknown as RequiredEntityData<TModel>;
+    await this.checkRelationshipsExistance(pojo);
     const entity = this.repository.create(pojo);
     this.repository.persist(entity);
     return entity;
@@ -84,6 +87,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         relationProperty.set([]);
       }
     }
+    await this.checkRelationshipsExistance(pojo as RequiredEntityData<TModel>);
     wrap(entity).assign(pojo);
     // persists to ORM but does not save to database
     this.repository.persist(entity);
@@ -213,6 +217,19 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
 
     for (const include of parentInclude.includes.values()) {
       this.applyIncludes(populate, fields, queryFields, include, parentsPath);
+    }
+  }
+
+  private async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
+    for (const relationship of this.resourceMeta.relationships) {
+      const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as IdentifiedReference<any> | Collection<any> | string;
+      const exists = await (this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>).find(relationshipValue);
+      if (!exists.length) {
+        throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
+      }
+      if (!relationship.mikroMeta.owner) {
+        throw new ForbiddenError(`${relationship.name} cannot be patched`);
+      }
     }
   }
 

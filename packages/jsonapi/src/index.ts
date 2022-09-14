@@ -27,6 +27,7 @@ export * from './errors/bad-request.js';
 export * from './errors/forbidden.js';
 export * from './errors/not-acceptable.js';
 export * from './errors/not-found.js';
+export * from './errors/specific/relationship-entity-not-found.js';
 export * from './errors/unauthorized.js';
 export * from './errors/unsupported-media-type.js';
 
