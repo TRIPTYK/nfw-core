@@ -228,8 +228,8 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         if (!exists.length) {
           throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
         }
-        if (!relationship.mikroMeta.owner) {
-          throw new ForbiddenError(`${relationship.name} cannot be patched`);
+        if (relationship.mikroMeta.type === ReferenceType.ONE_TO_ONE && !relationship.mikroMeta.owner) {
+          throw new ForbiddenError(`${relationship.name} cannot be patched, try on the owner side`);
         }
       }
     }
