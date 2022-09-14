@@ -222,13 +222,15 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
 
   private async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
     for (const relationship of this.resourceMeta.relationships) {
-      const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as IdentifiedReference<any> | Collection<any> | string;
-      const exists = await (this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>).find(relationshipValue);
-      if (!exists.length) {
-        throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
-      }
-      if (!relationship.mikroMeta.owner) {
-        throw new ForbiddenError(`${relationship.name} cannot be patched`);
+      if (Object.hasOwn(pojo, relationship.name)) {
+        const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as IdentifiedReference<any> | Collection<any> | string;
+        const exists = await (this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>).find(relationshipValue);
+        if (!exists.length) {
+          throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
+        }
+        if (!relationship.mikroMeta.owner) {
+          throw new ForbiddenError(`${relationship.name} cannot be patched`);
+        }
       }
     }
   }
