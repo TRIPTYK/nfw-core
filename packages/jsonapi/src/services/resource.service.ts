@@ -1,5 +1,5 @@
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
-import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository, IdentifiedReference } from '@mikro-orm/core';
+import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
@@ -134,6 +134,31 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     return this.findOne(id, ctx);
   }
 
+  public async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
+    for (const relationship of this.resourceMeta.relationships) {
+      if (Object.hasOwn(pojo, relationship.name)) {
+        const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as string[] | string;
+        const relationRepository = this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>;
+
+        let relatedEntitiesExists : boolean;
+        const isOneToOneRelation = relationship.mikroMeta.reference === ReferenceType.ONE_TO_ONE;
+
+        if (isOneToOneRelation || relationship.mikroMeta.reference === ReferenceType.MANY_TO_ONE) {
+          if (isOneToOneRelation && !relationship.mikroMeta.owner) {
+            throw new ForbiddenError(`${relationship.name} cannot be patched, try on the owner side`);
+          }
+          relatedEntitiesExists = (await relationRepository.findOne(relationshipValue)) !== null;
+        } else {
+          relatedEntitiesExists = (await relationRepository.find(relationshipValue)).length === (relationshipValue as string[]).length;
+        }
+
+        if (!relatedEntitiesExists) {
+          throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
+        }
+      }
+    }
+  }
+
   /**
    * Setups all the informations needed for an ORM query from the context
    * @param ctx The JsonApiContext
@@ -217,31 +242,6 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
 
     for (const include of parentInclude.includes.values()) {
       this.applyIncludes(populate, fields, queryFields, include, parentsPath);
-    }
-  }
-
-  private async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
-    for (const relationship of this.resourceMeta.relationships) {
-      if (Object.hasOwn(pojo, relationship.name)) {
-        const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as IdentifiedReference<any> | Collection<any> | string;
-        const relationRepository = this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>;
-
-        let relatedEntitiesExists : boolean;
-        const isOneToOneRelation = relationship.mikroMeta.type === ReferenceType.ONE_TO_ONE;
-
-        if (isOneToOneRelation || relationship.mikroMeta.type === ReferenceType.MANY_TO_ONE) {
-          if (isOneToOneRelation && !relationship.mikroMeta.owner) {
-            throw new ForbiddenError(`${relationship.name} cannot be patched, try on the owner side`);
-          }
-          relatedEntitiesExists = (await relationRepository.findOne(relationshipValue)) !== undefined;
-        } else {
-          relatedEntitiesExists = (await relationRepository.find(relationshipValue)).length !== 0;
-        }
-
-        if (!relatedEntitiesExists) {
-          throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
-        }
-      }
     }
   }
 
