@@ -37,7 +37,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       ), included);
   }
 
-  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>): JsonApiTopLevel['meta'] {
+  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>,totalRecords?: number): JsonApiTopLevel['meta'] {
     return undefined;
   }
 
@@ -88,7 +88,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
         ...this.paginationLinks(resource, jsonApiContext, totalRecords),
         self: jsonApiContext.koaContext.url
       },
-      meta: this.topMeta(resource, jsonApiContext),
+      meta: this.topMeta(resource, jsonApiContext, totalRecords),
       data,
       included: included.size > 0 ? Array.from(included.values()) : undefined
     } as JsonApiTopLevel;
