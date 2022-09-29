@@ -1,8 +1,8 @@
 import type { RouterContext } from '@koa/router';
 import type { RouteMetadataArgs } from '@triptyk/nfw-core';
+import { container } from '@triptyk/nfw-core';
 import createHttpError from 'http-errors';
 import type { Next } from 'koa';
-import { container } from 'tsyringe';
 import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { ResponseHandlerInterface } from '../interfaces/response-handler.interface.js';

@@ -185,26 +185,30 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       populate,
       fields,
       orderBy,
-      filters: this.applyFilter(ctx.query!.filters)
+      filters: this.applyFilter(ctx.query!.filters, {})
     };
   }
 
   /**
    * Generates the filter object
    */
-  protected applyFilter (filters: Filter<TModel>): ObjectQuery<TModel> {
-    const finalObject = {} as any;
-
-    finalObject[filters.logical] = [];
+  protected applyFilter (filters: Filter<TModel>, parentFilter:Record<string, any>): ObjectQuery<TModel> {
+    parentFilter[filters.logical] = [];
     for (const iterator of filters.filters) {
       const filterObj = {};
       const expanded = this.expandObject(filterObj, iterator.path);
       expanded[iterator.operator] = iterator.value;
-
-      finalObject[filters.logical].push(filterObj);
+      parentFilter[filters.logical].push(filterObj);
     }
-
-    return finalObject;
+    if (filters.nested.size) {
+      parentFilter[filters.logical] = [];
+      filters.nested.forEach((filter) => {
+        const tempFilterObject = {};
+        parentFilter[filters.logical].push(tempFilterObject)
+        this.applyFilter(filter, tempFilterObject)
+      })
+    }
+    return parentFilter as ObjectQuery<TModel>;
   }
 
   /**

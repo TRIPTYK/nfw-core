@@ -1,6 +1,6 @@
 import type { Middleware, RouterContext } from '@koa/router';
 import type { Next } from 'koa';
-import { container } from 'tsyringe';
+
 import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
 import type { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js';
 import type { MiddlewareInterface } from '../interfaces/middleware.interface.js';
@@ -8,6 +8,7 @@ import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
+import { container } from '@triptyk/nfw-core';
 
 export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
   /**
