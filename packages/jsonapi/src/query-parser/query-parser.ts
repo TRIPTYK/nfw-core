@@ -61,6 +61,8 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   }
 
   public parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
+    console.log(parentEntity.name, filterObject);
+    
     if (Array.isArray(filterObject)) {
       for (const filter of filterObject) {
         this.parseFilters(parentFilter, filter as any, parentEntity, parents);
@@ -79,13 +81,21 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
           parentFilter.nested.add(nested);
           this.parseFilters(nested, value as any, parentEntity, parents);
         } else {
-          const meta: any = parentEntity.attributes.find((a) => a.name === parents[parents.length - 1])!;
+          const child = parents[parents.length - 1];
+          const attrAndRel : (AttributeMeta<any> | RelationMeta<any>)[] = [...parentEntity.attributes, ...parentEntity.relationships];
+          const meta: any = attrAndRel.find((a) => a.name === child);
+
+          if (!meta) {
+            throw new BadRequestError(`${child} property not found in ${parentEntity.name}`)
+          }
+
           parentFilter.filters.add({
             path: parents.join('.'),
             meta,
             operator: key as any,
             value
           });
+          
           if (meta.allowedFilters === undefined) {
             continue;
           }

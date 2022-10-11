@@ -137,8 +137,9 @@ export class JsonApiRegistry {
       const allowedRelations : RelationMeta<any>[] = jsonApiMetadataStorage.getAllowedRelationshipsFor(resourceTargetPrototype)
         .map((e) => {
           const resource = this.getResourceByClassName(e.options.otherResource);
+          if (!resource) throw new Error('Cannot find resource ' + e.options.otherResource);
           const mikroMeta = mikroEntity.relations.find((r) => r.name === e.propertyName);
-          if (!resource || !mikroMeta) throw new Error('Cannot find resource ' + e.options.otherResource);
+          if (!mikroMeta) throw new Error(`Cannot find resource relationship meta ${e.propertyName} in model ${mikroEntity.className}`);
           return {
             mikroMeta,
             resource,

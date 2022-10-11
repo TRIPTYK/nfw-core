@@ -3,10 +3,10 @@ import { container } from '@triptyk/nfw-core';
 import { JsonApiRegistry } from '../../../src/jsonapi.registry.js';
 import { ArticleModel } from './models/article.model.js';
 import { CommentModel } from './models/comment.model.js';
+import './resources/article.resource.js';
+import './resources/comment.resource.js';
 
 export async function initApp () {
-  await import('./resources/article.resource.js');
-  await import('./resources/comment.resource.js');
 
   const orm = await init({
     dbName: ':memory:',

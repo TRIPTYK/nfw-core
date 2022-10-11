@@ -7,7 +7,11 @@ import type { ArticleResource } from './article.resource.js';
   entity: CommentModel
 })
 export class CommentResource extends Resource<CommentModel> {
-  @Attribute()
+  @Attribute({
+    filterable: {
+      $eq: true
+    }
+  })
   public id?: string | undefined;
 
   @Relationship({
