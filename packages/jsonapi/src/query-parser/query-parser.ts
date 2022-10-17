@@ -61,8 +61,6 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
   }
 
   public parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
-    console.log(parentEntity.name, filterObject);
-    
     if (Array.isArray(filterObject)) {
       for (const filter of filterObject) {
         this.parseFilters(parentFilter, filter as any, parentEntity, parents);
@@ -95,7 +93,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
             operator: key as any,
             value
           });
-          
+
           if (meta.allowedFilters === undefined) {
             continue;
           }

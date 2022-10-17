@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import { createRoute } from './controller-routing.factory.js';
+import { createRoute } from './controller.js';
 import type { Class } from 'type-fest';
 
 export interface CreateApplicationOptions {

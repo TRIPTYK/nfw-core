@@ -15,7 +15,6 @@ export * from './interfaces/guard.interface.js';
 
 export * from './factories/custom-decorator.factory.js';
 
-export * from './decorators/params/args.decorator.js'
 export * from './decorators/params/body.decorator.js'
 export * from './decorators/params/controller-context.decorator.js'
 export * from './decorators/params/args.decorator.js'

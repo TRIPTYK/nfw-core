@@ -1,8 +1,8 @@
 import type Router from '@koa/router';
 import type Application from 'koa';
-import type { Class } from 'type-fest';
+import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
-export interface RouteBuilderInterface {
+export interface RouterBuilderInterface {
     context: {
         instance: unknown,
         meta: RouteMetadataArgs<unknown>,
@@ -15,11 +15,4 @@ export interface RouteBuilderInterface {
      * After all endpoints and sub-routers have been built
      */
     bindRouting(parentRouter: Router | Application, router: Router) : Promise<void>,
-}
-
-export interface RouteMetadataArgs<T> {
-    target: Class<unknown>,
-    controllers?: Class<unknown>[],
-    args: T,
-    builder: Class<RouteBuilderInterface>,
 }

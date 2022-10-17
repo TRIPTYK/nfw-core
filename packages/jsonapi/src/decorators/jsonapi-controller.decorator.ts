@@ -1,7 +1,7 @@
 
 import type { BaseEntity } from '@mikro-orm/core';
 import type { Class } from 'type-fest';
-import { MetadataStorage, injectable } from '@triptyk/nfw-core';
+import { MetadataStorage, injectable, container } from '@triptyk/nfw-core';
 import { JsonApiBuilder } from '../builders/jsonapi.builder.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { ErrorHandler } from '../errors/error-handler.js';
@@ -14,7 +14,7 @@ export interface JsonApiControllerOptions {
 export function JsonApiController (resource: Class<any>, options?: JsonApiControllerOptions) {
   return function (target: Class<unknown>) {
     injectable()(target);
-    MetadataStorage.instance.routes.push({
+    container.resolve(MetadataStorage).routes.push({
       target,
       builder: JsonApiBuilder,
       controllers: [],

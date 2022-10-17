@@ -1,5 +1,5 @@
 import type { Class } from 'type-fest';
-import { injectable, MetadataStorage } from '@triptyk/nfw-core';
+import { container, injectable, MetadataStorage } from '@triptyk/nfw-core';
 import { HttpBuilder } from '../builders/http.builder.js';
 
 interface ControllerOptions {
@@ -14,7 +14,7 @@ export interface ControllerMetaArgs {
 export function Controller (options:ControllerOptions) {
   return function (target: Class<unknown>) {
     injectable()(target);
-    MetadataStorage.instance.routes.push({
+    container.resolve(MetadataStorage).routes.push({
       target,
       builder: HttpBuilder,
       controllers: options.controllers ?? [],

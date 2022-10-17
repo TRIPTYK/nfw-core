@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import type { RouteBuilderInterface, RouteMetadataArgs } from '@triptyk/nfw-core';
+import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.decorator.js';
 import { handleHttpRouteControllerAction } from '../factories/controller-action.factory.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
@@ -7,7 +7,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.util.js';
 import { middlewaresForTarget } from '../utils/factory.util.js';
 
-export class HttpBuilder implements RouteBuilderInterface {
+export class HttpBuilder implements RouterBuilderInterface {
   public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
 
   public async build (): Promise<Router> {

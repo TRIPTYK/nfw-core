@@ -2,15 +2,14 @@ import type Router from '@koa/router';
 import type Application from 'koa';
 import { container } from 'tsyringe';
 import type { Class } from 'type-fest';
-import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { RouteBuilderInterface } from '../storages/metadata/route.metadata.js';
-import type { CreateApplicationOptions } from './application.factory.js';
+import { MetadataStorage } from '../storages/metadata.js';
+import type { CreateApplicationOptions } from './application.js';
 
 /**
  * Handles creating controller-level route
  */
 export async function createRoute (parentRoute: Router | Application, controller: Class<unknown>, applicationOptions: CreateApplicationOptions) {
-  const controllerMetadata = MetadataStorage.instance.routes.find((controllerMeta) => controllerMeta.target === controller);
+  const controllerMetadata = container.resolve(MetadataStorage).routes.find((controllerMeta) => controllerMeta.target === controller);
 
   if (!controllerMetadata) {
     throw new Error(`Please register ${controller.constructor.name} in the metadata-storage`);
@@ -26,7 +25,8 @@ export async function createRoute (parentRoute: Router | Application, controller
    */
   const controllerInstance = container.resolve(controllerMetadata.target);
 
-  const builder = container.resolve(controllerMetadata.builder) as RouteBuilderInterface;
+  const builder = container.resolve(controllerMetadata.builder);
+
   builder.context = {
     instance: controllerInstance,
     meta: controllerMetadata
