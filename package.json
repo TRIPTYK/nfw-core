@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint packages/*/{src,tests}/**/*.ts",
     "lint:fix": "eslint packages/*/{src,tests}/**/*.ts --fix",
-    "test": "pnpm run build:clean && pnpm run build  && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "test:jsonapi": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-jsonapi",
     "test:http": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-http",
     "test:core": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-core",
