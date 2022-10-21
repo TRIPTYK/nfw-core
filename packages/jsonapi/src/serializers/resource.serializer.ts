@@ -46,7 +46,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       const url = jsonApiContext.koaContext.URL;
       const searchParams = url.searchParams;
 
-      const lastPage = Math.floor(
+      const lastPage = Math.ceil(
         totalRecords / jsonApiContext.query.size!
       );
       const previousPage =

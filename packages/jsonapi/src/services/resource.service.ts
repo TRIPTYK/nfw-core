@@ -37,7 +37,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       fields: fields as any,
       orderBy,
       limit: size,
-      offset: ctx.query!.page ? (ctx.query!.page * size) - 1 : undefined,
+      offset: ctx.query!.page ? (ctx.query!.page - 1) * size : undefined,
       filters: {
         context: {
           jsonApiContext: ctx
