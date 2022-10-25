@@ -3,8 +3,9 @@ import Router from '@koa/router';
 import type { AnyEntity, EntityManager } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { Class } from 'type-fest';
+import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { inject, injectable, container } from '@triptyk/nfw-core';
-import { MetadataStorage, HttpBuilder, middlewaresForTarget } from '@triptyk/nfw-http';
+import { middlewaresForTarget } from '@triptyk/nfw-http';
 import pluralize from 'pluralize';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
@@ -40,9 +41,14 @@ export interface JsonApiBuilderRouteParams {
 }
 
 @injectable()
-export class JsonApiBuilder extends HttpBuilder {
-  public constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {
-    super();
+export class JsonApiBuilder implements RouterBuilderInterface {
+  public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
+
+  public constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {}
+
+  public async bindRouting (parentRouter: Router, router: Router): Promise<void> {
+    parentRouter
+      .use(router.routes());
   }
 
   public async build (): Promise<Router> {
@@ -60,7 +66,6 @@ export class JsonApiBuilder extends HttpBuilder {
 
     const resourceMeta = this.registry.resources.get(resourceMetadataArgs.target)!;
 
-    const endpointsMeta = MetadataStorage.instance.getEndpointsForTarget(this.context.meta.target);
     const jsonApiEndpoints = JsonApiDatastorage.instance.endpoints.filter((e) => e.target === this.context.meta.target.prototype);
     const middlewares = middlewaresForTarget(this.context.meta.target);
 
@@ -76,13 +81,6 @@ export class JsonApiBuilder extends HttpBuilder {
     resourceMeta.routes.hasRelated = jsonApiEndpoints.some((em) => em.method === JsonApiMethod.GET_RELATED);
     resourceMeta.routes.hasRelationships = jsonApiEndpoints.some((em) => em.method === JsonApiMethod.GET_RELATIONSHIPS);
     resourceMeta.routes.hasUpdate = jsonApiEndpoints.some((em) => em.method === JsonApiMethod.UPDATE);
-
-    for (const endPointMeta of endpointsMeta) {
-      /**
-       * Fall-back to classic HTTP endpoint
-       */
-      this.setupEndpoint(controllerRouter, endPointMeta);
-    }
 
     for (const endpoint of jsonApiEndpoints) {
       this.setupJsonApiEndpoint(controllerRouter, endpoint, resourceMetadataArgs, options);
