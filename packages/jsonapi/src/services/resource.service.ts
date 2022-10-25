@@ -5,7 +5,7 @@ import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { Resource } from '../resource/base.resource.js';
 import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
-import type { Sort, Include, Filter } from '../query-parser/query.js';
+import type { Sort, Include, Filter, JsonApiQuery } from '../query-parser/query.js';
 import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
 import { ForbiddenError } from '../errors/forbidden.js';
 
@@ -168,14 +168,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    const attributes = this.resourceMeta.attributes.filter((a) => a.isFetchable && !a.isVirtual);
-
-    if (ctx.query!.fields.has(this.resourceMeta.name)) {
-      const attributes = ctx.query!.fields.get(this.resourceMeta.name)!;
-      fields.push(...attributes.map((attr) => attr.name));
-    } else {
-      fields.push(...attributes.map((a) => a.name));
-    }
+    this.addToFields(this.resourceMeta.name, ctx.query?.fields!, fields);
 
     for (const include of ctx.query!.includes.values()) {
       this.applyIncludes(populate, fields, ctx.query!.fields, include, []);
@@ -189,6 +182,17 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       orderBy,
       filters: this.applyFilter(ctx.query!.filters, {})
     };
+  }
+
+  protected addToFields (resourceName: string, queryFields: JsonApiQuery['fields'], fields: unknown[], joinPath?: string) {
+    const attributes = this.resourceMeta.attributes.filter((a) => a.isFetchable && !a.isVirtual);
+
+    if (queryFields.has(resourceName)) {
+      const attributes = queryFields.get(resourceName)!;
+      fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)))
+    } else {
+      fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)));
+    }
   }
 
   /**
@@ -237,18 +241,17 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     populate.push(joinPath);
     fields.push(joinPath);
 
-    if (queryFields.has(parentInclude.relationMeta.resource.name)) {
-      const attributes = queryFields.get(parentInclude.relationMeta.resource.name)!;
-      fields.push(...attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
-    } else {
-      fields.push(...parentInclude.relationMeta.resource.attributes.map((attr) => `${joinPath}.${attr.name.toString()}`));
-    }
+    this.addToFields(parentInclude.relationMeta.resource.name, queryFields, fields, joinPath);
 
     parentsPath.push(parentInclude.relationMeta.name);
 
     for (const include of parentInclude.includes.values()) {
       this.applyIncludes(populate, fields, queryFields, include, parentsPath);
     }
+  }
+
+  private mapAttributesWithJoinPath (attr: AttributeMeta<any>, joinPath?: string) {
+    return joinPath ? `${joinPath}.${attr.name}` : attr.name;
   }
 
   private expandObject (obj: Record<string, any>, path: string) {
