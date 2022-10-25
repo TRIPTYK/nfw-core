@@ -7,6 +7,7 @@ export interface AttributeOptions {
   updateable?: boolean,
   createable?: boolean,
   fetchable?: boolean,
+  isVirtual?: boolean,
 }
 
 export function Attribute (options?: AttributeOptions) {

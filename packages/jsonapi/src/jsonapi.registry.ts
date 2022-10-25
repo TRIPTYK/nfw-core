@@ -15,6 +15,7 @@ export interface AttributeMeta<TModel extends BaseEntity<TModel, any>, TResource
     name: StringKeyOf<TResource>,
     mikroMeta: EntityProperty<TModel>,
     resource: ResourceMeta<TModel>,
+    isVirtual: boolean,
     isFetchable: boolean,
     allowedSortDirections: ('ASC' | 'DESC')[],
     updateable: boolean,
@@ -121,10 +122,13 @@ export class JsonApiRegistry {
           sortable = [];
         }
 
+        const virtual = e.options?.isVirtual ?? false;
+
         return {
           mikroMeta,
           name: e.propertyName,
           resource: resourceRef,
+          isVirtual: virtual,
           updateable: e.options?.updateable ?? true,
           createable: e.options?.createable ?? true,
           allowedFilters: e.options?.filterable ?? {},

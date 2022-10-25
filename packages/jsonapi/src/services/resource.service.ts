@@ -168,7 +168,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    const attributes = this.resourceMeta.attributes.filter((a) => a.isFetchable);
+    const attributes = this.resourceMeta.attributes.filter((a) => a.isFetchable && !a.isVirtual);
 
     if (ctx.query!.fields.has(this.resourceMeta.name)) {
       const attributes = ctx.query!.fields.get(this.resourceMeta.name)!;
