@@ -168,7 +168,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     const fields : string[] = [];
     const orderBy : QueryOrderMap<TModel> = {};
 
-    this.addToFields(this.resourceMeta.name, ctx.query?.fields!, fields);
+    this.addToFields(this.resourceMeta, ctx.query?.fields!, fields);
 
     for (const include of ctx.query!.includes.values()) {
       this.applyIncludes(populate, fields, ctx.query!.fields, include, []);
@@ -184,11 +184,11 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     };
   }
 
-  protected addToFields (resourceName: string, queryFields: JsonApiQuery['fields'], fields: unknown[], joinPath?: string) {
-    const attributes = this.resourceMeta.attributes.filter((a) => a.isFetchable && !a.isVirtual);
+  protected addToFields (resourceMeta: ResourceMeta<any>, queryFields: JsonApiQuery['fields'], fields: unknown[], joinPath?: string) {
+    const attributes = resourceMeta.attributes.filter((a) => a.isFetchable && !a.isVirtual);
 
-    if (queryFields.has(resourceName)) {
-      const attributes = queryFields.get(resourceName)!;
+    if (queryFields.has(resourceMeta.name)) {
+      const attributes = queryFields.get(resourceMeta.name)!;
       fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)))
     } else {
       fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)));
@@ -241,7 +241,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     populate.push(joinPath);
     fields.push(joinPath);
 
-    this.addToFields(parentInclude.relationMeta.resource.name, queryFields, fields, joinPath);
+    this.addToFields(parentInclude.relationMeta.resource, queryFields, fields, joinPath);
 
     parentsPath.push(parentInclude.relationMeta.name);
 
