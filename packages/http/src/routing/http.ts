@@ -36,6 +36,6 @@ export class HttpBuilder implements RouterBuilderInterface {
 
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
     const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
-    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta));
+    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta.propertyName));
   }
 }
