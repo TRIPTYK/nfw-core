@@ -3,16 +3,16 @@ import type { RouteMetadataArgs } from '@triptyk/nfw-core';
 import { container } from '@triptyk/nfw-core';
 import createHttpError from 'http-errors';
 import type { Next } from 'koa';
-import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
+import type { ControllerContextInterface } from '../interfaces/controller-context.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
-import type { ResponseHandlerInterface } from '../interfaces/response-handler.interface.js';
+import type { ResponseHandlerInterface } from '../interfaces/response-handler.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.metadata.js';
-import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
-import { applyParam } from '../utils/factory.util.js';
+import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.js';
+import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
+import { applyParam } from '../utils/factory.js';
 
 const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs) => {
-  const paramsForGuardMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
+  const paramsForGuardMetadata = container.resolve(MetadataStorage).useParams.filter((paramMeta) => paramMeta.target.constructor === guardMeta.guard).sort((a, b) => a.index - b.index).map((useParam) => ({
     metadata: useParam
   }));
   return {
@@ -39,13 +39,13 @@ async function resolveParam (e: {
 
 export function handleHttpRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: HttpEndpointMetadataArgs) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
-  const paramsForRouteMetadata = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === controllerMetadata.target && paramMeta.propertyName === routeMetadata.propertyName).sort((a, b) => a.index - b.index).map((useParam) => {
+  const paramsForRouteMetadata = container.resolve(MetadataStorage).sortedParametersFor(controllerMetadata.target, routeMetadata.propertyName).map((useParam) => {
     return ({
       metadata: useParam
     })
   });
 
-  const responsehandlerForRouteMetadata = MetadataStorage.instance.useResponseHandlers.find((respHandlerMetadata) => {
+  const responsehandlerForRouteMetadata = container.resolve(MetadataStorage).useResponseHandlers.find((respHandlerMetadata) => {
     /**
        * If on controller level
        */
@@ -58,7 +58,7 @@ export function handleHttpRouteControllerAction (controllerInstance: any, contro
     return respHandlerMetadata.target.constructor === controllerMetadata.target && respHandlerMetadata.propertyName === routeMetadata.propertyName;
   });
 
-  const guardForRouteMetadata = MetadataStorage.instance.useGuards.filter((guardMeta) => {
+  const guardForRouteMetadata = container.resolve(MetadataStorage).useGuards.filter((guardMeta) => {
     /**
        * If on controller level
        */
@@ -85,7 +85,7 @@ export function handleHttpRouteControllerAction (controllerInstance: any, contro
 
   if (responsehandlerForRouteMetadata) {
     responseHandlerInstance = container.resolve(responsehandlerForRouteMetadata.responseHandler);
-    const params = MetadataStorage.instance.useParams.filter((paramMeta) => paramMeta.target.constructor === responsehandlerForRouteMetadata.responseHandler).sort((a, b) => a.index - b.index).map((useParam) => ({
+    const params = container.resolve(MetadataStorage).useParams.filter((paramMeta) => paramMeta.target.constructor === responsehandlerForRouteMetadata.responseHandler).sort((a, b) => a.index - b.index).map((useParam) => ({
       metadata: useParam
     }));
     responseHandlerUseParams = {

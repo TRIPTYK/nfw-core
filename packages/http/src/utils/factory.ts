@@ -1,10 +1,10 @@
 import type { Middleware, RouterContext } from '@koa/router';
 import type { Next } from 'koa';
 
-import type { ControllerContextInterface } from '../interfaces/controller-context.interface.js';
-import type { ErrorHandlerInterface } from '../interfaces/error-middleware.interface.js';
-import type { MiddlewareInterface } from '../interfaces/middleware.interface.js';
-import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.metadata.js';
+import type { ControllerContextInterface } from '../interfaces/controller-context.js';
+import type { ErrorHandlerInterface } from '../interfaces/error-middleware.js';
+import type { MiddlewareInterface } from '../interfaces/middleware.js';
+import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
@@ -57,7 +57,7 @@ export function resolveMiddleware (middleware: Middleware | Class<MiddlewareInte
 }
 
 export function middlewaresForTarget (target: Class<unknown>, propertyName?: string) {
-  const endpointMiddlewares = MetadataStorage.instance.getMiddlewaresForTarget(target, propertyName)
+  const endpointMiddlewares = container.resolve(MetadataStorage).getMiddlewaresForTarget(target, propertyName)
     .map((m) => resolveMiddleware(m.middleware));
   return endpointMiddlewares;
 }

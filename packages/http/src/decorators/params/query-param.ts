@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../factories/custom-decorator.factory.js';
+import { createCustomDecorator } from '../../factories/custom-decorator.js';
 
 export function QueryParam (this: unknown, paramName: string) {
   return createCustomDecorator(({ ctx }) => {

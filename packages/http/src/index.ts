@@ -1,38 +1,38 @@
 
-export * from './builders/http.builder.js'
-export * from './decorators/verbs.decorator.js'
-export * from './decorators/controller.decorator.js'
-export * from './decorators/use-guard.decorator.js'
-export * from './decorators/use-response-handler.decorator.js'
-export * from './decorators/use-response-handler.decorator.js'
-export * from './decorators/use-middleware.decorator.js';
+export * from './builders/http.js'
+export * from './decorators/verbs.js'
+export * from './decorators/controller.js'
+export * from './decorators/use-guard.js'
+export * from './decorators/use-response-handler.js'
+export * from './decorators/use-response-handler.js'
+export * from './decorators/use-middleware.js';
 
 export * from './interfaces/endpoint.metadata.js';
-export * from './interfaces/middleware.interface.js';
-export * from './interfaces/error-middleware.interface.js';
-export * from './interfaces/response-handler.interface.js';
-export * from './interfaces/guard.interface.js';
+export * from './interfaces/middleware.js';
+export * from './interfaces/error-middleware.js';
+export * from './interfaces/response-handler.js';
+export * from './interfaces/guard.js';
 
-export * from './factories/custom-decorator.factory.js';
+export * from './factories/custom-decorator.js';
 
-export * from './decorators/params/body.decorator.js'
-export * from './decorators/params/controller-context.decorator.js'
-export * from './decorators/params/args.decorator.js'
-export * from './decorators/params/header.decorator.js'
-export * from './decorators/params/ip.decorator.js'
-export * from './decorators/params/method.decorator.js'
-export * from './decorators/params/origin.decorator.js'
-export * from './decorators/params/param.decorator.js'
-export * from './decorators/params/params.decorator.js'
-export * from './decorators/params/query-param.decorator.js'
-export * from './decorators/params/query.decorator.js'
-export * from './decorators/params/router-context.decorator.js';
+export * from './decorators/params/body.js'
+export * from './decorators/params/controller-context.js'
+export * from './decorators/params/args.js'
+export * from './decorators/params/header.js'
+export * from './decorators/params/ip.js'
+export * from './decorators/params/method.js'
+export * from './decorators/params/origin.js'
+export * from './decorators/params/param.js'
+export * from './decorators/params/params.js'
+export * from './decorators/params/query-param.js'
+export * from './decorators/params/query.js'
+export * from './decorators/params/router-context.js';
 
 export * from './storages/metadata-storage.js';
 
-export * from './storages/metadata/use-guard.metadata.js';
-export * from './storages/metadata/use-param.metadata.js';
+export * from './storages/metadata/use-guard.js';
+export * from './storages/metadata/use-param.js';
 export * from './storages/metadata/use-response-handler.metadata.js';
-export * from './storages/metadata/use-middleware.metadata.js';
+export * from './storages/metadata/use-middleware.js';
 
-export * from './utils/factory.util.js';
+export * from './utils/factory.js';

@@ -1,5 +1,5 @@
 import type { Class } from 'type-fest';
-import type { GuardInterface } from '../../interfaces/guard.interface.js';
+import type { GuardInterface } from '../../interfaces/guard.js';
 
 export interface UseGuardMetadataArgs {
     target: any,

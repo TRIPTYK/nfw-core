@@ -1,11 +1,12 @@
 import Router from '@koa/router';
 import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
-import type { ControllerMetaArgs } from '../decorators/controller.decorator.js';
-import { handleHttpRouteControllerAction } from '../factories/controller-action.factory.js';
+import { container } from '@triptyk/nfw-core';
+import type { ControllerMetaArgs } from '../decorators/controller.js';
+import { handleHttpRouteControllerAction } from '../factories/controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import { allowedMethods } from '../utils/allowed-methods.util.js';
-import { middlewaresForTarget } from '../utils/factory.util.js';
+import { allowedMethods } from '../utils/allowed-methods.js';
+import { middlewaresForTarget } from '../utils/factory.js';
 
 export class HttpBuilder implements RouterBuilderInterface {
   public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
@@ -15,7 +16,7 @@ export class HttpBuilder implements RouterBuilderInterface {
       prefix: (this.context.meta.args as ControllerMetaArgs).routeName
     });
 
-    const endpointsMeta = MetadataStorage.instance.getEndpointsForTarget(this.context.meta.target);
+    const endpointsMeta = container.resolve(MetadataStorage).getEndpointsForTarget(this.context.meta.target);
     const applyMiddlewares = middlewaresForTarget(this.context.meta.target);
 
     controllerRouter.use(...applyMiddlewares);

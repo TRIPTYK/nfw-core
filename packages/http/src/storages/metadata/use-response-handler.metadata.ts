@@ -1,6 +1,6 @@
 
 import type { Class } from 'type-fest';
-import type { ResponseHandlerInterface } from '../../interfaces/response-handler.interface.js';
+import type { ResponseHandlerInterface } from '../../interfaces/response-handler.js';
 
 export interface UseResponseHandlerMetadataArgs {
     target: any,

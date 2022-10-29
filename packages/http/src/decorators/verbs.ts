@@ -1,9 +1,10 @@
+import { container } from '@triptyk/nfw-core';
 import { HttpMethod } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function GET (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -16,7 +17,7 @@ export function GET (routeName: `/${string}`) {
 
 export function POST (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -29,7 +30,7 @@ export function POST (routeName: `/${string}`) {
 
 export function PATCH (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -41,7 +42,7 @@ export function PATCH (routeName: `/${string}`) {
 }
 export function DELETE (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -54,7 +55,7 @@ export function DELETE (routeName: `/${string}`) {
 
 export function OPTIONS (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -67,7 +68,7 @@ export function OPTIONS (routeName: `/${string}`) {
 
 export function PUT (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -80,7 +81,7 @@ export function PUT (routeName: `/${string}`) {
 
 export function HEAD (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {
@@ -93,7 +94,7 @@ export function HEAD (routeName: `/${string}`) {
 
 export function ALL (routeName: `/${string}`) {
   return function (target: unknown, propertyKey: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName: propertyKey,
       args: {

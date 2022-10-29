@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../factories/custom-decorator.factory.js';
+import { createCustomDecorator } from '../../factories/custom-decorator.js';
 
 /**
  * Returns a param from ctx.params
