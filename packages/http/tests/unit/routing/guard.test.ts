@@ -1,5 +1,7 @@
 import 'reflect-metadata';
-import { isSpecialHandle, resolveSpecialContext } from '../../../src/routing/guard-action.js'
+import type { GuardInterface } from '../../../src/interfaces/guard.js';
+import { callGuardWithParams, isSpecialHandle, resolveSpecialContext } from '../../../src/routing/guard-action.js'
+import { jest } from '@jest/globals';
 
 describe('Guard routing build', () => {
   describe('is-special-handle', () => {
@@ -16,9 +18,7 @@ describe('Guard routing build', () => {
 
     function makeMeta (handleName: string) {
       return {
-        metadata: {
-          handle: handleName
-        }
+        handle: handleName
       } as any;
     }
 
@@ -26,7 +26,36 @@ describe('Guard routing build', () => {
       expect(resolveSpecialContext(makeMeta('args'), args, {} as any, controllerInstance)).toStrictEqual(args);
     });
     it('if special context is controller-context, it returns controller-context', () => {
-      expect(resolveSpecialContext(makeMeta('controller-context'), args, {} as any, controllerInstance)).toStrictEqual({ controllerAction: undefined, controllerInstance });
+      expect(resolveSpecialContext(makeMeta('controller-context'), args, 'action', controllerInstance)).toStrictEqual({ controllerAction: 'action', controllerInstance });
+    })
+  })
+  describe('Guard behavior', () => {
+    let guardInstance : GuardInterface;
+    let returnValue: boolean;
+    let canFunction: jest.MockedFunction<any>;
+
+    beforeEach(() => {
+      canFunction = jest.fn(() => returnValue);
+      guardInstance = new class implements GuardInterface {
+        public code = 500;
+        public message = 'banana';
+        public async can (...args: unknown[]) {
+          return canFunction(...args);
+        }
+      }()
+    })
+
+    it('Guard throw error when returning other than true', async () => {
+      returnValue = false;
+      expect(() => callGuardWithParams(guardInstance, ['a'])).rejects.toThrowError(/banana/);
+      expect(canFunction).toBeCalledTimes(1);
+      expect(canFunction).toBeCalledWith('a');
+    })
+    it('Guard does not throw error when returning true', async () => {
+      returnValue = true;
+      expect(() => callGuardWithParams(guardInstance, ['a'])).not.toThrowError();
+      expect(canFunction).toBeCalledTimes(1);
+      expect(canFunction).toBeCalledWith('a');
     })
   })
 })

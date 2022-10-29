@@ -1,38 +1,12 @@
 import type { Middleware, RouterContext } from '@koa/router';
 import type { Next } from 'koa';
 
-import type { ControllerContextInterface } from '../interfaces/controller-context.js';
 import type { ErrorHandlerInterface } from '../interfaces/error-middleware.js';
 import type { MiddlewareInterface } from '../interfaces/middleware.js';
-import type { ControllerParamsContext, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { container } from '@triptyk/nfw-core';
-
-export function applyParam (paramMetadata: UseParamsMetadataArgs, ctx: ControllerParamsContext) {
-  /**
-   * Args is a special handler, it should be handled before in guard or response-handler
-   */
-  if (paramMetadata.handle === 'args') {
-    throw new Error("Args are not handled in this context, please don't use this decorator in this context");
-  }
-
-  /**
-   * Return without args, it has his own decorator
-   */
-  if (paramMetadata.handle === 'controller-context') {
-    return {
-      controllerAction: ctx.controllerAction,
-      controllerInstance: ctx.controllerInstance
-    } as ControllerContextInterface;
-  }
-
-  /**
-   * Handle the rest normally
-   */
-  return paramMetadata.handle(ctx);
-}
 
 export function useErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
   const errorHandlerInstance = container.resolve(errorHandler) as ErrorHandlerInterface;

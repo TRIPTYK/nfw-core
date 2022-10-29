@@ -7,11 +7,13 @@ export interface ControllerParamsContext {
     args?: unknown[],
 }
 
+export type ParamsHandleFunction = ((ctx: ControllerParamsContext) => Promise<unknown> | unknown);
+
 export interface UseParamsMetadataArgs {
     decoratorName: string,
     target: any,
     propertyName: string,
     index: number,
-    handle: ((ctx: ControllerParamsContext) => Promise<unknown> | unknown) | 'args' | 'controller-context',
+    handle: ParamsHandleFunction | 'args' | 'controller-context',
     args: unknown[],
 }

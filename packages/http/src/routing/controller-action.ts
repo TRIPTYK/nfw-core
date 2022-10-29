@@ -5,58 +5,48 @@ import type { Next } from 'koa';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import type { ResponseHandlerInterface } from '../interfaces/response-handler.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
+import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-response-handler.metadata.js';
-import { applyParam } from '../utils/factory.js';
 import type { GuardInstance } from './guard-action.js';
-import { isSpecialHandle, resolveSpecialContext, resolveGuardParam, callGuardWithParams, resolveGuardInstance } from './guard-action.js';
-
-export interface ParamsMeta {
-  metadata: UseParamsMetadataArgs,
-}
+import { isSpecialHandle, resolveSpecialContext, callGuardWithParams, resolveGuardInstance } from './guard-action.js';
 
 interface ResponseHandlerInstanceMeta {
   instance: ResponseHandlerInterface,
   args: unknown[],
-  paramsMeta: ParamsMeta[],
+  paramsMeta: UseParamsMetadataArgs[],
 }
 
-export async function resolveParam (e: {
-  metadata: UseParamsMetadataArgs,
-}, controllerInstance: any, ctx: RouterContext, endpointMetadata: HttpEndpointMetadataArgs) {
-  /**
-   * Apply guard params
-   */
-  const paramResult = await applyParam(e.metadata, {
-    controllerAction: endpointMetadata.propertyName,
+export function handleParam (paramMeta: UseParamsMetadataArgs, contextArgs: unknown[], controllerAction: string, controllerInstance: unknown, ctx: RouterContext) {
+  if (isSpecialHandle(paramMeta.handle)) {
+    return resolveSpecialContext(paramMeta, contextArgs, controllerAction, controllerInstance);
+  }
+  return (paramMeta.handle as ParamsHandleFunction)({
     controllerInstance,
-    ctx
+    controllerAction,
+    ctx,
+    args: contextArgs
   });
-
-  return paramResult;
 }
 
-function controllerActionMiddleware (guardsInstance: GuardInstance[], controllerInstance: any, routeMetadata: HttpEndpointMetadataArgs, paramsForRouteMetadata:ParamsMeta[], responsehandlerForRouteMetadata: UseResponseHandlerMetadataArgs | undefined, responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
+export function resolveParams (paramsMeta: UseParamsMetadataArgs[], contextArgs: unknown[], controllerAction: string, controllerInstance: any, ctx: RouterContext) {
+  return Promise.all(paramsMeta.map((paramMeta) => handleParam(paramMeta, contextArgs, controllerAction, controllerInstance, ctx)));
+}
+
+function controllerActionMiddleware (guardsInstance: GuardInstance[], controllerInstance: any, routeMetadata: HttpEndpointMetadataArgs, paramsForRouteMetadata:UseParamsMetadataArgs[], responsehandlerForRouteMetadata: UseResponseHandlerMetadataArgs | undefined, responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
   const controllerMethod = controllerInstance[routeMetadata.propertyName] as Function;
 
   return async (ctx: RouterContext, _next: Next) => {
     for (const { instance, args, paramsMeta } of guardsInstance) {
-      const resolvedGuardParams = await Promise.all(paramsMeta.map((paramMeta) => resolveGuardParam(paramMeta, args, routeMetadata, controllerInstance, ctx)));
-
+      const resolvedGuardParams = await resolveParams(paramsMeta, args, routeMetadata.propertyName, controllerInstance, ctx);
       await callGuardWithParams(instance, resolvedGuardParams);
     }
 
-    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => resolveParam(e, controllerInstance, ctx, routeMetadata)));
+    const resolvedParams = await Promise.all(paramsForRouteMetadata.map(async (e) => handleParam(e, [], routeMetadata.propertyName, controllerInstance, ctx)));
 
     const controllerActionResult = await controllerMethod.call(controllerInstance, ...resolvedParams);
 
     if (responsehandlerForRouteMetadata) {
-      const resolvedHandlerParams = await Promise.all(responseHandlerUseParams!.paramsMeta.map((paramMeta) => {
-        if (isSpecialHandle(paramMeta.metadata.handle)) {
-          return resolveSpecialContext(paramMeta, responsehandlerForRouteMetadata.args, routeMetadata, controllerInstance);
-        }
-        return resolveParam(paramMeta, controllerInstance, ctx, routeMetadata)
-      }));
+      const resolvedHandlerParams = await resolveParams(responseHandlerUseParams!.paramsMeta, responseHandlerUseParams!.args, routeMetadata.propertyName, controllerInstance, ctx);
       return responseHandlerUseParams!.instance.handle(controllerActionResult, ...resolvedHandlerParams);
     }
 
@@ -67,11 +57,7 @@ function controllerActionMiddleware (guardsInstance: GuardInstance[], controller
 export function handleHttpRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, routeMetadata: HttpEndpointMetadataArgs) {
   const metadataStorage = container.resolve(MetadataStorage);
 
-  const paramsForRouteMetadata: ParamsMeta[] = metadataStorage.sortedParametersForEndpoint(controllerMetadata.target, routeMetadata.propertyName).map((useParam) => {
-    return ({
-      metadata: useParam
-    })
-  });
+  const paramsForRouteMetadata: UseParamsMetadataArgs[] = metadataStorage.sortedParametersForEndpoint(controllerMetadata.target, routeMetadata.propertyName);
 
   const responsehandlerForRouteMetadata = metadataStorage.getClosestResponseHandlerForEndpoint(controllerMetadata.target, routeMetadata.propertyName);
 
@@ -80,9 +66,7 @@ export function handleHttpRouteControllerAction (controllerInstance: any, contro
   let responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined;
 
   if (responsehandlerForRouteMetadata) {
-    const params = metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.target).map((useParam) => ({
-      metadata: useParam
-    }));
+    const params = metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.target);
     responseHandlerUseParams = {
       instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
       args: responsehandlerForRouteMetadata.args,
