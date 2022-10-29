@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../factories/custom-decorator.js';
+import { createCustomDecorator } from '../../utils/custom-decorator.js';
 
 export function Query (this: unknown) {
   return createCustomDecorator(({ ctx }) => {

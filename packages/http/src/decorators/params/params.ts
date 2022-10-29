@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../factories/custom-decorator.js';
+import { createCustomDecorator } from '../../utils/custom-decorator.js';
 
 export function Params (this: unknown) {
   return createCustomDecorator(({ ctx }) => {

@@ -2,7 +2,7 @@ import Router from '@koa/router';
 import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { container } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.js';
-import { handleHttpRouteControllerAction } from '../factories/controller-action.js';
+import { handleHttpRouteControllerAction } from './controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';

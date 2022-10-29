@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../factories/custom-decorator.js';
+import { createCustomDecorator } from '../../utils/custom-decorator.js';
 
 /**
  * Returns context body

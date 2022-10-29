@@ -1,5 +1,5 @@
 
-export * from './builders/http.js'
+export * from './routing/http.js'
 export * from './decorators/verbs.js'
 export * from './decorators/controller.js'
 export * from './decorators/use-guard.js'
@@ -13,7 +13,7 @@ export * from './interfaces/error-middleware.js';
 export * from './interfaces/response-handler.js';
 export * from './interfaces/guard.js';
 
-export * from './factories/custom-decorator.js';
+export * from './utils/custom-decorator.js';
 
 export * from './decorators/params/body.js'
 export * from './decorators/params/controller-context.js'

@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@jest/globals': ^28.1.3
+      '@jscpd/finder': ^3.5.1
       '@types/jest': ^28.1.6
       '@typescript-eslint/eslint-plugin': ^5.32.0
       '@typescript-eslint/parser': ^5.32.0
@@ -17,11 +18,12 @@ importers:
       eslint-plugin-promise: ^6.0.0
       eslint-plugin-unused-imports: ^2.0.0
       jest: ^28.1.3
-      jscpd: ^3.4.5
+      jscpd: ~3.4.5
       npm-run-all: ^4.1.5
       typescript: ~4.7.4
     devDependencies:
       '@jest/globals': 28.1.3
+      '@jscpd/finder': 3.5.1
       '@types/jest': 28.1.6
       '@typescript-eslint/eslint-plugin': 5.32.0_iosr3hrei2tubxveewluhu5lhy
       '@typescript-eslint/parser': 5.32.0_qugx7qdu5zevzvxaiqyxfiwquq
@@ -79,6 +81,7 @@ importers:
       is-class: ^0.0.9
       koa: ^2.13.4
       node-fetch: ^3.2.10
+      reflect-metadata: ^0.1.13
       type-fest: ^2.18.1
       typescript: ~4.7.4
     dependencies:
@@ -93,6 +96,7 @@ importers:
       '@types/node': 18.6.3
       koa: 2.13.4
       node-fetch: 3.2.10
+      reflect-metadata: 0.1.13
       type-fest: 2.18.1
       typescript: 4.7.4
 
@@ -820,17 +824,17 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@jscpd/core/3.4.5:
-    resolution: {integrity: sha512-02Ajnj07VykiwdWNoMKGdQDHT76kJGOvc1h9+aoicU0CeacWIEuoJW6Gy+N3j+UGUlc1ndWhZ91alIiQ8ERMGg==}
+  /@jscpd/core/3.5.0:
+    resolution: {integrity: sha512-ddts7g3oany+N7LDculkfvN+B/n0BjGkIKFKU/ZOvJ/KmuUycFGC6xufM73Peo1fpwEecVko+uINUsyNU3bNzw==}
     dependencies:
       eventemitter3: 4.0.7
     dev: true
 
-  /@jscpd/finder/3.4.5:
-    resolution: {integrity: sha512-Hz8s6UVbtETYmDP+MdjaTaKKgXsb+SR1dJcdwluBTm5ZNkE9cE/dnDVnrEcKGhE7N3Mg6HEo/fTIKqBsvbRZlw==}
+  /@jscpd/finder/3.5.1:
+    resolution: {integrity: sha512-9+hpaJkr4W90A4h8coS0ibfvUQRk0VvpwrLLNH0+kAJMKk7uYgqFEj/5Agy1kS0VFZwJEnmkXSvWp8NjFqUhGQ==}
     dependencies:
-      '@jscpd/core': 3.4.5
-      '@jscpd/tokenizer': 3.4.5
+      '@jscpd/core': 3.5.0
+      '@jscpd/tokenizer': 3.5.1
       blamer: 1.0.1
       bytes: 3.1.2
       cli-table3: 0.6.2
@@ -848,10 +852,10 @@ packages:
       fs-extra: 9.1.0
     dev: true
 
-  /@jscpd/tokenizer/3.4.5:
-    resolution: {integrity: sha512-yPamcj9V1a6h1AGEzdlyfa8t9Lxsb3sZ6Wr7m+cZw2sWD2AlCAjSzbgUwdla7d6y5g1jaVU2XGHEVNUx4vZUqw==}
+  /@jscpd/tokenizer/3.5.1:
+    resolution: {integrity: sha512-Tj8ehnb4AyfdsfR2w1Lp/62e4AwyMKD53NJ7KpLcmh74BqzfwbDgi7QBNfL9L/FJfhovt24uxG3JNOIEYONixw==}
     dependencies:
-      '@jscpd/core': 3.4.5
+      '@jscpd/core': 3.5.0
       reprism: 0.0.11
       spark-md5: 3.0.2
     dev: true
@@ -3851,10 +3855,10 @@ packages:
     resolution: {integrity: sha512-2gAskcIpbnNTs0RgPZG72xBNa0eRR7mB121XApzbN7kkRUUue2ZT9ug7HMV1JZ01hIpJkrrchcDidMgnl6/DWA==}
     hasBin: true
     dependencies:
-      '@jscpd/core': 3.4.5
-      '@jscpd/finder': 3.4.5
+      '@jscpd/core': 3.5.0
+      '@jscpd/finder': 3.5.1
       '@jscpd/html-reporter': 3.4.5
-      '@jscpd/tokenizer': 3.4.5
+      '@jscpd/tokenizer': 3.5.1
       colors: 1.4.0
       commander: 5.1.0
       fs-extra: 9.1.0

@@ -2,7 +2,7 @@ import { container } from '@triptyk/nfw-core';
 import { HttpMethod } from '../interfaces/endpoint.metadata.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
-export function GET (routeName: `/${string}`) {
+export function createHttpVerbDecorator (routeName: string, verb: HttpMethod) {
   return function (target: unknown, propertyKey: string) {
     container.resolve(MetadataStorage).endpoints.push({
       target,
@@ -10,97 +10,38 @@ export function GET (routeName: `/${string}`) {
       args: {
         routeName
       },
-      method: HttpMethod.GET
+      method: verb
     });
   }
+}
+
+export function GET (routeName: `/${string}`) {
+  return createHttpVerbDecorator(routeName, HttpMethod.GET);
 }
 
 export function POST (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.POST
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.POST);
 }
 
 export function PATCH (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.PATCH
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.PATCH);
 }
 export function DELETE (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.DELETE
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.DELETE);
 }
 
 export function OPTIONS (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.OPTIONS
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.OPTIONS);
 }
 
 export function PUT (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.PUT
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.PUT);
 }
 
 export function HEAD (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.HEAD
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.HEAD);
 }
 
 export function ALL (routeName: `/${string}`) {
-  return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
-      target,
-      propertyName: propertyKey,
-      args: {
-        routeName
-      },
-      method: HttpMethod.ALL
-    });
-  }
+  return createHttpVerbDecorator(routeName, HttpMethod.ALL);
 }

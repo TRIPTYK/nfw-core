@@ -5,6 +5,6 @@ import type { ResponseHandlerInterface } from '../../interfaces/response-handler
 export interface UseResponseHandlerMetadataArgs {
     target: any,
     propertyName?: string,
-    args?: unknown[],
+    args: unknown[],
     responseHandler: Class<ResponseHandlerInterface>,
 }

@@ -1,6 +1,6 @@
 import type { Class } from 'type-fest';
 import { container, injectable, MetadataStorage } from '@triptyk/nfw-core';
-import { HttpBuilder } from '../builders/http.js';
+import { HttpBuilder } from '../routing/http.js';
 
 interface ControllerOptions {
   routeName: string,
