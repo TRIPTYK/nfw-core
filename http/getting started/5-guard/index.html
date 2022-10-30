@@ -507,8 +507,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-the-guard-and-the-args-decorator" class="md-nav__link">
-    Use the guard and the @Args() decorator
+  <a href="#using-a-guard-and-the-args-decorator" class="md-nav__link">
+    Using a guard and the @Args() decorator
   </a>
   
 </li>
@@ -530,6 +530,20 @@
     <li class="md-nav__item">
       <a href="../6-response-handler/" class="md-nav__link">
         Response Handlers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-error-handling/" class="md-nav__link">
+        Error handling
       </a>
     </li>
   
@@ -858,8 +872,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-the-guard-and-the-args-decorator" class="md-nav__link">
-    Use the guard and the @Args() decorator
+  <a href="#using-a-guard-and-the-args-decorator" class="md-nav__link">
+    Using a guard and the @Args() decorator
   </a>
   
 </li>
@@ -883,24 +897,21 @@
 
 
 <h1 id="guards">Guards</h1>
-<p>Guards are pieces of code that executes one by one before the controller action, if some guard throws an error or returns false, it will return by default a 403 forbidden error.
-The code and the message returned can be customised in the Guard class.</p>
-<p>In the example below, i've created an IpGuard that rejets when the user ip is not authorized. </p>
+<p>Guards are pieces of code that executes one by one before the controller action, if some guard throws an error or returns false, it will throw by default a ForbiddenError.
+If you want to throw another Error, use <code>throw &lt;error&gt;</code> in the guard.</p>
+<p>In the example below, i've created an IpGuard that rejects when the user ip is not authorized. </p>
 <div class="highlight"><span class="filename">guard.ts</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">IpGuard</span><span class="w"> </span><span class="k">implements</span><span class="w"> </span><span class="nx">GuardInterface</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="c1">// (1)</span><span class="w"></span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">can</span><span class="w"> </span><span class="p">(</span><span class="kd">@Ip</span><span class="p">()</span><span class="w"> </span><span class="nx">ip</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kd">@Args</span><span class="p">()</span><span class="w"> </span><span class="p">[</span><span class="nx">allowedIp</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">])</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ip</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">allowedIp</span><span class="p">;</span><span class="w"></span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">}</span><span class="w"></span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">403</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Your ip is not allowed&#39;</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <ol>
 <li>Decorators can be used in guards the same way than in the controller action.</li>
 </ol>
-<h2 id="use-the-guard-and-the-args-decorator">Use the guard and the <code>@Args()</code> decorator</h2>
-<p>The guards can be applied at <strong>controller</strong>, <strong>route</strong> or <strong>application</strong> level. For the controller and route level, you must use the <code>@UseGuard(GuardClass, ...args)</code> decorator.</p>
+<h2 id="using-a-guard-and-the-args-decorator">Using a guard and the <code>@Args()</code> decorator</h2>
+<p>The guards can be applied at <strong>controller</strong> or <strong>endpoint</strong> level. For the controller and route level, you must use the <code>@UseGuard(GuardClass, ...args)</code> decorator.</p>
 <p>The args passed to the <code>@UseGuard</code> will be passed to the guard and can be retrieved in the guard by using the <code>@Args()</code> decorator. </p>
 <div class="highlight"><span class="filename">controller.ts</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span><span class="w"></span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">@UseMiddleware</span><span class="p">(</span><span class="nx">Middleware</span><span class="p">)</span><span class="w"> </span>

@@ -536,6 +536,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-error-handling/" class="md-nav__link">
+        Error handling
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -902,7 +916,7 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h2 id="using-the-response-handler">Using the response handler</h2>
-<p>The response handler can be applied at <strong>controller</strong> and <strong>route</strong> level. You must use the <code>@UseResponseHandler(ResponseHabdler, ...args)</code> decorator.</p>
+<p>The response handler can be applied at <strong>controller</strong> and <strong>endpoint</strong> level. You must use the <code>@UseResponseHandler(ResponseHabdler, ...args)</code> decorator.</p>
 <p>The args passed to the <code>@UseResponseHandler</code> will be passed to the response handler and can be retrieved by using the <code>@Args()</code> decorator. </p>
 <div class="highlight"><span class="filename">controller.ts</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span><span class="w"></span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">@UseMiddleware</span><span class="p">(</span><span class="nx">Middleware</span><span class="p">)</span><span class="w"></span>
@@ -951,13 +965,13 @@
       
       
         
-        <a href="../../../jsonapi/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction" rel="next">
+        <a href="../7-error-handling/" class="md-footer__link md-footer__link--next" aria-label="Next: Error handling" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Introduction
+              Error handling
             </div>
           </div>
           <div class="md-footer__button md-icon">
