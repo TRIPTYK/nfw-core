@@ -29,6 +29,8 @@ export * from './decorators/params/router-context.js';
 
 export * from './storages/metadata-storage.js';
 
+export * from './enums/http-method.js';
+
 export * from './storages/metadata/use-guard.js';
 export * from './storages/metadata/use-param.js';
 export * from './storages/metadata/use-response-handler.js';

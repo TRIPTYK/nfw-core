@@ -1,14 +1,4 @@
-
-export enum HttpMethod {
-    GET = 'get',
-    PUT = 'put',
-    POST = 'post',
-    PATCH = 'patch',
-    OPTIONS = 'options',
-    DELETE = 'delete',
-    HEAD = 'head',
-    ALL = 'all'
-}
+import type { HttpMethod } from '../../enums/http-method.js';
 
 export interface HttpEndpointMetadataArgs {
     target: unknown,

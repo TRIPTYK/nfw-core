@@ -1,5 +1,5 @@
 import { container } from '@triptyk/nfw-core';
-import { HttpMethod } from '../storages/metadata/endpoint.js';
+import { HttpMethod } from '../enums/http-method.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function createHttpVerbDecorator (routeName: string, verb: HttpMethod) {
