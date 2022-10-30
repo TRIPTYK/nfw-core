@@ -23,22 +23,27 @@ describe('ResolveParam', () => {
     };
   }
 
+  function constructParamResolver (handle : UseParamsMetadataArgs['handle']) {
+    const paramMeta = makeMeta(handle);
+    return new ParamResolver(paramMeta, 'thing', controllerInstance);
+  }
+
   it('Resolve a param and executes the handle', async () => {
     const handle = jest.fn(() => true);
-    const paramMeta = makeMeta(handle);
-    const result = await new ParamResolver(paramMeta).handleParam([], 'thing', controllerInstance, {} as RouterContext);
+    const resolver = constructParamResolver(handle);
+    const result = await resolver.handleParam([], {} as RouterContext);
 
     expect(result).toStrictEqual(true);
     expect(handle).toBeCalledTimes(1);
   });
   it('Returns controller-context on special controller-context param', async () => {
-    const paramMeta = makeMeta('controller-context');
-    const result = await new ParamResolver(paramMeta).handleParam([], 'thing', controllerInstance, {} as RouterContext);
+    const resolver = constructParamResolver('controller-context');
+    const result = await resolver.handleParam([], {} as RouterContext);
     expect(result).toStrictEqual({ controllerAction: 'thing', controllerInstance });
   });
   it('Returns context args on special args param', async () => {
-    const paramMeta = makeMeta('args');
-    const result = new ParamResolver(paramMeta).handleParam(['a'], 'thing', controllerInstance, {} as RouterContext);
+    const resolver = constructParamResolver('args');
+    const result = await resolver.handleParam(['a'], {} as RouterContext);
     expect(result).toStrictEqual(['a']);
   });
 });

@@ -1,21 +1,39 @@
 import type { RouterContext } from '@koa/router';
+import type { ControllerContextInterface } from '../interfaces/controller-context.js';
 import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
-import { isSpecialHandle, resolveSpecialContext } from './controller-action.js';
 
 export class ParamResolver {
   public constructor (
-      public paramMeta: UseParamsMetadataArgs
+      public paramMeta: UseParamsMetadataArgs,
+      public controllerAction: string,
+      public controllerInstance: unknown
   ) {}
 
-  public handleParam (contextArgs: unknown[], controllerAction: string, controllerInstance: unknown, ctx: RouterContext) {
-    if (isSpecialHandle(this.paramMeta.handle)) {
-      return resolveSpecialContext(this.paramMeta, contextArgs, controllerAction, controllerInstance);
+  public handleParam (contextArgs: unknown[], ctx: RouterContext) {
+    if (this.isSpecialHandle()) {
+      return this.resolveSpecialContext(contextArgs);
     }
     return (this.paramMeta.handle as ParamsHandleFunction)({
-      controllerInstance,
-      controllerAction,
+      controllerInstance: this.controllerInstance,
+      controllerAction: this.controllerAction,
       ctx,
       args: contextArgs
     });
+  }
+
+  private isSpecialHandle () {
+    return this.paramMeta.handle === 'args' || this.paramMeta.handle === 'controller-context';
+  }
+
+  private resolveSpecialContext (args: unknown[]) {
+    if (this.paramMeta.handle === 'args') {
+      return args;
+    }
+    if (this.paramMeta.handle === 'controller-context') {
+      return {
+        controllerAction: this.controllerAction,
+        controllerInstance: this.controllerInstance
+      } as ControllerContextInterface;
+    }
   }
 }

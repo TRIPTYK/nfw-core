@@ -1,7 +1,6 @@
 import type { RouterContext } from '@koa/router';
 import { container } from '@triptyk/nfw-core';
 import type { Next } from 'koa';
-import type { ControllerContextInterface } from '../interfaces/controller-context.js';
 import type { MetadataStorage } from '../storages/metadata-storage.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import type { GuardInstance } from './guard-action.js';
@@ -10,24 +9,8 @@ import { ParamResolver } from './param-resolver.js';
 import type { ResponseHandlerInstanceMeta } from './response-handler-action.js';
 import { executeResponseHandler } from './response-handler-action.js';
 
-export function isSpecialHandle (handle: UseParamsMetadataArgs['handle']) {
-  return handle === 'args' || handle === 'controller-context';
-}
-
-export function resolveSpecialContext (paramMeta: UseParamsMetadataArgs, args: unknown[], controllerAction: string, controllerInstance: unknown) {
-  if (paramMeta.handle === 'args') {
-    return args;
-  }
-  if (paramMeta.handle === 'controller-context') {
-    return {
-      controllerAction,
-      controllerInstance
-    } as ControllerContextInterface;
-  }
-}
-
 export function resolveParams (paramsMeta: UseParamsMetadataArgs[], contextArgs: unknown[], controllerAction: string, controllerInstance: any, ctx: RouterContext) {
-  return Promise.all(paramsMeta.map((paramMeta) => new ParamResolver(paramMeta).handleParam(contextArgs, controllerAction, controllerInstance, ctx)));
+  return Promise.all(paramsMeta.map((paramMeta) => new ParamResolver(paramMeta, controllerAction, controllerInstance).handleParam(contextArgs, ctx)));
 }
 
 export class ControllerActionBuilder {
