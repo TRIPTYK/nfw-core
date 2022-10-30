@@ -1,5 +1,6 @@
 export default {
   testEnvironment: "node",
+  collectCoverage: process.env.CI,
   projects: [
     {
       displayName: "nfw-core-mikro-orm",
