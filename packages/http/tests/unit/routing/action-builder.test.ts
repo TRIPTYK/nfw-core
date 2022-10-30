@@ -55,7 +55,6 @@ describe('Action builder', () => {
     expect(handle).toBeCalledWith('waw');
   });
   describe('Guard', () => {
-    // eslint-disable-next-line @foxglove/no-boolean-parameters
     function buildGuardClass (handle: GuardInterface['can']) {
       return class Guard implements GuardInterface {
         public can = handle;
