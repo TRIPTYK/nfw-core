@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import 'reflect-metadata';
 import { MetadataStorage } from '../../src/storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../../src/storages/metadata/use-guard.js';

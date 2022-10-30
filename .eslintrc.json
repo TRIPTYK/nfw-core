@@ -24,7 +24,7 @@
     "no-use-before-define":"off", 
     "no-useless-constructor":"off", 
     "max-statements-per-line": ["error", { "max": 1 }],
-    "max-statements": ["error", { "max": 10 }],
+    "max-statements": ["error", { "max": 8 }],
     "@foxglove/no-boolean-parameters":"error",
     "no-return-await": "error",
     "custom-elements/file-name-matches-element": ["error", {"transform": ["kebab"], "matchDirectory": true}],
