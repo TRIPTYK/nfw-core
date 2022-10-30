@@ -6,7 +6,7 @@ import { ControllerActionBuilder } from './controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
-import { middlewaresForTarget } from '../utils/factory.js';
+import { middlewaresInstancesForTarget } from '../utils/middlewares.js';
 
 @injectable()
 export class HttpBuilder implements RouterBuilderInterface {
@@ -22,7 +22,7 @@ export class HttpBuilder implements RouterBuilderInterface {
     });
 
     const endpointsMeta = this.metadataStorage.getEndpointsForTarget(this.context.meta.target);
-    const applyMiddlewares = middlewaresForTarget(this.context.meta.target);
+    const applyMiddlewares = middlewaresInstancesForTarget(this.context.meta.target);
 
     controllerRouter.use(...applyMiddlewares);
 
@@ -40,7 +40,7 @@ export class HttpBuilder implements RouterBuilderInterface {
   }
 
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
-    const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+    const endpointMiddlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
 
     const controllerActionBuilder = new ControllerActionBuilder(this.context.instance, this.metadataStorage, endPointMeta.propertyName);
 

@@ -37,4 +37,4 @@ export * from './storages/metadata/use-response-handler.js';
 export * from './storages/metadata/use-middleware.js';
 export * from './storages/metadata/endpoint.js';
 
-export * from './utils/factory.js';
+export * from './utils/middlewares.js';

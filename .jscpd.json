@@ -2,7 +2,7 @@
     "absolute": true,
     "ignoreCase": true,
     "minLines": 1,
-    "mode": "strict",
+    "mode": "mild",
     "gitignore": true,
     "pattern": ["packages/*/src/**/*.ts"],
     "ignore": ["**/jsonapi/src/builders/**"]
