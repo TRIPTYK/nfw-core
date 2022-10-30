@@ -1,6 +1,6 @@
 import { singleton } from '@triptyk/nfw-core';
 import type { Class } from 'type-fest';
-import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
+import type { HttpEndpointMetadataArgs } from './metadata/endpoint.js';
 import { numericalSortOnKeyASC } from '../utils/numerical-sort.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.js';

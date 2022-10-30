@@ -37,7 +37,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       ), included);
   }
 
-  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>,totalRecords?: number): JsonApiTopLevel['meta'] {
+  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>, totalRecords?: number): JsonApiTopLevel['meta'] {
     return undefined;
   }
 

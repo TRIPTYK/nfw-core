@@ -7,12 +7,6 @@ export interface RouterBuilderInterface {
         instance: unknown,
         meta: RouteMetadataArgs<unknown>,
     },
-    /**
-     * Build the routing
-     */
     build() : Promise<Router>,
-    /**
-     * After all endpoints and sub-routers have been built
-     */
     bindRouting(parentRouter: Router | Application, router: Router) : Promise<void>,
 }

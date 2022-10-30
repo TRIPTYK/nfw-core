@@ -3,7 +3,7 @@ import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-cor
 import { container } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.js';
 import { handleHttpRouteControllerAction } from './controller-action.js';
-import type { HttpEndpointMetadataArgs } from '../interfaces/endpoint.metadata.js';
+import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
 import { middlewaresForTarget } from '../utils/factory.js';

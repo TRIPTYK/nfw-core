@@ -5,25 +5,30 @@ name: Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [16.x]
-
+        node-version: [16.x, 18.x]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i --legacy-peer-deps
-    - run: npm run lint 
-    - run: npm test
+
+    - uses: pnpm/action-setup@v2.2.4
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 7
+        run_install: true
+
+    - run: pnpm run jscpd 
+    - run: pnpm run lint 
+    - run: pnpm test

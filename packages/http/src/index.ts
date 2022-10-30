@@ -7,7 +7,7 @@ export * from './decorators/use-response-handler.js'
 export * from './decorators/use-response-handler.js'
 export * from './decorators/use-middleware.js';
 
-export * from './interfaces/endpoint.metadata.js';
+export * from './storages/metadata/endpoint.js';
 export * from './interfaces/middleware.js';
 export * from './interfaces/error-middleware.js';
 export * from './interfaces/response-handler.js';
