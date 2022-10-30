@@ -21,9 +21,9 @@
   "type": "module",
   "devDependencies": {
     "@foxglove/eslint-plugin": "^0.20.0",
-    "@jest/globals": "^29.2.2",
     "@jscpd/finder": "^3.5.1",
     "@types/jest": "^29.2.0",
+    "@jest/globals": "^29.2.2",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "eslint": "^8.26.0",

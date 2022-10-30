@@ -87,15 +87,16 @@ importers:
 
   packages/http:
     specifiers:
+      '@jest/globals': ^29.2.2
       '@koa/router': ^12.0.0
       '@triptyk/nfw-core': workspace:*
-      '@types/http-errors': ^1.8.2
       '@types/koa': ^2.13.5
       '@types/koa__router': ^8.0.11
       '@types/node': ^18.6.3
       is-class: ^0.0.9
       koa: ^2.13.4
       node-fetch: ^3.2.10
+      node-mocks-http: ^1.11.0
       reflect-metadata: ^0.1.13
       type-fest: ^2.18.1
       typescript: ~4.7.4
@@ -103,13 +104,14 @@ importers:
       '@koa/router': 12.0.0
       is-class: 0.0.9
     devDependencies:
+      '@jest/globals': 29.2.2
       '@triptyk/nfw-core': link:../core
-      '@types/http-errors': 1.8.2
       '@types/koa': 2.13.5
       '@types/koa__router': 8.0.11
       '@types/node': 18.6.3
       koa: 2.13.4
       node-fetch: 3.2.10
+      node-mocks-http: 1.11.0
       reflect-metadata: 0.1.13
       type-fest: 2.18.1
       typescript: 4.7.4
@@ -354,7 +356,7 @@ packages:
     resolution: {integrity: sha512-u7stbOuYjaPezCuLj29hNW1v64M2Md2qupEKP1fHc7WdOA3DgLh37suiSrZYY7haUB7iBeQZ9P1uiRF359do3g==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/helper-validator-identifier': 7.18.6
+      '@babel/helper-validator-identifier': 7.19.1
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: true
@@ -4476,7 +4478,6 @@ packages:
 
   /merge-descriptors/1.0.1:
     resolution: {integrity: sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==}
-    dev: false
 
   /merge-stream/2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -4490,7 +4491,6 @@ packages:
   /methods/1.1.2:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
     engines: {node: '>= 0.6'}
-    dev: false
 
   /micromatch/4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
@@ -4515,6 +4515,12 @@ packages:
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
+    dev: true
+
+  /mime/1.6.0:
+    resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
+    engines: {node: '>=4'}
+    hasBin: true
     dev: true
 
   /mimic-fn/2.1.0:
@@ -4681,6 +4687,22 @@ packages:
 
   /node-int64/0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
+    dev: true
+
+  /node-mocks-http/1.11.0:
+    resolution: {integrity: sha512-jS/WzSOcKbOeGrcgKbenZeNhxUNnP36Yw11+hL4TTxQXErGfqYZ+MaYNNvhaTiGIJlzNSqgQkk9j8dSu1YWSuw==}
+    engines: {node: '>=0.6'}
+    dependencies:
+      accepts: 1.3.8
+      content-disposition: 0.5.4
+      depd: 1.1.2
+      fresh: 0.5.2
+      merge-descriptors: 1.0.1
+      methods: 1.1.2
+      mime: 1.6.0
+      parseurl: 1.3.3
+      range-parser: 1.2.1
+      type-is: 1.6.18
     dev: true
 
   /node-releases/2.0.6:
@@ -5167,6 +5189,11 @@ packages:
 
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+    dev: true
+
+  /range-parser/1.2.1:
+    resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
+    engines: {node: '>= 0.6'}
     dev: true
 
   /react-is/18.2.0:

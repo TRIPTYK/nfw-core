@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';
 import type { UseParamsMetadataArgs } from '../../../src/index.js';
 import { handleParam } from '../../../src/routing/controller-action.js';
-import { jest } from '@jest/globals';
+import { jest, describe, expect, it } from '@jest/globals';
 
 describe('ResolveParam', () => {
   class Controller {}

@@ -34,5 +34,6 @@ export * from './storages/metadata/use-guard.js';
 export * from './storages/metadata/use-param.js';
 export * from './storages/metadata/use-response-handler.metadata.js';
 export * from './storages/metadata/use-middleware.js';
+export * from './storages/metadata/endpoint.js';
 
 export * from './utils/factory.js';

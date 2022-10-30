@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import type { RouterContext } from '@koa/router';
 import Router from '@koa/router';
 import type { AnyEntity, EntityManager } from '@mikro-orm/core';
@@ -25,6 +26,7 @@ import type { RoleServiceAuthorizer } from '../services/role-authorizer.service.
 import { NotAcceptableError } from '../errors/not-acceptable.js';
 import { UnsupportedMediaTypeError } from '../errors/unsupported-media-type.js';
 import { validateContentType } from '../utils/content-type.js';
+import type { Next } from 'koa';
 
 export interface JsonApiBuilderRouteParams {
   resource: ResourceMeta<any, any>,
@@ -106,7 +108,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
     const authorizer = container.resolve('authorizer') as RoleServiceAuthorizer<any> | undefined;
 
-    router[routeInfo.method](routeInfo.routeName, async (ctx, next) => {
+    router[routeInfo.method](routeInfo.routeName, async (ctx: RouterContext, next: Next) => {
       try {
         await next();
       } catch (e: any) {
