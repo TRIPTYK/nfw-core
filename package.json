@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint packages/*/{src,tests}/**/*.ts",
-    "lint:fix": "eslint packages/*/{src,tests}/**/*.ts --fix",
+    "lint": "eslint 'packages/*/{src,tests}/**/*.ts'",
+    "lint:fix": "eslint 'packages/*/{src,tests}/**/*.ts' --fix",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "test:jsonapi": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-jsonapi",
     "test:http": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-http",

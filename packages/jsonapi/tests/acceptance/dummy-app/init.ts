@@ -7,7 +7,6 @@ import './resources/article.resource.js';
 import './resources/comment.resource.js';
 
 export async function initApp () {
-
   const orm = await init({
     dbName: ':memory:',
     type: 'sqlite',
