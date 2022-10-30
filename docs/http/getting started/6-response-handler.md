@@ -24,7 +24,7 @@ export class MetaResponseHandler implements ResponseHandlerInterface {
 
 ## Using the response handler
 
-The response handler can be applied at **controller** and **route** level. You must use the `@UseResponseHandler(ResponseHabdler, ...args)` decorator.
+The response handler can be applied at **controller** and **endpoint** level. You must use the `@UseResponseHandler(ResponseHabdler, ...args)` decorator.
 
 The args passed to the `@UseResponseHandler` will be passed to the response handler and can be retrieved by using the `@Args()` decorator. 
 

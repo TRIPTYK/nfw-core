@@ -18,7 +18,7 @@ export class Middleware implements MiddlewareInterface {
 
 Middlewares are applied on an endpoint with the `@UseMiddleware` decorators.
 
-Middlewares can be applied at  **controller level** and **route level**.
+Middlewares can be applied at  **controller level** and **endpoint level**.
 
 ```ts title="application.ts"
 // ...

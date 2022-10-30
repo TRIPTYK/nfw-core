@@ -1,7 +1,7 @@
 # Creating an Area
 
 An area is a kind of 'super' controller that have multiple controllers as childen.
-Even if the concept of an Area is unknown to NFW itself, it can be easily created.
+Even if the concept of an Area is unknown to NFW itself, it can be easily created because controllers can be nested !
 
 ```ts 
 @Controller({ // (1)

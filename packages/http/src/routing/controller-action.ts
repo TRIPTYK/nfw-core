@@ -22,11 +22,6 @@ export interface GuardInstanceMeta {
   paramsMeta: UseParamsMetadataArgs[],
 }
 
-// eslint-disable-next-line max-params
-export function resolveParams (paramsMeta: UseParamsMetadataArgs[], contextArgs: unknown[], controllerAction: string, controllerInstance: any, ctx: RouterContext) {
-  return Promise.all(paramsMeta.map((paramMeta) => new ParamResolver(paramMeta, controllerAction, controllerInstance).handleParam(contextArgs, ctx)));
-}
-
 export async function callGuardWithParams (instance: GuardInterface, resolvedGuardParams: unknown[]) {
   const guardRes = await instance.can(...resolvedGuardParams);
   if (guardRes !== true) {
@@ -94,20 +89,24 @@ export class ControllerActionBuilder {
   }
 
   private async executeControllerAction (paramsForRouteMetadata: UseParamsMetadataArgs[], ctx: RouterContext, controllerMethod: Function) {
-    const resolvedParams = await resolveParams(paramsForRouteMetadata, [], this.propertyName, this.controllerInstance, ctx);
+    const resolvedParams = await this.resolveParams(paramsForRouteMetadata, [], ctx);
 
     return controllerMethod.call(this.controllerInstance, ...resolvedParams);
   }
 
   private async executeGuards (guardsInstance: GuardInstanceMeta[], ctx: RouterContext) {
     for (const { instance, args, paramsMeta } of guardsInstance) {
-      const resolvedGuardParams = await resolveParams(paramsMeta, args, this.propertyName, this.controllerInstance, ctx);
+      const resolvedGuardParams = await this.resolveParams(paramsMeta, args, ctx);
       await callGuardWithParams(instance, resolvedGuardParams);
     }
   }
 
   private async executeResponseHandler (responseHandlerUseParams: ResponseHandlerInstanceMeta, ctx: RouterContext, controllerActionResult: any) {
-    const resolvedHandlerParams = await resolveParams(responseHandlerUseParams.paramsMeta, responseHandlerUseParams.args, this.propertyName, this.controllerInstance, ctx);
+    const resolvedHandlerParams = await this.resolveParams(responseHandlerUseParams.paramsMeta, responseHandlerUseParams.args, ctx);
     return responseHandlerUseParams.instance.handle(controllerActionResult, ...resolvedHandlerParams);
+  }
+
+  private resolveParams (paramsMeta: UseParamsMetadataArgs[], contextArgs: unknown[], ctx: RouterContext) {
+    return Promise.all(paramsMeta.map((paramMeta) => new ParamResolver(paramMeta, this.propertyName, this.controllerInstance).handleParam(contextArgs, ctx)));
   }
 }
