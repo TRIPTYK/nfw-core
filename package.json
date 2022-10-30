@@ -12,7 +12,7 @@
     "test:http": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-http",
     "test:core": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-core",
     "test:mikro-orm": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects nfw-mikro-orm",
-    "jscpd": "jscpd --pattern \"packages/*/src/**/*.ts\"",
+    "jscpd": "jscpd --exitCode 1",
     "build": "pnpm  recursive run build",
     "build:clean": "pnpm recursive run build:clean",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",

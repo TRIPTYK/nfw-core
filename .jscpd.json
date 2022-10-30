@@ -1,0 +1,7 @@
+{
+    "absolute": true,
+    "ignoreCase": true,
+    "gitignore": true,
+    "pattern": ["packages/*/src/**/*.ts"],
+    "ignore": ["**/jsonapi/src/builders/**"]
+}

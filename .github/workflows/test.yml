@@ -10,7 +10,7 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,6 +29,7 @@ jobs:
         version: 7
         run_install: true
 
+    - run: pnpm run build
     - run: pnpm run jscpd 
     - run: pnpm run lint 
     - run: pnpm test
