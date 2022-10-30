@@ -9,7 +9,6 @@ export * from './decorators/use-middleware.js';
 
 export * from './storages/metadata/endpoint.js';
 export * from './interfaces/middleware.js';
-export * from './interfaces/error-middleware.js';
 export * from './interfaces/response-handler.js';
 export * from './interfaces/guard.js';
 
@@ -32,7 +31,7 @@ export * from './storages/metadata-storage.js';
 
 export * from './storages/metadata/use-guard.js';
 export * from './storages/metadata/use-param.js';
-export * from './storages/metadata/use-response-handler.metadata.js';
+export * from './storages/metadata/use-response-handler.js';
 export * from './storages/metadata/use-middleware.js';
 export * from './storages/metadata/endpoint.js';
 

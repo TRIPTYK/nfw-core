@@ -5,7 +5,7 @@ import { numericalSortOnKeyASC } from '../utils/numerical-sort.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.js';
 import type { UseParamsMetadataArgs } from './metadata/use-param.js';
-import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.metadata.js';
+import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.js';
 
 @singleton()
 export class MetadataStorage {

@@ -7,7 +7,7 @@ import type { ResponseHandlerInterface } from '../interfaces/response-handler.js
 import type { MetadataStorage } from '../storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
-import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-response-handler.metadata.js';
+import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-response-handler.js';
 import { ParamResolver } from './param-resolver.js';
 
 export interface ResponseHandlerInstanceMeta {

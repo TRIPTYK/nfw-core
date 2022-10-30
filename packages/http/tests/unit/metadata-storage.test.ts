@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { MetadataStorage } from '../../src/storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../../src/storages/metadata/use-guard.js';
 import type { UseParamsMetadataArgs } from '../../src/storages/metadata/use-param.js';
-import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.metadata.js';
+import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.js';
 import { describe, expect, it, beforeEach } from '@jest/globals';
 
 describe('Metadata storage tests', () => {
