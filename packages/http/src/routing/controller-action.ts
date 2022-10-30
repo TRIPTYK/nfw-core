@@ -59,7 +59,7 @@ export class ControllerActionBuilder {
     public metadataStorage: MetadataStorage
   ) {}
 
-  public handleHttpRouteControllerAction (target: unknown, propertyName: string) {
+  public build (target: unknown, propertyName: string) {
     const paramsForRouteMetadata: UseParamsMetadataArgs[] = this.metadataStorage.sortedParametersForEndpoint(target, propertyName);
     const responsehandlerForRouteMetadata = this.metadataStorage.getClosestResponseHandlerForEndpoint(target, propertyName);
     const guardsForRouteMetadata = this.metadataStorage.getGuardsForEndpoint(target, propertyName);

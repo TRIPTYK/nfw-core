@@ -1,27 +1,95 @@
+/* eslint-disable max-statements */
 
 import 'reflect-metadata';
 import { jest } from '@jest/globals';
 import { ControllerActionBuilder } from '../../../src/routing/controller-action.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
-import type { RouterContext } from '@koa/router';
+import { createKoaContext } from '../../mocks/koa-context.js';
+import type { GuardInterface, ResponseHandlerInterface } from '../../../src/index.js';
+import { ForbiddenError } from '../../../src/errors/forbidden.js';
 
 describe('Action builder', () => {
-  test('It builds a middleware', async () => {
-    const listFn = jest.fn();
+  let instance: Controller;
+  let storage : MetadataStorage;
+  let actionBuilder : ControllerActionBuilder;
+
+  const listFn = jest.fn(() => 'waw');
+  class Controller {
+    public list = listFn;
+  }
+
+  beforeEach(() => {
+    instance = new Controller();
+    storage = new MetadataStorage();
+    actionBuilder = new ControllerActionBuilder(instance, storage);
+  });
+
+  it('Builds a middleware that executes controller action', async () => {
     const next = jest.fn(async () => {});
 
-    class Controller {
-      public list = listFn;
-    }
+    const actionMiddleware = actionBuilder.build(Controller, 'list');
+    await actionMiddleware(createKoaContext(), next);
 
-    const instance = new Controller();
-    const storage = new MetadataStorage();
-
-    const actionBuilder = new ControllerActionBuilder(instance, storage);
-    const actionMiddleware = actionBuilder.handleHttpRouteControllerAction(Controller, 'list');
-
-    await actionMiddleware(createMockContext() as RouterContext, next);
     expect(listFn).toBeCalledTimes(1);
     expect(next).toBeCalledTimes(0);
+  });
+  it('Triggers response handler when defined', async () => {
+    const handle = jest.fn(async () => {});
+
+    class ResponseHandler implements ResponseHandlerInterface {
+      public handle = handle;
+    };
+
+    storage.useResponseHandlers.push({
+      target: Controller.prototype,
+      propertyName: 'list',
+      args: [],
+      responseHandler: ResponseHandler
+    });
+
+    const actionMiddleware = actionBuilder.build(Controller, 'list');
+
+    await actionMiddleware(createKoaContext(), async () => {});
+
+    expect(handle).toBeCalledTimes(1);
+    expect(handle).toBeCalledWith('waw');
+  });
+  describe('Guard', () => {
+    // eslint-disable-next-line @foxglove/no-boolean-parameters
+    function buildGuardClass (handle: GuardInterface['can']) {
+      return class Guard implements GuardInterface {
+        public can = handle;
+      };
+    }
+
+    it('Triggers guards', async () => {
+      const canHandle = jest.fn(async () => true);
+      const Guard = buildGuardClass(canHandle);
+
+      storage.useGuards.push({
+        target: Controller.prototype,
+        propertyName: 'list',
+        args: [],
+        guard: Guard
+      });
+
+      const actionMiddleware = actionBuilder.build(Controller, 'list');
+      await actionMiddleware(createKoaContext(), async () => {});
+      expect(canHandle).toBeCalledTimes(1);
+    });
+    it('Throws exception when any guard fails', async () => {
+      const canHandle = jest.fn(async () => false);
+      const Guard = buildGuardClass(canHandle);
+
+      storage.useGuards.push({
+        target: Controller.prototype,
+        propertyName: 'list',
+        args: [],
+        guard: Guard
+      });
+
+      const actionMiddleware = actionBuilder.build(Controller, 'list');
+      expect(() => actionMiddleware(createKoaContext(), async () => {})).rejects.toThrowError(ForbiddenError);
+    });
   });
 });
