@@ -21,13 +21,13 @@ describe('Action builder', () => {
   beforeEach(() => {
     instance = new Controller();
     storage = new MetadataStorage();
-    actionBuilder = new ControllerActionBuilder(instance, storage);
+    actionBuilder = new ControllerActionBuilder(instance, storage, 'list');
   });
 
   it('Builds a middleware that executes controller action', async () => {
     const next = jest.fn(async () => {});
 
-    const actionMiddleware = actionBuilder.build(Controller, 'list');
+    const actionMiddleware = actionBuilder.build();
     await actionMiddleware(createKoaContext(), next);
 
     expect(listFn).toBeCalledTimes(1);
@@ -47,7 +47,7 @@ describe('Action builder', () => {
       responseHandler: ResponseHandler
     });
 
-    const actionMiddleware = actionBuilder.build(Controller, 'list');
+    const actionMiddleware = actionBuilder.build();
 
     await actionMiddleware(createKoaContext(), async () => {});
 
@@ -72,7 +72,7 @@ describe('Action builder', () => {
         guard: Guard
       });
 
-      const actionMiddleware = actionBuilder.build(Controller, 'list');
+      const actionMiddleware = actionBuilder.build();
       await actionMiddleware(createKoaContext(), async () => {});
       expect(canHandle).toBeCalledTimes(1);
     });
@@ -87,7 +87,7 @@ describe('Action builder', () => {
         guard: Guard
       });
 
-      const actionMiddleware = actionBuilder.build(Controller, 'list');
+      const actionMiddleware = actionBuilder.build();
       expect(() => actionMiddleware(createKoaContext(), async () => {})).rejects.toThrowError(ForbiddenError);
     });
   });
