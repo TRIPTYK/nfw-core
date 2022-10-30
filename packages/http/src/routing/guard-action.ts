@@ -1,5 +1,5 @@
 import { container } from '@triptyk/nfw-core';
-import createHttpError from 'http-errors';
+import { ForbiddenError } from '../errors/forbidden.js';
 import type { ControllerContextInterface } from '../interfaces/controller-context.js';
 import type { GuardInterface } from '../interfaces/guard.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
@@ -41,11 +41,6 @@ export const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs): GuardInst
 export async function callGuardWithParams (instance: GuardInterface, resolvedGuardParams: unknown[]) {
   const guardRes = await instance.can(...resolvedGuardParams);
   if (guardRes !== true) {
-    if (typeof instance.code === 'number') {
-      if (instance.message === undefined) {
-        throw createHttpError(instance.code ?? 403);
-      }
-      throw createHttpError(instance.code ?? 403, instance.message);
-    }
+    throw new ForbiddenError();
   }
 }

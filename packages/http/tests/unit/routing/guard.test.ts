@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
 import { callGuardWithParams, isSpecialHandle, resolveSpecialContext } from '../../../src/routing/guard-action.js'
 import { jest } from '@jest/globals';
+import { ForbiddenError } from '../../../src/errors/forbidden.js';
 
 describe('Guard routing build', () => {
   describe('is-special-handle', () => {
@@ -37,8 +38,6 @@ describe('Guard routing build', () => {
     beforeEach(() => {
       canFunction = jest.fn(() => returnValue);
       guardInstance = new class implements GuardInterface {
-        public code = 500;
-        public message = 'banana';
         public async can (...args: unknown[]) {
           return canFunction(...args);
         }
@@ -47,7 +46,7 @@ describe('Guard routing build', () => {
 
     it('Guard throw error when returning other than true', async () => {
       returnValue = false;
-      expect(() => callGuardWithParams(guardInstance, ['a'])).rejects.toThrowError(/banana/);
+      expect(() => callGuardWithParams(guardInstance, ['a'])).rejects.toThrowError(ForbiddenError);
       expect(canFunction).toBeCalledTimes(1);
       expect(canFunction).toBeCalledWith('a');
     })
