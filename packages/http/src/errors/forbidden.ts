@@ -1,1 +1,3 @@
-export class ForbiddenError extends Error {}
+export class ForbiddenError extends Error {
+  public message = 'Forbidden';
+}

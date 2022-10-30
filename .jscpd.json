@@ -1,6 +1,8 @@
 {
     "absolute": true,
     "ignoreCase": true,
+    "minLines": 1,
+    "mode": "strict",
     "gitignore": true,
     "pattern": ["packages/*/src/**/*.ts"],
     "ignore": ["**/jsonapi/src/builders/**"]
