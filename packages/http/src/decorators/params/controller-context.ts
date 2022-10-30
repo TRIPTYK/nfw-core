@@ -14,5 +14,5 @@ export function ControllerContext (this : unknown) {
       handle: 'controller-context',
       args: []
     });
-  }
+  };
 }

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { JsonApiMethod, JsonApiRegistry, QueryParser } from '../../src/index.js'
+import { JsonApiMethod, JsonApiRegistry, QueryParser } from '../../src/index.js';
 import { container } from '@triptyk/nfw-core';
 import { MikroORM } from '@mikro-orm/core';
 
@@ -18,7 +18,7 @@ test('parses request', async () => {
     resource,
     koaContext: undefined as any,
     method: JsonApiMethod.GET
-  }
+  };
 
   const parsed = await parser.parse({
     include: 'comments',

@@ -37,7 +37,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
       ), included);
   }
 
-  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>, totalRecords?: number): JsonApiTopLevel['meta'] {
+  protected topMeta (_resource: TResource | TResource[], _jsonApiContext: JsonApiContext<TModel, TResource>, _totalRecords?: number): JsonApiTopLevel['meta'] {
     return undefined;
   }
 
@@ -96,7 +96,7 @@ export class ResourceSerializer<TModel extends BaseEntity<TModel, any>, TResourc
 
   protected serializeResourceIdentifiers (data: Resource<any> | Resource<any>[] | undefined | null, rel: RelationMeta<any>): ResourceIdentifierObject | ResourceIdentifierObject[] | null {
     if (!data) {
-      // spec need null
+      // eslint-disable-next-line unicorn/no-null
       return null;
     }
 

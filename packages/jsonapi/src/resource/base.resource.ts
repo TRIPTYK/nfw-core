@@ -37,10 +37,10 @@ export abstract class Resource<T extends BaseEntity<any, 'id'>> {
       if (valueOfProperty !== undefined) {
         if (Array.isArray(valueOfProperty)) {
           if (valueOfProperty.some((v) => !(v instanceof Resource))) {
-            throw new Error(`${valueOfProperty} must be instanceof Resource`)
+            throw new Error(`${valueOfProperty} must be instanceof Resource`);
           }
         } else if (!(valueOfProperty instanceof Resource)) {
-          throw new Error(`${valueOfProperty} must be instanceof Resource`)
+          throw new Error(`${valueOfProperty} must be instanceof Resource`);
         }
         if (valueOfProperty !== undefined) {
           const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : valueOfProperty.id;

@@ -21,6 +21,6 @@ export function Controller (options:ControllerOptions) {
       args: {
         routeName: options.routeName
       } as ControllerMetaArgs
-    })
-  }
+    });
+  };
 }

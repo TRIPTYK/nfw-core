@@ -19,10 +19,10 @@ test('Should throw error when a provided relationship does not exists', async ()
     await commentsService.checkRelationshipsExistance({
       id: 'article',
       comments: ['156-5+9596-9+5']
-    })
+    });
   } catch (e) {
     expect(e)
-      .toBeInstanceOf(RelationshipEntityNotFoundError)
+      .toBeInstanceOf(RelationshipEntityNotFoundError);
   }
 });
 
@@ -34,10 +34,10 @@ test('Should throw error when a provided relationship does not exists BUT some e
     await commentsService.checkRelationshipsExistance({
       id: 'article',
       comments: ['156-5+9596-9+5', 'comment']
-    })
+    });
   } catch (e) {
     expect(e)
-      .toBeInstanceOf(RelationshipEntityNotFoundError)
+      .toBeInstanceOf(RelationshipEntityNotFoundError);
   }
 });
 
@@ -47,7 +47,7 @@ test('Should not throw error when all the provided relationship exists', async (
   await commentsService.checkRelationshipsExistance({
     id: 'article',
     comments: ['comment']
-  })
+  });
 });
 
 test('Should throw error when provided relationship does exists', async () => {
@@ -58,10 +58,10 @@ test('Should throw error when provided relationship does exists', async () => {
     await commentsService.checkRelationshipsExistance({
       id: 'comment',
       article: 'id'
-    })
+    });
   } catch (e) {
     expect(e)
-      .toBeInstanceOf(RelationshipEntityNotFoundError)
+      .toBeInstanceOf(RelationshipEntityNotFoundError);
   }
 });
 
@@ -71,7 +71,7 @@ test('Should not throw error when the provided relationship exists', async () =>
   await commentsService.checkRelationshipsExistance({
     id: 'comment',
     article: 'article'
-  })
+  });
 });
 
 afterEach(async () => {

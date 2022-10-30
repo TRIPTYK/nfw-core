@@ -71,7 +71,7 @@ export function handleHttpRouteControllerAction (controllerInstance: any, contro
       instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
       args: responsehandlerForRouteMetadata.args,
       paramsMeta: params
-    }
+    };
   }
 
   const guardsInstance = guardsForRouteMetadata.map(resolveGuardInstance);

@@ -10,16 +10,28 @@
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module",
-    "project": ["./{packages,examples}/*/tsconfig.json","tsconfig.json"]
+    "project": ["./packages/*/tsconfig.json","./examples/*/tsconfig.json","tsconfig.json"]
   },
-  "plugins": ["@typescript-eslint", "unused-imports", "jest"],
+  "plugins": ["@typescript-eslint", "unused-imports", "jest","@foxglove","unicorn", "custom-elements"],
   "rules": {
-    "semi": "off",
+    "semi": ["error","always"],
     "no-console": "error",
+    "max-params": ["error", {
+      "max": 4
+    }],
     "no-return-assign": "off",
     "no-redeclare": "off",
     "no-use-before-define":"off", 
     "no-useless-constructor":"off", 
+    "max-statements-per-line": ["error", { "max": 1 }],
+    "max-statements": ["error", { "max": 10 }],
+    "@foxglove/no-boolean-parameters":"error",
+    "no-return-await": "error",
+    "custom-elements/file-name-matches-element": ["error", {"transform": ["kebab"], "matchDirectory": true}],
+    "unicorn/no-null": "error",
+    "no-warning-comments": "error",
+    "no-inline-comments": "error",
+    "camelcase": "error",
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/explicit-member-accessibility": "error",
     "@typescript-eslint/no-redeclare": "error",
@@ -48,6 +60,6 @@
         }
       }
     ],
-    "@typescript-eslint/member-ordering": "warn"
+    "@typescript-eslint/member-ordering": "error"
   }
 }

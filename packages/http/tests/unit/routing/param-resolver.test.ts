@@ -2,7 +2,7 @@
 import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';
 import type { UseParamsMetadataArgs } from '../../../src/index.js';
-import { handleParam } from '../../../src/routing/controller-action.js'
+import { handleParam } from '../../../src/routing/controller-action.js';
 import { jest } from '@jest/globals';
 
 describe('ResolveParam', () => {
@@ -41,4 +41,4 @@ describe('ResolveParam', () => {
     const result = await handleParam(paramMeta, ['a'], 'thing', controllerInstance, {} as RouterContext);
     expect(result).toStrictEqual(['a']);
   });
-})
+});

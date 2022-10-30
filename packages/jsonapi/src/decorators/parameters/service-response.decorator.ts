@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../../storage/metadata-storage.js'
+import { MetadataStorage } from '../../storage/metadata-storage.js';
 
 export function ServiceResponse () {
   return function (target: any, propertyName: string, index: number) {
@@ -7,6 +7,6 @@ export function ServiceResponse () {
       propertyName,
       index,
       decoratorName: 'service-response'
-    })
-  }
+    });
+  };
 }

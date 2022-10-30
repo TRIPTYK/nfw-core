@@ -17,5 +17,5 @@ export function getRouteParamsFromContext (routeParams: ControllerActionParamsMe
     }
 
     throw new Error(`Unknown decorator ${rp.decoratorName}`);
-  })
+  });
 }

@@ -135,7 +135,7 @@ export class JsonApiRegistry {
           isFetchable: e.options?.fetchable ?? true,
 
           allowedSortDirections: sortable as ('ASC' | 'DESC')[]
-        }
+        };
       });
 
       const allowedRelations : RelationMeta<any>[] = jsonApiMetadataStorage.getAllowedRelationshipsFor(resourceTargetPrototype)
@@ -149,7 +149,7 @@ export class JsonApiRegistry {
             resource,
             links: e.options.links,
             name: e.propertyName as any
-          }
+          };
         });
 
       // register service

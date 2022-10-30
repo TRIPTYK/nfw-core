@@ -13,6 +13,6 @@ export function Relationship<T> (options: RelationshipOptions<T>) {
       target,
       propertyName,
       options: options as any
-    })
+    });
   };
 }

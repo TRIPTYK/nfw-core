@@ -7,5 +7,5 @@ describe('Debug test', () => {
   test('debug function is undefined when NFW_DEBUG is disabled', async () => {
     const { debug } = await import('../../src/utils/debug.util.js');
     expect(debug).not.toBeUndefined();
-  })
-})
+  });
+});

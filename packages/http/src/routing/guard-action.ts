@@ -24,7 +24,7 @@ export function resolveSpecialContext (paramMeta: UseParamsMetadataArgs, args: u
     return {
       controllerAction,
       controllerInstance
-    } as ControllerContextInterface
+    } as ControllerContextInterface;
   }
 }
 
@@ -35,8 +35,8 @@ export const resolveGuardInstance = (guardMeta: UseGuardMetadataArgs): GuardInst
     instance: container.resolve(guardMeta.guard),
     args: guardMeta.args,
     paramsMeta: paramsForGuardMetadata
-  }
-}
+  };
+};
 
 export async function callGuardWithParams (instance: GuardInterface, resolvedGuardParams: unknown[]) {
   const guardRes = await instance.can(...resolvedGuardParams);

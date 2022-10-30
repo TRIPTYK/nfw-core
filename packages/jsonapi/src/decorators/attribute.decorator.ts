@@ -16,6 +16,6 @@ export function Attribute (options?: AttributeOptions) {
       target,
       propertyName,
       options
-    })
+    });
   };
 }

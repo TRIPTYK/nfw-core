@@ -11,13 +11,13 @@ describe('Numerical sort test', () => {
       index: 1
     };
     array = [first, second];
-  })
+  });
 
   it('sorts array of objects based on numerical key', () => {
-    expect(numericalSortOnKeyASC(array, 'index')).toStrictEqual([array[1], array[0]])
+    expect(numericalSortOnKeyASC(array, 'index')).toStrictEqual([array[1], array[0]]);
   });
   it('sorted array is not the same reference to the original', () => {
     const sorted = numericalSortOnKeyASC(array, 'index');
-    expect(sorted !== array).toStrictEqual(true)
-  })
-})
+    expect(sorted !== array).toStrictEqual(true);
+  });
+});

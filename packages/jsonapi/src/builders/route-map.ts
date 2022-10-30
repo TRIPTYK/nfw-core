@@ -58,4 +58,4 @@ export const routeMap: Record<JsonApiMethod, RouteInfo> = {
     function: getRelationships,
     defaultStatus: 200
   }
-}
+};

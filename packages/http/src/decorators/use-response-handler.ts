@@ -10,6 +10,6 @@ export function UseResponseHandler (responseHandler: Class<ResponseHandlerInterf
       propertyName,
       responseHandler,
       args
-    })
-  }
+    });
+  };
 }

@@ -10,6 +10,6 @@ export function UseMiddleware (middleware: AnyMiddleware) {
       target,
       propertyName,
       middleware
-    })
-  }
+    });
+  };
 }

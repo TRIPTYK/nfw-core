@@ -15,7 +15,7 @@ describe('Metadata storage tests', () => {
       propertyName,
       handle: () => {},
       args: []
-    }
+    };
   }
 
   function makeGuardFor (target: unknown, propertyName?: string): UseGuardMetadataArgs {
@@ -24,7 +24,7 @@ describe('Metadata storage tests', () => {
       guard: class {} as any,
       propertyName,
       args: []
-    }
+    };
   }
 
   function makeResponseHandlerFor (target: unknown, propertyName?: string): UseResponseHandlerMetadataArgs {
@@ -33,7 +33,7 @@ describe('Metadata storage tests', () => {
       target,
       propertyName,
       responseHandler: class {} as any
-    }
+    };
   }
 
   class TheTarget {
@@ -42,7 +42,7 @@ describe('Metadata storage tests', () => {
 
   beforeEach(() => {
     metadataStorage = new MetadataStorage();
-  })
+  });
 
   describe('Params', () => {
     it('gets sorted params for target property', () => {
@@ -80,8 +80,8 @@ describe('Metadata storage tests', () => {
       expect(metadataStorage.getClosestResponseHandlerForEndpoint(TheTarget, 'cmonDoSomething')).toStrictEqual(first);
     });
     it('it returns undefined when no response handler is found', () => {
-      expect(metadataStorage.getClosestResponseHandlerForEndpoint(TheTarget, 'cmonDoSomething')).toBeUndefined()
-    })
+      expect(metadataStorage.getClosestResponseHandlerForEndpoint(TheTarget, 'cmonDoSomething')).toBeUndefined();
+    });
   });
   describe('Guards', () => {
     it('gets reversed guards for target property', () => {
@@ -92,5 +92,5 @@ describe('Metadata storage tests', () => {
 
       expect(metadataStorage.getGuardsForEndpoint(TheTarget, 'cmonDoSomething')).toStrictEqual([secondGuard, firstGuard]);
     });
-  })
-})
+  });
+});

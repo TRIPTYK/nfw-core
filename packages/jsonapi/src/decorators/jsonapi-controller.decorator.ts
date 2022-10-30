@@ -19,6 +19,6 @@ export function JsonApiController (resource: Class<any>, options?: JsonApiContro
       builder: JsonApiBuilder,
       controllers: [],
       args: [resource, options ?? {}]
-    })
-  }
+    });
+  };
 }

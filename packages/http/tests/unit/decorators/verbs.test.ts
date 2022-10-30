@@ -12,13 +12,13 @@ describe('Decorators | verbs', () => {
 
   beforeEach(() => {
     metadataStorage = container.resolve(MetadataStorage);
-  })
+  });
 
   for (const decorator of [GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, ALL]) {
     test(`${decorator.name} is pushed into the metadata storage`, () => {
       decorator('/')(Target.prototype, 'list');
 
       expect(metadataStorage.endpoints.some((e) => e.target === Target.prototype && e.propertyName === 'list' && e.method === decorator.name.toLowerCase() as any)).toStrictEqual(true);
-    })
+    });
   }
-})
+});

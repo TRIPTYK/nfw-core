@@ -12,7 +12,7 @@ export function createHttpVerbDecorator (routeName: string, verb: HttpMethod) {
       },
       method: verb
     });
-  }
+  };
 }
 
 export function GET (routeName: `/${string}`) {

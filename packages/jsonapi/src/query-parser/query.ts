@@ -52,7 +52,7 @@ export class JsonApiQuery {
   public sort: Sort<any> = {
     attributes: new Map(),
     nested: new Map()
-  }
+  };
 
   public page?: number;
   public size?: number;

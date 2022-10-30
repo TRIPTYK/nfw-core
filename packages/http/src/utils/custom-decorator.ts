@@ -11,6 +11,6 @@ export function createCustomDecorator (handle: (ctx: ControllerParamsContext) =>
       decoratorName: name,
       handle,
       args
-    })
-  }
+    });
+  };
 }

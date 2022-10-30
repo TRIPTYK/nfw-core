@@ -32,7 +32,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
 
     for (const property of Object.keys(jsonApiBody)) {
       if (!this.resource.attributes.some((p) => {
-        return p.name === property && (context.method === JsonApiMethod.CREATE ? p.createable : p.updateable)
+        return p.name === property && (context.method === JsonApiMethod.CREATE ? p.createable : p.updateable);
       })) {
         throw new BadRequestError(`Property ${property} is not allowed in body`);
       }

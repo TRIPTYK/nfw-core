@@ -36,7 +36,7 @@ export class ErrorHandler {
       detail: error.message,
       code: error.name,
       status: '500'
-    }
+    };
   }
 
   private getGeneralErrorCode (errors: JsonApiErrorObject[]) {

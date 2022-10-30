@@ -1,4 +1,4 @@
-import { createCustomDecorator } from '../../utils/custom-decorator.js'
+import { createCustomDecorator } from '../../utils/custom-decorator.js';
 
 /**
  * Returns Koa router context

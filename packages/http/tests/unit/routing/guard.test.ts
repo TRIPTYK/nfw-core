@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
-import { callGuardWithParams, isSpecialHandle, resolveSpecialContext } from '../../../src/routing/guard-action.js'
+import { callGuardWithParams, isSpecialHandle, resolveSpecialContext } from '../../../src/routing/guard-action.js';
 import { jest } from '@jest/globals';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
 
@@ -11,7 +11,7 @@ describe('Guard routing build', () => {
       expect(isSpecialHandle('controller-context')).toStrictEqual(true);
       expect(isSpecialHandle('soemthing' as any)).toStrictEqual(false);
       expect(isSpecialHandle((() => {}) as any)).toStrictEqual(false);
-    })
+    });
   });
   describe('resolve special context', () => {
     const args: unknown[] = [];
@@ -28,8 +28,8 @@ describe('Guard routing build', () => {
     });
     it('if special context is controller-context, it returns controller-context', () => {
       expect(resolveSpecialContext(makeMeta('controller-context'), args, 'action', controllerInstance)).toStrictEqual({ controllerAction: 'action', controllerInstance });
-    })
-  })
+    });
+  });
   describe('Guard behavior', () => {
     let guardInstance : GuardInterface;
     let returnValue: boolean;
@@ -41,20 +41,20 @@ describe('Guard routing build', () => {
         public async can (...args: unknown[]) {
           return canFunction(...args);
         }
-      }()
-    })
+      }();
+    });
 
     it('Guard throw error when returning other than true', async () => {
       returnValue = false;
       expect(() => callGuardWithParams(guardInstance, ['a'])).rejects.toThrowError(ForbiddenError);
       expect(canFunction).toBeCalledTimes(1);
       expect(canFunction).toBeCalledWith('a');
-    })
+    });
     it('Guard does not throw error when returning true', async () => {
       returnValue = true;
       expect(() => callGuardWithParams(guardInstance, ['a'])).not.toThrowError();
       expect(canFunction).toBeCalledTimes(1);
       expect(canFunction).toBeCalledWith('a');
-    })
-  })
-})
+    });
+  });
+});

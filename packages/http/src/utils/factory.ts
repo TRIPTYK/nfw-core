@@ -16,7 +16,7 @@ export function useErrorHandler (errorHandler: Class<ErrorHandlerInterface>) {
     } catch (e) {
       await errorHandlerInstance.handle(e, context);
     }
-  }
+  };
 }
 
 /**

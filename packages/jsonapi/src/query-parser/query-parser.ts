@@ -84,7 +84,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
           const meta: any = attrAndRel.find((a) => a.name === child);
 
           if (!meta) {
-            throw new BadRequestError(`${child} property not found in ${parentEntity.name}`)
+            throw new BadRequestError(`${child} property not found in ${parentEntity.name}`);
           }
 
           parentFilter.filters.add({
@@ -176,7 +176,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
       const meta = parentResource.attributes.find((r) => r.name === parentRel);
 
       if (!meta) {
-        throw new BadRequestError(`Field ${parentRel} not found in sort`)
+        throw new BadRequestError(`Field ${parentRel} not found in sort`);
       }
 
       if (!meta.allowedSortDirections.includes(direction)) {

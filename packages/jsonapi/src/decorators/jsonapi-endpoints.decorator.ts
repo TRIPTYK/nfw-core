@@ -31,7 +31,7 @@ export function JsonApiGet (options?: JsonApiGetOptions) {
       method: JsonApiMethod.GET,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiCreateOptions extends JsonApiOptions {
@@ -49,7 +49,7 @@ export function JsonApiCreate (options?: JsonApiCreateOptions) {
       method: JsonApiMethod.CREATE,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiListOptions extends JsonApiOptions {};
@@ -62,7 +62,7 @@ export function JsonApiList (options?: JsonApiListOptions) {
       method: JsonApiMethod.LIST,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiUpdateOptions extends JsonApiOptions {
@@ -80,7 +80,7 @@ export function JsonApiUpdate (options?: JsonApiUpdateOptions) {
       method: JsonApiMethod.UPDATE,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiDeleteOptions extends JsonApiOptions {}
@@ -93,7 +93,7 @@ export function JsonApiDelete (options?: JsonApiDeleteOptions) {
       method: JsonApiMethod.DELETE,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiGetRelationshipsOptions extends JsonApiOptions {}
@@ -106,7 +106,7 @@ export function JsonApiGetRelationships (options?: JsonApiGetRelationshipsOption
       method: JsonApiMethod.GET_RELATIONSHIPS,
       options
     });
-  }
+  };
 }
 
 export interface JsonApiGetRelatedOptions extends JsonApiOptions {}
@@ -119,5 +119,5 @@ export function JsonApiGetRelated (options?: JsonApiGetRelatedOptions) {
       method: JsonApiMethod.GET_RELATED,
       options
     });
-  }
+  };
 }

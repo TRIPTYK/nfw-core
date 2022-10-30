@@ -4,7 +4,7 @@ import { ArticleModel } from './article.model.js';
 @Entity()
 export class CommentModel extends BaseEntity<CommentModel, 'id'> {
   @PrimaryKey()
-  public declare id: string
+  public declare id: string;
 
   @ManyToOne('ArticleModel', 'comments')
   public declare article: ArticleModel;

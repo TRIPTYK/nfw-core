@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../../storage/metadata-storage.js'
+import { MetadataStorage } from '../../storage/metadata-storage.js';
 
 export function Ctx () {
   return function (target: any, propertyName: string, index: number) {
@@ -7,6 +7,6 @@ export function Ctx () {
       propertyName,
       index,
       decoratorName: 'koa-context'
-    })
-  }
+    });
+  };
 }

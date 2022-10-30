@@ -153,7 +153,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         }
 
         if (!relatedEntitiesExists) {
-          throw new RelationshipEntityNotFoundError(`${relationship.name} not found`)
+          throw new RelationshipEntityNotFoundError(`${relationship.name} not found`);
         }
       }
     }
@@ -189,7 +189,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
 
     if (queryFields.has(resourceMeta.name)) {
       const attributes = queryFields.get(resourceMeta.name)!;
-      fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)))
+      fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)));
     } else {
       fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)));
     }
@@ -210,9 +210,9 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       parentFilter[filters.logical] = [];
       filters.nested.forEach((filter) => {
         const tempFilterObject = {};
-        parentFilter[filters.logical].push(tempFilterObject)
-        this.applyFilter(filter, tempFilterObject)
-      })
+        parentFilter[filters.logical].push(tempFilterObject);
+        this.applyFilter(filter, tempFilterObject);
+      });
     }
     return parentFilter as ObjectQuery<TModel>;
   }
