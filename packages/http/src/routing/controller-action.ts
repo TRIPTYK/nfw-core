@@ -1,8 +1,7 @@
 import type { RouterContext } from '@koa/router';
-import type { RouteMetadataArgs } from '@triptyk/nfw-core';
 import { container } from '@triptyk/nfw-core';
 import type { Next } from 'koa';
-import { MetadataStorage } from '../storages/metadata-storage.js';
+import type { MetadataStorage } from '../storages/metadata-storage.js';
 import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import type { GuardInstance } from './guard-action.js';
 import { isSpecialHandle, resolveSpecialContext, callGuardWithParams, resolveGuardInstance } from './guard-action.js';
@@ -54,27 +53,30 @@ function controllerActionMiddleware (guardsInstance: GuardInstance[], controller
   };
 }
 
-export function handleHttpRouteControllerAction (controllerInstance: any, controllerMetadata: RouteMetadataArgs<unknown>, propertyName: string) {
-  const metadataStorage = container.resolve(MetadataStorage);
+export class ControllerActionBuilder {
+  public constructor (
+    public controllerInstance: unknown,
+    public metadataStorage: MetadataStorage
+  ) {}
 
-  const paramsForRouteMetadata: UseParamsMetadataArgs[] = metadataStorage.sortedParametersForEndpoint(controllerMetadata.target, propertyName);
+  public handleHttpRouteControllerAction (target: unknown, propertyName: string) {
+    const paramsForRouteMetadata: UseParamsMetadataArgs[] = this.metadataStorage.sortedParametersForEndpoint(target, propertyName);
+    const responsehandlerForRouteMetadata = this.metadataStorage.getClosestResponseHandlerForEndpoint(target, propertyName);
+    const guardsForRouteMetadata = this.metadataStorage.getGuardsForEndpoint(target, propertyName);
 
-  const responsehandlerForRouteMetadata = metadataStorage.getClosestResponseHandlerForEndpoint(controllerMetadata.target, propertyName);
+    let responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined;
 
-  const guardsForRouteMetadata = metadataStorage.getGuardsForEndpoint(controllerMetadata.target, propertyName);
+    if (responsehandlerForRouteMetadata) {
+      const params = this.metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.target);
+      responseHandlerUseParams = {
+        instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
+        args: responsehandlerForRouteMetadata.args,
+        paramsMeta: params
+      };
+    }
 
-  let responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined;
+    const guardsInstance = guardsForRouteMetadata.map(resolveGuardInstance);
 
-  if (responsehandlerForRouteMetadata) {
-    const params = metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.target);
-    responseHandlerUseParams = {
-      instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
-      args: responsehandlerForRouteMetadata.args,
-      paramsMeta: params
-    };
+    return controllerActionMiddleware(guardsInstance, this.controllerInstance, propertyName, paramsForRouteMetadata, responseHandlerUseParams);
   }
-
-  const guardsInstance = guardsForRouteMetadata.map(resolveGuardInstance);
-
-  return controllerActionMiddleware(guardsInstance, controllerInstance, propertyName, paramsForRouteMetadata, responseHandlerUseParams);
 }

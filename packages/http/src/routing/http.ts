@@ -2,7 +2,7 @@ import Router from '@koa/router';
 import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { container } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.js';
-import { handleHttpRouteControllerAction } from './controller-action.js';
+import { ControllerActionBuilder } from './controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
@@ -36,6 +36,9 @@ export class HttpBuilder implements RouterBuilderInterface {
 
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
     const endpointMiddlewares = middlewaresForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
-    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, handleHttpRouteControllerAction(this.context.instance, this.context.meta, endPointMeta.propertyName));
+
+    const controllerActionBuilder = new ControllerActionBuilder(this.context.instance, container.resolve(MetadataStorage));
+
+    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, controllerActionBuilder.handleHttpRouteControllerAction(this.context.meta.target, endPointMeta.propertyName));
   }
 }

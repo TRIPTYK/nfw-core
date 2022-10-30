@@ -10,7 +10,7 @@ export function ControllerContext (this : unknown) {
       target,
       propertyName: propertyKey,
       index,
-      decoratorName: 'ControllerContext', // context will never be shared or cached, i just don't want Typescript to be angry at me
+      decoratorName: 'ControllerContext',
       handle: 'controller-context',
       args: []
     });
