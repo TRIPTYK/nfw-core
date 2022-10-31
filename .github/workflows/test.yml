@@ -31,7 +31,7 @@ jobs:
 
     - run: pnpm run build
     - run: pnpm run jscpd 
-    - run: pnpm run lint 
+    # - run: pnpm run lint 
     - run: pnpm test
   deploy:
     runs-on: ubuntu-latest
