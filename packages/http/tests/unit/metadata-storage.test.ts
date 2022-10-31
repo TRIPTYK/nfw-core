@@ -5,6 +5,7 @@ import type { UseGuardMetadataArgs } from '../../src/storages/metadata/use-guard
 import type { UseParamsMetadataArgs } from '../../src/storages/metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.js';
 import { describe, expect, it, beforeEach } from '@jest/globals';
+import { RouterMetadataNotFoundError } from '../../src/errors/router-metadata-not-found.js';
 
 describe('Metadata storage tests', () => {
   let metadataStorage: MetadataStorage;
@@ -93,6 +94,21 @@ describe('Metadata storage tests', () => {
       metadataStorage.useGuards.push(firstGuard, secondGuard);
 
       expect(metadataStorage.getGuardsForEndpoint(TheTarget, 'cmonDoSomething')).toStrictEqual([secondGuard, firstGuard]);
+    });
+  });
+  describe('Router', () => {
+    it('Throws error when no route metadata is found for target', () => {
+      expect(() => metadataStorage.findRouteForTarget(class {})).toThrowError(RouterMetadataNotFoundError);
+    });
+    it('Retreives correct metadata from target', () => {
+      const routeMeta = {
+        target: TheTarget,
+        controllers: [],
+        args: [],
+        builder: class {} as any
+      };
+      metadataStorage.routes.push(routeMeta);
+      expect(metadataStorage.findRouteForTarget(TheTarget)).toStrictEqual(routeMeta);
     });
   });
 });
