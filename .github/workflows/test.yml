@@ -34,17 +34,14 @@ jobs:
     # - run: pnpm run lint 
     - run: pnpm test
   deploy:
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
     runs-on: ubuntu-latest
     needs: [test]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
       uses: actions/setup-node@v3
-    - name: Sets env vars for release
-      run: echo "alpha" >> $TAG
-      if: contains(github.ref_name, 'develop')
-    - name: Sets env vars for release
-      run: echo "latest" >> $TAG
       if: contains(github.ref_name, 'master')
     - uses: pnpm/action-setup@v2.2.4
       name: Install pnpm
@@ -53,7 +50,6 @@ jobs:
         version: 7
         run_install: true
     - run: pnpm run build
-    - name: publish
-      run: pnpm recursive publish --tag $TAG
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    - name: publish alpha
+      run: pnpm recursive publish --tag alpha
+      if : contains(github.ref_name, 'develop')
