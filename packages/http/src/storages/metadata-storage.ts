@@ -6,14 +6,27 @@ import type { UseGuardMetadataArgs } from './metadata/use-guard.js';
 import type { UseMiddlewareMetadataArgs } from './metadata/use-middleware.js';
 import type { UseParamsMetadataArgs } from './metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.js';
+import { RouterMetadataNotFoundError } from '../errors/router-metadata-not-found.js';
+import type { RouteMetadataArgs } from './metadata/route.js';
 
 @singleton()
 export class MetadataStorage {
+  public routes: RouteMetadataArgs<unknown>[] = [];
   public endpoints: HttpEndpointMetadataArgs[] = [];
   public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
   public useParams: UseParamsMetadataArgs[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
+
+  public findRouteForTarget (target: unknown) {
+    const route = this.routes.find((controllerMeta) => controllerMeta.target === target);
+
+    if (!route) {
+      throw new RouterMetadataNotFoundError();
+    }
+
+    return route;
+  }
 
   public sortedParametersForEndpoint (target: unknown, propertyName: string) {
     return this.sortedParametersForTarget(target).filter((paramMeta) => paramMeta.propertyName === propertyName);

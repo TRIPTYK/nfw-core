@@ -1,4 +1,5 @@
-import type { RouteMetadataArgs } from '@triptyk/nfw-core';
+
+import type { RouteMetadataArgs } from '@triptyk/nfw-http';
 import { HttpMethod } from '@triptyk/nfw-http';
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 import type { JsonApiBuilderRouteParams } from './jsonapi.builder.js';

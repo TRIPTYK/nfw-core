@@ -4,9 +4,7 @@ import Router from '@koa/router';
 import type { AnyEntity, EntityManager } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/core';
 import type { Class } from 'type-fest';
-import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { inject, injectable, container } from '@triptyk/nfw-core';
-import { middlewaresInstancesForTarget } from '@triptyk/nfw-http';
 import pluralize from 'pluralize';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
@@ -27,6 +25,8 @@ import { NotAcceptableError } from '../errors/not-acceptable.js';
 import { UnsupportedMediaTypeError } from '../errors/unsupported-media-type.js';
 import { validateContentType } from '../utils/content-type.js';
 import type { Next } from 'koa';
+import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-http';
+import { middlewaresInstancesForTarget } from '@triptyk/nfw-http';
 
 export interface JsonApiBuilderRouteParams {
   resource: ResourceMeta<any, any>,

@@ -8,9 +8,14 @@ export * from './decorators/use-response-handler.js';
 export * from './decorators/use-middleware.js';
 
 export * from './storages/metadata/endpoint.js';
+
 export * from './interfaces/middleware.js';
 export * from './interfaces/response-handler.js';
 export * from './interfaces/guard.js';
+export * from './interfaces/router-builder.js';
+
+export * from './factories/application.js';
+export * from './factories/controller.js';
 
 export * from './utils/custom-decorator.js';
 
@@ -36,5 +41,6 @@ export * from './storages/metadata/use-param.js';
 export * from './storages/metadata/use-response-handler.js';
 export * from './storages/metadata/use-middleware.js';
 export * from './storages/metadata/endpoint.js';
+export * from './storages/metadata/route.js';
 
 export * from './utils/middlewares.js';

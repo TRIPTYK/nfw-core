@@ -2,7 +2,7 @@ import type Router from '@koa/router';
 import type Application from 'koa';
 import { container } from 'tsyringe';
 import type { Class } from 'type-fest';
-import { MetadataStorage } from '../storages/metadata.js';
+import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { CreateApplicationOptions } from './application.js';
 
 export async function createRoute (parentRoute: Router | Application, controller: Class<unknown>, applicationOptions: CreateApplicationOptions) {

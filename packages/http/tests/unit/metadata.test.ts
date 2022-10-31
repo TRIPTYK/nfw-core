@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { RouterMetadataNotFoundError } from '../../../src/errors/router-metadata-not-found.js';
-import { MetadataStorage } from '../../../src/storages/metadata.js';
+import { RouterMetadataNotFoundError } from '../../src/errors/router-metadata-not-found.js';
+import { MetadataStorage } from '../../src/storages/metadata-storage.js';
 
 describe('Metadata storage', () => {
   class Target {}

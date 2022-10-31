@@ -1,5 +1,4 @@
 import Router from '@koa/router';
-import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { injectable, inject } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.js';
 import { ControllerActionBuilder } from './controller-action.js';
@@ -7,6 +6,8 @@ import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js'
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
 import { middlewaresInstancesForTarget } from '../utils/middlewares.js';
+import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
+import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
 @injectable()
 export class HttpBuilder implements RouterBuilderInterface {
