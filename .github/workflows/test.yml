@@ -54,5 +54,5 @@ jobs:
         run_install: true
     - run: pnpm run build
     - name: publish alpha
-      run: pnpm recursive publish --tag alpha
+      run: pnpm recursive publish --tag alpha --no-git-checks
       if : contains(github.ref_name, 'develop')
