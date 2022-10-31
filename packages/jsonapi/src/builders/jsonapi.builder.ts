@@ -6,7 +6,7 @@ import { MikroORM } from '@mikro-orm/core';
 import type { Class } from 'type-fest';
 import type { RouteMetadataArgs, RouterBuilderInterface } from '@triptyk/nfw-core';
 import { inject, injectable, container } from '@triptyk/nfw-core';
-import { middlewaresForTarget } from '@triptyk/nfw-http';
+import { middlewaresInstancesForTarget } from '@triptyk/nfw-http';
 import pluralize from 'pluralize';
 import { MetadataStorage as JsonApiDatastorage } from '../storage/metadata-storage.js';
 import type { EndpointMetadataArgs } from '../storage/metadata/endpoint.metadata.js';
@@ -69,7 +69,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const resourceMeta = this.registry.resources.get(resourceMetadataArgs.target)!;
 
     const jsonApiEndpoints = JsonApiDatastorage.instance.endpoints.filter((e) => e.target === this.context.meta.target.prototype);
-    const middlewares = middlewaresForTarget(this.context.meta.target);
+    const middlewares = middlewaresInstancesForTarget(this.context.meta.target);
 
     controllerRouter.use(...middlewares);
 
@@ -97,7 +97,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const errorHandlerClass = container.resolve(options.errorHandler ?? ErrorHandler);
 
     const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
-    const middlewares = middlewaresForTarget(this.context.meta.target.prototype, endpoint.propertyName);
+    const middlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endpoint.propertyName);
     const orm = container.resolve(MikroORM);
 
     /**
