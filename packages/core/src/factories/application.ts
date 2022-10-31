@@ -3,13 +3,7 @@ import { createRoute } from './controller.js';
 import type { Class } from 'type-fest';
 
 export interface CreateApplicationOptions {
-  /**
-   * Controllers
-   */
   controllers: Class<unknown>[],
-  /**
-   * The Koa server app
-   */
   server: Koa,
 }
 
