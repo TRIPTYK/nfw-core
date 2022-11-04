@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import { init } from '@triptyk/nfw-mikro-orm';
 import { container } from '@triptyk/nfw-core';
 import { JsonApiRegistry } from '../../../src/jsonapi.registry.js';

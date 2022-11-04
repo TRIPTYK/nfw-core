@@ -9,10 +9,19 @@ import type { ArticleResource } from './article.resource.js';
 export class CommentResource extends Resource<CommentModel> {
   @Attribute({
     filterable: {
-      $eq: true
+      $eq: true,
+      $like: true
     }
   })
   public id?: string | undefined;
+
+  @Attribute({
+    filterable: {
+      $eq: true,
+      $like: true
+    }
+  })
+  public title?: string | undefined;
 
   @Relationship({
     otherResource: 'ArticleResource'

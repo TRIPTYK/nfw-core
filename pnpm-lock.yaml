@@ -140,6 +140,7 @@ importers:
       koa-qs: ~3.0.0
       pluralize: ~8.0.0
       reflect-metadata: ^0.1.13
+      ts-deepmerge: ^4.0.0
       tsyringe: 4.7.0
       type-fest: ^2.18.1
       typescript: ~4.7.4
@@ -164,6 +165,7 @@ importers:
       '@types/node': 18.6.3
       '@types/pluralize': 0.0.29
       reflect-metadata: 0.1.13
+      ts-deepmerge: 4.0.0
       tsyringe: 4.7.0
       type-fest: 2.18.1
       typescript: 4.7.4
@@ -6209,6 +6211,11 @@ packages:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
     engines: {node: '>=8'}
     dev: false
+
+  /ts-deepmerge/4.0.0:
+    resolution: {integrity: sha512-IrjjAwfM/J6ajWv5wDRZBdpVaTmuONJN1vC85mXlWVPXKelouLFiqsjR7m0h245qY6zZEtcDtcOTc4Rozgg1TQ==}
+    engines: {node: '>=14'}
+    dev: true
 
   /tsconfig-paths/3.14.1:
     resolution: {integrity: sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==}

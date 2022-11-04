@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
@@ -8,6 +9,8 @@ import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js'
 import type { Sort, Include, Filter, JsonApiQuery } from '../query-parser/query.js';
 import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
 import { ForbiddenError } from '../errors/forbidden.js';
+// eslint-disable-next-line import/no-named-default
+import { default as merge } from 'ts-deepmerge';
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
@@ -134,6 +137,30 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     return this.findOne(id, ctx);
   }
 
+  /**
+   * Generates the filter object
+   */
+  public applyFilter (filters: Filter<TModel>, parentFilter:Record<string, any>): ObjectQuery<TModel> {
+    parentFilter[filters.logical] = [];
+    let filter = {};
+    for (const iterator of filters.filters) {
+      const filterObj = {};
+      const expanded = this.expandObject(filterObj, iterator.path);
+      expanded[iterator.operator] = iterator.value;
+      filter = (merge as any).default(filter, filterObj);
+    }
+    parentFilter[filters.logical].push(filter);
+    if (filters.nested.size) {
+      parentFilter[filters.logical] = [];
+      filters.nested.forEach((filter) => {
+        const tempFilterObject = {};
+        parentFilter[filters.logical].push(tempFilterObject);
+        this.applyFilter(filter, tempFilterObject);
+      });
+    }
+    return parentFilter as ObjectQuery<TModel>;
+  }
+
   public async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
     for (const relationship of this.resourceMeta.relationships) {
       if (Object.hasOwn(pojo, relationship.name)) {
@@ -193,28 +220,6 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     } else {
       fields.push(...attributes.map((attr) => this.mapAttributesWithJoinPath(attr, joinPath)));
     }
-  }
-
-  /**
-   * Generates the filter object
-   */
-  protected applyFilter (filters: Filter<TModel>, parentFilter:Record<string, any>): ObjectQuery<TModel> {
-    parentFilter[filters.logical] = [];
-    for (const iterator of filters.filters) {
-      const filterObj = {};
-      const expanded = this.expandObject(filterObj, iterator.path);
-      expanded[iterator.operator] = iterator.value;
-      parentFilter[filters.logical].push(filterObj);
-    }
-    if (filters.nested.size) {
-      parentFilter[filters.logical] = [];
-      filters.nested.forEach((filter) => {
-        const tempFilterObject = {};
-        parentFilter[filters.logical].push(tempFilterObject);
-        this.applyFilter(filter, tempFilterObject);
-      });
-    }
-    return parentFilter as ObjectQuery<TModel>;
   }
 
   /**

@@ -1,6 +1,6 @@
 import type Router from '@koa/router';
+import { container } from '@triptyk/nfw-core';
 import type Application from 'koa';
-import { container } from 'tsyringe';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import type { CreateApplicationOptions } from './application.js';

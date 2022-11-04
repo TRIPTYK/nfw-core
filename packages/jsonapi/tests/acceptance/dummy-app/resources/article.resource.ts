@@ -7,7 +7,11 @@ import type { CommentResource } from './comment.resource.js';
   entity: ArticleModel
 })
 export class ArticleResource extends Resource<ArticleModel> {
-  @Attribute()
+  @Attribute({
+    filterable: {
+      $like: true
+    }
+  })
   public id?: string | undefined;
 
   @Relationship({

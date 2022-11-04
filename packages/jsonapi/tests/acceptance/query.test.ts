@@ -8,6 +8,7 @@ beforeEach(async () => {
   await initApp();
 });
 
+// eslint-disable-next-line max-statements
 test('parses request', async () => {
   const parser = new QueryParser();
   const registry = container.resolve(JsonApiRegistry);
