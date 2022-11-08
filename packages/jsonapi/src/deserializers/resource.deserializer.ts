@@ -11,6 +11,7 @@ import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
   public declare resource: ResourceMeta<TModel>;
 
+  // eslint-disable-next-line max-statements
   public deserialize (payload: Record<string, unknown>, context: JsonApiContext<TModel>): Promise<Resource<TModel>> | Resource<TModel> {
     if (!payload.data) {
       throw new BadRequestError('Not a json-api payload');
@@ -46,7 +47,7 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
         throw new BadRequestError(`Relationship ${key} does not exists in ${this.resource.name}`);
       }
       const data = value.data;
-      if (!data) {
+      if (data === undefined) {
         throw new BadRequestError(`Please provide data to relationships object ${key}`);
       }
 
@@ -65,6 +66,12 @@ export class ResourceDeserializer<TModel extends BaseEntity<TModel, any>> {
       } else {
         if (typeof data !== 'object' && data !== null) {
           throw new BadRequestError(`Relationship data for ${key} must be an null or an object`);
+        }
+
+        if (data === null) {
+          // eslint-disable-next-line unicorn/no-null
+          (newResource as any)[key] = null;
+          continue;
         }
 
         // eslint-disable-next-line new-cap

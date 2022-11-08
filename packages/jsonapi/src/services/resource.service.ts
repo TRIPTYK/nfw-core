@@ -8,7 +8,6 @@ import type { Resource } from '../resource/base.resource.js';
 import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
 import type { Sort, Include, Filter, JsonApiQuery } from '../query-parser/query.js';
 import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
-import { ForbiddenError } from '../errors/forbidden.js';
 // eslint-disable-next-line import/no-named-default
 import { default as merge } from 'ts-deepmerge';
 
@@ -171,8 +170,8 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         const isOneToOneRelation = relationship.mikroMeta.reference === ReferenceType.ONE_TO_ONE;
 
         if (isOneToOneRelation || relationship.mikroMeta.reference === ReferenceType.MANY_TO_ONE) {
-          if (isOneToOneRelation && !relationship.mikroMeta.owner) {
-            throw new ForbiddenError(`${relationship.name} cannot be patched, try on the owner side`);
+          if (relationshipValue === null) {
+            continue;
           }
           relatedEntitiesExists = (await relationRepository.findOne(relationshipValue)) !== null;
         } else {

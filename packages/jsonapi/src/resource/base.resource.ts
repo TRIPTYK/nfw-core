@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import type { BaseEntity, EntityDTO, Loaded } from '@mikro-orm/core';
 import type { EntityDTOProp } from '@mikro-orm/core/typings.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
@@ -34,18 +35,21 @@ export abstract class Resource<T extends BaseEntity<any, 'id'>> {
     }
     for (const attr of this.resourceMeta.relationships) {
       const valueOfProperty = (this as unknown as T & Partial<T>)[attr.name as keyof T];
+      if (valueOfProperty === null) {
+        // eslint-disable-next-line unicorn/no-null
+        pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = null as any;
+        continue;
+      }
       if (valueOfProperty !== undefined) {
         if (Array.isArray(valueOfProperty)) {
           if (valueOfProperty.some((v) => !(v instanceof Resource))) {
             throw new Error(`${valueOfProperty} must be instanceof Resource`);
           }
-        } else if (!(valueOfProperty instanceof Resource)) {
-          throw new Error(`${valueOfProperty} must be instanceof Resource`);
+        } else if (!(valueOfProperty instanceof Resource) && valueOfProperty !== null) {
+          throw new Error(`${valueOfProperty} must be instanceof Resource or null`);
         }
-        if (valueOfProperty !== undefined) {
-          const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : valueOfProperty.id;
-          pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = transformedValue as EntityDTOProp<any>;
-        }
+        const transformedValue = Array.isArray(valueOfProperty) ? (valueOfProperty as Resource<any>[]).map((e) => e.id) : (valueOfProperty as any).id;
+        pojo[attr.name as keyof EntityDTO<Loaded<T, never>>] = transformedValue as EntityDTOProp<any>;
       }
     }
     return pojo;
