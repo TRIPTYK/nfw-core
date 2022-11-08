@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import type { BaseEntity } from '@mikro-orm/core';
 import { container, injectable } from '@triptyk/nfw-core';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
@@ -47,8 +48,11 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
       );
     }
 
-    this.parseInclude(query.include?.split(',') ?? [], jsonApiQuery.includes);
-    this.parseFilters(jsonApiQuery.filters, query.filter ?? {}, this.context.resource);
+    for (const include of query.include?.split(',') ?? []) {
+      this.parseInclude(include, jsonApiQuery.includes, this.context.resource);
+    }
+
+    this.parseFilters(query.filter ?? {}, jsonApiQuery.filters, this.context.resource);
 
     for (const sort of (query.sort?.split(',') ?? [])) {
       const startsWithDesc = sort.startsWith('-');
@@ -60,10 +64,10 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     return jsonApiQuery;
   }
 
-  public parseFilters (parentFilter: Filter<TModel>, filterObject: Record<string, unknown> | Record<string, unknown>[], parentEntity: ResourceMeta<any>, parents:string[] = []) {
+  public parseFilters (filterObject: Record<string, unknown> | Record<string, unknown>[], parentFilter: Filter<TModel>, parentEntity: ResourceMeta<any>, parents:string[] = []) {
     if (Array.isArray(filterObject)) {
       for (const filter of filterObject) {
-        this.parseFilters(parentFilter, filter as any, parentEntity, parents);
+        this.parseFilters(filter as any, parentFilter, parentEntity, parents);
       }
       return;
     }
@@ -77,7 +81,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
             filters: new Set()
           };
           parentFilter.nested.add(nested);
-          this.parseFilters(nested, value as any, parentEntity, parents);
+          this.parseFilters(value as any, nested, parentEntity, parents);
         } else {
           const child = parents[parents.length - 1];
           const attrAndRel : (AttributeMeta<any> | RelationMeta<any>)[] = [...parentEntity.attributes, ...parentEntity.relationships];
@@ -117,7 +121,7 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
         const found = attrAndRel.find((e) => e.name === key);
 
         if (found) {
-          this.parseFilters(parentFilter, value as any, found.resource, [...parents, key]);
+          this.parseFilters(value as any, parentFilter, found.resource, [...parents, key]);
         } else {
           throw new BadRequestError(`Resource attribute/relation ${key} of ${parentEntity.name} does not exists`);
         }
@@ -125,40 +129,55 @@ export class QueryParser<TModel extends BaseEntity<TModel, any>> {
     }
   }
 
-  public parseInclude (
-    relations: string[],
-    parentInclude: Map<string, Include<any>> | Include<any>
-  ) {
-    for (const relation of relations) {
-      const splitted = relation.split('.');
-      const parentRel = splitted.shift()!;
-
-      if (parentInclude instanceof Map) {
-        const relationMeta = this.context.resource.relationships.find((rel) => rel.name === parentRel);
-        if (!relationMeta) {
-          throw new BadRequestError(`Relation ${parentRel} not found`);
-        }
-        parentInclude.set(parentRel, {
-          relationMeta,
-          includes: new Map()
-        });
-        if (splitted.length > 0) {
-          this.parseInclude(splitted, parentInclude.get(parentRel)!);
-        }
-      } else {
-        const relationMeta =
-          parentInclude.relationMeta.resource.relationships.find((rel) => rel.name === parentRel);
-        if (!relationMeta) {
-          throw new BadRequestError(`Relation ${parentRel} not found`);
-        }
-        parentInclude.includes.set(parentRel, {
-          relationMeta,
-          includes: new Map()
-        });
-        if (splitted.length > 0) {
-          this.parseInclude(splitted, parentInclude.includes.get(parentRel)!);
+  /*
+    comments,comments.locales,comments.locales.comment,comments.article
+    {
+      comments: {
+        meta : ...
+        includes : {
+          locales : {
+            meta : ...
+            includes: {
+              comment: {
+                meta: ...
+                includes: {}
+              }
+            }
+          },
+          article: {
+            meta: ...
+            includes: {}
+          }
         }
       }
+    }
+  */
+  public parseInclude (
+    relation: string,
+    parentInclude: Map<string, Include<any>>,
+    parentResource: ResourceMeta<TModel>
+  ) {
+    const paths = relation.split('.');
+    const currentRelation = paths.shift();
+    const restOfPaths = paths.join('.');
+
+    const relationMeta = parentResource.relationships.find((relationship) => relationship.name === currentRelation);
+
+    if (!relationMeta) {
+      throw new BadRequestError(`${currentRelation} was not found in resource ${parentResource.name}`);
+    }
+
+    const existingChildRelation = parentInclude.get(relationMeta.name);
+
+    if (!existingChildRelation) {
+      parentInclude.set(relationMeta.name, {
+        relationMeta,
+        includes: new Map()
+      });
+    }
+
+    if (restOfPaths) {
+      this.parseInclude(restOfPaths, parentInclude.get(relationMeta.name)!.includes, relationMeta.resource);
     }
   }
 

@@ -1,11 +1,11 @@
 import { BaseEntity, Entity, ManyToOne, PrimaryKey } from '@mikro-orm/core';
-import { ArticleModel } from './article.model.js';
+import { CommentModel } from './comment.model.js';
 
 @Entity()
 export class LocaleModel extends BaseEntity<LocaleModel, 'id'> {
   @PrimaryKey()
   public declare id: string;
 
-  @ManyToOne('ArticleModel', 'comments')
-  public declare article: ArticleModel;
+  @ManyToOne('CommentModel', 'locales')
+  public declare comment: CommentModel;
 }

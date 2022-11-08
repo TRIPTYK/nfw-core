@@ -5,13 +5,15 @@ import { JsonApiRegistry } from '../../../src/jsonapi.registry.js';
 import { ArticleModel } from './models/article.model.js';
 import { CommentModel } from './models/comment.model.js';
 import './resources/article.resource.js';
+import './resources/locale.resource.js';
 import './resources/comment.resource.js';
+import { LocaleModel } from './models/locale.model.js';
 
 export async function initApp () {
   const orm = await init({
     dbName: ':memory:',
     type: 'sqlite',
-    entities: [ArticleModel, CommentModel],
+    entities: [ArticleModel, CommentModel, LocaleModel],
     allowGlobalContext: true
   });
   container.resolve(JsonApiRegistry).init({

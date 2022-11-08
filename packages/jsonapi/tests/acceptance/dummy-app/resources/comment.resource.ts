@@ -1,6 +1,7 @@
 import { Attribute, JsonApiResource, Relationship, Resource } from '../../../../src/index.js';
 import { CommentModel } from '../models/comment.model.js';
 import type { ArticleResource } from './article.resource.js';
+import type { LocaleResource } from './locale.resource.js';
 
 @JsonApiResource({
   entityName: 'comment',
@@ -27,4 +28,9 @@ export class CommentResource extends Resource<CommentModel> {
     otherResource: 'ArticleResource'
   })
   public declare article: ArticleResource[];
+
+  @Relationship({
+    otherResource: 'LocaleResource'
+  })
+  public declare locales: LocaleResource[];
 }
