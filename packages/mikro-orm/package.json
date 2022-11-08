@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-mikro-orm",
-  "version": "4.0.0-alpha.21",
+  "version": "4.0.0-alpha.22",
   "description": "Mikro-ORM module for NFW-CORE",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
