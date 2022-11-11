@@ -1,6 +1,6 @@
 # Params
 
-Usually, guards are created by using `createCustomDecorator(handle,name)`.
+Usually, params decorators are created by using `createCustomDecorator(handle,name)`.
 
 ```ts title="demo-http/src/params/validated-body.ts"
 --8<-- "sandbox/demo-http/src/params/validated-body.ts"
