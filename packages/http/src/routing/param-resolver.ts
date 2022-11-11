@@ -1,5 +1,5 @@
 import type { RouterContext } from '@koa/router';
-import type { ControllerContextInterface } from '../interfaces/controller-context.js';
+import type { ControllerContext } from '../types/controller-context.js';
 import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 
 export class ParamResolver {
@@ -13,7 +13,7 @@ export class ParamResolver {
     if (this.isSpecialHandle()) {
       return this.resolveSpecialContext(contextArgs);
     }
-    return (this.paramMeta.handle as ParamsHandleFunction)({
+    return (this.paramMeta.handle as ParamsHandleFunction<any>)({
       controllerInstance: this.controllerInstance,
       controllerAction: this.controllerAction,
       ctx,
@@ -33,7 +33,7 @@ export class ParamResolver {
       return {
         controllerAction: this.controllerAction,
         controllerInstance: this.controllerInstance
-      } as ControllerContextInterface;
+      } as ControllerContext;
     }
   }
 }

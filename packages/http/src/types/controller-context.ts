@@ -1,4 +1,4 @@
-export interface ControllerContextInterface<T = unknown> {
+export interface ControllerContext<T = unknown> {
     controllerInstance: T,
     controllerAction: keyof T,
 }
