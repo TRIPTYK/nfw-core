@@ -34,6 +34,12 @@ export * from './decorators/params/router-context.js';
 
 export * from './storages/metadata-storage.js';
 
+export * from './errors/forbidden.js';
+export * from './errors/router-metadata-not-found.js';
+
+export * from './routing/controller-action.js';
+export * from './routing/param-resolver.js';
+
 export * from './enums/http-method.js';
 
 export * from './storages/metadata/use-guard.js';
