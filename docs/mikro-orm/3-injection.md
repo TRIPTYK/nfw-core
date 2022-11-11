@@ -13,13 +13,13 @@ class UserController {
 
 ## Injecting a repository
 
-Injecting a repository can be achieved by using the `@InjectRepository` decorator from `@triptyk/nfw-mikro-orm`.
+Injecting a repository can be achieved by using the `@injectRepository` decorator from `@triptyk/nfw-mikro-orm`.
 
 ```ts
 @singleton()
 class UserController {
     public constructor(
-        @InjectRepository(UserModel) public userRepository: EntityRepository<UserModel>
+        @injectRepository(UserModel) public userRepository: EntityRepository<UserModel>
     ) {}
 }
 ```
