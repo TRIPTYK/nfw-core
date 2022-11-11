@@ -50,3 +50,6 @@ export class UsersController {
   }
 }
 ```
+
+!!! danger
+    At the moment, the response of the decorator is not cached. If a decorator is used once in the guard and once in the controller, it will be called twice.
