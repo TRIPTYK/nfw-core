@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 
 import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';

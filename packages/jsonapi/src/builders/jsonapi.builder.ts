@@ -118,7 +118,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
       /**
      * Validate content type negociation
      */
-      if (!validateContentType(ctx.headers['content-type'] ?? '', endpoint.options?.allowedContentType, endpoint.options?.ignoreMedia)) {
+      if (!validateContentType(ctx.headers['content-type'] ?? '', endpoint.options?.allowedContentType)) {
         throw new UnsupportedMediaTypeError();
       }
       if (ctx.headers.accept !== 'application/vnd.api+json') {

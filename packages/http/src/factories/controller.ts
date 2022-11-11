@@ -2,25 +2,39 @@ import type Router from '@koa/router';
 import { container } from '@triptyk/nfw-core';
 import type Application from 'koa';
 import type { Class } from 'type-fest';
-import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { CreateApplicationOptions } from './application.js';
+import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
+import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
+import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
-export async function createRoute (parentRoute: Router | Application, controller: Class<unknown>, applicationOptions: CreateApplicationOptions) {
-  const controllerMetadata = container.resolve(MetadataStorage).findRouteForTarget(controller);
+export class RouterBuilderFactory {
+  public constructor (
+    public metadataStorage: MetadataStorageInterface,
+    private parentRoute: Router | Application,
+    private controller: Class<unknown>
+  ) {}
 
-  container.registerSingleton(controllerMetadata.target);
+  public async createRoute () {
+    const controllerMetadata = this.metadataStorage.findRouteForTarget(this.controller);
+    const controllerInstance = container.resolve(controllerMetadata.target);
+    const builder = container.resolve(controllerMetadata.builder);
 
-  const controllerInstance = container.resolve(controllerMetadata.target);
-  const builder = container.resolve(controllerMetadata.builder);
+    await this.callBuilder(builder, controllerInstance, controllerMetadata);
+  }
 
-  builder.context = {
-    instance: controllerInstance,
-    meta: controllerMetadata
-  };
+  private async callBuilder (builder: RouterBuilderInterface, controllerInstance: unknown, controllerMetadata: RouteMetadataArgs<unknown>) {
+    builder.context = {
+      instance: controllerInstance,
+      meta: controllerMetadata
+    };
 
-  const controllerRouter = await builder.build();
+    const controllerRouter = await builder.build();
 
-  await Promise.all((controllerMetadata.controllers ?? []).map((c) => createRoute(controllerRouter, c, applicationOptions)));
+    await this.createNestedRouters(controllerMetadata);
 
-  await builder.bindRouting(parentRoute, controllerRouter);
+    await builder.bindRouting(controllerRouter, controllerRouter);
+  }
+
+  private async createNestedRouters (controllerMetadata: RouteMetadataArgs<unknown>) {
+    await Promise.all((controllerMetadata.controllers ?? []).map(async (c) => new RouterBuilderFactory(this.metadataStorage, this.parentRoute, c).createRoute()));
+  }
 }

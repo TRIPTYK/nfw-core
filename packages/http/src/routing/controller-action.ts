@@ -41,15 +41,20 @@ export class ControllerActionBuilder {
     const responsehandlerForRouteMetadata = this.metadataStorage.getClosestResponseHandlerForEndpoint(this.controllerInstance.constructor, this.propertyName);
     const guardsForRouteMetadata = this.metadataStorage.getGuardsForEndpoint(this.controllerInstance.constructor, this.propertyName);
 
+    const responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined = this.getReponseHandlerInstanceMeta(responsehandlerForRouteMetadata);
+
+    const guardsInstance = guardsForRouteMetadata.map(this.resolveGuardInstance.bind(this));
+
+    return this.controllerActionMiddleware(guardsInstance, paramsForRouteMetadata, responseHandlerUseParams);
+  }
+
+  private getReponseHandlerInstanceMeta (responsehandlerForRouteMetadata: UseResponseHandlerMetadataArgs | undefined) {
     let responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined;
 
     if (responsehandlerForRouteMetadata) {
       responseHandlerUseParams = this.resolveResponseHandler(responsehandlerForRouteMetadata, responseHandlerUseParams);
     }
-
-    const guardsInstance = guardsForRouteMetadata.map(this.resolveGuardInstance.bind(this));
-
-    return this.controllerActionMiddleware(guardsInstance, paramsForRouteMetadata, responseHandlerUseParams);
+    return responseHandlerUseParams;
   }
 
   private resolveGuardInstance (guardMeta: UseGuardMetadataArgs): GuardInstanceMeta {

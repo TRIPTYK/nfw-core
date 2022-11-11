@@ -27,9 +27,7 @@ export class HttpBuilder implements RouterBuilderInterface {
 
     controllerRouter.use(...applyMiddlewares);
 
-    for (const endPointMeta of endpointsMeta) {
-      this.setupEndpoint(controllerRouter, endPointMeta);
-    }
+    this.setupEndpoints(endpointsMeta, controllerRouter);
 
     return controllerRouter;
   }
@@ -46,5 +44,11 @@ export class HttpBuilder implements RouterBuilderInterface {
     const controllerActionBuilder = new ControllerActionBuilder(this.context.instance, this.metadataStorage, endPointMeta.propertyName);
 
     router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, controllerActionBuilder.build());
+  }
+
+  private setupEndpoints (endpointsMeta: HttpEndpointMetadataArgs[], controllerRouter: Router) {
+    for (const endPointMeta of endpointsMeta) {
+      this.setupEndpoint(controllerRouter, endPointMeta);
+    }
   }
 }
