@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { UsersController } from '../src/controllers/users.js';
 import { UserNotFoundError } from '../src/errors/user-not-found.js';
-import { UsersService } from '../src/service/users.js';
+import { UsersService } from '../src/services/users.js';
 
 let service: UsersService;
 let controller : UsersController;

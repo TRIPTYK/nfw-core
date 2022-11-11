@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';
-import { RestResponseHandler } from '../src/response-handler/rest.js';
+import { RestResponseHandler } from '../src/response-handlers/rest.js';
 
 test('Response is wrapped in data', async () => {
   const context = {

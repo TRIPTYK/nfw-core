@@ -3,9 +3,9 @@ import { Controller, GET, Param, POST, UseGuard, UseResponseHandler } from '@tri
 import { UserNotFoundError } from '../errors/user-not-found.js';
 import { AuthGuard } from '../guards/guard.js';
 import { ValidatedBody } from '../params/validated-body.js';
-import { RestResponseHandler } from '../response-handler/rest.js';
-import { User, UsersService } from '../service/users.js';
-import { userSchema } from '../validation/user.js';
+import { RestResponseHandler } from '../response-handlers/rest.js';
+import { User, UsersService } from '../services/users.js';
+import { userSchema } from '../validations/user.js';
 
 @Controller({
   routeName: '/users'

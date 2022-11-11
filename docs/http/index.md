@@ -4,7 +4,7 @@ The `@triptyk/nfw-http` contains a builder that setup complex http routing for a
 
 ## Installation
 
-!!! info     
+!!! info
     This module depends of `@triptyk/nfw-core`.
 
 ```sh
