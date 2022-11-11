@@ -256,20 +256,6 @@
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../core/2-create-your-own-block/" class="md-nav__link">
-        Create your own module
-      </a>
-    </li>
-  
-
-            
-          
         </ul>
       </nav>
     </li>
@@ -545,6 +531,142 @@
       <a href="../../getting%20started/7-error-handling/" class="md-nav__link">
         Error handling
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Testing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Testing" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Testing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4_1" type="checkbox" id="__nav_3_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4_1">
+          Unit
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Unit" data-md-level="3">
+        <label class="md-nav__title" for="__nav_3_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Unit
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/unit/1-introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/unit/controllers/" class="md-nav__link">
+        Controllers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/unit/guards/" class="md-nav__link">
+        Guards
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/unit/param/" class="md-nav__link">
+        Params
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/unit/response-handler/" class="md-nav__link">
+        Response Handler
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -898,10 +1020,12 @@
 
 <h1 id="controller-context">Controller Context</h1>
 <p><img alt="" loading="lazy" src="/../assets/controller-context.png" style="height:450px;width:300px" /></p>
-<p>The controller is available when code is executed inside the controller class. That's the case for <strong>guards</strong>, <strong>controller action</strong> and <strong>response handlers</strong>.p</p>
-<p>The controller context actually contains these informations: 
-- controllerInstance: The instance of the controller
-- controllerAction: The controller action name (A.K.A the called method)</p>
+<p>The controller is available when code is executed inside the controller class. That's the case for <strong>guards</strong>, <strong>controller action</strong> and <strong>response handlers</strong>.</p>
+<p>The controller context actually contains these informations:</p>
+<ul>
+<li>controllerInstance: The instance of the controller</li>
+<li>controllerAction: The controller action name (A.K.A the called method)</li>
+</ul>
 <p>The context can be accessed by using the <code>@ControllerContext</code> param.</p>
 <h2 id="example">Example</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">@Controller</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="w"></span>
