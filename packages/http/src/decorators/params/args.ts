@@ -3,7 +3,7 @@ import { MetadataStorage } from '../../storages/metadata-storage.js';
 
 export function Args (this: unknown) {
   return function (target: unknown, propertyKey: string, index: number) {
-    container.resolve(MetadataStorage).useParams.push({
+    container.resolve(MetadataStorage).addParamUsage({
       target,
       propertyName: propertyKey,
       index,

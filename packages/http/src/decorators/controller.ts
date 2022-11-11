@@ -15,7 +15,7 @@ export interface ControllerMetaArgs {
 export function Controller (options:ControllerOptions) {
   return function (target: Class<unknown>) {
     injectable()(target);
-    container.resolve(MetadataStorage).routes.push({
+    container.resolve(MetadataStorage).addRouter({
       target,
       builder: HttpBuilder,
       controllers: options.controllers ?? [],

@@ -6,7 +6,7 @@ import type { AnyMiddleware } from '../types/any-middleware.js';
 
 export function UseMiddleware (middleware: AnyMiddleware) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {
-    container.resolve(MetadataStorage).useMiddlewares.push({
+    container.resolve(MetadataStorage).addMiddlewareUsage({
       target,
       propertyName,
       middleware

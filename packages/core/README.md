@@ -1,3 +1,5 @@
 # NFW-CORE
 
-Provides tools to build routes and endpoints
+Provides DI container.
+Provides Debug utils.
+Provides Global utils.

@@ -4,7 +4,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function createHttpVerbDecorator (routeName: string, verb: HttpMethod) {
   return function (target: unknown, propertyKey: string) {
-    container.resolve(MetadataStorage).endpoints.push({
+    container.resolve(MetadataStorage).addEndpoint({
       target,
       propertyName: propertyKey,
       args: {

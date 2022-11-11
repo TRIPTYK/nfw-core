@@ -8,15 +8,40 @@ import type { UseParamsMetadataArgs } from './metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-handler.js';
 import { RouterMetadataNotFoundError } from '../errors/router-metadata-not-found.js';
 import type { RouteMetadataArgs } from './metadata/route.js';
+import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
 
 @singleton()
-export class MetadataStorage {
+export class MetadataStorage implements MetadataStorageInterface {
   public routes: RouteMetadataArgs<unknown>[] = [];
   public endpoints: HttpEndpointMetadataArgs[] = [];
   public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
   public useParams: UseParamsMetadataArgs[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
+
+  public addRouter (...routerMeta: RouteMetadataArgs<unknown>[]) {
+    this.routes.push(...routerMeta);
+  }
+
+  public addParamUsage (...paramMeta: UseParamsMetadataArgs[]) {
+    this.useParams.push(...paramMeta);
+  }
+
+  public addEndpoint (...endpointMeta: HttpEndpointMetadataArgs[]) {
+    this.endpoints.push(...endpointMeta);
+  }
+
+  public addMiddlewareUsage (...middlewareMeta: UseMiddlewareMetadataArgs[]) {
+    this.useMiddlewares.push(...middlewareMeta);
+  }
+
+  public addGuardUsage (...guardMeta: UseGuardMetadataArgs[]) {
+    this.useGuards.push(...guardMeta);
+  }
+
+  public addResponseHandlerUsage (...responseHandlerMeta: UseResponseHandlerMetadataArgs[]) {
+    this.useResponseHandlers.push(...responseHandlerMeta);
+  }
 
   public findRouteForTarget (target: unknown) {
     const route = this.routes.find((controllerMeta) => controllerMeta.target === target);

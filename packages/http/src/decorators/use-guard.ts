@@ -6,7 +6,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function UseGuard (guard: Class<GuardInterface>, ...args: unknown[]) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {
-    container.resolve(MetadataStorage).useGuards.push({
+    container.resolve(MetadataStorage).addGuardUsage({
       target,
       propertyName,
       guard,

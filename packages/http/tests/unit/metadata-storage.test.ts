@@ -6,6 +6,8 @@ import type { UseParamsMetadataArgs } from '../../src/storages/metadata/use-para
 import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.js';
 import { describe, expect, it, beforeEach } from '@jest/globals';
 import { RouterMetadataNotFoundError } from '../../src/errors/router-metadata-not-found.js';
+import type { RouteMetadataArgs } from '../../src/index.js';
+import type { Class } from 'type-fest';
 
 describe('Metadata storage tests', () => {
   let metadataStorage: MetadataStorage;
@@ -39,6 +41,15 @@ describe('Metadata storage tests', () => {
     };
   }
 
+  function makeRouterFor (target: Class<unknown>): RouteMetadataArgs<unknown> {
+    return {
+      target,
+      controllers: [],
+      args: [],
+      builder: class {} as any
+    };
+  }
+
   class TheTarget {
     public cmonDoSomething () {}
   }
@@ -64,6 +75,11 @@ describe('Metadata storage tests', () => {
 
       expect(metadataStorage.sortedParametersForTarget(TheTarget)).toStrictEqual([firstParam, secondParam]);
     });
+    it('addParamUsage pushes into storage array', () => {
+      const param = makeParamFor(TheTarget.prototype, 'aaa', 0);
+      metadataStorage.addParamUsage(param);
+      expect(metadataStorage.useParams.some((r) => r === param)).toStrictEqual(true);
+    });
   });
 
   describe('Response handler', () => {
@@ -85,6 +101,11 @@ describe('Metadata storage tests', () => {
     it('it returns undefined when no response handler is found', () => {
       expect(metadataStorage.getClosestResponseHandlerForEndpoint(TheTarget, 'cmonDoSomething')).toBeUndefined();
     });
+    it('addResponseHandlerUsage pushes into storage array', () => {
+      const handler = makeResponseHandlerFor(TheTarget);
+      metadataStorage.addResponseHandlerUsage(handler);
+      expect(metadataStorage.useResponseHandlers.some((r) => r === handler)).toStrictEqual(true);
+    });
   });
   describe('Guards', () => {
     it('gets reversed guards for target property', () => {
@@ -95,20 +116,25 @@ describe('Metadata storage tests', () => {
 
       expect(metadataStorage.getGuardsForEndpoint(TheTarget, 'cmonDoSomething')).toStrictEqual([secondGuard, firstGuard]);
     });
+    it('addGuardUsage pushes into storage array', () => {
+      const handler = makeGuardFor(TheTarget);
+      metadataStorage.addGuardUsage(handler);
+      expect(metadataStorage.useGuards.some((r) => r === handler)).toStrictEqual(true);
+    });
   });
   describe('Router', () => {
     it('Throws error when no route metadata is found for target', () => {
       expect(() => metadataStorage.findRouteForTarget(class {})).toThrowError(RouterMetadataNotFoundError);
     });
     it('Retreives correct metadata from target', () => {
-      const routeMeta = {
-        target: TheTarget,
-        controllers: [],
-        args: [],
-        builder: class {} as any
-      };
+      const routeMeta = makeRouterFor(TheTarget);
       metadataStorage.routes.push(routeMeta);
       expect(metadataStorage.findRouteForTarget(TheTarget)).toStrictEqual(routeMeta);
+    });
+    it('addRouter pushes into storage array', () => {
+      const handler = makeRouterFor(TheTarget);
+      metadataStorage.addRouter(handler);
+      expect(metadataStorage.routes.some((r) => r === handler)).toStrictEqual(true);
     });
   });
 });
