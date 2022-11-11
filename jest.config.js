@@ -3,7 +3,7 @@ export default {
   collectCoverage: Boolean(process.env.CI),
   projects: [
     {
-      displayName: "nfw-core-mikro-orm",
+      displayName: "nfw-mikro-orm",
       testMatch: ["<rootDir>/packages/mikro-orm/dist/tests/**/*.test.js"],
     },
     {
