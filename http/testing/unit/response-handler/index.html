@@ -990,6 +990,10 @@
 
 <h1 id="response-handler">Response Handler</h1>
 <p>Testing response handlers can be achieved by simply instantiating the response handler and calling the <code>handle</code> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because the response handler does not return a value but instead set it to the ctx.body, you need to test the values against the koa context.</p>
+</div>
 <div class="highlight"><span class="filename">demo-http/tests/response-handler.test.ts</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="s1">&#39;reflect-metadata&#39;</span><span class="p">;</span><span class="w"></span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@koa/router&#39;</span><span class="p">;</span><span class="w"></span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RestResponseHandler</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/response-handlers/rest.js&#39;</span><span class="p">;</span><span class="w"></span>
