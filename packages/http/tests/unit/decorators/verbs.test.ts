@@ -8,6 +8,7 @@ describe('Decorators | verbs', () => {
   let metadataStorage: MetadataStorage;
 
   class Target {
+    // eslint-disable-next-line class-methods-use-this
     public list () {}
   }
 

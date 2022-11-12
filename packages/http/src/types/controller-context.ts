@@ -1,4 +1,6 @@
-export interface ControllerContext<T = unknown> {
+import type { StringKeyOf } from 'type-fest';
+
+export interface ControllerContext<T extends InstanceType<any> = InstanceType<any>> {
     controllerInstance: T,
-    controllerAction: keyof T,
+    controllerAction: StringKeyOf<T>,
 }

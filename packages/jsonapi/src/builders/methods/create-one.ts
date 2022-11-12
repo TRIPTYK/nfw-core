@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
@@ -67,8 +69,8 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
   const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, fetched);
 
   /**
-     * Call the controller's method
-     */
+   * Call the controller's method
+   */
   const res : TModel | undefined = await ((this.instance as any)[endpoint.propertyName] as Function).call(this.instance, ...evaluatedParams);
 
   if (res && !(res instanceof resource.mikroEntity.class)) {

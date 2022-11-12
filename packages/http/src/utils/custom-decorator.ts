@@ -1,10 +1,10 @@
 import { container } from '@triptyk/nfw-core';
 import { MetadataStorage } from '../storages/metadata-storage.js';
-import type { ControllerParamsContext } from '../storages/metadata/use-param.js';
+import type { ParamsHandleFunction } from '../storages/metadata/use-param.js';
 
-export function createCustomDecorator (handle: (ctx: ControllerParamsContext<unknown>) => unknown, name: string, args: unknown[] = []) {
+export function createCustomDecorator (handle: ParamsHandleFunction<unknown>, name: string, args: unknown[] = []) {
   return function (target: unknown, propertyName: string, index: number) {
-    container.resolve(MetadataStorage).useParams.push({
+    container.resolve(MetadataStorage).addParamUsage({
       target,
       propertyName,
       index,

@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable max-statements */
 import 'reflect-metadata';
 import { MetadataStorage } from '../../src/storages/metadata-storage.js';
@@ -51,6 +52,7 @@ describe('Metadata storage tests', () => {
   }
 
   class TheTarget {
+    // eslint-disable-next-line class-methods-use-this
     public cmonDoSomething () {}
   }
 

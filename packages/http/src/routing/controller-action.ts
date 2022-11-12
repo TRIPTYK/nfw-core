@@ -5,9 +5,11 @@ import { ForbiddenError } from '../errors/forbidden.js';
 import type { GuardInterface } from '../interfaces/guard.js';
 import type { ResponseHandlerInterface } from '../interfaces/response-handler.js';
 import type { MetadataStorage } from '../storages/metadata-storage.js';
-import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-response-handler.js';
+import type { ControllerContext } from '../types/controller-context.js';
+import type { ExecutableGuard } from './executable-guard.js';
+import { GuardResolver } from './guard-resolver.js';
 import { ParamResolver } from './param-resolver.js';
 
 export interface ResponseHandlerInstanceMeta {
@@ -31,19 +33,20 @@ export async function callGuardWithParams (instance: GuardInterface, resolvedGua
 
 export class ControllerActionBuilder {
   public constructor (
-    public controllerInstance: InstanceType<any>,
-    public metadataStorage: MetadataStorage,
-    public propertyName: string
+    public context: ControllerContext<any>,
+    public metadataStorage: MetadataStorage
   ) {}
 
+  // eslint-disable-next-line max-statements
   public build () {
-    const paramsForRouteMetadata: UseParamsMetadataArgs[] = this.metadataStorage.sortedParametersForEndpoint(this.controllerInstance.constructor, this.propertyName);
-    const responsehandlerForRouteMetadata = this.metadataStorage.getClosestResponseHandlerForEndpoint(this.controllerInstance.constructor, this.propertyName);
-    const guardsForRouteMetadata = this.metadataStorage.getGuardsForEndpoint(this.controllerInstance.constructor, this.propertyName);
+    const paramsForRouteMetadata: UseParamsMetadataArgs[] = this.metadataStorage.sortedParametersForEndpoint(this.context.controllerInstance.constructor, this.context.controllerAction);
+    const responsehandlerForRouteMetadata = this.metadataStorage.getClosestResponseHandlerForEndpoint(this.context.controllerInstance.constructor, this.context.controllerAction);
+    const guardsForRouteMetadata = this.metadataStorage.getGuardsForEndpoint(this.context.controllerInstance.constructor, this.context.controllerAction);
 
     const responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined = this.getReponseHandlerInstanceMeta(responsehandlerForRouteMetadata);
 
-    const guardsInstance = guardsForRouteMetadata.map(this.resolveGuardInstance.bind(this));
+    const guardResolver = new GuardResolver(this.metadataStorage, this.context);
+    const guardsInstance = guardsForRouteMetadata.map((meta) => guardResolver.resolve(meta));
 
     return this.controllerActionMiddleware(guardsInstance, paramsForRouteMetadata, responseHandlerUseParams);
   }
@@ -57,16 +60,6 @@ export class ControllerActionBuilder {
     return responseHandlerUseParams;
   }
 
-  private resolveGuardInstance (guardMeta: UseGuardMetadataArgs): GuardInstanceMeta {
-    const paramsForGuardMetadata = this.metadataStorage.sortedParametersForTarget(guardMeta.guard);
-
-    return {
-      instance: container.resolve(guardMeta.guard),
-      args: guardMeta.args,
-      paramsMeta: paramsForGuardMetadata
-    };
-  };
-
   private resolveResponseHandler (responsehandlerForRouteMetadata: UseResponseHandlerMetadataArgs, responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
     const params = this.metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.responseHandler);
     responseHandlerUseParams = {
@@ -77,8 +70,8 @@ export class ControllerActionBuilder {
     return responseHandlerUseParams;
   }
 
-  private controllerActionMiddleware (guardsInstance: GuardInstanceMeta[], paramsForRouteMetadata:UseParamsMetadataArgs[], responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
-    const controllerMethod = (this.controllerInstance as any)[this.propertyName] as Function;
+  private controllerActionMiddleware (guardsInstance: ExecutableGuard[], paramsForRouteMetadata:UseParamsMetadataArgs[], responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
+    const controllerMethod = (this.context.controllerInstance as any)[this.context.controllerAction] as Function;
 
     return async (ctx: RouterContext, _next: Next) => {
       await this.executeGuards(guardsInstance, ctx);
@@ -94,24 +87,24 @@ export class ControllerActionBuilder {
   }
 
   private async executeControllerAction (paramsForRouteMetadata: UseParamsMetadataArgs[], ctx: RouterContext, controllerMethod: Function) {
-    const resolvedParams = await this.resolveParams(paramsForRouteMetadata, [], ctx);
+    const resolvedParams = await this.resolveParams(paramsForRouteMetadata.map((p) => p.handle), [], ctx);
 
-    return controllerMethod.call(this.controllerInstance, ...resolvedParams);
+    return controllerMethod.call(this.context.controllerInstance, ...resolvedParams);
   }
 
-  private async executeGuards (guardsInstance: GuardInstanceMeta[], ctx: RouterContext) {
-    for (const { instance, args, paramsMeta } of guardsInstance) {
-      const resolvedGuardParams = await this.resolveParams(paramsMeta, args, ctx);
-      await callGuardWithParams(instance, resolvedGuardParams);
+  // eslint-disable-next-line class-methods-use-this
+  private async executeGuards (guardsInstance: ExecutableGuard[], ctx: RouterContext) {
+    for (const guard of guardsInstance) {
+      await guard.execute(ctx);
     }
   }
 
   private async executeResponseHandler (responseHandlerUseParams: ResponseHandlerInstanceMeta, ctx: RouterContext, controllerActionResult: any) {
-    const resolvedHandlerParams = await this.resolveParams(responseHandlerUseParams.paramsMeta, responseHandlerUseParams.args, ctx);
+    const resolvedHandlerParams = await this.resolveParams(responseHandlerUseParams.paramsMeta.map((p) => p.handle), responseHandlerUseParams.args, ctx);
     return responseHandlerUseParams.instance.handle(controllerActionResult, ...resolvedHandlerParams);
   }
 
-  private resolveParams (paramsMeta: UseParamsMetadataArgs[], contextArgs: unknown[], ctx: RouterContext) {
-    return Promise.all(paramsMeta.map((paramMeta) => new ParamResolver(paramMeta, this.propertyName, this.controllerInstance).handleParam(contextArgs, ctx)));
+  private resolveParams (handles: UseParamsMetadataArgs['handle'][], contextArgs: unknown[], ctx: RouterContext) {
+    return Promise.all(handles.map((handle) => new ParamResolver(handle, this.context).resolve(contextArgs)));
   }
 }

@@ -32,6 +32,7 @@ export class HttpBuilder implements RouterBuilderInterface {
     return controllerRouter;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public async bindRouting (parentRouter: Router, router: Router): Promise<void> {
     parentRouter
       .use(router.routes())
@@ -41,7 +42,10 @@ export class HttpBuilder implements RouterBuilderInterface {
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
     const endpointMiddlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
 
-    const controllerActionBuilder = new ControllerActionBuilder(this.context.instance, this.metadataStorage, endPointMeta.propertyName);
+    const controllerActionBuilder = new ControllerActionBuilder({
+      controllerInstance: this.context.instance,
+      controllerAction: endPointMeta.propertyName
+    }, this.metadataStorage);
 
     router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, controllerActionBuilder.build());
   }

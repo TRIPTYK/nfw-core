@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable max-statements */
 
 import 'reflect-metadata';
@@ -21,7 +22,10 @@ describe('Action builder', () => {
   beforeEach(() => {
     instance = new Controller();
     storage = new MetadataStorage();
-    actionBuilder = new ControllerActionBuilder(instance, storage, 'list');
+    actionBuilder = new ControllerActionBuilder({
+      controllerAction: 'list',
+      controllerInstance: instance
+    }, storage);
   });
 
   it('Builds a middleware that executes controller action', async () => {
