@@ -4,6 +4,5 @@
     "minLines": 2,
     "mode": "strict",
     "gitignore": true,
-    "pattern": ["packages/*/src/**/*.ts"],
-    "ignore": ["**/jsonapi/src/builders/**"]
+    "pattern": ["packages/*/src/**/*.ts"]
 }

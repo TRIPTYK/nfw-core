@@ -68,7 +68,7 @@ export class ControllerActionBuilder {
   };
 
   private resolveResponseHandler (responsehandlerForRouteMetadata: UseResponseHandlerMetadataArgs, responseHandlerUseParams: ResponseHandlerInstanceMeta | undefined) {
-    const params = this.metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.target);
+    const params = this.metadataStorage.sortedParametersForTarget(responsehandlerForRouteMetadata.responseHandler);
     responseHandlerUseParams = {
       instance: container.resolve(responsehandlerForRouteMetadata.responseHandler),
       args: responsehandlerForRouteMetadata.args,
