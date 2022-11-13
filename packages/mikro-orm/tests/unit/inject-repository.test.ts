@@ -1,8 +1,9 @@
+/* eslint-disable max-classes-per-file */
+import 'reflect-metadata';
 import { container, injectable } from '@triptyk/nfw-core';
 import { init, injectRepository } from '../../src/index.js';
 import { jest } from '@jest/globals';
 import { Entity, PrimaryKey, EntityRepository } from '@mikro-orm/core';
-import('reflect-metadata');
 
 jest.useFakeTimers();
 
