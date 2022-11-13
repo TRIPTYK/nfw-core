@@ -992,16 +992,17 @@
 <p>Testing the whole controller method (guards + params + action + response handler) consists of generating the middleware associated with the controller method and calling it with a Koa context.</p>
 <p>The magic class is the ControllerActionBuilder. It produces a middleware based on the decorators applied to it and the method name.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ControllerActionBuilder</span><span class="p">(</span><span class="w"></span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nx">controller</span><span class="p">,</span><span class="w"> </span><span class="c1">// (1)</span><span class="w"></span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nx">container</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">MetadataStorage</span><span class="p">),</span><span class="c1">// (2)</span><span class="w"></span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s1">&#39;get&#39;</span><span class="c1">// (3)</span><span class="w"></span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">);</span><span class="w"></span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nx">action</span><span class="p">.</span><span class="nx">build</span><span class="p">();</span><span class="w"> </span><span class="c1">// It builds the middleware.</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">      </span><span class="nx">controllerAction</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;get&#39;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nx">controllerInstance</span><span class="o">:</span><span class="w"> </span><span class="kt">controller</span><span class="w"></span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="c1">// (1)</span><span class="w"></span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nx">container</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">MetadataStorage</span><span class="p">)</span><span class="w"> </span><span class="c1">// (2)</span><span class="w"></span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">);</span><span class="w"></span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nx">action</span><span class="p">.</span><span class="nx">build</span><span class="p">();</span><span class="w"> </span><span class="c1">// It builds the middleware.</span><span class="w"></span>
 </code></pre></div>
 <ol>
-<li>The controller instance</li>
+<li>The controller context (instance + action)</li>
 <li>The metadata storage</li>
-<li>The controller method to test</li>
 </ol>
 <div class="highlight"><span class="filename">demo-http/tests/action.test.ts</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="s1">&#39;reflect-metadata&#39;</span><span class="p">;</span><span class="w"></span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RouterContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@koa/router&#39;</span><span class="p">;</span><span class="w"></span>
