@@ -1,8 +1,8 @@
 # Guards
 
-You will need to use the callGuardWithParams method to test the guard's behavior.
+You can also test the guard by only calling the method's instance. You will not get the exact behavior of the framework because if the guard's response is false, the framework will throw an error.
 
-You can also test the guard by only calling the method's instance but you will not get the exact behavior.
+To reproduce the exact behavior, you will need to work with the `ExecutableGuard` class.
 
 ```ts title="demo-http/tests/guard.test.ts"
 --8<-- "sandbox/demo-http/tests/guard.test.ts"
