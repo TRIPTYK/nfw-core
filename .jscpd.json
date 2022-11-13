@@ -4,5 +4,8 @@
     "minLines": 2,
     "mode": "strict",
     "gitignore": true,
+    "ignorePattern": [
+        "import .* from '.*';"
+    ],
     "pattern": ["packages/*/src/**/*.ts"]
 }

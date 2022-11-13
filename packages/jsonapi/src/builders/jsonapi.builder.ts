@@ -48,6 +48,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
 
   public constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {}
 
+  // eslint-disable-next-line class-methods-use-this
   public async bindRouting (parentRouter: Router, router: Router): Promise<void> {
     parentRouter
       .use(router.routes());

@@ -9,7 +9,7 @@ export class ExecutableParam {
   ) {}
 
   public execute (ctx: RouterContext) {
-    if (this.param instanceof Function) {
+    if (typeof this.param === 'function') {
       return this.param({
         ctx,
         ...this.controllerContext

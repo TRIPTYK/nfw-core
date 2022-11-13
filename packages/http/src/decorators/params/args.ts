@@ -3,6 +3,7 @@ import { MetadataStorage } from '../../storages/metadata-storage.js';
 
 export function Args (this: unknown) {
   return function (target: unknown, propertyKey: string, index: number) {
+    /* jscpd:ignore-start */
     container.resolve(MetadataStorage).addParamUsage({
       target,
       propertyName: propertyKey,
@@ -11,5 +12,6 @@ export function Args (this: unknown) {
       decoratorName: 'args',
       args: []
     });
+    /* jscpd:ignore-end */
   };
 }

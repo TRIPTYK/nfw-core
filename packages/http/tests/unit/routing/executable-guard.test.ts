@@ -2,10 +2,11 @@
 /* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { describe, expect, it, beforeEach, jest } from '@jest/globals';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
 import { ExecutableGuard } from '../../../src/routing/executable-guard.js';
 import type { RouterContext } from '@koa/router';
+import { ExecutableParam } from '../../../src/routing/executable-param.js';
 
 describe('Executable Guard', () => {
   let guardInstance : GuardInterface;
@@ -37,7 +38,12 @@ describe('Executable Guard', () => {
   });
   it('Resolves params correctly', async () => {
     returnValue = true;
-    const executableGuard = new ExecutableGuard(guardInstance, context, []);
-    expect(() => executableGuard.execute({} as RouterContext)).not.toThrowError();
+    const spy = jest.spyOn(guardInstance, 'can');
+    const firstParam = new ExecutableParam(context, ['blah']);
+    const secondParam = new ExecutableParam(context, () => 'hello');
+    const executableGuard = new ExecutableGuard(guardInstance, context, [firstParam, secondParam]);
+    await executableGuard.execute({} as RouterContext);
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith(['blah'], 'hello');
   });
 });

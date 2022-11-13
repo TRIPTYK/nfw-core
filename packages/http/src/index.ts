@@ -13,11 +13,14 @@ export * from './interfaces/middleware.js';
 export * from './interfaces/response-handler.js';
 export * from './interfaces/guard.js';
 export * from './interfaces/router-builder.js';
+export * from './interfaces/metadata-storage.js';
 
 export * from './factories/application.js';
 export * from './factories/controller.js';
 
 export * from './utils/custom-decorator.js';
+export * from './utils/execute-params.js';
+export * from './utils/resolve-params.js';
 
 export * from './decorators/params/body.js';
 export * from './decorators/params/controller-context.js';
@@ -39,6 +42,9 @@ export * from './errors/router-metadata-not-found.js';
 
 export * from './routing/controller-action.js';
 export * from './routing/param-resolver.js';
+export * from './routing/executable-guard.js';
+export * from './routing/executable-param.js';
+export * from './routing/executable-response-handler.js';
 
 export * from './enums/http-method.js';
 

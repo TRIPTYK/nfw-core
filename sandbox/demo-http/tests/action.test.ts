@@ -38,9 +38,11 @@ function setupServiceAndController () {
 it('Whole action set ctx.body with correct data', async () => {
   const controller = setupServiceAndController();
   const action = new ControllerActionBuilder(
-    controller,
-    container.resolve(MetadataStorage),
-    'get'
+    {
+      controllerAction: 'get',
+      controllerInstance: controller
+    },
+    container.resolve(MetadataStorage)
   );
 
   const fakeContext = createFakeContext();

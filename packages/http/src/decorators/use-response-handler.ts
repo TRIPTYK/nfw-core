@@ -5,11 +5,13 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 
 export function UseResponseHandler (responseHandler: Class<ResponseHandlerInterface>, ...args: unknown[]) {
   return function (target: Class<unknown> | unknown, propertyName?: string) {
+    /* jscpd:ignore-start */
     container.resolve(MetadataStorage).addResponseHandlerUsage({
       target,
       propertyName,
       responseHandler,
       args
     });
+    /* jscpd:ignore-end */
   };
 }
