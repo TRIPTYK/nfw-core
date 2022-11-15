@@ -29,12 +29,12 @@ export class RouterBuilderFactory {
 
     const controllerRouter = await builder.build();
 
-    await this.createNestedRouters(controllerMetadata);
+    await this.createNestedRouters(controllerMetadata, controllerRouter);
 
     await builder.bindRouting(this.parentRoute, controllerRouter);
   }
 
-  private async createNestedRouters (controllerMetadata: RouteMetadataArgs<unknown>) {
-    await Promise.all((controllerMetadata.controllers ?? []).map(async (c) => new RouterBuilderFactory(this.metadataStorage, this.parentRoute, c).createRoute()));
+  private async createNestedRouters (controllerMetadata: RouteMetadataArgs<unknown>, futureParentRouter: Router) {
+    await Promise.all((controllerMetadata.controllers ?? []).map(async (c) => new RouterBuilderFactory(this.metadataStorage, futureParentRouter, c).createRoute()));
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+/* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable max-statements */
 /* eslint-disable class-methods-use-this */
 import 'reflect-metadata';
@@ -11,39 +13,47 @@ import { setTimeout } from 'node:timers/promises';
 
 describe('Create application', () => {
   const spy = jest.fn();
-    @Controller({
-      routeName: '/hello'
-    })
-    @singleton()
+
+  @Controller({
+    routeName: '/hello'
+  })
+  @singleton()
   class Troller {
-    @GET('/index')
-      public index () {
-        return spy();
-      }
+  @GET('/index')
+    public index () {
+      return spy();
     }
+  }
 
-    it('Setups a router from the controller that handle requests', async () => {
-      const app = new Application();
+  @Controller({
+    routeName: '/api/v1',
+    controllers: [Troller]
+  })
+  @singleton()
+  class Area {}
 
-      await createApplication(
-        {
-          controllers: [Troller],
-          server: app
-        }
-      );
+  it('Setups a router from the controller that handle requests', async () => {
+    const app = new Application();
 
-      app.callback()(
-        createRequest({
-          url: '/hello/index',
-          method: 'GET',
-          originalUrl: '/hello/index',
-          baseUrl: '/hello/index'
-        }),
-        createResponse()
-      );
+    await createApplication(
+      {
+        controllers: [Area],
+        server: app
+      }
+    );
 
-      await setTimeout(100);
+    app.callback()(
+      createRequest({
+        url: '/api/v1/hello/index',
+        method: 'GET',
+        originalUrl: '/api/v1/hello/index',
+        baseUrl: '/api/v1/hello/index'
+      }),
+      createResponse()
+    );
 
-      expect(spy).toBeCalledTimes(1);
-    });
+    await setTimeout(100);
+
+    expect(spy).toBeCalledTimes(1);
+  });
 });
