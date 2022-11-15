@@ -16,6 +16,4 @@ export async function createApplication (options: CreateApplicationOptions) {
     const routerBuilder = new RouterBuilderFactory(container.resolve(MetadataStorage), app, controller);
     await routerBuilder.createRoute();
   }
-
-  return app;
 }

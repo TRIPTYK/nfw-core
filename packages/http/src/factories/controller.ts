@@ -31,7 +31,7 @@ export class RouterBuilderFactory {
 
     await this.createNestedRouters(controllerMetadata);
 
-    await builder.bindRouting(controllerRouter, controllerRouter);
+    await builder.bindRouting(this.parentRoute, controllerRouter);
   }
 
   private async createNestedRouters (controllerMetadata: RouteMetadataArgs<unknown>) {

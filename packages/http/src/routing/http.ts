@@ -21,7 +21,6 @@ export class HttpBuilder implements RouterBuilderInterface {
     const controllerRouter = new Router({
       prefix: (this.context.meta.args as ControllerMetaArgs).routeName
     });
-
     const endpointsMeta = this.metadataStorage.getEndpointsForTarget(this.context.meta.target);
     const applyMiddlewares = middlewaresInstancesForTarget(this.context.meta.target);
 
