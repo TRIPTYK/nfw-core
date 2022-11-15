@@ -1,5 +1,6 @@
-import { BaseEntity, PrimaryKey, Collection, OneToMany, Entity } from '@mikro-orm/core';
+import { BaseEntity, PrimaryKey, Collection, OneToMany, Entity, OneToOne } from '@mikro-orm/core';
 import type { CommentModel } from './comment.model.js';
+import { LocaleModel } from './locale.model.js';
 
 @Entity()
 export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
@@ -8,4 +9,10 @@ export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
 
   @OneToMany('CommentModel', 'article')
   public comments = new Collection<CommentModel>(this);
+
+  @OneToOne('LocaleModel', 'article', {
+    nullable: true,
+    owner: true
+  })
+  public locale? : LocaleModel;
 }

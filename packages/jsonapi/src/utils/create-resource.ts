@@ -19,22 +19,22 @@ export function createResourceFrom<TModel extends BaseEntity<TModel, any>> (json
 
   newResource.id = json.id;
 
-  for (const attr of resourceMeta.relationships) {
-    if (Object.hasOwn(json, attr.name)) {
-      if (Array.isArray(json[attr.name])) {
-        newResource[attr.name as keyof Resource<any>] = json[attr.name].map((e: Loaded<AnyEntity>) => {
-          return createResourceFrom(typeof e === 'object' ? e : { id: e }, attr.resource, context);
+  for (const relationship of resourceMeta.relationships) {
+    if (Object.hasOwn(json, relationship.name)) {
+      if (Array.isArray(json[relationship.name])) {
+        newResource[relationship.name as keyof Resource<any>] = json[relationship.name].map((e: Loaded<AnyEntity>) => {
+          return createResourceFrom(typeof e === 'object' ? e : { id: e }, relationship.resource, context);
         });
         continue;
       }
 
-      if (json[attr.name] === undefined || json[attr.name] === null) {
-        (newResource as any)[attr.name as keyof Resource<any>] = json[attr.name];
+      if (json[relationship.name] === undefined || json[relationship.name] === null) {
+        (newResource as any)[relationship.name as keyof Resource<any>] = json[relationship.name];
         continue;
       }
 
-      const resourceObj = typeof json[attr.name] === 'object' ? json[attr.name] : { id: json[attr.name] };
-      (newResource as any)[attr.name as keyof Resource<any>] = createResourceFrom(resourceObj, attr.resource, context);
+      const resourceObj = typeof json[relationship.name] === 'object' ? json[relationship.name] : { id: json[relationship.name] };
+      (newResource as any)[relationship.name as keyof Resource<any>] = createResourceFrom(resourceObj, relationship.resource, context);
     }
   }
 

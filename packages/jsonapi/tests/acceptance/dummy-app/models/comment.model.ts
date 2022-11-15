@@ -1,5 +1,6 @@
 import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
-import { ArticleModel } from './article.model.js';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ArticleModel } from './article.model.js';
 import type { LocaleModel } from './locale.model.js';
 
 @Entity()

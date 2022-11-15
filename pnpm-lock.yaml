@@ -138,6 +138,7 @@ importers:
       fastest-validator: ~1.15.0
       fastest-validator-decorators: ~2.0.0-alpha.0
       koa-qs: ~3.0.0
+      node-mocks-http: ^1.11.0
       pluralize: ~8.0.0
       reflect-metadata: ^0.1.13
       ts-deepmerge: ^4.0.0
@@ -165,6 +166,7 @@ importers:
       '@types/koa__router': 8.0.11
       '@types/node': 18.11.7
       '@types/pluralize': 0.0.29
+      node-mocks-http: 1.12.1
       reflect-metadata: 0.1.13
       tsyringe: 4.7.0
       type-fest: 2.19.0
