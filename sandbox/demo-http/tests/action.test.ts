@@ -52,5 +52,5 @@ it('Whole action set ctx.body with correct data', async () => {
     async () => {}
   );
 
-  expect(fakeContext.body).toStrictEqual({ data: { name: 'amaury' }, meta: undefined });
+  expect((fakeContext as Record<string, unknown>).body).toStrictEqual({ data: { name: 'amaury' }, meta: undefined });
 });
