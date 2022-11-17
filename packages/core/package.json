@@ -36,6 +36,6 @@
     "reflect-metadata": "^0.1.13"
   },
   "dependencies": {
-    "tsyringe": "^4.7.0"
+    "tsyringe": "~4.7.0"
   }
 }

@@ -50,7 +50,7 @@
     "fastest-validator-decorators": "~2.0.0",
     "koa-qs": "~3.0.0",
     "pluralize": "~8.0.0",
-    "ts-deepmerge": "^5.0.0"
+    "ts-deepmerge": "~5.0.0"
   },
   "peerDependencies": {
     "@triptyk/nfw-http": "workspace:*",
