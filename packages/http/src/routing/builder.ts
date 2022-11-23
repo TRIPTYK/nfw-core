@@ -8,6 +8,10 @@ import { allowedMethods } from '../utils/allowed-methods.js';
 import { middlewaresInstancesForTarget } from '../utils/middlewares.js';
 import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.js';
+import { ControllerActionResolver } from './controller-action-resolver.js';
+import { GuardResolver } from './guard-resolver.js';
+import { ResponseHandlerResolver } from './response-handler-resolver.js';
+import type { ControllerContext } from '../types/controller-context.js';
 
 @injectable()
 export class HttpBuilder implements RouterBuilderInterface {
@@ -41,12 +45,29 @@ export class HttpBuilder implements RouterBuilderInterface {
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
     const endpointMiddlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
 
-    const controllerActionBuilder = new ControllerActionBuilder({
-      controllerInstance: this.context.instance,
-      controllerAction: endPointMeta.propertyName
-    }, this.metadataStorage);
+    const controllerContext = this.createControllerContext(endPointMeta);
+    const controllerActionBuilder = this.createActionBuilder(controllerContext);
 
     router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, controllerActionBuilder.build());
+  }
+
+  private createControllerContext (endPointMeta: HttpEndpointMetadataArgs): ControllerContext<any> {
+    return {
+      controllerInstance: this.context.instance,
+      controllerAction: endPointMeta.propertyName
+    };
+  }
+
+  private createActionBuilder (controllerContext: ControllerContext<any>) {
+    const actionResolver = new ControllerActionResolver(this.metadataStorage, controllerContext);
+    const guardResolver = new GuardResolver(this.metadataStorage, controllerContext);
+    const responseHandlerResolver = new ResponseHandlerResolver(this.metadataStorage, controllerContext);
+
+    return new ControllerActionBuilder(
+      guardResolver,
+      responseHandlerResolver,
+      actionResolver
+    );
   }
 
   private setupEndpoints (endpointsMeta: HttpEndpointMetadataArgs[], controllerRouter: Router) {

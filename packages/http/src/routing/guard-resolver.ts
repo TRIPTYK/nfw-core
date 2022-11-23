@@ -1,6 +1,7 @@
 import { container } from '@triptyk/nfw-core';
 import 'reflect-metadata';
 import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
+import type { ResolverInterface } from '../interfaces/resolver.js';
 import type { UseGuardMetadataArgs } from '../storages/metadata/use-guard.js';
 import type { ParamsHandleFunction } from '../storages/metadata/use-param.js';
 import type { ControllerContext } from '../types/controller-context.js';
@@ -9,13 +10,18 @@ import { ExecutableGuard } from './executable-guard.js';
 
 export type ResolvedParam = ControllerContext<unknown> | unknown[] | ParamsHandleFunction<any>;
 
-export class GuardResolver {
+export class GuardResolver implements ResolverInterface {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
     public controllerContext: ControllerContext
   ) {}
 
-  public resolve (guardUsageMeta: UseGuardMetadataArgs): ExecutableGuard {
+  public resolve (): ExecutableGuard[] {
+    const guardUsageMetas = this.metadataStorage.getGuardsForEndpoint(this.controllerContext.controllerInstance.constructor, this.controllerContext.controllerAction);
+    return guardUsageMetas.map((guardUsageMeta) => this.resolveOneGuard(guardUsageMeta));
+  }
+
+  private resolveOneGuard (guardUsageMeta: UseGuardMetadataArgs) {
     const paramsForGuardMetadata = this.metadataStorage.sortedParametersForTarget(guardUsageMeta.guard);
     const handles = resolveParams(paramsForGuardMetadata, this.controllerContext);
     const guardInstance = container.resolve(guardUsageMeta.guard);

@@ -3,42 +3,56 @@
 
 import 'reflect-metadata';
 import type { Class } from 'type-fest';
-import type { ResponseHandlerInterface } from '../../../src/index.js';
+import type { MetadataStorageInterface, ResponseHandlerInterface } from '../../../src/index.js';
 import { ExecutableResponseHandler } from '../../../src/routing/executable-response-handler.js';
 import { ResponseHandlerResolver } from '../../../src/routing/response-handler-resolver.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 
 describe('Response handler resolver', () => {
+  let storage: MetadataStorageInterface;
+
   class Controller {}
   class ResponseHandler implements ResponseHandlerInterface {
   // eslint-disable-next-line class-methods-use-this
     public handle () {}
   }
 
-  function setupGuardMetaInStorage (Controller: Class<Controller>, responseHandler: Class<ResponseHandler>, storage: MetadataStorage) {
+  function setupResponseHandlerMetaInStorage (Controller: Class<Controller>, responseHandler: Class<ResponseHandler>, storage: MetadataStorageInterface) {
     const meta = {
       target: Controller,
       responseHandler,
       args: ['blah']
     };
 
-    storage.useResponseHandlers.push(meta);
+    storage.addResponseHandlerUsage(meta);
     return meta;
   }
 
-  test('It returns an executableGuard instance', () => {
-    const storage = new MetadataStorage();
-    const meta = setupGuardMetaInStorage(Controller, ResponseHandler, storage);
-
-    const guardBuilder = new ResponseHandlerResolver(
+  function createResolver () {
+    return new ResponseHandlerResolver(
       storage,
       {
         controllerAction: 'nona',
-        controllerInstance: new class {}()
+        controllerInstance: new Controller()
       }
     );
-    const resolved = guardBuilder.resolve(meta);
+  }
+
+  beforeEach(() => {
+    storage = new MetadataStorage();
+  });
+
+  test('It returns an executableResponseHandler instance when response-handler is in the storage', () => {
+    setupResponseHandlerMetaInStorage(Controller, ResponseHandler, storage);
+    const responseHandlerResolver = createResolver();
+    const resolved = responseHandlerResolver.resolve();
 
     expect(resolved).toBeInstanceOf(ExecutableResponseHandler);
+  });
+
+  test('It returns undefined when nothing is in storage', () => {
+    const responseHandlerResolver = createResolver();
+    const resolved = responseHandlerResolver.resolve();
+    expect(resolved).toBeUndefined();
   });
 });

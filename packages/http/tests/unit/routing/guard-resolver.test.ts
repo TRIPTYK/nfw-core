@@ -30,17 +30,21 @@ describe('Guard builder', () => {
 
   test('It returns an executableGuard instance', () => {
     const storage = new MetadataStorage();
-    const meta = setupGuardMetaInStorage(Controller, Guard, storage);
+    setupGuardMetaInStorage(Controller, Guard, storage);
 
     const guardBuilder = new GuardResolver(
       storage,
       {
         controllerAction: 'nona',
-        controllerInstance: new class {}()
+        controllerInstance: new Controller()
       }
     );
-    const resolved = guardBuilder.resolve(meta);
+    const resolved = guardBuilder.resolve();
 
-    expect(resolved).toBeInstanceOf(ExecutableGuard);
+    expect(resolved).toBeInstanceOf(Array);
+    expect(resolved.length).toStrictEqual(1);
+    for (const guard of resolved) {
+      expect(guard).toBeInstanceOf(ExecutableGuard);
+    }
   });
 });

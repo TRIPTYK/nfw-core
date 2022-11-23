@@ -1,8 +1,10 @@
 import type { ControllerContext } from '../types/controller-context.js';
 import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import { ExecutableParam } from './executable-param.js';
+import type { ResolverInterface } from '../interfaces/resolver.js';
+import { UnknownSpecialContextError } from '../errors/unknown-special-context.js';
 
-export class ParamResolver {
+export class ParamResolver implements ResolverInterface {
   public constructor (
       public handle: UseParamsMetadataArgs['handle'],
       public controllerContext: ControllerContext
@@ -26,6 +28,6 @@ export class ParamResolver {
     if (this.handle === 'controller-context') {
       return this.controllerContext;
     }
-    throw new Error();
+    throw new UnknownSpecialContextError(`${this.handle} is an unknown special context`);
   }
 }

@@ -8,6 +8,10 @@ import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 import { createKoaContext } from '../../mocks/koa-context.js';
 import type { GuardInterface, ResponseHandlerInterface } from '../../../src/index.js';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
+import { ControllerActionResolver } from '../../../src/routing/controller-action-resolver.js';
+import { GuardResolver } from '../../../src/routing/guard-resolver.js';
+import { ResponseHandlerResolver } from '../../../src/routing/response-handler-resolver.js';
+import type { ControllerContext } from '../../../src/types/controller-context.js';
 
 describe('Action builder', () => {
   let instance: Controller;
@@ -19,13 +23,29 @@ describe('Action builder', () => {
     public list = listFn;
   }
 
+  function createControllerContext () {
+    return {
+      controllerAction: 'list',
+      controllerInstance: instance
+    };
+  }
+
+  function createActionBuilder (controllerContext: ControllerContext) {
+    const actionResolver = new ControllerActionResolver(storage, controllerContext);
+    const guardResolver = new GuardResolver(storage, controllerContext);
+    const responseHandlerResolver = new ResponseHandlerResolver(storage, controllerContext);
+
+    return new ControllerActionBuilder(
+      guardResolver,
+      responseHandlerResolver,
+      actionResolver
+    );
+  }
+
   beforeEach(() => {
     instance = new Controller();
     storage = new MetadataStorage();
-    actionBuilder = new ControllerActionBuilder({
-      controllerAction: 'list',
-      controllerInstance: instance
-    }, storage);
+    actionBuilder = createActionBuilder(createControllerContext());
   });
 
   it('Builds a middleware that executes controller action', async () => {

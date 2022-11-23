@@ -6,6 +6,8 @@ export interface ControllerParamsContext<T> extends ControllerContext<T> {
     ctx: RouterContext,
 }
 
+export type SpecialContextStrings = 'args' | 'controller-context';
+
 export type ParamsHandleFunction<T> = ((ctx: ControllerParamsContext<T>) => Promise<unknown> | unknown);
 
 export interface UseParamsMetadataArgs {
@@ -13,6 +15,6 @@ export interface UseParamsMetadataArgs {
     target: any,
     propertyName: string,
     index: number,
-    handle: ParamsHandleFunction<unknown> | 'args' | 'controller-context',
+    handle: ParamsHandleFunction<unknown> | SpecialContextStrings,
     args: unknown[],
 }
