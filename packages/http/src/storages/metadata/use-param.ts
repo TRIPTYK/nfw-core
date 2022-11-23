@@ -1,7 +1,7 @@
 import type { RouterContext } from '@koa/router';
-import type { ControllerContext } from '../../types/controller-context.js';
+import type { ControllerContextType } from '../../types/controller-context.js';
 
-export interface ControllerParamsContext<T> extends ControllerContext<T> {
+export interface ControllerParamsContext<T> extends ControllerContextType<T> {
     args?: unknown[],
     ctx: RouterContext,
 }

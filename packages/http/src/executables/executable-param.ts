@@ -1,11 +1,11 @@
 import type { RouterContext } from '@koa/router';
-import type { ControllerContext } from '../types/controller-context.js';
-import type { ResolvedParam } from './guard-resolver.js';
+import type { ControllerContextType } from '../types/controller-context.js';
+import type { ResolvedParamType } from '../types/resolved-param.js';
 
 export class ExecutableParam {
   public constructor (
-    public controllerContext: ControllerContext,
-    private param: ResolvedParam
+    public controllerContext: ControllerContextType,
+    private param: ResolvedParamType
   ) {}
 
   public execute (ctx: RouterContext) {

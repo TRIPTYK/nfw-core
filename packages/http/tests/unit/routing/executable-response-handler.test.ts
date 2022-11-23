@@ -2,9 +2,9 @@
 /* eslint-disable max-classes-per-file */
 import type { RouterContext } from '@koa/router';
 import { jest } from '@jest/globals';
-import type { ResponseHandlerInterface } from '../../../src/index.js';
-import { ExecutableParam } from '../../../src/routing/executable-param.js';
-import { ExecutableResponseHandler } from '../../../src/routing/executable-response-handler.js';
+import type { ResponseHandlerInterface } from '../../../src/interfaces/response-handler.js';
+import { ExecutableParam } from '../../../src/executables/executable-param.js';
+import { ExecutableResponseHandler } from '../../../src/executables/executable-response-handler.js';
 
 describe('Executable response handler', () => {
   class RH implements ResponseHandlerInterface {

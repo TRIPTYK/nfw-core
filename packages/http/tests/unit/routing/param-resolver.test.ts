@@ -3,9 +3,8 @@
 
 import 'reflect-metadata';
 import type { UseParamsMetadataArgs } from '../../../src/index.js';
+import { ExecutableParam, ParamResolver } from '../../../src/index.js';
 import { jest, describe, expect, it } from '@jest/globals';
-import { ParamResolver } from '../../../src/routing/param-resolver.js';
-import { ExecutableParam } from '../../../src/routing/executable-param.js';
 
 describe('ResolveParam', () => {
   class Controller {}

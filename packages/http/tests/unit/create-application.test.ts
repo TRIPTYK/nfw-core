@@ -6,7 +6,7 @@ import 'reflect-metadata';
 import { singleton } from '@triptyk/nfw-core';
 import Application from 'koa';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { createApplication } from '../../src/factories/application.js';
+import { createApplication } from '../../src/factories/create-application.js';
 import { Controller, GET } from '../../src/index.js';
 import { jest } from '@jest/globals';
 import { setTimeout } from 'node:timers/promises';

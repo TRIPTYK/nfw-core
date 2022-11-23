@@ -3,9 +3,9 @@
 
 import 'reflect-metadata';
 import type { Class } from 'type-fest';
+import { ExecutableResponseHandler } from '../../../src/executables/executable-response-handler.js';
 import type { MetadataStorageInterface, ResponseHandlerInterface } from '../../../src/index.js';
-import { ExecutableResponseHandler } from '../../../src/routing/executable-response-handler.js';
-import { ResponseHandlerResolver } from '../../../src/routing/response-handler-resolver.js';
+import { ResponseHandlerResolver } from '../../../src/resolvers/response-handler-resolver.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 
 describe('Response handler resolver', () => {

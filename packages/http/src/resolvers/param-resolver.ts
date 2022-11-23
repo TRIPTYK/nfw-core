@@ -1,13 +1,14 @@
-import type { ControllerContext } from '../types/controller-context.js';
+import type { ControllerContextType } from '../types/controller-context.js';
 import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
-import { ExecutableParam } from './executable-param.js';
+
 import type { ResolverInterface } from '../interfaces/resolver.js';
 import { UnknownSpecialContextError } from '../errors/unknown-special-context.js';
+import { ExecutableParam } from '../executables/executable-param.js';
 
 export class ParamResolver implements ResolverInterface {
   public constructor (
       public handle: UseParamsMetadataArgs['handle'],
-      public controllerContext: ControllerContext
+      public controllerContext: ControllerContextType
   ) {}
 
   public resolve (contextArgs: unknown[]) : ExecutableParam {

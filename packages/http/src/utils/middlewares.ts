@@ -3,9 +3,9 @@ import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { container } from '@triptyk/nfw-core';
-import type { AnyMiddleware } from '../types/any-middleware.js';
+import type { AnyMiddlewareType } from '../types/any-middleware.js';
 
-export function resolveMiddlewareInstance (middleware: AnyMiddleware) {
+export function resolveMiddlewareInstance (middleware: AnyMiddlewareType) {
   if (!isClass(middleware)) {
     return middleware;
   }

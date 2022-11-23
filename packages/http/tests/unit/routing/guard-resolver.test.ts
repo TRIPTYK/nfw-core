@@ -3,9 +3,10 @@
 
 import 'reflect-metadata';
 import type { Class } from 'type-fest';
+import { ExecutableGuard } from '../../../src/executables/executable-guard.js';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
-import { ExecutableGuard } from '../../../src/routing/executable-guard.js';
-import { GuardResolver } from '../../../src/routing/guard-resolver.js';
+import { GuardResolver } from '../../../src/resolvers/guard-resolver.js';
+
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 
 describe('Guard builder', () => {

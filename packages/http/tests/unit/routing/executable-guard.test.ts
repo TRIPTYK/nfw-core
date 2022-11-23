@@ -4,9 +4,8 @@ import 'reflect-metadata';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
 import { describe, expect, it, beforeEach, jest } from '@jest/globals';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
-import { ExecutableGuard } from '../../../src/routing/executable-guard.js';
 import type { RouterContext } from '@koa/router';
-import { ExecutableParam } from '../../../src/routing/executable-param.js';
+import { ExecutableGuard, ExecutableParam } from '../../../src/index.js';
 
 describe('Executable Guard', () => {
   let guardInstance : GuardInterface;

@@ -1,11 +1,11 @@
 import type { RouterContext } from '@koa/router';
 import type { Next } from 'koa';
-import type { ControllerActionResolver } from './controller-action-resolver.js';
-import type { ExecutableControllerAction } from './executable-controller-action.js';
-import type { ExecutableGuard } from './executable-guard.js';
-import type { ExecutableResponseHandler } from './executable-response-handler.js';
-import type { GuardResolver } from './guard-resolver.js';
-import type { ResponseHandlerResolver } from './response-handler-resolver.js';
+import type { ControllerActionResolver } from '../resolvers/controller-action-resolver.js';
+import type { ExecutableControllerAction } from '../executables/executable-controller-action.js';
+import type { ExecutableGuard } from '../executables/executable-guard.js';
+import type { ExecutableResponseHandler } from '../executables/executable-response-handler.js';
+import type { GuardResolver } from '../resolvers/guard-resolver.js';
+import type { ResponseHandlerResolver } from '../resolvers/response-handler-resolver.js';
 
 async function executeGuards (guardsInstance: ExecutableGuard[], ctx: RouterContext) {
   for (const guard of guardsInstance) {

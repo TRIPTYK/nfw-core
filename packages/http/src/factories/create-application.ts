@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import { RouterBuilderFactory } from './controller.js';
+import { RouterBuilderFactory } from '../routing/router-builder.js';
 import type { Class } from 'type-fest';
 import { container } from '@triptyk/nfw-core';
 import { MetadataStorage } from '../storages/metadata-storage.js';

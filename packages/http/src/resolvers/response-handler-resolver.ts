@@ -1,15 +1,15 @@
 import { container } from '@triptyk/nfw-core';
+import { ExecutableResponseHandler } from '../executables/executable-response-handler.js';
 import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
 import type { ResolverInterface } from '../interfaces/resolver.js';
 import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-response-handler.js';
-import type { ControllerContext } from '../types/controller-context.js';
+import type { ControllerContextType } from '../types/controller-context.js';
 import { resolveParams } from '../utils/resolve-params.js';
-import { ExecutableResponseHandler } from './executable-response-handler.js';
 
 export class ResponseHandlerResolver implements ResolverInterface {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
-    public controllerContext: ControllerContext
+    public controllerContext: ControllerContextType
   ) {}
 
   public resolve (): ExecutableResponseHandler | undefined {

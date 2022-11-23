@@ -7,11 +7,11 @@ import { ControllerActionBuilder } from '../../../src/routing/controller-action.
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 import { createKoaContext } from '../../mocks/koa-context.js';
 import type { GuardInterface, ResponseHandlerInterface } from '../../../src/index.js';
+import { GuardResolver, ResponseHandlerResolver } from '../../../src/index.js';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
-import { ControllerActionResolver } from '../../../src/routing/controller-action-resolver.js';
-import { GuardResolver } from '../../../src/routing/guard-resolver.js';
-import { ResponseHandlerResolver } from '../../../src/routing/response-handler-resolver.js';
-import type { ControllerContext } from '../../../src/types/controller-context.js';
+import { ControllerActionResolver } from '../../../src/resolvers/controller-action-resolver.js';
+
+import type { ControllerContextType } from '../../../src/types/controller-context.js';
 
 describe('Action builder', () => {
   let instance: Controller;
@@ -30,7 +30,7 @@ describe('Action builder', () => {
     };
   }
 
-  function createActionBuilder (controllerContext: ControllerContext) {
+  function createActionBuilder (controllerContext: ControllerContextType) {
     const actionResolver = new ControllerActionResolver(storage, controllerContext);
     const guardResolver = new GuardResolver(storage, controllerContext);
     const responseHandlerResolver = new ResponseHandlerResolver(storage, controllerContext);
