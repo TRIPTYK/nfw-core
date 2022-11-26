@@ -1,9 +1,10 @@
 import type { RouterContext } from '@koa/router';
+import type { ExecutableInterface } from '../interfaces/executable.js';
 import type { ControllerContextType } from '../types/controller-context.js';
 import { executeParams } from '../utils/execute-params.js';
 import type { ExecutableParam } from './executable-param.js';
 
-export class ExecutableControllerAction {
+export class ExecutableControllerAction implements ExecutableInterface {
   public constructor (
     public controllerContext: ControllerContextType,
     public params: ExecutableParam[]

@@ -1,11 +1,12 @@
 import type { RouterContext } from '@koa/router';
 import { ForbiddenError } from '../errors/forbidden.js';
+import type { ExecutableInterface } from '../interfaces/executable.js';
 import type { GuardInterface } from '../interfaces/guard.js';
 import type { ControllerContextType } from '../types/controller-context.js';
 import { executeParams } from '../utils/execute-params.js';
 import type { ExecutableParam } from './executable-param.js';
 
-export class ExecutableGuard {
+export class ExecutableGuard implements ExecutableInterface {
   public constructor (
     public instance: GuardInterface,
     public controllerContext: ControllerContextType,

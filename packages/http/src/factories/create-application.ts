@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import { RouterBuilderFactory } from '../routing/router-builder.js';
+import { RouterBuilder } from '../routing/router-builder.js';
 import type { Class } from 'type-fest';
 import { container } from '@triptyk/nfw-core';
 import { MetadataStorage } from '../storages/metadata-storage.js';
@@ -11,9 +11,10 @@ export interface CreateApplicationOptions {
 
 export async function createApplication (options: CreateApplicationOptions) {
   const app = options.server;
+  const metadataStorage = container.resolve(MetadataStorage);
 
   for (const controller of options.controllers) {
-    const routerBuilder = new RouterBuilderFactory(container.resolve(MetadataStorage), app, controller);
+    const routerBuilder = new RouterBuilder(metadataStorage, app, controller);
     await routerBuilder.createRoute();
   }
 }

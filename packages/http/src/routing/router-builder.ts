@@ -6,7 +6,7 @@ import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js
 import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
-export class RouterBuilderFactory {
+export class RouterBuilder {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
     private parentRoute: Router | Application,
@@ -35,6 +35,6 @@ export class RouterBuilderFactory {
   }
 
   private async createNestedRouters (controllerMetadata: RouteMetadataArgs<unknown>, futureParentRouter: Router) {
-    await Promise.all((controllerMetadata.controllers ?? []).map(async (c) => new RouterBuilderFactory(this.metadataStorage, futureParentRouter, c).createRoute()));
+    await Promise.all((controllerMetadata.controllers ?? []).map(async (c) => new RouterBuilder(this.metadataStorage, futureParentRouter, c).createRoute()));
   }
 }
