@@ -1,4 +1,5 @@
 /* eslint-disable max-statements */
+import 'reflect-metadata';
 import { MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { ResourceService } from '../../src/index.js';

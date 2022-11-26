@@ -1,22 +1,32 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+
+function createProject(name) {
+  return {
+    displayName: name,
+    testMatch: [`<rootDir>/packages/${name}/tests/**/*.test.ts`],
+    tsConfig: `<rootDir>/packages/${name}/tsconfig.json`,
+    preset: "ts-jest/presets/default-esm", // or other ESM presets
+    moduleNameMapper: {
+      "^(\\.{1,2}/.*)\\.js$": "$1",
+    },
+    transform: {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          useESM: true,
+        },
+      ],
+    },
+  };
+}
+
 export default {
   testEnvironment: "node",
   collectCoverage: Boolean(process.env.CI),
   projects: [
-    {
-      displayName: "nfw-mikro-orm",
-      testMatch: ["<rootDir>/packages/mikro-orm/dist/tests/**/*.test.js"],
-    },
-    {
-      displayName: "nfw-core",
-      testMatch: ["<rootDir>/packages/core/dist/tests/**/*.test.js"],
-    },
-    {
-      displayName: "nfw-http",
-      testMatch: ["<rootDir>/packages/http/dist/tests/**/*.test.js"],
-    },
-    {
-      displayName: "nfw-jsonapi",
-      testMatch: ["<rootDir>/packages/jsonapi/dist/tests/**/*.test.js"],
-    },
+    createProject("mikro-orm"),
+    createProject("core"),
+    createProject("http"),
+    createProject("jsonapi"),
   ],
 };

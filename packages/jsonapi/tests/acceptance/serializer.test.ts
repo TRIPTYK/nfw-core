@@ -2,6 +2,7 @@
 /* eslint-disable unicorn/no-null */
 /* eslint-disable max-statements */
 /* eslint-disable no-console */
+import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';
 import { MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
