@@ -4,4 +4,6 @@
 
 A NodeJS Typescript framework using Koa !
 
+Nothing has changed
+
 ## [See the wiki !](https://triptyk.github.io/nfw-core/)
