@@ -1,5 +1,3 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-
 const ESMPreset = {
   preset: "ts-jest/presets/default-esm", // or other ESM presets
   moduleNameMapper: {
@@ -18,19 +16,22 @@ const ESMPreset = {
 function createProject(name) {
   return {
     displayName: name,
+    coveragePathIgnorePatterns: [`<rootDir>/packages/${name}/tests/.*`],
+    collectCoverageFrom: [`packages/${name}/src/**/*.ts`],
     testMatch: [`<rootDir>/packages/${name}/tests/**/*.test.ts`],
     ...ESMPreset,
   };
 }
 
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   testEnvironment: "node",
   collectCoverage: Boolean(process.env.CI),
-  ...ESMPreset,
   projects: [
     createProject("mikro-orm"),
     createProject("core"),
     createProject("http"),
     createProject("jsonapi"),
+    createProject("jsonapi-new"),
   ],
 };
