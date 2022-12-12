@@ -170,6 +170,15 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     return parentFilter as ObjectQuery<TModel>;
   }
 
+  public async deleteOne (id :string, _ctx: JsonApiContext<TModel>) {
+    const one = await this.repository.findOneOrFail({ id } as never);
+    if (!one) {
+      throw new ResourceNotFoundError();
+    }
+    this.repository.remove(one);
+    return one;
+  }
+
   public async checkRelationshipsExistance (pojo: RequiredEntityData<TModel>) {
     for (const relationship of this.resourceMeta.relationships) {
       if (Object.hasOwn(pojo, relationship.name)) {

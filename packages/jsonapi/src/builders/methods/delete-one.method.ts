@@ -24,11 +24,11 @@ export async function deleteOne<TModel extends BaseEntity<TModel, any>> (this: H
   jsonApiContext.query = await parser.parse(query);
   jsonApiContext.currentUser = await options?.currentUser?.(jsonApiContext);
 
-  const one = await service.findOne(jsonApiContext.koaContext.params.id, jsonApiContext);
+  const one = await service.deleteOne(jsonApiContext.koaContext.params.id, jsonApiContext);
 
   await executeAuthorizer(authorizer, 'delete', jsonApiContext, resource, one);
 
-  await service.repository.removeAndFlush(one);
+  await service.repository.flush(one);
 
   return callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, one);
 }
