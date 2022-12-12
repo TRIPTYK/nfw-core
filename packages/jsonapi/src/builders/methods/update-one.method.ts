@@ -1,15 +1,16 @@
-import { subject } from '@casl/ability';
+/* eslint-disable complexity */
+/* eslint-disable max-statements */
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
 import type { JsonApiUpdateOptions } from '../../decorators/jsonapi-endpoints.decorator.js';
-import { ForbiddenError } from '../../errors/forbidden.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
-import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
-import { validateObject } from './utils/validate.js';
+import { callControllerAction } from './utils/call-controller-action.js';
+import { executeAuthorizer } from './utils/execute-authorizer.js';
+import { validateOneControllerResponse } from './utils/validate-controller-response.js';
 
 export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, service, authorizer, ctx, deserializer }: JsonApiBuilderRouteParams) {
   /**
@@ -39,36 +40,22 @@ export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: H
 
   const createOptions = endpoint.options as JsonApiUpdateOptions;
 
-  if (createOptions.validation) {
-    // validate only the POJO, we don't want meta properties to be validated
-    await validateObject(createOptions.validation, bodyAsResource.toPojo());
+  if (createOptions.validateFunction) {
+    await createOptions.validateFunction(bodyAsResource, jsonApiContext);
   }
   /**
      * Call the service method
      */
   let one = await service.updateOne(bodyAsResource, jsonApiContext);
 
-  if (authorizer) {
-    const ability = authorizer.buildAbility(jsonApiContext);
-    const can = ability.can('update', subject(resource.name, one));
-    if (!can) {
-      throw new ForbiddenError(`Cannot update ${resource.name}`);
-    }
-  }
+  await executeAuthorizer(authorizer, 'update', jsonApiContext, resource, one);
 
   await service.repository.flush();
-  one = (await service.findOne((one as unknown as Record<'id', string>).id, jsonApiContext))!;
+  one = await service.findOne((one as unknown as Record<'id', string>).id, jsonApiContext);
 
-  const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
+  const res: TModel | undefined = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, one);
 
-  /**
-     * Call the controller's method
-     */
-  const res: TModel | undefined = await ((this.instance as Function)[endpoint.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
-
-  if (res && !(res instanceof resource.mikroEntity.class)) {
-    throw new Error('updateOne must return an instance of entity !');
-  }
+  validateOneControllerResponse(res, resource);
 
   const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
 

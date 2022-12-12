@@ -1,11 +1,10 @@
-import type { RouterContext } from '@koa/router';
 import type { JsonApiContext } from '../../../interfaces/json-api-context.js';
 import type { ControllerActionParamsMetadataArgs } from '../../../storage/metadata/controller-params.metadata.js';
 
-export function getRouteParamsFromContext (routeParams: ControllerActionParamsMetadataArgs[], ctx: RouterContext, jsonApiContext: JsonApiContext<any>, serviceResponse?: unknown) {
+export function getRouteParamsFromContext (routeParams: ControllerActionParamsMetadataArgs[], jsonApiContext: JsonApiContext<any>, serviceResponse?: unknown) {
   return routeParams.map((rp) => {
     if (rp.decoratorName === 'koa-context') {
-      return ctx;
+      return jsonApiContext.koaContext;
     }
 
     if (rp.decoratorName === 'jsonapi-context') {

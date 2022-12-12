@@ -1,15 +1,16 @@
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 import type { BaseEntity } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import type { HttpBuilder } from '@triptyk/nfw-http';
-import { ResourceNotFoundError } from '../../errors/specific/resource-not-found.js';
 import type { JsonApiContext } from '../../interfaces/json-api-context.js';
 import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
-import { getRouteParamsFromContext } from './utils/evaluate-route-params.js';
 import { RelationshipNotFoundError } from '../../errors/specific/relationship-not-found.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
-import { subject } from '@casl/ability';
-import { ForbiddenError } from '../../errors/forbidden.js';
+import { executeAuthorizer } from './utils/execute-authorizer.js';
+import { validateOneControllerResponse } from './utils/validate-controller-response.js';
+import { callControllerAction } from './utils/call-controller-action.js';
 
 export async function getRelationships<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, service, authorizer, ctx }: JsonApiBuilderRouteParams) {
   /**
@@ -35,8 +36,7 @@ export async function getRelationships<TModel extends BaseEntity<TModel, any>> (
   await parser.validate(query);
   jsonApiContext.query = await parser.parse(query);
 
-  const currentUser = await options?.currentUser?.(jsonApiContext);
-  jsonApiContext.currentUser = currentUser;
+  jsonApiContext.currentUser = await options?.currentUser?.(jsonApiContext);
   const { id, relation } = ctx.params;
 
   const relMeta = resource.relationships.find((r) => r.name === relation);
@@ -50,29 +50,11 @@ export async function getRelationships<TModel extends BaseEntity<TModel, any>> (
      */
   const one = await service.getOneWithRelation(id, jsonApiContext, relation);
 
-  if (!one) {
-    throw new ResourceNotFoundError();
-  }
+  await executeAuthorizer(authorizer, 'read', jsonApiContext, resource, one);
 
-  if (authorizer) {
-    const ability = authorizer.buildAbility(jsonApiContext);
+  const res: TModel | undefined = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, one);
 
-    const can = ability.can('read', subject(resource.name, one));
-    if (!can) {
-      throw new ForbiddenError(`Cannot read ${resource.name}`);
-    }
-  }
-
-  const evaluatedParams = getRouteParamsFromContext(routeParams, ctx, jsonApiContext, one);
-  /**
-     * Call the controller's method
-     */
-  const res: TModel | undefined = await ((this.instance as Function)[endpoint.propertyName as keyof Function] as Function).call(this.instance, ...evaluatedParams);
-
-  if (res && !(res instanceof resource.mikroEntity.class)) {
-    throw new Error('Related must return an instance of entity !');
-  }
-
+  validateOneControllerResponse(res, resource);
   const asResource = createResourceFrom((res || one).toJSON(), resource, jsonApiContext);
 
   /**

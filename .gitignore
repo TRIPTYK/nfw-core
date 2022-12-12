@@ -4,3 +4,4 @@ dist/
 site/
 *.tsbuildinfo
 coverage
+jsonapi-new

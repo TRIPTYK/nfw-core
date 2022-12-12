@@ -1,6 +1,8 @@
 
 import type { Class } from 'type-fest';
+import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { QueryParser } from '../query-parser/query-parser.js';
+import type { Resource } from '../resource/base.resource.js';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 import { JsonApiMethod } from '../storage/metadata/endpoint.metadata.js';
 
@@ -36,9 +38,9 @@ export function JsonApiGet (options?: JsonApiGetOptions) {
 
 export interface JsonApiCreateOptions extends JsonApiOptions {
   /**
-   * The validation Schema from fastest-validator-decorators
+   * External validation of deserialized resource
   */
-  validation?: Class<unknown>,
+  validateFunction?: (resource: Resource<any>, context: JsonApiContext<any>) => void | Promise<void>,
 }
 
 export function JsonApiCreate (options?: JsonApiCreateOptions) {
@@ -69,7 +71,7 @@ export interface JsonApiUpdateOptions extends JsonApiOptions {
     /**
      * The validation Schema from fastest-validator-decorators
     */
-    validation?: Class<unknown>,
+    validateFunction?: (resource: Resource<any>, context: JsonApiContext<any>) => void | Promise<void>,
 }
 
 export function JsonApiUpdate (options?: JsonApiUpdateOptions) {

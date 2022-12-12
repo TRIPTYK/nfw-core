@@ -29,6 +29,7 @@ export class ResourceSerializer implements ResourceSerializerInterface {
     return relationships;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private serializeRelation (resource: ResourceInterface, relation : RelationshipInterface) {
     const relationshipData = new RelationshipSerializer(resource);
     return relationshipData.serialize(relation);

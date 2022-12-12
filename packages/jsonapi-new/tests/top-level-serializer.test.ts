@@ -62,7 +62,7 @@ it('It serializes a resource to a top level document', () => {
 });
 
 it('It serializes a resource with its relationships', () => {
-  userResource.article = new ArticleResource('3');
+  userResource.article = new ArticleResource('2');
 
   expect(serializer.serialize(userResource)).toStrictEqual({
     data: {
@@ -86,7 +86,7 @@ it('It serializes a resource with its relationships', () => {
           },
           data: {
             type: 'articles',
-            data: '1'
+            id: '2'
           }
         }
       }
@@ -94,9 +94,57 @@ it('It serializes a resource with its relationships', () => {
     included: [
       {
         type: 'articles',
-        id: '1',
+        id: '2',
         attributes: {}
       }
     ]
+  });
+});
+
+it('It serializes a resource array', () => {
+  userResource.article = new ArticleResource('2');
+
+  expect(serializer.serialize([userResource])).toStrictEqual({
+    data: [{
+      type: 'users',
+      id: '3',
+      attributes: {
+        name: 'amaury'
+      },
+      relationships: {
+        articles: {
+          links: {
+            self: '/users/3/relationships/articles',
+            related: '/users/3/articles'
+          },
+          data: []
+        },
+        article: {
+          links: {
+            self: '/users/3/relationships/article',
+            related: '/users/3/article'
+          },
+          data: {
+            type: 'articles',
+            id: '2'
+          }
+        }
+      }
+    }],
+    included: [
+      {
+        type: 'articles',
+        id: '2',
+        attributes: {}
+      }
+    ]
+  });
+});
+
+it('It serializes a null resource', () => {
+  // eslint-disable-next-line unicorn/no-null
+  expect(serializer.serialize(null)).toStrictEqual({
+    // eslint-disable-next-line unicorn/no-null
+    data: null
   });
 });

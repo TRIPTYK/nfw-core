@@ -108,56 +108,48 @@ importers:
 
   packages/jsonapi:
     specifiers:
-      '@casl/ability': ~6.3.2
+      '@casl/ability': ~6.3.3
       '@koa/router': ~12.0.0
       '@mikro-orm/core': ~5.5.3
       '@mikro-orm/knex': ~5.5.3
       '@mikro-orm/sqlite': ~5.5.3
-      '@nestjs/class-validator': ^0.13.4
       '@triptyk/nfw-core': workspace:*
       '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
       '@types/koa': ^2.13.5
       '@types/koa-qs': ^2.0.0
       '@types/koa__router': ^12.0.0
-      '@types/node': ^18.11.9
+      '@types/node': ^18.11.13
       '@types/pluralize': ^0.0.29
-      fastest-validator: ~1.15.0
-      fastest-validator-decorators: ~2.0.0
-      koa-qs: ~3.0.0
       node-mocks-http: ^1.11.0
       pluralize: ~8.0.0
       reflect-metadata: ^0.1.13
       ts-deepmerge: ~5.0.0
       tsyringe: 4.7.0
-      type-fest: ^3.2.0
-      typescript: ~4.9.3
+      type-fest: ^3.3.0
+      typescript: ~4.9.4
     dependencies:
-      '@casl/ability': 6.3.2
+      '@casl/ability': 6.3.3
       '@koa/router': 12.0.0
-      fastest-validator: 1.15.0
-      fastest-validator-decorators: 2.0.0_fastest-validator@1.15.0
-      koa-qs: 3.0.0
       pluralize: 8.0.0
       ts-deepmerge: 5.0.0
     devDependencies:
       '@mikro-orm/core': 5.5.3_@mikro-orm+sqlite@5.5.3
       '@mikro-orm/knex': 5.5.3_@mikro-orm+core@5.5.3
       '@mikro-orm/sqlite': 5.5.3_@mikro-orm+core@5.5.3
-      '@nestjs/class-validator': 0.13.4
       '@triptyk/nfw-core': link:../core
       '@triptyk/nfw-http': link:../http
       '@triptyk/nfw-mikro-orm': link:../mikro-orm
       '@types/koa': 2.13.5
       '@types/koa-qs': 2.0.0
       '@types/koa__router': 12.0.0
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
       '@types/pluralize': 0.0.29
       node-mocks-http: 1.12.1
       reflect-metadata: 0.1.13
       tsyringe: 4.7.0
-      type-fest: 3.2.0
-      typescript: 4.9.3
+      type-fest: 3.3.0
+      typescript: 4.9.4
 
   packages/jsonapi-new:
     specifiers:
@@ -600,6 +592,12 @@ packages:
 
   /@casl/ability/6.3.2:
     resolution: {integrity: sha512-ygOlg3WDu39t1ZOVdDfRpPXEiCn7F/a7uLBJIuAE6KksdBogzPszFRAuGULmo4h37fXIyouYUilVIryh0ddTRA==}
+    dependencies:
+      '@ucast/mongo2js': 1.3.3
+    dev: false
+
+  /@casl/ability/6.3.3:
+    resolution: {integrity: sha512-UzbqsE9etu6QzZrRmqIyVun2kztAzJ46Tz7lC/2P2buCE6B6Ll7Vptz7JTQtGwapLbeKo2jS7dL966TVOQ7x4g==}
     dependencies:
       '@ucast/mongo2js': 1.3.3
     dev: false
@@ -1243,7 +1241,7 @@ packages:
   /@types/accepts/1.3.5:
     resolution: {integrity: sha512-jOdnI/3qTpHABjM5cx1Hc0sKsPoYCp+DP/GJRGtDlPd7fiV9oXGGIcjW/ZOxLIvjGz8MA+uMZI9metHlgqbgwQ==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/babel__core/7.1.20:
@@ -1279,13 +1277,13 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/content-disposition/0.5.5:
@@ -1298,13 +1296,13 @@ packages:
       '@types/connect': 3.4.35
       '@types/express': 4.17.14
       '@types/keygrip': 1.0.2
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/express-serve-static-core/4.17.31:
     resolution: {integrity: sha512-DxMhY+NAsTwMMFHBTtJFNp5qiHKJ7TeqOo23zVEM9alT1Ml27Q3xcTH0xwxn7Q0BbMcVEJOs/7aQtUWupUQN3Q==}
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
     dev: true
@@ -1389,7 +1387,7 @@ packages:
       '@types/http-errors': 2.0.1
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/koa__router/12.0.0:
@@ -1400,6 +1398,10 @@ packages:
 
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
+    dev: true
+
+  /@types/node/18.11.13:
+    resolution: {integrity: sha512-IASpMGVcWpUsx5xBOrxMj7Bl8lqfuTY7FKAnPmu5cHkfQVWF8GulWS1jbRqA934qZL35xh5xN/+Xe/i26Bod4w==}
     dev: true
 
   /@types/node/18.11.9:
@@ -1434,7 +1436,7 @@ packages:
     resolution: {integrity: sha512-z5xyF6uh8CbjAu9760KDKsH2FcDxZ2tFCsA4HIMWE6IkiYMXfVoa+4f9KX+FN0ZLsaMw1WNG2ETLA6N+/YA+cg==}
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 18.11.9
+      '@types/node': 18.11.13
     dev: true
 
   /@types/stack-utils/2.0.1:
@@ -5923,6 +5925,11 @@ packages:
     engines: {node: '>=14.16'}
     dev: true
 
+  /type-fest/3.3.0:
+    resolution: {integrity: sha512-gezeeOIZyQLGW5uuCeEnXF1aXmtt2afKspXz3YqoOcZ3l/YMJq1pujvgT+cz/Nw1O/7q/kSav5fihJHsC/AOUg==}
+    engines: {node: '>=14.16'}
+    dev: true
+
   /type-is/1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -5933,6 +5940,12 @@ packages:
 
   /typescript/4.9.3:
     resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.9.4:
+    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true

@@ -102,9 +102,9 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
    * @param ctx The JsonApiContext
    * @returns
    */
-  public findOne (id :string, ctx: JsonApiContext<TModel>) {
+  public async findOne (id :string, ctx: JsonApiContext<TModel>) {
     const { populate, fields, orderBy, filters } = this.setupRequestObjects(ctx);
-    return this.repository.findOne(
+    const one = await this.repository.findOne(
       { id, ...filters }, {
         populate: populate as any,
         fields: fields as any,
@@ -116,6 +116,12 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         disableIdentityMap: true,
         orderBy
       });
+
+    if (!one) {
+      throw new ResourceNotFoundError();
+    }
+
+    return one;
   }
 
   /**
@@ -133,7 +139,11 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         includes: new Map()
       });
     }
-    return this.findOne(id, ctx);
+    const one = await this.findOne(id, ctx);
+    if (!one) {
+      throw new ResourceNotFoundError();
+    }
+    return one;
   }
 
   /**
