@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-jsonapi",
-  "version": "4.0.0-alpha.27",
+  "version": "4.0.0-alpha.28",
   "description": "JSON:API module for NFW-CORE",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
