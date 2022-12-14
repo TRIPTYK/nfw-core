@@ -732,24 +732,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    What it does
+  </a>
+  
+    <nav class="md-nav" aria-label="What it does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    Schema
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="authorizers/" class="md-nav__link">
-        Authorizers
-      </a>
     </li>
   
 
@@ -803,20 +809,6 @@
   
   
     <li class="md-nav__item">
-      <a href="getting%20started/" class="md-nav__link">
-        Getting started
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="global-filter/" class="md-nav__link">
         The context filter
       </a>
@@ -845,22 +837,8 @@
   
   
     <li class="md-nav__item">
-      <a href="registry/" class="md-nav__link">
-        The registry
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="resource%20services/" class="md-nav__link">
-        Resource services
+        The Resource Service
       </a>
     </li>
   
@@ -1012,6 +990,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    What it does
+  </a>
+  
+    <nav class="md-nav" aria-label="What it does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    Schema
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1043,6 +1041,17 @@
 <p class="admonition-title">Danger</p>
 <p>This module is experimental and subject to drastical changes</p>
 </div>
+<h2 id="what-it-does">What it does</h2>
+<p>The final goal of this addon is to:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Be agnostic of the database.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Make it easier to parse and validate request body/query to a convenient format.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Easier routing and creation of jsonapi routes for a given resource.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Easily describe the behavior, relationships and attributes of a resource.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Support of JSONAPI version 1.0.</li>
+</ul>
+<h3 id="schema">Schema</h3>
+<p><img alt="alt text" src="../assets/steps.png" /></p>
 
 
 
@@ -1077,13 +1086,13 @@
       
       
         
-        <a href="authorizers/" class="md-footer__link md-footer__link--next" aria-label="Next: Authorizers" rel="next">
+        <a href="context/" class="md-footer__link md-footer__link--next" aria-label="Next: The jsonapi request context" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Authorizers
+              The jsonapi request context
             </div>
           </div>
           <div class="md-footer__button md-icon">

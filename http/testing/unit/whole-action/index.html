@@ -720,20 +720,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../jsonapi/authorizers/" class="md-nav__link">
-        Authorizers
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../../jsonapi/context/" class="md-nav__link">
         The jsonapi request context
       </a>
@@ -776,20 +762,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../jsonapi/getting%20started/" class="md-nav__link">
-        Getting started
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../../jsonapi/global-filter/" class="md-nav__link">
         The context filter
       </a>
@@ -818,22 +790,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../jsonapi/registry/" class="md-nav__link">
-        The registry
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../../jsonapi/resource%20services/" class="md-nav__link">
-        Resource services
+        The Resource Service
       </a>
     </li>
   
@@ -1058,7 +1016,7 @@
 <a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">    </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
 <a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">  </span><span class="p">);</span><span class="w"></span>
 <a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">fakeContext</span><span class="p">.</span><span class="nx">body</span><span class="p">).</span><span class="nx">toStrictEqual</span><span class="p">({</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;amaury&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">  </span><span class="nx">expect</span><span class="p">((</span><span class="nx">fakeContext</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="p">).</span><span class="nx">body</span><span class="p">).</span><span class="nx">toStrictEqual</span><span class="p">({</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;amaury&#39;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">meta</span><span class="o">:</span><span class="w"> </span><span class="kt">undefined</span><span class="w"> </span><span class="p">});</span><span class="w"></span>
 <a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="p">});</span><span class="w"></span>
 </code></pre></div>
 

@@ -706,20 +706,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../authorizers/" class="md-nav__link">
-        Authorizers
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../context/" class="md-nav__link">
         The jsonapi request context
       </a>
@@ -762,20 +748,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting%20started/" class="md-nav__link">
-        Getting started
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../global-filter/" class="md-nav__link">
         The context filter
       </a>
@@ -804,22 +776,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../registry/" class="md-nav__link">
-        The registry
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../resource%20services/" class="md-nav__link">
-        Resource services
+        The Resource Service
       </a>
     </li>
   
@@ -989,6 +947,12 @@
 <p>It will also apply the links, meta and check which attributes should be sent to the client.</p>
 <p>By default, the <code>ResourceSerializer</code> is used.</p>
 <p>The serializer will also check if the related and relationships links should be included into the payload. In case the relationships endpoint of the controller is disabled.</p>
+<p>You can override the serializer in the <code>Resource</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">@JsonApiResource</span><span class="p">({</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">   </span><span class="p">...</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">serializer</span><span class="o">:</span><span class="w"> </span><span class="kt">PaginatedSerializer</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">})</span><span class="w"></span>
+</code></pre></div>
 
 
 
