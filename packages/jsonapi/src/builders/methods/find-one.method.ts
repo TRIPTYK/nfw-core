@@ -10,7 +10,7 @@ import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 import { validateOneControllerResponse } from './utils/validate-controller-response.js';
 import { callControllerAction } from './utils/call-controller-action.js';
 
-export async function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, endpoint, routeParams, serializer, ctx }: JsonApiBuilderRouteParams) {
+export async function findOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, endpoint, routeParams, serializer, ctx }: JsonApiBuilderRouteParams) {
   /**
      * Resolve instance
      */

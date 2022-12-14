@@ -34,14 +34,11 @@ export async function updateOne<TModel extends BaseEntity<TModel, any>> (this: H
     await createOptions.validateFunction(bodyAsResource, jsonApiContext);
   }
 
-  const res: TModel = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, undefined);
+  const res: TModel = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, bodyAsResource);
 
   validateOneControllerResponse(res, resource);
 
   const asResource = createResourceFrom(res.toJSON(), resource, jsonApiContext);
 
-  /**
-     * Serialize result and res to client
-     */
   return serializer.serialize(asResource, jsonApiContext);
 }

@@ -95,7 +95,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorHandlerClass = container.resolve(options.errorHandler ?? ErrorHandler);
 
-    const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target);
+    const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target, endpoint.propertyName);
     const middlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endpoint.propertyName);
     const orm = container.resolve(MikroORM);
 

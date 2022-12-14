@@ -5,9 +5,6 @@ import type { RelationshipMetadataArgs } from './metadata/relationship.metadata.
 import type { ResourceMetadataArgs } from './metadata/resource.metadata.js';
 
 export class MetadataStorage {
-  /**
-   * Singleton
-   */
   private static _instance?: MetadataStorage;
 
   public useParams: ControllerActionParamsMetadataArgs[] = [];
@@ -38,7 +35,7 @@ export class MetadataStorage {
     return this.relationships.filter((e) => e.target === resource);
   }
 
-  public getParamsFor (resource: unknown) {
-    return this.useParams.filter((e) => e.target === resource).sort((a, b) => a.index - b.index);
+  public getParamsFor (resource: unknown, propertyName: string) {
+    return this.useParams.filter((e) => e.target === resource && e.propertyName === propertyName).sort((a, b) => a.index - b.index);
   }
 }

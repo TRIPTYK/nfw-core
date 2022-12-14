@@ -66,3 +66,4 @@ export * from './storages/metadata/endpoint.js';
 export * from './storages/metadata/route.js';
 
 export * from './utils/middlewares.js';
+export * from './utils/numerical-sort.js';

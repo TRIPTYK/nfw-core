@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository } from '@mikro-orm/core';

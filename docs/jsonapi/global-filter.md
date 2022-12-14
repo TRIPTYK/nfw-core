@@ -8,9 +8,9 @@ It allows you to create pseudo-views from the current jsonapi context.
 @Entity()
 @Filter({
   name: 'context',
-  cond: ({ jsonApiContext } : { jsonApiContext : JsonApiContext<any>}) => {
+  cond: ({ koaContext } : { jsonApiContext : JsonApiContext<any>}) => {
     // user can only get itself
-    return { id: (jsonApiContext?.currentUser as UserModel).id }
+    return { id: (koaContext.state.user as UserModel).id }
   }
 })
 export class UserModel extends BaseEntity<UserModel, 'id'> {}
