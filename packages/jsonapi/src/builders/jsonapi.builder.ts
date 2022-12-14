@@ -20,7 +20,6 @@ import type { ControllerActionParamsMetadataArgs } from '../storage/metadata/con
 import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
 import type { ResourceSerializer } from '../serializers/resource.serializer.js';
 import type { ResourceService } from '../services/resource.service.js';
-import type { RoleServiceAuthorizer } from '../services/role-authorizer.service.js';
 import { NotAcceptableError } from '../errors/not-acceptable.js';
 import { UnsupportedMediaTypeError } from '../errors/unsupported-media-type.js';
 import { validateContentType } from '../utils/content-type.js';
@@ -39,7 +38,6 @@ export interface JsonApiBuilderRouteParams {
   serializer : ResourceSerializer<any>,
   deserializer: ResourceDeserializer<any>,
   service : ResourceService<any>,
-  authorizer? : RoleServiceAuthorizer<any>,
 }
 
 @injectable()
@@ -107,7 +105,6 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const serializer = container.resolve(`serializer:${resource.name}`) as ResourceSerializer<any>;
     const deserializer = container.resolve(`deserializer:${resource.name}`) as ResourceDeserializer<any>;
     const service = container.resolve(`service:${resource.name}`) as ResourceService<any>;
-    const authorizer = container.resolve('authorizer') as RoleServiceAuthorizer<any> | undefined;
 
     router[routeInfo.method](routeInfo.routeName, async (ctx: RouterContext, next: Next) => {
       try {
@@ -137,8 +134,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
         serializer,
         deserializer,
         ctx,
-        service,
-        authorizer
+        service
       });
 
       ctx.status = routeInfo.defaultStatus;

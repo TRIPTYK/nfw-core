@@ -1,6 +1,6 @@
 # The context filter
 
-In each request, a mikro-orm [@Filter](https://mikro-orm.io/docs/filters) 'context' is defined. 
+In each request, a mikro-orm [@Filter](https://mikro-orm.io/docs/filters) 'context' is defined.
 
 It allows you to create pseudo-views from the current jsonapi context.
 

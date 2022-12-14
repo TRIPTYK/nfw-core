@@ -1,6 +1,6 @@
 # Resources
 
-The resources are the main elements of this frameworks.
+The resource is the main element of this framework.
 
 ## Purpose
 

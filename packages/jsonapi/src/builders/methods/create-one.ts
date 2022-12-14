@@ -8,14 +8,10 @@ import { QueryParser } from '../../query-parser/query-parser.js';
 import { createResourceFrom } from '../../utils/create-resource.js';
 import type { JsonApiBuilderRouteParams } from '../jsonapi.builder.js';
 import type { JsonApiCreateOptions } from '../../decorators/jsonapi-endpoints.decorator.js';
-import { executeAuthorizer } from './utils/execute-authorizer.js';
 import { validateOneControllerResponse } from './utils/validate-controller-response.js';
 import { callControllerAction } from './utils/call-controller-action.js';
 
-export async function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, options, deserializer, endpoint, routeParams, serializer, ctx, service, authorizer }: JsonApiBuilderRouteParams) {
-  /**
-     * Resolve instance
-     */
+export async function createOne<TModel extends BaseEntity<TModel, any>> (this: HttpBuilder['context'], { resource, deserializer, endpoint, routeParams, serializer, ctx }: JsonApiBuilderRouteParams) {
   const parser = container.resolve<QueryParser<TModel>>(endpoint.options?.queryParser ?? QueryParser);
 
   const jsonApiContext = {
@@ -24,20 +20,11 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
     koaContext: ctx
   } as JsonApiContext<TModel>;
 
-  /**
-   * Parse the query
-   */
   const query = ctx.query as Record<string, any>;
   parser.context = jsonApiContext;
 
   await parser.validate(query);
   jsonApiContext.query = await parser.parse(query);
-
-  /**
-   * Load Current-User
-   */
-  const currentUser = await options?.currentUser?.(jsonApiContext);
-  jsonApiContext.currentUser = currentUser;
 
   const bodyAsResource = await deserializer.deserialize(((ctx.request as any).body ?? {}) as Record<string, unknown>, jsonApiContext);
 
@@ -47,27 +34,15 @@ export async function createOne<TModel extends BaseEntity<TModel, any>> (this: H
     await createOptions.validateFunction(bodyAsResource, jsonApiContext);
   }
 
-  /**
-     * Call the service method
-     */
-  const original = await service.createOne(bodyAsResource, jsonApiContext);
-
-  await executeAuthorizer(authorizer, 'create', jsonApiContext, resource, original);
-
-  await service.repository.persistAndFlush(original);
-  const fetched = (await service.findOne(original.id, jsonApiContext));
-
-  const res: TModel | undefined = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, fetched);
+  const res: any | undefined = await callControllerAction(this.instance, endpoint.propertyName as never, routeParams, jsonApiContext, bodyAsResource);
 
   validateOneControllerResponse(res, resource);
 
-  const finalResponse = res || fetched;
-
-  if (finalResponse) {
-    const asResource = createResourceFrom(finalResponse.toJSON(), resource, jsonApiContext);
+  if (res) {
+    const asResource = createResourceFrom(res.toJSON(), resource, jsonApiContext);
 
     const url = ctx.URL;
-    url.pathname += url.pathname.endsWith('/') ? original.id : `/${original.id}`;
+    url.pathname += url.pathname.endsWith('/') ? res.id : `/${res.id}`;
 
     ctx.set('Location', url.pathname);
 

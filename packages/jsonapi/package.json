@@ -30,6 +30,7 @@
     "@mikro-orm/sqlite": "~5.5.3",
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
+    "@triptyk/nfw-jsonapi": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*",
     "@types/koa": "^2.13.5",
     "@types/koa-qs": "^2.0.0",
@@ -43,12 +44,12 @@
     "typescript": "~4.9.4"
   },
   "dependencies": {
-    "@casl/ability": "~6.3.3",
     "@koa/router": "~12.0.0",
     "pluralize": "~8.0.0",
     "ts-deepmerge": "~5.0.0"
   },
   "peerDependencies": {
+    "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
     "@triptyk/nfw-mikro-orm": "workspace:*"
   }

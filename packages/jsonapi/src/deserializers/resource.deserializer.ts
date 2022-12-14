@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import type { BaseEntity } from '@mikro-orm/core';
 import { ReferenceType } from '@mikro-orm/core';
 import { injectable } from '@triptyk/nfw-core';

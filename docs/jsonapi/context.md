@@ -22,7 +22,6 @@ This object can be accessed in :
 
 - resources
 - controllers (via parameter decorators)
-- authorizers
 - deserializers
 - serializers
 - query parsers
