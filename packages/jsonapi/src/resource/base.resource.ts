@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-statements */
 import type { BaseEntity, EntityDTO, Loaded } from '@mikro-orm/core';
 import type { EntityDTOProp } from '@mikro-orm/core/typings.js';

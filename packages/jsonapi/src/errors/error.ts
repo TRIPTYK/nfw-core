@@ -1,6 +1,6 @@
 import type { JsonApiErrorObject, LinksObject } from '../serializers/spec.interface.js';
 
-export class JsonapiError implements JsonApiErrorObject {
+export class JsonapiError extends Error implements JsonApiErrorObject {
   public id?: string;
   public links?: LinksObject<'about' | 'type'>;
   public status?: string;
@@ -16,6 +16,7 @@ export class JsonapiError implements JsonApiErrorObject {
   public meta?: Record<string, unknown>;
 
   public constructor (message?: string) {
+    super(message);
     this.detail = message;
   }
 }

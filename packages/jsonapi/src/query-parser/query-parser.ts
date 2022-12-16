@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 import type { BaseEntity } from '@mikro-orm/core';
 import { container, injectable } from '@triptyk/nfw-core';

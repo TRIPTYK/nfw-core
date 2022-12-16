@@ -1,8 +1,9 @@
+/* eslint-disable complexity */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
-import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository } from '@mikro-orm/core';
+import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository, FilterQuery } from '@mikro-orm/core';
 import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
@@ -12,6 +13,10 @@ import type { Sort, Include, Filter, JsonApiQuery } from '../query-parser/query.
 import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
 // eslint-disable-next-line import/no-named-default
 import { default as merge } from 'ts-deepmerge';
+
+function failHandler (entityName: string, where: any) {
+  return new ResourceNotFoundError(`Resource ${entityName} with ${where} not found`);
+}
 
 @injectable()
 export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
@@ -69,16 +74,15 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
    * Updates a model from a resource
    */
   public async updateOne (resource: Resource<TModel>, ctx: JsonApiContext<TModel>) {
-    const entity = await this.repository.findOne({ id: resource.id } as any, {
+    const searchCriteria = { id: resource.id } as unknown as FilterQuery<TModel>;
+    const entity = await this.repository.findOneOrFail(searchCriteria, {
       filters: {
         context: {
           jsonApiContext: ctx
         }
-      }
+      },
+      failHandler
     });
-    if (!entity) {
-      throw new ResourceNotFoundError();
-    }
     const pojo = resource.toPojo();
     for (const relationMeta of resource.resourceMeta.relationships) {
       const relationProperty = entity[relationMeta.name as keyof typeof entity];
@@ -106,7 +110,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
    */
   public async findOne (id :string, ctx: JsonApiContext<TModel>) {
     const { populate, fields, orderBy, filters } = this.setupRequestObjects(ctx);
-    const one = await this.repository.findOne(
+    const one = await this.repository.findOneOrFail(
       { id, ...filters }, {
         populate: populate as any,
         fields: fields as any,
@@ -115,13 +119,10 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
             jsonApiContext: ctx
           }
         },
+        failHandler,
         disableIdentityMap: true,
         orderBy
       });
-
-    if (!one) {
-      throw new ResourceNotFoundError();
-    }
 
     return one;
   }
@@ -141,11 +142,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
         includes: new Map()
       });
     }
-    const one = await this.findOne(id, ctx);
-    if (!one) {
-      throw new ResourceNotFoundError();
-    }
-    return one;
+    return this.findOne(id, ctx);
   }
 
   /**
@@ -173,10 +170,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
   }
 
   public async deleteOne (id :string, _ctx: JsonApiContext<TModel>) {
-    const one = await this.repository.findOneOrFail({ id } as never);
-    if (!one) {
-      throw new ResourceNotFoundError();
-    }
+    const one = await this.repository.findOneOrFail({ id } as never, { failHandler });
     this.repository.remove(one);
     return one;
   }
