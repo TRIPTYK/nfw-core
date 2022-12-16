@@ -1,4 +1,5 @@
 import type { OperatorMap } from '@mikro-orm/core/typings.js';
+import { container } from '@triptyk/nfw-core';
 import { MetadataStorage } from '../storage/metadata-storage.js';
 
 export interface AttributeOptions {
@@ -12,7 +13,7 @@ export interface AttributeOptions {
 
 export function Attribute (options?: AttributeOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.attributes.push({
+    container.resolve(MetadataStorage).attributes.push({
       target,
       propertyName,
       options

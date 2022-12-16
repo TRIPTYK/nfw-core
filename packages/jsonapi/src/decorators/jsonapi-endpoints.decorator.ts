@@ -1,4 +1,5 @@
 
+import { container } from '@triptyk/nfw-core';
 import type { Class } from 'type-fest';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { QueryParser } from '../query-parser/query-parser.js';
@@ -27,7 +28,7 @@ export interface JsonApiGetOptions extends JsonApiOptions {}
 
 export function JsonApiGet (options?: JsonApiGetOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.GET,
@@ -45,7 +46,7 @@ export interface JsonApiCreateOptions extends JsonApiOptions {
 
 export function JsonApiCreate (options?: JsonApiCreateOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.CREATE,
@@ -58,7 +59,7 @@ export interface JsonApiListOptions extends JsonApiOptions {};
 
 export function JsonApiList (options?: JsonApiListOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.LIST,
@@ -76,7 +77,7 @@ export interface JsonApiUpdateOptions extends JsonApiOptions {
 
 export function JsonApiUpdate (options?: JsonApiUpdateOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.UPDATE,
@@ -89,7 +90,7 @@ export interface JsonApiDeleteOptions extends JsonApiOptions {}
 
 export function JsonApiDelete (options?: JsonApiDeleteOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.DELETE,
@@ -102,7 +103,7 @@ export interface JsonApiGetRelationshipsOptions extends JsonApiOptions {}
 
 export function JsonApiGetRelationships (options?: JsonApiGetRelationshipsOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.GET_RELATIONSHIPS,
@@ -115,7 +116,7 @@ export interface JsonApiGetRelatedOptions extends JsonApiOptions {}
 
 export function JsonApiGetRelated (options?: JsonApiGetRelatedOptions) {
   return function (target: unknown, propertyName: string) {
-    MetadataStorage.instance.endpoints.push({
+    container.resolve(MetadataStorage).endpoints.push({
       target,
       propertyName,
       method: JsonApiMethod.GET_RELATED,

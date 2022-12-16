@@ -90,7 +90,7 @@ export class JsonApiRegistry {
   } : JsonApiRegistryInitOptions) {
     this.apiPath = apiPath;
     const mikroORMMetadataStorage = this.orm.getMetadata();
-    const jsonApiMetadataStorage = MetadataStorage.instance;
+    const jsonApiMetadataStorage = container.resolve(MetadataStorage);
 
     for (const resource of jsonApiMetadataStorage.resources) {
       this.resources.set(resource.target, {} as ResourceMeta<any, any>);

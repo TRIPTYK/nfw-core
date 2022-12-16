@@ -44,7 +44,10 @@ export interface JsonApiBuilderRouteParams {
 export class JsonApiBuilder implements RouterBuilderInterface {
   public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
 
-  public constructor (@inject(JsonApiRegistry) public registry: JsonApiRegistry) {}
+  public constructor (
+    @inject(JsonApiRegistry) public registry: JsonApiRegistry,
+    @inject(JsonApiDatastorage) public jsonApiDatastorage: JsonApiDatastorage
+  ) {}
 
   // eslint-disable-next-line class-methods-use-this
   public async bindRouting (parentRouter: Router, router: Router): Promise<void> {
@@ -55,7 +58,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
   public async build (): Promise<Router> {
     const [entity, options] = this.context.meta.args as any[];
 
-    const resourceMetadataArgs = JsonApiDatastorage.instance.resources.find((v) => v.target === (entity as Class<AnyEntity>));
+    const resourceMetadataArgs = this.jsonApiDatastorage.resources.find((v) => v.target === (entity as Class<AnyEntity>));
 
     if (!resourceMetadataArgs) {
       throw new Error(`Resource not found for controller ${(this.context.instance as Function).name}`);
@@ -67,7 +70,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
 
     const resourceMeta = this.registry.resources.get(resourceMetadataArgs.target)!;
 
-    const jsonApiEndpoints = JsonApiDatastorage.instance.endpoints.filter((e) => e.target === this.context.meta.target.prototype);
+    const jsonApiEndpoints = this.jsonApiDatastorage.endpoints.filter((e) => e.target === this.context.meta.target.prototype);
     const middlewares = middlewaresInstancesForTarget(this.context.meta.target);
 
     controllerRouter.use(...middlewares);
@@ -95,7 +98,7 @@ export class JsonApiBuilder implements RouterBuilderInterface {
     const resource = this.registry.resources.get(resourceMeta.target)!;
     const errorHandlerClass = container.resolve(options.errorHandler ?? ErrorHandler);
 
-    const routeParams = JsonApiDatastorage.instance.getParamsFor(endpoint.target, endpoint.propertyName);
+    const routeParams = this.jsonApiDatastorage.getParamsFor(endpoint.target, endpoint.propertyName);
     const middlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endpoint.propertyName);
     const orm = container.resolve(MikroORM);
 

@@ -4,6 +4,7 @@ import type { ResourceSerializer } from '../serializers/resource.serializer.js';
 import type { ResourceService } from '../services/resource.service.js';
 import type { ResourceDeserializer } from '../deserializers/resource.deserializer.js';
 import type { BaseEntity } from '@mikro-orm/core';
+import { container } from '@triptyk/nfw-core';
 
 export interface ResourceOptions<T extends BaseEntity<any, 'id'>> {
   entity : any,
@@ -15,7 +16,7 @@ export interface ResourceOptions<T extends BaseEntity<any, 'id'>> {
 
 export function JsonApiResource (options: ResourceOptions<any>) {
   return function (target: Class<any>) {
-    MetadataStorage.instance.resources.push({
+    container.resolve(MetadataStorage).resources.push({
       target,
       options
     });
