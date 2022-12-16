@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 
 import type { RouterContext } from '@koa/router';
 import { JsonapiError } from './error.js';
