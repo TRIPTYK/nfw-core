@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { JsonapiError } from '../../src/index.js';
 
 it('is instance of Error', () => {
