@@ -29,11 +29,11 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.11.18",
     "node-fetch": "^3.2.10",
-    "type-fest": "^3.2.0",
-    "typescript": "~4.9.3",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "type-fest": "^3.5.1",
+    "typescript": "~4.9.4"
   },
   "dependencies": {
     "tsyringe": "~4.7.0"
