@@ -1,9 +1,8 @@
-import { beforeEach, expect, test, vitest, describe, it } from 'vitest';
-import { InvalidResourceFieldError } from '../src/errors/invalid-resource-field.js';
-import { UnauthorizedError } from '../src/errors/unauthorized-error.js';
-import { UnknownResourceFieldError } from '../src/errors/unknown-resource-field.js';
-import type { ResourceSchema } from '../src/create-resource.js';
-import { createResource } from '../src/create-resource.js';
+import { beforeEach, vitest, expect, describe, it, test } from 'vitest';
+
+import { createResource, UnknownResourceFieldError, InvalidResourceFieldError } from '../../src/index.js';
+import type { ResourceAuthorizer } from '../../src/resources/authorizer.js';
+import type { ResourceSchema } from '../../src/resources/schema.js';
 
 class ArticleResource {
   public firstName?: string;
@@ -19,8 +18,9 @@ const structure = {
 
 const validAuthorizer = {
   authorizer: {
-    canAccessField: () => true
-  }
+    canAccessField: () => true,
+    canCreateResource: () => true
+  } as ResourceAuthorizer
 };
 
 describe('resource validation', () => {
@@ -67,32 +67,5 @@ describe('resource validation', () => {
     it('should refuse property if validator returns false for this property', () => {
       expect(() => (resource as any).firstName = 1234).toThrowError(InvalidResourceFieldError);
     });
-  });
-});
-
-describe('Resource authorization', () => {
-  let schema: ResourceSchema<ArticleResource>;
-
-  beforeEach(() => {
-    schema = {
-      structure,
-      validator: {
-        isFieldValid: () => true
-      },
-      authorization: {
-        authorizer: {
-          canAccessField: () => false
-        }
-      }
-    };
-    resource = createResource(ArticleResource, schema);
-  });
-
-  it('Should refuse actor when not allowed to access resource field', () => {
-    expect(() => resource.firstName).toThrowError(UnauthorizedError);
-  });
-
-  it('Should throw Error when actor is not allowed to access resource field', () => {
-    expect(() => resource.firstName).toThrowError(UnauthorizedError);
   });
 });

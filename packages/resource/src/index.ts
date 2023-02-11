@@ -1,4 +1,4 @@
-export * from './create-resource.js';
+export * from './resources/create-resource.js';
 
 export * from './errors/invalid-resource-field.js';
 export * from './errors/unauthorized-error.js';

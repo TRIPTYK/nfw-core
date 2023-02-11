@@ -1,31 +1,8 @@
 import type { Class, StringKeyOf } from 'type-fest';
-import { InvalidResourceFieldError } from './errors/invalid-resource-field.js';
-import { UnauthorizedError } from './errors/unauthorized-error.js';
-import { UnknownResourceFieldError } from './errors/unknown-resource-field.js';
-
-type ResourceStructure<T extends object> = {
-    [key in StringKeyOf<T>]: ResourceProperty
-}
-
-interface ResourceProperty {
-    type: string,
-}
-
-interface ResourceAuthorizer {
-  canAccessField: (field: string, value: unknown, actor: unknown) => boolean,
-}
-
-export interface ResourceSchema<T extends object> {
-    validator: ResourceValidator,
-    structure: ResourceStructure<T>,
-    authorization: {
-      authorizer: ResourceAuthorizer,
-    },
-}
-
-export interface ResourceValidator {
-    isFieldValid(key: string, newValue: unknown, validator: string): boolean,
-}
+import { InvalidResourceFieldError } from '../errors/invalid-resource-field.js';
+import { UnauthorizedError } from '../errors/unauthorized-error.js';
+import { UnknownResourceFieldError } from '../errors/unknown-resource-field.js';
+import type { ResourceProperty, ResourceSchema } from './schema.js';
 
 class ResourceProxyHandler<T extends object> implements ProxyHandler<T> {
   public constructor (
@@ -81,7 +58,14 @@ function createProxy<T extends object> (resourceInstance: T, schema: ResourceSch
   return new Proxy<T>(resourceInstance, new ResourceProxyHandler(schema, actor));
 }
 
+function assertCanCreateResource<T extends object> (schema: ResourceSchema<T>, actor: string | undefined) {
+  if (!schema.authorization.authorizer.canCreateResource(actor)) {
+    throw new UnauthorizedError();
+  }
+}
+
 export function createResource<T extends object> (ResourceClass: Class<T>, schema: ResourceSchema<T>, actor?: string): T {
+  assertCanCreateResource<T>(schema, actor);
   const resourceInstance = new ResourceClass();
   return createProxy<T>(resourceInstance, schema, actor);
 }
