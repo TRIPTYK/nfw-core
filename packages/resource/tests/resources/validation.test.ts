@@ -1,9 +1,9 @@
 import { beforeEach, vitest, expect, describe, it, test } from 'vitest';
 
-import { createResource, UnknownResourceFieldError, InvalidResourceFieldError } from '../../src/index.js';
+import { UnknownResourceFieldError, InvalidResourceFieldError } from '../../src/index.js';
 import type { ResourceAuthorizer } from '../../src/resources/authorizer.js';
-import type { ResourceSchema } from '../../src/resources/schema.js';
-import { ArticleResource, structure } from './drivers/article.js';
+import type { StructureLessArticleSchema, ArticleResource } from './fake/article.js';
+import { createArticleResource } from './fake/article.js';
 
 let resource: ArticleResource;
 
@@ -16,17 +16,16 @@ const validAuthorizer = {
 
 describe('resource validation', () => {
   describe('valid resource', () => {
-    let schema: ResourceSchema<ArticleResource>;
+    let schema: StructureLessArticleSchema;
 
     beforeEach(() => {
       schema = {
-        structure,
         validator: {
           isFieldValid: vitest.fn(() => true)
         },
         authorization: validAuthorizer
       };
-      resource = createResource(ArticleResource, schema);
+      resource = createArticleResource(schema);
     });
 
     it('should call validator before setting property', () => {
@@ -46,8 +45,7 @@ describe('resource validation', () => {
 
   describe('Invalid resource', () => {
     beforeEach(() => {
-      resource = createResource(ArticleResource, {
-        structure,
+      resource = createArticleResource({
         validator: {
           isFieldValid: vitest.fn(() => false)
         },
