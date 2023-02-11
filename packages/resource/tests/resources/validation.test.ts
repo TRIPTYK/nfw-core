@@ -3,18 +3,9 @@ import { beforeEach, vitest, expect, describe, it, test } from 'vitest';
 import { createResource, UnknownResourceFieldError, InvalidResourceFieldError } from '../../src/index.js';
 import type { ResourceAuthorizer } from '../../src/resources/authorizer.js';
 import type { ResourceSchema } from '../../src/resources/schema.js';
-
-class ArticleResource {
-  public firstName?: string;
-}
+import { ArticleResource, structure } from './drivers/article.js';
 
 let resource: ArticleResource;
-
-const structure = {
-  firstName: {
-    type: 'string'
-  }
-};
 
 const validAuthorizer = {
   authorizer: {
