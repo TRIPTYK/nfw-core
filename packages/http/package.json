@@ -30,6 +30,7 @@
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
     "@triptyk/nfw-core": "workspace:*",
+    "@types/chai": "^4.3.4",
     "@types/koa": "^2.13.5",
     "@types/koa__router": "^12.0.0",
     "@types/node": "^18.13.0",

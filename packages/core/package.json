@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
+    "@types/chai": "^4.3.4",
     "@types/node": "^18.13.0",
     "node-fetch": "^3.2.10",
     "reflect-metadata": "^0.1.13",

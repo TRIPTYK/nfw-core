@@ -26,7 +26,6 @@ importers:
       npm-run-all: ^4.1.5
       prettier: ^2.8.4
       typescript: ~4.9.5
-      vite: ^4.1.1
       vitest: ^0.28.4
     devDependencies:
       '@foxglove/eslint-plugin': 0.21.0_36r2whqxul37sfw3c4nrs7d6ny
@@ -51,11 +50,11 @@ importers:
       npm-run-all: 4.1.5
       prettier: 2.8.4
       typescript: 4.9.5
-      vite: 4.1.1
       vitest: 0.28.4
 
   packages/core:
     specifiers:
+      '@types/chai': ^4.3.4
       '@types/node': ^18.13.0
       node-fetch: ^3.2.10
       reflect-metadata: ^0.1.13
@@ -66,6 +65,7 @@ importers:
     dependencies:
       tsyringe: 4.7.0
     devDependencies:
+      '@types/chai': 4.3.4
       '@types/node': 18.13.0
       node-fetch: 3.3.0
       reflect-metadata: 0.1.13
@@ -77,6 +77,7 @@ importers:
     specifiers:
       '@koa/router': ~12.0.0
       '@triptyk/nfw-core': workspace:*
+      '@types/chai': ^4.3.4
       '@types/koa': ^2.13.5
       '@types/koa__router': ^12.0.0
       '@types/node': ^18.13.0
@@ -93,6 +94,7 @@ importers:
       is-class: 0.0.9
     devDependencies:
       '@triptyk/nfw-core': link:../core
+      '@types/chai': 4.3.4
       '@types/koa': 2.13.5
       '@types/koa__router': 12.0.0
       '@types/node': 18.13.0
@@ -114,6 +116,7 @@ importers:
       '@triptyk/nfw-http': workspace:*
       '@triptyk/nfw-jsonapi': workspace:*
       '@triptyk/nfw-mikro-orm': workspace:*
+      '@types/chai': ^4.3.4
       '@types/koa': ^2.13.5
       '@types/koa-qs': ^2.0.0
       '@types/koa__router': ^12.0.0
@@ -139,6 +142,7 @@ importers:
       '@triptyk/nfw-http': link:../http
       '@triptyk/nfw-jsonapi': 'link:'
       '@triptyk/nfw-mikro-orm': link:../mikro-orm
+      '@types/chai': 4.3.4
       '@types/koa': 2.13.5
       '@types/koa-qs': 2.0.0
       '@types/koa__router': 12.0.0
@@ -156,6 +160,7 @@ importers:
       '@mikro-orm/core': ~5.6.9
       '@mikro-orm/sqlite': ~5.6.9
       '@triptyk/nfw-core': workspace:*
+      '@types/chai': ^4.3.4
       '@types/koa': ^2.13.5
       '@types/node': ^18.13.0
       reflect-metadata: ^0.1.13
@@ -167,6 +172,7 @@ importers:
       '@mikro-orm/core': 5.6.9_@mikro-orm+sqlite@5.6.9
       '@mikro-orm/sqlite': 5.6.9_@mikro-orm+core@5.6.9
       '@triptyk/nfw-core': link:../core
+      '@types/chai': 4.3.4
       '@types/koa': 2.13.5
       '@types/node': 18.13.0
       reflect-metadata: 0.1.13
@@ -177,12 +183,14 @@ importers:
 
   packages/resource:
     specifiers:
+      '@types/chai': ^4.3.4
       '@types/node': ^18.13.0
       reflect-metadata: ^0.1.13
       type-fest: ^3.5.7
       typescript: ~4.9.5
       vitest: ^0.28.4
     devDependencies:
+      '@types/chai': 4.3.4
       '@types/node': 18.13.0
       reflect-metadata: 0.1.13
       type-fest: 3.5.7
@@ -192,6 +200,7 @@ importers:
   packages/resource-jsonapi:
     specifiers:
       '@triptyk/nfw-resources': workspace:*
+      '@types/chai': ^4.3.4
       '@types/node': ^18.13.0
       reflect-metadata: ^0.1.13
       type-fest: ^3.5.7
@@ -200,6 +209,7 @@ importers:
     dependencies:
       '@triptyk/nfw-resources': link:../resource
     devDependencies:
+      '@types/chai': 4.3.4
       '@types/node': 18.13.0
       reflect-metadata: 0.1.13
       type-fest: 3.5.7
@@ -4969,39 +4979,6 @@ packages:
       - sugarss
       - supports-color
       - terser
-    dev: true
-
-  /vite/4.1.1:
-    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.16.17
-      postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 3.15.0
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /vite/4.1.1_@types+node@18.11.18:

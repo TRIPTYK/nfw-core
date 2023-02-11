@@ -1,17 +1,17 @@
 import { beforeEach, vitest, expect, describe, it, test } from 'vitest';
 
 import { UnknownResourceFieldError, InvalidResourceFieldError } from '../../src/index.js';
-import type { ResourceAuthorizer } from '../../src/resources/authorizer.js';
-import type { StructureLessArticleSchema, ArticleResource } from './fake/article.js';
+import type { StructureLessArticleSchema, ArticleResource, ArticleResourceAuthorizer } from './fake/article.js';
 import { createArticleResource } from './fake/article.js';
 
 let resource: ArticleResource;
 
 const validAuthorizer = {
   authorizer: {
+    canDelete: () => true,
     canAccessField: () => true,
-    canCreateResource: () => true
-  } as ResourceAuthorizer
+    canCreate: () => true
+  } as ArticleResourceAuthorizer
 };
 
 describe('resource validation', () => {

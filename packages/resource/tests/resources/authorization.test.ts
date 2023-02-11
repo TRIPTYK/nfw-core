@@ -1,7 +1,7 @@
-import { beforeEach, expect, describe, it } from 'vitest';
+import { beforeEach, expect, describe, it, vi } from 'vitest';
 import { UnauthorizedError } from '../../src/index.js';
-import type { StructureLessArticleSchema, ArticleResource } from './fake/article.js';
-import { createArticleResource } from './fake/article.js';
+import type { StructureLessArticleSchema } from './fake/article.js';
+import { ArticleResource, createExistingArticleResource, createArticleResource } from './fake/article.js';
 
 let resource: ArticleResource;
 
@@ -9,18 +9,66 @@ describe('resource authorization', () => {
   let schema: StructureLessArticleSchema;
 
   describe('resource creation', () => {
-    it('refuses creating a new resource when not allowed', () => {
-      expect(() => createArticleResource({
+    beforeEach(() => {
+      schema = {
         validator: {
           isFieldValid: () => true
         },
         authorization: {
           authorizer: {
+            canDelete: () => true,
             canAccessField: () => true,
-            canCreateResource: () => false
+            canCreate: vi.fn(() => false)
           }
         }
-      })).toThrowError(UnauthorizedError);
+      };
+    });
+
+    it('refuses creating a new resource when not allowed', () => {
+      expect(() => createArticleResource(schema)).toThrowError(UnauthorizedError);
+    });
+
+    it('ignores canCreate when using createExistingResource', () => {
+      createExistingArticleResource({
+        validator: {
+          isFieldValid: () => true
+        },
+        authorization: {
+          authorizer: {
+            canDelete: () => true,
+            canAccessField: () => true,
+            canCreate: () => false
+          }
+        }
+      });
+      expect(schema.authorization.authorizer.canCreate).not.toBeCalled();
+    });
+  });
+
+  describe('resource deletion', () => {
+    beforeEach(() => {
+      schema = {
+        validator: {
+          isFieldValid: () => true
+        },
+        authorization: {
+          authorizer: {
+            canDelete: vi.fn(() => false),
+            canAccessField: () => false,
+            canCreate: () => true
+          }
+        }
+      };
+    });
+
+    it('refuses deleting a resource when not allowed', () => {
+      const resource = createExistingArticleResource(schema);
+
+      expect(() => resource.delete()).toThrowError(UnauthorizedError);
+
+      const firstCall = (schema.authorization.authorizer.canDelete as any).calls[0];
+      expect(firstCall[0]).toBeInstanceOf(ArticleResource);
+      expect(firstCall[1]).toBeUndefined();
     });
   });
 
@@ -32,8 +80,9 @@ describe('resource authorization', () => {
         },
         authorization: {
           authorizer: {
+            canDelete: () => true,
             canAccessField: () => false,
-            canCreateResource: () => true
+            canCreate: () => true
           }
         }
       };
