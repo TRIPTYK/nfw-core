@@ -11,8 +11,7 @@ import type { Resource } from '../resource/base.resource.js';
 import { ResourceNotFoundError } from '../errors/specific/resource-not-found.js';
 import type { Sort, Include, Filter, JsonApiQuery } from '../query-parser/query.js';
 import { RelationshipEntityNotFoundError } from '../errors/specific/relationship-entity-not-found.js';
-// eslint-disable-next-line import/no-named-default
-import { default as merge } from 'ts-deepmerge';
+import merge from 'ts-deepmerge';
 
 function failHandler (entityName: string, where: any) {
   return new ResourceNotFoundError(`Resource ${entityName} with ${where} not found`);
@@ -155,7 +154,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       const filterObj = {};
       const expanded = this.expandObject(filterObj, iterator.path);
       expanded[iterator.operator] = iterator.value;
-      filter = (merge as any).default(filter, filterObj);
+      filter = merge(filter, filterObj);
     }
     parentFilter[filters.logical].push(filter);
     if (filters.nested.size) {

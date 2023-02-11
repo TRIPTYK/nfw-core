@@ -12,6 +12,6 @@ class RepositoryTransformer<T> implements Transform<Class<T>, EntityRepository<a
   }
 }
 
-export function injectRepository (entity: Class<AnyEntity>) {
-  return injectWithTransform(entity, RepositoryTransformer, entity.name);
+export function injectRepository (entity: Class<AnyEntity> | string) {
+  return injectWithTransform(entity, RepositoryTransformer, typeof entity === 'string' ? entity : entity.name);
 }

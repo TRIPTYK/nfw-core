@@ -4,7 +4,9 @@ import { LocaleModel } from './locale.model.js';
 
 @Entity()
 export class ArticleModel extends BaseEntity<ArticleModel, 'id'> {
-  @PrimaryKey()
+  @PrimaryKey({
+    type: 'numeric'
+  })
   public declare id: string;
 
   @OneToMany('CommentModel', 'article')

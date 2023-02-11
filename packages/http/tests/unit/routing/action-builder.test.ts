@@ -2,7 +2,6 @@
 /* eslint-disable max-statements */
 
 import 'reflect-metadata';
-import { jest } from '@jest/globals';
 import { ControllerActionBuilder } from '../../../src/routing/controller-action.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 import { createKoaContext } from '../../mocks/koa-context.js';
@@ -10,7 +9,7 @@ import type { GuardInterface, ResponseHandlerInterface } from '../../../src/inde
 import { GuardResolver, ResponseHandlerResolver } from '../../../src/index.js';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
 import { ControllerActionResolver } from '../../../src/resolvers/controller-action-resolver.js';
-
+import { describe, expect, beforeEach, it, vi } from 'vitest';
 import type { ControllerContextType } from '../../../src/types/controller-context.js';
 
 describe('Action builder', () => {
@@ -18,7 +17,7 @@ describe('Action builder', () => {
   let storage : MetadataStorage;
   let actionBuilder : ControllerActionBuilder;
 
-  const listFn = jest.fn(() => 'waw');
+  const listFn = vi.fn(() => 'waw');
   class Controller {
     public list = listFn;
   }
@@ -49,7 +48,7 @@ describe('Action builder', () => {
   });
 
   it('Builds a middleware that executes controller action', async () => {
-    const next = jest.fn(async () => {});
+    const next = vi.fn(async () => {});
 
     const actionMiddleware = actionBuilder.build();
     await actionMiddleware(createKoaContext(), next);
@@ -58,7 +57,7 @@ describe('Action builder', () => {
     expect(next).toBeCalledTimes(0);
   });
   it('Triggers response handler when defined', async () => {
-    const handle = jest.fn(async () => {});
+    const handle = vi.fn(async () => {});
 
     class ResponseHandler implements ResponseHandlerInterface {
       public handle = handle;
@@ -86,7 +85,7 @@ describe('Action builder', () => {
     }
 
     it('Triggers guards', async () => {
-      const canHandle = jest.fn(async () => true);
+      const canHandle = vi.fn(async () => true);
       const Guard = buildGuardClass(canHandle);
 
       storage.useGuards.push({
@@ -101,7 +100,7 @@ describe('Action builder', () => {
       expect(canHandle).toBeCalledTimes(1);
     });
     it('Throws exception when any guard fails', async () => {
-      const canHandle = jest.fn(async () => false);
+      const canHandle = vi.fn(async () => false);
       const Guard = buildGuardClass(canHandle);
 
       storage.useGuards.push({

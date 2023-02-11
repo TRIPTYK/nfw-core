@@ -6,7 +6,9 @@ import type { CommentModel } from './comment.model.js';
 
 @Entity()
 export class LocaleModel extends BaseEntity<LocaleModel, 'id'> {
-  @PrimaryKey()
+  @PrimaryKey({
+    type: 'numeric'
+  })
   public declare id: string;
 
   @ManyToOne('CommentModel', 'locales')

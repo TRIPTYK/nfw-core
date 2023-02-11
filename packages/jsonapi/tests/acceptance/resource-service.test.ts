@@ -6,6 +6,8 @@ import type { ResourceService } from '../../src/index.js';
 import { QueryParser, JsonApiMethod } from '../../src/index.js';
 import { JsonApiRegistry } from '../../src/jsonapi.registry.js';
 import type { ArticleModel } from './dummy-app/models/article.model.js';
+import { test, expect, beforeEach, afterEach } from 'vitest';
+
 beforeEach(async () => {
   const { initApp } = await import('./dummy-app/init.js');
   await initApp();

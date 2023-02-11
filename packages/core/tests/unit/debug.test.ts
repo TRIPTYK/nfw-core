@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 describe('Debug test', () => {
   test('debug function is not undefined when NFW_DEBUG is enabled', async () => {
     process.env.NFW_DEBUG = 'all';

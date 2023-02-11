@@ -8,11 +8,11 @@ import Application from 'koa';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { createApplication } from '../../src/factories/create-application.js';
 import { Controller, GET } from '../../src/index.js';
-import { jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import { setTimeout } from 'node:timers/promises';
 
 describe('Create application', () => {
-  const spy = jest.fn();
+  const spy = vi.fn();
 
   @Controller({
     routeName: '/hello'

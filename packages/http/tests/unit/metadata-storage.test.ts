@@ -5,7 +5,7 @@ import { MetadataStorage } from '../../src/storages/metadata-storage.js';
 import type { UseGuardMetadataArgs } from '../../src/storages/metadata/use-guard.js';
 import type { UseParamsMetadataArgs } from '../../src/storages/metadata/use-param.js';
 import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.js';
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { describe, expect, beforeEach, it } from 'vitest';
 import { RouterMetadataNotFoundError } from '../../src/errors/router-metadata-not-found.js';
 import type { RouteMetadataArgs } from '../../src/index.js';
 import type { Class } from 'type-fest';

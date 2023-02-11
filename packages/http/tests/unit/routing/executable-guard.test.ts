@@ -2,7 +2,7 @@
 /* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
-import { describe, expect, it, beforeEach, jest } from '@jest/globals';
+import { describe, expect, beforeEach, it, vi } from 'vitest';
 import { ForbiddenError } from '../../../src/errors/forbidden.js';
 import type { RouterContext } from '@koa/router';
 import { ExecutableGuard, ExecutableParam } from '../../../src/index.js';
@@ -37,7 +37,7 @@ describe('Executable Guard', () => {
   });
   it('Resolves params correctly', async () => {
     returnValue = true;
-    const spy = jest.spyOn(guardInstance, 'can');
+    const spy = vi.spyOn(guardInstance, 'can');
     const firstParam = new ExecutableParam(context, ['blah']);
     const secondParam = new ExecutableParam(context, () => 'hello');
     const executableGuard = new ExecutableGuard(guardInstance, context, [firstParam, secondParam]);

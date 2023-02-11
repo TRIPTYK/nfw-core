@@ -1,5 +1,5 @@
 import { numericalSortOnKeyASC } from '../../../src/utils/numerical-sort.js';
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { describe, expect, beforeEach, it } from 'vitest';
 
 describe('Numerical sort test', () => {
   let array: any[];

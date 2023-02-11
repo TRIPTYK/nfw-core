@@ -5,11 +5,14 @@ import type { LocaleModel } from './locale.model.js';
 
 @Entity()
 export class CommentModel extends BaseEntity<CommentModel, 'id'> {
-  @PrimaryKey()
+  @PrimaryKey({
+    type: 'numeric'
+  })
   public declare id: string;
 
   @Property({
-    default: 'title'
+    default: 'title',
+    type: 'string'
   })
   public declare title?: string;
 

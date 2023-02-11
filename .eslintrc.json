@@ -1,8 +1,7 @@
 {
   "env": {
     "browser": true,
-    "es2021": true,
-    "jest/globals": true
+    "es2021": true
   },
   "root": true,
   "extends": ["standard"],
@@ -20,7 +19,6 @@
   "plugins": [
     "@typescript-eslint",
     "unused-imports",
-    "jest",
     "@foxglove",
     "unicorn",
     "custom-elements"

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { JsonApiMethod, JsonApiRegistry, QueryParser } from '../../src/index.js';
 import { container } from '@triptyk/nfw-core';
 import { MikroORM } from '@mikro-orm/core';
+import { test, expect, beforeEach, afterEach } from 'vitest';
 
 beforeEach(async () => {
   const { initApp } = await import('./dummy-app/init.js');

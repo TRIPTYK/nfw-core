@@ -7,6 +7,5 @@
   "eslint.validate": ["javascript", "typescript"],
   "eslint.format.enable": true,
   "typescript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifier": "project-relative",
-  "jest.jestCommandLine": "pnpm test --"
+  "typescript.preferences.importModuleSpecifier": "project-relative"
 }

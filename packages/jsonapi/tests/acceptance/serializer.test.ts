@@ -10,6 +10,7 @@ import type { JsonApiContext, ResourceSerializer } from '../../src/index.js';
 import { QueryParser, JsonApiRegistry, createResourceFrom, JsonApiMethod } from '../../src/index.js';
 import type { ArticleModel } from './dummy-app/models/article.model.js';
 import type { CommentModel } from './dummy-app/models/comment.model.js';
+import { describe, expect, beforeEach, afterEach, it } from 'vitest';
 
 beforeEach(async () => {
   const { initApp } = await import('./dummy-app/init.js');
