@@ -92,7 +92,7 @@ importers:
       '@koa/router': 12.0.0
       is-class: 0.0.9
     devDependencies:
-      '@triptyk/nfw-core': link:../resource
+      '@triptyk/nfw-core': link:../core
       '@types/koa': 2.13.5
       '@types/koa__router': 12.0.0
       '@types/node': 18.13.0
@@ -135,7 +135,7 @@ importers:
       '@mikro-orm/core': 5.6.9_@mikro-orm+sqlite@5.6.9
       '@mikro-orm/knex': 5.6.9_@mikro-orm+core@5.6.9
       '@mikro-orm/sqlite': 5.6.9_@mikro-orm+core@5.6.9
-      '@triptyk/nfw-core': link:../resource
+      '@triptyk/nfw-core': link:../core
       '@triptyk/nfw-http': link:../http
       '@triptyk/nfw-jsonapi': 'link:'
       '@triptyk/nfw-mikro-orm': link:../mikro-orm
@@ -166,7 +166,7 @@ importers:
     devDependencies:
       '@mikro-orm/core': 5.6.9_@mikro-orm+sqlite@5.6.9
       '@mikro-orm/sqlite': 5.6.9_@mikro-orm+core@5.6.9
-      '@triptyk/nfw-core': link:../resource
+      '@triptyk/nfw-core': link:../core
       '@types/koa': 2.13.5
       '@types/node': 18.13.0
       reflect-metadata: 0.1.13
@@ -179,12 +179,26 @@ importers:
     specifiers:
       '@types/node': ^18.13.0
       reflect-metadata: ^0.1.13
-      tsyringe: ~4.7.0
+      type-fest: ^3.5.7
+      typescript: ~4.9.5
+      vitest: ^0.28.4
+    devDependencies:
+      '@types/node': 18.13.0
+      reflect-metadata: 0.1.13
+      type-fest: 3.5.7
+      typescript: 4.9.5
+      vitest: 0.28.4
+
+  packages/resource-jsonapi:
+    specifiers:
+      '@triptyk/nfw-resources': workspace:*
+      '@types/node': ^18.13.0
+      reflect-metadata: ^0.1.13
       type-fest: ^3.5.7
       typescript: ~4.9.5
       vitest: ^0.28.4
     dependencies:
-      tsyringe: 4.7.0
+      '@triptyk/nfw-resources': link:../resource
     devDependencies:
       '@types/node': 18.13.0
       reflect-metadata: 0.1.13

@@ -1,5 +1,5 @@
 {
-  "name": "@triptyk/nfw-resources",
+  "name": "@triptyk/nfw-resources-jsonapi",
   "version": "4.0.0-alpha.31",
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
@@ -36,5 +36,6 @@
     "vitest": "^0.28.4"
   },
   "dependencies": {
+    "@triptyk/nfw-resources": "workspace:*"
   }
 }
