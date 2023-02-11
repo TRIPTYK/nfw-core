@@ -1,6 +1,9 @@
 import type { Class, StringKeyOf } from 'type-fest';
+import { CannotAccessFieldError } from '../errors/cannot-access-field.js';
+import { CannotCreateResourceError } from '../errors/cannot-create-recource.js';
+import { CannotDeleteResourceError } from '../errors/cannot-delete-resource.js';
+import { CannotUpdateFieldError } from '../errors/cannot-update-field.js';
 import { InvalidResourceFieldError } from '../errors/invalid-resource-field.js';
-import { UnauthorizedError } from '../errors/unauthorized-error.js';
 import { UnknownResourceFieldError } from '../errors/unknown-resource-field.js';
 import type { Resource } from './resource.js';
 import type { ResourceProperty, ResourceSchema } from './schema.js';
@@ -13,7 +16,7 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
 
   public delete (target: T) {
     if (!this.schema.authorization.authorizer.canDelete(target, this.actor)) {
-      throw new UnauthorizedError();
+      throw new CannotDeleteResourceError();
     }
   }
 
@@ -21,6 +24,8 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
     this.assertExistsInSchemaStructure(propertyName);
 
     const schemaStructureProperty = this.schema.structure[propertyName as StringKeyOf<T>];
+
+    this.assertCanUpdateField(resource, propertyName, newValue);
 
     this.validateNewValue(propertyName, newValue, schemaStructureProperty);
 
@@ -32,7 +37,7 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
   }
 
   public get (resource: T, propertyName: string) {
-    if (propertyName === 'delete') {
+    if (this.isDeleteProperty(propertyName)) {
       return () => this.delete(resource);
     }
 
@@ -40,14 +45,25 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
 
     const propertyValue: unknown = resource[propertyName as never];
 
-    this.assertFieldAccess(resource, propertyName, propertyValue);
+    this.assertFieldAccess(resource, propertyName as StringKeyOf<T>, propertyValue);
 
     return propertyValue;
   }
 
-  private assertFieldAccess (resource: T, propertyName: string, propertyValue: unknown) {
+  // eslint-disable-next-line class-methods-use-this
+  private isDeleteProperty (propertyName: string) {
+    return propertyName === 'delete';
+  }
+
+  private assertCanUpdateField (resource: T, propertyName: string, newValue: unknown) {
+    if (!this.schema.authorization.authorizer.canUpdateField(resource, propertyName as StringKeyOf<T>, newValue)) {
+      throw new CannotUpdateFieldError();
+    }
+  }
+
+  private assertFieldAccess (resource: T, propertyName: StringKeyOf<T>, propertyValue: unknown) {
     if (!this.schema.authorization.authorizer.canAccessField(resource, propertyName, propertyValue, this.actor)) {
-      throw new UnauthorizedError();
+      throw new CannotAccessFieldError();
     }
   }
 
@@ -72,7 +88,7 @@ function createProxy<T extends object> (resourceInstance: T, schema: ResourceSch
 
 function assertCanCreateResource<T extends object> (schema: ResourceSchema<T>, actor: string | undefined) {
   if (!schema.authorization.authorizer.canCreate(actor)) {
-    throw new UnauthorizedError();
+    throw new CannotCreateResourceError();
   }
 }
 

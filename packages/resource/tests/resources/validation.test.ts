@@ -10,7 +10,8 @@ const validAuthorizer = {
   authorizer: {
     canDelete: () => true,
     canAccessField: () => true,
-    canCreate: () => true
+    canCreate: () => true,
+    canUpdateField: () => true
   } as ArticleResourceAuthorizer
 };
 
