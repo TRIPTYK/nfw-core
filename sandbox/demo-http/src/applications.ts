@@ -3,7 +3,7 @@ import { createApplication } from '@triptyk/nfw-http';
 import { UsersController } from './controllers/users.js';
 import Koa from 'koa';
 import koaQs from 'koa-qs';
-import koaBody from 'koa-body';
+import { koaBody } from 'koa-body';
 
 export async function init () {
   const server = new Koa();
@@ -18,7 +18,7 @@ export async function init () {
   });
 
   server.listen(4200, () => {
-    console.log(4200);
+    console.log('http://localhost:4200');
   });
 }
 

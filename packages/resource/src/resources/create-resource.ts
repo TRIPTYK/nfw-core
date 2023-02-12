@@ -1,4 +1,4 @@
-import type { Class, StringKeyOf } from 'type-fest';
+import type { StringKeyOf } from 'type-fest';
 import { CannotAccessFieldError } from '../errors/cannot-access-field.js';
 import { CannotCreateResourceError } from '../errors/cannot-create-recource.js';
 import { CannotDeleteResourceError } from '../errors/cannot-delete-resource.js';
@@ -36,11 +36,19 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
     return true;
   }
 
-  public get (resource: T, propertyName: string) {
-    if (this.isDeleteProperty(propertyName)) {
-      return () => this.delete(resource);
+  public get (resource: T, propertyName: string): unknown {
+    if (this.isSpecialProperty(propertyName)) {
+      return this.getSpecialProperty(resource, propertyName);
     }
 
+    if (this.isKnownObjectProperty(resource, propertyName) && !this.doesPropertyExistsInSchemaStructure(propertyName)) {
+      return resource[propertyName as never];
+    }
+
+    return this.getSchemaPropertyInResource(propertyName, resource);
+  }
+
+  private getSchemaPropertyInResource (propertyName: string, resource: T) {
     this.assertExistsInSchemaStructure(propertyName);
 
     const propertyValue: unknown = resource[propertyName as never];
@@ -51,8 +59,22 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private isDeleteProperty (propertyName: string) {
-    return propertyName === 'delete';
+  private isKnownObjectProperty (resource: T, propertyName: string) {
+    return resource[propertyName as never] !== undefined;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private isSpecialProperty (propertyName: string) {
+    return propertyName === 'delete' || propertyName === 'toJSON';
+  }
+
+  private getSpecialProperty (resource: T, propertyName: string) {
+    if (propertyName === 'delete') {
+      return () => this.delete(resource);
+    }
+    if (propertyName === 'toJSON') {
+      return resource;
+    }
   }
 
   private assertCanUpdateField (resource: T, propertyName: string, newValue: unknown) {
@@ -75,9 +97,13 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
   }
 
   private assertExistsInSchemaStructure (p: string) {
-    if (!Object.hasOwn(this.schema.structure, p)) {
+    if (!this.doesPropertyExistsInSchemaStructure(p)) {
       throw new UnknownResourceFieldError(`${p} is unknown`);
     }
+  }
+
+  private doesPropertyExistsInSchemaStructure (p: string) {
+    return Object.hasOwn(this.schema.structure, p);
   }
 }
 
@@ -92,16 +118,15 @@ function assertCanCreateResource<T extends object> (schema: ResourceSchema<T>, a
   }
 }
 
-function instantiateAndWrapResourceIntoProxy<T extends object> (ResourceClass: Class<T, any[]>, schema: ResourceSchema<T>, actor: string | undefined) {
-  const resourceInstance = new ResourceClass();
+function instantiateAndWrapResourceIntoProxy<T extends object> (resourceInstance: T, schema: ResourceSchema<T>, actor: string | undefined) {
   return createProxy<T>(resourceInstance, schema, actor);
 }
 
-export function createResource<T extends object> (ResourceClass: Class<T>, schema: ResourceSchema<T>, actor?: string): Resource<T> {
+export function createResource<T extends object> (resourceInstance: T, schema: ResourceSchema<T>, actor?: string): Resource<T> {
   assertCanCreateResource<T>(schema, actor);
-  return instantiateAndWrapResourceIntoProxy<T>(ResourceClass, schema, actor);
+  return instantiateAndWrapResourceIntoProxy<T>(resourceInstance, schema, actor);
 }
 
-export function createExistingResource<T extends object> (ResourceClass: Class<T>, schema: ResourceSchema<T>, actor?: string): Resource<T> {
-  return instantiateAndWrapResourceIntoProxy<T>(ResourceClass, schema, actor);
+export function createExistingResource<T extends object> (resourceInstance: T, schema: ResourceSchema<T>, actor?: string): Resource<T> {
+  return instantiateAndWrapResourceIntoProxy<T>(resourceInstance, schema, actor);
 }

@@ -19,6 +19,7 @@ describe('resource authorization', () => {
         },
         authorization: {
           authorizer: {
+            canUpdateField: () => true,
             canDelete: () => true,
             canAccessField: () => true,
             canCreate: vi.fn(() => false)
@@ -126,6 +127,7 @@ describe('resource authorization', () => {
       expect(firstCall[0]).toBeInstanceOf(ArticleResource);
       expect(firstCall[1]).toStrictEqual('firstName');
       expect(firstCall[2]).toStrictEqual('123');
+      expect(firstCall[3]).toBeUndefined();
     });
   });
 });

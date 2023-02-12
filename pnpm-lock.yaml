@@ -197,25 +197,6 @@ importers:
       typescript: 4.9.5
       vitest: 0.28.4
 
-  packages/resource-jsonapi:
-    specifiers:
-      '@triptyk/nfw-resources': workspace:*
-      '@types/chai': ^4.3.4
-      '@types/node': ^18.13.0
-      reflect-metadata: ^0.1.13
-      type-fest: ^3.5.7
-      typescript: ~4.9.5
-      vitest: ^0.28.4
-    dependencies:
-      '@triptyk/nfw-resources': link:../resource
-    devDependencies:
-      '@types/chai': 4.3.4
-      '@types/node': 18.13.0
-      reflect-metadata: 0.1.13
-      type-fest: 3.5.7
-      typescript: 4.9.5
-      vitest: 0.28.4
-
 packages:
 
   /@babel/code-frame/7.18.6:
