@@ -18,4 +18,11 @@ describe('known properties access', () => {
     resource.firstName = '123';
     expect(JSON.stringify(resource)).toStrictEqual('{"firstName":"123"}');
   });
+
+  it('It should allow access to then', async () => {
+    const resourceWithAsyncResult = async () => {
+      return resource;
+    };
+    await resourceWithAsyncResult();
+  });
 });

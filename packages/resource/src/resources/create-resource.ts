@@ -8,14 +8,17 @@ import { UnknownResourceFieldError } from '../errors/unknown-resource-field.js';
 import type { Resource } from './resource.js';
 import type { ResourceProperty, ResourceSchema } from './schema.js';
 
+const SPECIAL_OBJECT_PROPERTIES = ['hasOwnProperty', 'then', 'toJSON'] as const;
+const SPECIAL_RESOURCE_OBJECT_PROPERTIES = ['delete'] as const;
+
 class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>> {
   public constructor (
     private schema: ResourceSchema<T>,
     private actor: unknown
   ) {}
 
-  public delete (target: T) {
-    if (!this.schema.authorization.authorizer.canDelete(target, this.actor)) {
+  public delete (resource: T) {
+    if (!this.schema.authorization.authorizer.canDelete(resource, this.actor)) {
       throw new CannotDeleteResourceError();
     }
   }
@@ -37,12 +40,12 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
   }
 
   public get (resource: T, propertyName: string): unknown {
-    if (this.isSpecialProperty(propertyName)) {
-      return this.getSpecialProperty(resource, propertyName);
+    if (this.isSpecialObjectProperty(propertyName)) {
+      return this.proxyToObject(resource, propertyName);
     }
 
-    if (this.isKnownObjectProperty(resource, propertyName) && !this.doesPropertyExistsInSchemaStructure(propertyName)) {
-      return resource[propertyName as never];
+    if (this.isSpecialResourceProperty(propertyName)) {
+      return this.getSpecialResourceProperty(resource, propertyName);
     }
 
     return this.getSchemaPropertyInResource(propertyName, resource);
@@ -59,21 +62,23 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private isKnownObjectProperty (resource: T, propertyName: string) {
-    return resource[propertyName as never] !== undefined;
+  private isSpecialObjectProperty (propertyName: string) {
+    return SPECIAL_OBJECT_PROPERTIES.includes(propertyName as never);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private isSpecialProperty (propertyName: string) {
-    return propertyName === 'delete' || propertyName === 'toJSON';
+  private isSpecialResourceProperty (propertyName: string) {
+    return SPECIAL_RESOURCE_OBJECT_PROPERTIES.includes(propertyName as never);
   }
 
-  private getSpecialProperty (resource: T, propertyName: string) {
+  // eslint-disable-next-line class-methods-use-this
+  private proxyToObject (resource: T, propertyName: string) {
+    return resource[propertyName as never];
+  }
+
+  private getSpecialResourceProperty (resource: T, propertyName: string) {
     if (propertyName === 'delete') {
       return () => this.delete(resource);
-    }
-    if (propertyName === 'toJSON') {
-      return resource;
     }
   }
 
@@ -96,14 +101,14 @@ class ResourceProxyHandler<T extends object> implements ProxyHandler<Resource<T>
     }
   }
 
-  private assertExistsInSchemaStructure (p: string) {
-    if (!this.doesPropertyExistsInSchemaStructure(p)) {
-      throw new UnknownResourceFieldError(`${p} is unknown`);
+  private assertExistsInSchemaStructure (propertyName: string) {
+    if (!this.doesPropertyExistsInSchemaStructure(propertyName)) {
+      throw new UnknownResourceFieldError(`${propertyName} is unknown`);
     }
   }
 
-  private doesPropertyExistsInSchemaStructure (p: string) {
-    return Object.hasOwn(this.schema.structure, p);
+  private doesPropertyExistsInSchemaStructure (propertyName: string) {
+    return Object.hasOwn(this.schema.structure, propertyName);
   }
 }
 

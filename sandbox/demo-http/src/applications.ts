@@ -4,8 +4,26 @@ import { UsersController } from './controllers/users.js';
 import Koa from 'koa';
 import koaQs from 'koa-qs';
 import { koaBody } from 'koa-body';
+import { init } from '@triptyk/nfw-mikro-orm';
+import { UserModel } from './models/user.model.js';
 
-export async function init () {
+// eslint-disable-next-line max-statements
+export async function initHTTP () {
+  const orm = await init({
+    dbName: ':memory:',
+    type: 'sqlite',
+    entities: [UserModel],
+    allowGlobalContext: true
+  });
+
+  await orm.getSchemaGenerator().refreshDatabase();
+
+  orm.em.insertMany(UserModel, [
+    {
+      name: 'amaury'
+    }
+  ]);
+
   const server = new Koa();
 
   koaQs(server);
@@ -22,4 +40,4 @@ export async function init () {
   });
 }
 
-init();
+initHTTP();

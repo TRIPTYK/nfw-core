@@ -1,9 +1,9 @@
 import type { ResourceSchema } from '@triptyk/nfw-resources';
-import type { User } from '../services/users.js';
+import type { UserModel } from '../models/user.model.js';
 
-export const userResourceSchema : ResourceSchema<User> = {
+export const userResourceSchema: ResourceSchema<UserModel> = {
   validator: {
-    isFieldValid (key, newValue, validator) {
+    isFieldValid () {
       return true;
     }
   },
@@ -14,16 +14,16 @@ export const userResourceSchema : ResourceSchema<User> = {
   },
   authorization: {
     authorizer: {
-      canAccessField (resource, field, value, actor) {
+      canAccessField () {
         return true;
       },
-      canCreate (actor) {
+      canCreate () {
         return true;
       },
-      canDelete (resource, actor) {
+      canDelete () {
         return true;
       },
-      canUpdateField (resource, field, newValue) {
+      canUpdateField () {
         return true;
       }
     }

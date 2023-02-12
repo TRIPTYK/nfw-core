@@ -14,6 +14,7 @@
   "dependencies": {
     "@triptyk/nfw-core": "file:../../packages/core",
     "@triptyk/nfw-http": "file:../../packages/http",
+    "@triptyk/nfw-mikro-orm": "file:../../packages/mikro-orm",
     "@triptyk/nfw-resources": "file:../../packages/resource",
     "koa": "^2.13.4",
     "koa-body": "^6.0.1",
@@ -21,8 +22,10 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@mikro-orm/core": "~5.6.9",
+    "@mikro-orm/sqlite": "~5.6.9",
     "@types/koa": "^2.13.5",
-    "@types/koa-qs":"^2.0.0",
+    "@types/koa-qs": "^2.0.0",
     "@types/koa__router": "^12.0.0",
     "@types/node": "^18.6.3",
     "node-mocks-http": "^1.11.0",

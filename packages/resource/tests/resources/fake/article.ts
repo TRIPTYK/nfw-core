@@ -25,7 +25,7 @@ export const alwaysValidSchema = {
       canCreate: vi.fn(() => true)
     }
   }
-} satisfies StructureLessArticleSchema;
+} as never;
 
 export type ArticleResourceAuthorizer = ResourceAuthorizer<ArticleResource>;
 

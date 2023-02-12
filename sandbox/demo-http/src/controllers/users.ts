@@ -15,10 +15,8 @@ export class UsersController {
   ) {}
 
   @GET('/:name')
-  public get (@Param('name') param: string) {
-    const user = this.usersService.findOne(param);
-
-    console.log(user);
+  public async get (@Param('name') param: string) {
+    const user = await this.usersService.findOne(param);
 
     return JSON.stringify(user);
   }
