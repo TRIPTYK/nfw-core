@@ -3,7 +3,7 @@
     "lib": ["ES2022"],
     "target": "ES2022",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "module": "ES2022",
     "noEmitOnError": true,
     "allowSyntheticDefaultImports": true,
