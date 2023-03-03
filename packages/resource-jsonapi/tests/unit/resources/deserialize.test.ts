@@ -3,14 +3,14 @@ import 'reflect-metadata';
 import { container } from '@triptyk/nfw-core';
 import type { ResourcesRegistry } from 'resources';
 import { test, expect, beforeEach } from 'vitest';
-import { ResourcesRegistryImpl } from '../../../src/registry.js';
+import { JsonApiRegistryImpl } from '../../../src/registry/registry.js';
 import { ArticleResource, registerArticle } from '../../samples/article.js';
 import { registerUser, UserResource } from '../../samples/user.js';
 
 let registry : ResourcesRegistry;
 
 beforeEach(async () => {
-  registry = container.resolve(ResourcesRegistryImpl);
+  registry = container.resolve(JsonApiRegistryImpl);
   registerArticle(registry);
   registerUser(registry);
 });

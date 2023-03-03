@@ -1,6 +1,6 @@
-import type { Resource } from 'resources';
-import { ResourceAdapter } from 'resources/build/src/adapter.js';
+import type { AbstractResource } from 'resources';
+import { AbstractResourceAdapter } from 'resources';
 
-export abstract class JsonApiResourceAdapter<T extends Resource> extends ResourceAdapter<T> {
+export abstract class JsonApiResourceAdapter<T extends AbstractResource> extends AbstractResourceAdapter<T> {
     abstract create(resource: T): void;
 }

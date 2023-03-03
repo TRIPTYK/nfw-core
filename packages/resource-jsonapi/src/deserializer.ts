@@ -1,8 +1,9 @@
-import { ResourceDeserializer } from 'resources';
-import type { Resource } from 'resources';
-import JSONAPISerializer from 'json-api-serializer';
 
-export class JsonApiResourceDeserializer<T extends Resource> extends ResourceDeserializer<T> {
+import JSONAPISerializer from 'json-api-serializer';
+import type { AbstractResource } from 'resources';
+import { AbstractResourceDeserializer } from 'resources';
+
+export class JsonApiResourceDeserializer<T extends AbstractResource> extends AbstractResourceDeserializer<T> {
   public deserialize (payload: Record<string, unknown>): Promise<T> {
     const serializer = this.createSerializerFromSchema();
     const deserializedPayload = this.deserializeAndWrapRelations(serializer, payload);

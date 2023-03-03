@@ -6,6 +6,14 @@ import koaQs from 'koa-qs';
 import { koaBody } from 'koa-body';
 import { init } from '@triptyk/nfw-mikro-orm';
 import { UserModel } from './models/user.model.js';
+import { container } from '@triptyk/nfw-core';
+import { JsonApiRegistryImpl } from '@triptyk/nfw-resources';
+import { registerUserResource } from './resources/user/registration.js';
+
+function registerResources () {
+  const registry = container.resolve(JsonApiRegistryImpl);
+  registerUserResource(registry);
+}
 
 // eslint-disable-next-line max-statements
 export async function initHTTP () {
@@ -25,6 +33,8 @@ export async function initHTTP () {
   ]);
 
   const server = new Koa();
+
+  registerResources();
 
   koaQs(server);
 

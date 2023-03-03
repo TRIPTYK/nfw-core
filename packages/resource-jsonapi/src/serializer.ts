@@ -1,11 +1,11 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable max-statements */
 import JSONAPISerializer from 'json-api-serializer';
-import type { Resource } from 'resources';
-import { ResourceSerializer } from 'resources';
+import type { AbstractResource } from 'resources';
+import { AbstractResourceSerializer } from 'resources';
 import { SerializerGenerator } from './utils/serializer-generator.js';
 
-export class JsonApiResourceSerializer<T extends Resource> extends ResourceSerializer<T> {
+export class JsonApiResourceSerializer<T extends AbstractResource> extends AbstractResourceSerializer<T> {
   private serializer = new JSONAPISerializer();
 
   public async serialize (resource: T): Promise<unknown> {

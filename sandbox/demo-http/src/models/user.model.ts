@@ -7,4 +7,9 @@ export class UserModel {
       primary: true
     })
   public declare name: string;
+
+  @Property({
+    type: 'string'
+  })
+    public declare role: string;
 }
