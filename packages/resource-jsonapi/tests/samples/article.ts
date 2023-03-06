@@ -32,7 +32,9 @@ export class ArticlesDeserializer extends JsonApiResourceDeserializer<ArticleRes
 export class ArticlesSerializer extends JsonApiResourceSerializer<ArticleResource> {}
 
 export class ArticleAdapter extends JsonApiResourceAdapter<ArticleResource> {
-  create = vi.fn();
+  create = vi.fn() as any;
+  findAll = vi.fn() as any;
+  findById = vi.fn() as any;
 }
 
 export class ArticleValidator extends AbstractResourceValidator<ArticleResource> {

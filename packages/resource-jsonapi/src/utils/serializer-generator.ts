@@ -1,6 +1,5 @@
 import type JSONAPISerializer from 'json-api-serializer';
 import type { ResourcesRegistry, ResourceSchema } from 'resources';
-import pluralize from 'pluralize';
 
 export class SerializerGenerator {
   private processedTypes: string[] = [];
@@ -37,10 +36,5 @@ export class SerializerGenerator {
 
     this.processedTypes.push(relationSchema.type);
     this.generate(relationSchema);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  private makeSelf (relationSchema: ResourceSchema<any>, object: unknown): string | JSONAPISerializer.LinksObject {
-    return `${pluralize(relationSchema.type)}/${(object as Record<'id', string>).id}`;
   }
 }

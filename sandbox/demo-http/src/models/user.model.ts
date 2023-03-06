@@ -9,7 +9,8 @@ export class UserModel {
   public declare name: string;
 
   @Property({
-    type: 'string'
+    type: 'string',
+    default: 'admin'
   })
     public declare role: string;
 }

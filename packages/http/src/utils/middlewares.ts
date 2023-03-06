@@ -1,4 +1,3 @@
-
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';

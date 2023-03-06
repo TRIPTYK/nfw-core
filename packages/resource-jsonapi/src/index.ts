@@ -5,3 +5,4 @@ export * from './registry/registry.js';
 export * from './registry/resource-registry.js';
 export * from './serializer.js';
 export * from './utils/serializer-generator.js';
+export * from './query/query.js';

@@ -188,6 +188,7 @@ importers:
       '@types/json-api-serializer': ^2.6.3
       '@types/node': ^18.13.0
       '@types/pluralize': ^0.0.29
+      json-api-query-parser: link:../../../json-api-query-parser
       json-api-serializer: ^2.6.6
       pluralize: ~8.0.0
       reflect-metadata: ^0.1.13
@@ -196,6 +197,7 @@ importers:
       typescript: ~4.9.5
       vitest: ^0.28.4
     dependencies:
+      json-api-query-parser: link:../../../json-api-query-parser
       json-api-serializer: 2.6.6
       pluralize: 8.0.0
     devDependencies:
