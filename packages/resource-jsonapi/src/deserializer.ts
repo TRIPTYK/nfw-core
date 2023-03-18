@@ -4,7 +4,7 @@ import type { AbstractResource } from 'resources';
 import { AbstractResourceDeserializer } from 'resources';
 
 export class JsonApiResourceDeserializer<T extends AbstractResource> extends AbstractResourceDeserializer<T> {
-  public deserialize (payload: Record<string, unknown>): Promise<T> {
+  public async deserialize (payload: Record<string, unknown>): Promise<T> {
     const serializer = this.createSerializerFromSchema();
     const deserializedPayload = this.deserializeAndWrapRelations(serializer, payload);
     return this.ownRegistry.factory.create(deserializedPayload);

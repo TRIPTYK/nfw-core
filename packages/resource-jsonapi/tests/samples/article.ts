@@ -13,7 +13,6 @@ export class ArticleFactory extends AbstractResourceFactory<ArticleResource> {
 }
 
 export class ArticleResource extends AbstractResource {
-  public id?: string | undefined;
   public declare name: string;
   public declare writer: UserResource;
   public validate () {}
@@ -35,6 +34,8 @@ export class ArticleAdapter extends JsonApiResourceAdapter<ArticleResource> {
   create = vi.fn() as any;
   findAll = vi.fn() as any;
   findById = vi.fn() as any;
+  update = vi.fn() as any;
+  delete = vi.fn() as any;
 }
 
 export class ArticleValidator extends AbstractResourceValidator<ArticleResource> {

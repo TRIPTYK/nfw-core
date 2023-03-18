@@ -14,8 +14,8 @@ export interface PageQuery {
 }
 
 export interface JsonApiQuery {
-    fields: Record<string, string[]>,
-    include: IncludeQuery[],
+    fields?: Record<string, string[]>,
+    include?: IncludeQuery[],
     sort?: SortQuery,
     filter?: FilterQuery,
     page?: PageQuery,

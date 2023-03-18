@@ -200,6 +200,7 @@ importers:
       json-api-query-parser: link:../../../json-api-query-parser
       json-api-serializer: 2.6.6
       pluralize: 8.0.0
+      resources: link:../../../resources
     devDependencies:
       '@triptyk/nfw-core': link:../core
       '@types/chai': 4.3.4
@@ -207,7 +208,6 @@ importers:
       '@types/node': 18.13.0
       '@types/pluralize': 0.0.29
       reflect-metadata: 0.1.13
-      resources: link:../../../resources
       type-fest: 3.5.7
       typescript: 4.9.5
       vitest: 0.28.4

@@ -30,7 +30,7 @@ const payload = {
 };
 
 test('It transforms a jsonapi payload into a resource and populates nested resources', async () => {
-  const deserializer = registry.get('article').deserializer;
+  const deserializer = registry.getDeserializerFor('article');
 
   const deserialized = await deserializer.deserialize(payload) as ArticleResource;
 

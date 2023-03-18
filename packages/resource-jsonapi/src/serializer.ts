@@ -2,7 +2,7 @@
 /* eslint-disable max-statements */
 import JSONAPISerializer from 'json-api-serializer';
 import type { AbstractResource } from 'resources';
-import { AbstractResourceSerializer } from 'resources';
+import { AbstractResourceSerializer } from 'resources/build/src/serializer/abstract.js';
 import { SerializerGenerator } from './utils/serializer-generator.js';
 
 export class JsonApiResourceSerializer<T extends AbstractResource> extends AbstractResourceSerializer<T> {
@@ -13,7 +13,7 @@ export class JsonApiResourceSerializer<T extends AbstractResource> extends Abstr
     return this.serializer.serialize(this.ownRegistry.schema.type, resources.map((r) => r.toJSON()));
   }
 
-  public async serialize (resource: T): Promise<unknown> {
+  public async serializeOne (resource: T): Promise<unknown> {
     this.generateSerializer();
     return this.serializer.serialize(this.ownRegistry.schema.type, resource.toJSON());
   }

@@ -1,14 +1,14 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
 import type { ResourceSchema, ResourcesRegistry } from 'resources';
-import { AbstractResourceAuthorizer, AbstractResourceAdapter, AbstractResourceValidator, AbstractResource, AbstractResourceFactory } from 'resources';
+import { AbstractResourceValidator, AbstractResourceAdapter, AbstractResource, AbstractResourceFactory, AbstractResourceAuthorizer } from 'resources';
 import { JsonApiResourceDeserializer } from '../../src/deserializer.js';
+import { JsonApiResourceSerializer } from '../../src/serializer.js';
 import type { ArticleResource } from './article.js';
 
 export class UserFactory extends AbstractResourceFactory<UserResource> {}
 
 export class UserResource extends AbstractResource {
-  public id?: string | undefined;
   public declare name: string;
   public declare articles: ArticleResource[];
 }
@@ -26,9 +26,8 @@ export class UserSchema implements ResourceSchema<UserResource> {
   type = 'user';
 }
 
-export class UserDeserializer extends JsonApiResourceDeserializer<UserResource> {
-
-}
+export class UserDeserializer extends JsonApiResourceDeserializer<UserResource> {}
+export class UserSerializer extends JsonApiResourceSerializer<UserResource> {}
 
 export class UserAdapter extends AbstractResourceAdapter<UserResource> {
   protected saveToDatasource (resource: UserResource): unknown {
@@ -47,7 +46,7 @@ export function registerUser (registry: ResourcesRegistry) {
     deserializer: UserDeserializer,
     schema: UserSchema,
     resourceClass: UserResource,
-    serializer: UserDeserializer as never,
+    serializer: UserSerializer,
     factory: UserFactory,
     adapter: UserAdapter,
     authorizer: UserAuthorizer,

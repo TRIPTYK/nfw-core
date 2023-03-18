@@ -5,8 +5,8 @@ export class SerializerGenerator {
   private processedTypes: string[] = [];
 
   public constructor (
-      private registry: ResourcesRegistry,
-      private serializer: JSONAPISerializer
+    private registry: ResourcesRegistry,
+    private serializer: JSONAPISerializer
   ) {}
 
   public generate<T extends ResourceSchema<any>> (schema: T): void {
@@ -24,7 +24,7 @@ export class SerializerGenerator {
   }
 
   private generateForRelation (schema: JSONAPISerializer.Options, relationName: string, relationType: string) {
-    const relationSchema = this.registry.get(relationType!).schema as ResourceSchema<any>;
+    const relationSchema = this.registry.getSchemaFor(relationType) as ResourceSchema<any>;
 
     schema.relationships![relationName] = {
       type: relationSchema.type

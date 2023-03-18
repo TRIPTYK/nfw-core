@@ -16,9 +16,9 @@ beforeEach(async () => {
 });
 
 test('serializes a resource', async () => {
-  const serializer = registry.get('article').serializer;
+  const serializer = registry.getSerializerFor('article');
 
-  const resource = await registry.get('article').factory.create({
+  const resource = await registry.getFactoryFor('article').create({
     name: '123',
     writer: {
       id: '123',
@@ -26,7 +26,7 @@ test('serializes a resource', async () => {
     }
   });
 
-  const serialized = await serializer.serialize(resource);
+  const serialized = await serializer.serializeOne(resource);
 
   expect(serialized).toStrictEqual({
     jsonapi: { version: '1.0' },
@@ -63,9 +63,9 @@ test('serializes a resource', async () => {
 });
 
 test('serializes many resources', async () => {
-  const serializer = registry.get('article').serializer;
+  const serializer = registry.getSerializerFor('article');
 
-  const resource = await registry.get('article').factory.create({
+  const resource = await registry.getFactoryFor('article').create({
     name: '123',
     writer: {
       id: '123',
