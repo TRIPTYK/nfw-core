@@ -18,7 +18,7 @@ export class JsonApiQueryParserImpl implements JsonApiQueryParser {
       include: parsed.include,
       page: {
         number: page?.number,
-        size: page?.sizer
+        size: page?.size
       },
       filter: parsed.filter ? JSON.parse(parsed.filter as string) : undefined
     };

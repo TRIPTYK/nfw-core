@@ -80,14 +80,14 @@ importers:
       '@types/chai': ^4.3.4
       '@types/koa': ^2.13.5
       '@types/koa__router': ^12.0.0
-      '@types/node': ^18.13.0
+      '@types/node': ^18.15.5
       is-class: ~0.0.9
       koa: ^2.14.1
-      node-fetch: ^3.2.10
-      node-mocks-http: ^1.11.0
+      node-fetch: ^3.3.1
+      node-mocks-http: ^1.12.2
       reflect-metadata: ^0.1.13
-      type-fest: ^3.5.7
-      typescript: ~4.9.5
+      type-fest: ^3.6.1
+      typescript: 5.0.2
       vitest: ^0.29.7
     dependencies:
       '@koa/router': 12.0.0
@@ -97,13 +97,13 @@ importers:
       '@types/chai': 4.3.4
       '@types/koa': 2.13.5
       '@types/koa__router': 12.0.0
-      '@types/node': 18.13.0
+      '@types/node': 18.15.5
       koa: 2.14.1
-      node-fetch: 3.3.0
-      node-mocks-http: 1.12.1
+      node-fetch: 3.3.1
+      node-mocks-http: 1.12.2
       reflect-metadata: 0.1.13
-      type-fest: 3.5.7
-      typescript: 4.9.5
+      type-fest: 3.6.1
+      typescript: 5.0.2
       vitest: 0.29.7
 
   packages/jsonapi:
@@ -1072,7 +1072,7 @@ packages:
       '@types/http-errors': 2.0.1
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
-      '@types/node': 18.13.0
+      '@types/node': 18.15.5
     dev: true
 
   /@types/koa__router/12.0.0:
@@ -3924,6 +3924,15 @@ packages:
       formdata-polyfill: 4.0.10
     dev: true
 
+  /node-fetch/3.3.1:
+    resolution: {integrity: sha512-cRVc/kyto/7E5shrWca1Wsea4y6tL9iYJE5FBCius3JQfb/4P4I295PfhgbJQBLTx6lATE4z+wK0rPM4VS2uow==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      data-uri-to-buffer: 4.0.0
+      fetch-blob: 3.2.0
+      formdata-polyfill: 4.0.10
+    dev: true
+
   /node-gyp/8.4.1:
     resolution: {integrity: sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w==}
     engines: {node: '>= 10.12.0'}
@@ -3948,6 +3957,22 @@ packages:
 
   /node-mocks-http/1.12.1:
     resolution: {integrity: sha512-jrA7Sn3qI6GsHgWtUW3gMj0vO6Yz0nJjzg3jRZYjcfj4tzi8oWPauDK1qHVJoAxTbwuDHF1JiM9GISZ/ocI/ig==}
+    engines: {node: '>=0.6'}
+    dependencies:
+      accepts: 1.3.8
+      content-disposition: 0.5.4
+      depd: 1.1.2
+      fresh: 0.5.2
+      merge-descriptors: 1.0.1
+      methods: 1.1.2
+      mime: 1.6.0
+      parseurl: 1.3.3
+      range-parser: 1.2.1
+      type-is: 1.6.18
+    dev: true
+
+  /node-mocks-http/1.12.2:
+    resolution: {integrity: sha512-xhWwC0dh35R9rf0j3bRZXuISXdHxxtMx0ywZQBwjrg3yl7KpRETzogfeCamUIjltpn0Fxvs/ZhGJul1vPLrdJQ==}
     engines: {node: '>=0.6'}
     dependencies:
       accepts: 1.3.8
@@ -5208,7 +5233,7 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /vite-node/0.28.4_@types+node@18.13.0:
+  /vite-node/0.28.4_@types+node@18.15.5:
     resolution: {integrity: sha512-KM0Q0uSG/xHHKOJvVHc5xDBabgt0l70y7/lWTR7Q0pR5/MrYxadT+y32cJOE65FfjGmJgxpVEEY+69btJgcXOQ==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -5220,7 +5245,7 @@ packages:
       picocolors: 1.0.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.1.1_@types+node@18.13.0
+      vite: 4.1.1_@types+node@18.15.5
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -5250,40 +5275,6 @@ packages:
       - sugarss
       - supports-color
       - terser
-    dev: true
-
-  /vite/4.1.1_@types+node@18.13.0:
-    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 18.13.0
-      esbuild: 0.16.17
-      postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 3.15.0
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /vite/4.1.1_@types+node@18.15.5:
@@ -5344,7 +5335,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.13.0
+      '@types/node': 18.15.5
       '@vitest/expect': 0.28.4
       '@vitest/runner': 0.28.4
       '@vitest/spy': 0.28.4
@@ -5363,8 +5354,8 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.1
       tinyspy: 1.1.1
-      vite: 4.1.1_@types+node@18.13.0
-      vite-node: 0.28.4_@types+node@18.13.0
+      vite: 4.1.1_@types+node@18.15.5
+      vite-node: 0.28.4_@types+node@18.15.5
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
