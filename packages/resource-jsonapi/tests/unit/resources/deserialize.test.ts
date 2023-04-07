@@ -1,41 +1,51 @@
-
 import 'reflect-metadata';
-import { container } from '@triptyk/nfw-core';
-import type { ResourcesRegistry } from 'resources';
-import { test, expect, beforeEach } from 'vitest';
-import { JsonApiRegistryImpl } from '../../../src/registry/registry.js';
-import { ArticleResource, registerArticle } from '../../samples/article.js';
-import { registerUser, UserResource } from '../../samples/user.js';
+import { assert, test } from "vitest";
+import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
+import { ResourceSchema } from 'resources';
+import { defaultAttribute, defaultRelation } from "./utils.js";
 
-let registry : ResourcesRegistry;
+const schema: ResourceSchema<never> = {
+  type: 'article',
+  attributes: {
+    name: defaultAttribute(),
+  },
+  relationships: {
+    relation: defaultRelation('user','belongs-to')
+  }
+} as never;
 
-beforeEach(async () => {
-  registry = container.resolve(JsonApiRegistryImpl);
-  registerArticle(registry);
-  registerUser(registry);
-});
-
-const payload = {
-  data: {
-    type: 'article',
-    attributes: {
-      name: 'Ember Hamster'
+test("It deserializes a payload and ignores unknown",async () => {
+  const deserializer = new JsonApiResourceDeserializer('article', {
+    getSchemaFor() {
+      return schema;
     },
-    relationships: {
-      writer: {
-        data: { type: 'user', id: '9' }
+  } as never);
+
+  const deserialized = await deserializer.deserialize({
+    data: {
+      attributes: {
+        name: 'hello',
+        unknown_field: 'treuc'
+      },
+      relationships: {
+        relation: {
+          data: {
+            type: 'user',
+            id: '1'
+          }
+        },
+        relation2: {
+          data: {
+            type: 'user',
+            id: '1'
+          }
+        }
       }
     }
-  }
-};
+  })
 
-test('It transforms a jsonapi payload into a resource and populates nested resources', async () => {
-  const deserializer = registry.getDeserializerFor('article');
-
-  const deserialized = await deserializer.deserialize(payload) as ArticleResource;
-
-  expect(deserialized).toBeInstanceOf(ArticleResource);
-  expect(deserialized.id).toBe(undefined);
-  expect(deserialized.writer).toBeInstanceOf(UserResource);
-  expect(deserialized.writer.id).toBe('9');
-});
+  assert.deepEqual<any>(deserialized, {
+    name: 'hello',
+    relation: '1'
+  });
+})

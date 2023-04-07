@@ -1,20 +1,54 @@
 /* eslint-disable class-methods-use-this */
-import type { AbstractResource, ResourcesRegistry } from 'resources';
-import { AbstractResourcesRegistry } from 'resources';
+import type { Resource, ResourceAdapter, ResourceAuthorizer, ResourceDeserializer, ResourceFactory, ResourceSchema, ResourceSerializer, ResourceValidator, ResourcesRegistry } from 'resources';
 import { container, singleton } from '@triptyk/nfw-core';
-import type { StringKeyOf, Class } from 'type-fest';
-import type { JsonApiResourceRegistry } from './resource-registry.js';
-import type { JsonApiRegistration } from './registration.js';
-
-export interface JsonApiResourcesRegistry extends ResourcesRegistry {
-  register<T extends AbstractResource>(type: string, registry: JsonApiRegistration<T>): void,
-  isRegistered(type: string): boolean,
-  get<T extends AbstractResource>(type: string): JsonApiResourceRegistry<T>,
-}
+import type { Class } from 'type-fest';
 
 @singleton()
-export class JsonApiRegistryImpl extends AbstractResourcesRegistry {
-  protected resolveInstance<T extends AbstractResource, K extends StringKeyOf<JsonApiResourceRegistry<T>>> (instanceToken: Class<JsonApiResourceRegistry<T>[K]>): JsonApiResourceRegistry<T>[K] {
-    return container.resolve(instanceToken);
+export class ResourcesRegistryImpl implements ResourcesRegistry {
+  getSchemaFor<T extends Resource> (type: string): ResourceSchema<T> {
+    return container.resolve(`schema:${type}`);
+  }
+
+  getSerializerFor<T extends Resource> (type: string): ResourceSerializer<T> {
+    return container.resolve(`serializer:${type}`);
+  }
+
+  getAdapterFor (type: string): object {
+    return container.resolve(`adapter:${type}`);
+  }
+
+  getDeserializerFor<T extends Resource> (type: string): ResourceDeserializer<T> {
+    return container.resolve(`deserializer:${type}`);
+  }
+
+  getValidatorFor<T extends Resource> (type: string): ResourceValidator<T> {
+    return container.resolve(`validator:${type}`);
+  }
+
+  getAuthorizerFor<T extends Resource> (type: string): ResourceAuthorizer<unknown, T, string, unknown> {
+    return container.resolve(`authorizer:${type}`);
+  }
+
+  getFactoryFor<T extends Resource> (type: string): ResourceFactory<T> {
+    return container.resolve(`factory:${type}`);
+  }
+
+  // eslint-disable-next-line max-statements
+  register<T extends Resource> (type: string, classes: {
+    serializer: Class<ResourceSerializer<T>>,
+    deserializer: Class<ResourceDeserializer<T>>,
+    factory: Class<ResourceFactory<T>>,
+    adapter: Class<ResourceAdapter>,
+    validator: Class<ResourceValidator<T>>,
+    authorizer: Class<ResourceAuthorizer<unknown, T, string>>,
+    schema: Class<ResourceSchema<T>>,
+  }): void {
+    container.register(`serializer:${type}`, { useClass: classes.serializer });
+    container.register(`deserializer:${type}`,{ useClass: classes.deserializer });
+    container.register(`factory:${type}`, classes.factory);
+    container.register(`adapter:${type}`, classes.adapter);
+    container.register(`validator:${type}`, classes.validator);
+    container.register(`authorizer:${type}`, classes.authorizer);
+    container.register(`schema:${type}`, classes.schema);
   }
 }

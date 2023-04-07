@@ -1,110 +1,172 @@
-/* eslint-disable unicorn/no-null */
-import 'reflect-metadata';
-import { container } from '@triptyk/nfw-core';
-import type { ResourcesRegistry } from 'resources';
-import { beforeEach, test, expect } from 'vitest';
-import { JsonApiRegistryImpl } from '../../../src/registry/registry.js';
-import { registerArticle } from '../../samples/article.js';
-import { registerUser } from '../../samples/user.js';
+import "reflect-metadata";
+import { describe, it, expect, vi } from "vitest";
+import { JsonApiResourceSerializer } from "../../../src/serializer.js";
+import { Resource } from "resources";
+import type { ResourceSchema } from "resources";
+import { defaultAttribute, defaultRelation } from "./utils.js";
 
-let registry : ResourcesRegistry;
+const schema: ResourceSchema<never> = {
+  type: "test",
+  attributes: {
+    name: defaultAttribute(),
+  },
+  relationships: {
+    relation: defaultRelation("dummy", "belongs-to"),
+  },
+} as never;
 
-beforeEach(async () => {
-  registry = container.resolve(JsonApiRegistryImpl);
-  registerArticle(registry);
-  registerUser(registry);
-});
+const schemaForRelationship: ResourceSchema<never> = {
+  type: "dummy",
+  attributes: {
+    name: defaultAttribute(),
+  },
+  relationships: {
+    test: defaultRelation("test", "belongs-to"),
+  },
+} as never;
 
-test('serializes a resource', async () => {
-  const serializer = registry.getSerializerFor('article');
-
-  const resource = await registry.getFactoryFor('article').create({
-    name: '123',
-    writer: {
-      id: '123',
-      name: 'amaury'
-    }
-  });
-
-  const serialized = await serializer.serializeOne(resource);
-
-  expect(serialized).toStrictEqual({
-    jsonapi: { version: '1.0' },
-    meta: undefined,
-    links: undefined,
-    data: {
-      type: 'article',
-      id: undefined,
-      attributes: { name: '123' },
-      relationships: {
-        writer: {
-          data: {
-            id: '123',
-            type: 'user'
-          },
-          links: undefined,
-          meta: undefined
-        }
-      },
-      meta: undefined,
-      links: undefined
-    },
-    included: [
-      {
-        type: 'user',
-        id: '123',
-        attributes: { name: 'amaury' },
-        relationships: undefined,
-        meta: undefined,
-        links: undefined
+describe("JsonApiResourceSerializer", () => {
+  const registryMock = {
+    getSchemaFor: vi.fn((type) => {
+      if (type === "dummy") {
+        return schemaForRelationship;
+      } else {
+        return schema;
       }
-    ]
-  });
-});
+    }),
+  };
 
-test('serializes many resources', async () => {
-  const serializer = registry.getSerializerFor('article');
+  class TestResource implements Resource {
+    type: string = "test";
+    id?: string;
+    name!: string;
+    relation!: DummyResource;
+  }
 
-  const resource = await registry.getFactoryFor('article').create({
-    name: '123',
-    writer: {
-      id: '123',
-      name: 'amaury'
-    }
-  });
+  class DummyResource implements Resource {
+    type: string = "dummy";
+    id?: string;
+    declare name: string;
+  }
 
-  const serialized = await serializer.serializeMany([resource]);
+  class TestSerializer extends JsonApiResourceSerializer<TestResource> {
+    type: string = "test";
+  }
 
-  expect(serialized).toStrictEqual({
-    jsonapi: { version: '1.0' },
-    meta: undefined,
-    links: undefined,
-    data: [{
-      type: 'article',
-      id: undefined,
-      attributes: { name: '123' },
-      relationships: {
-        writer: {
-          data: {
-            id: '123',
-            type: 'user'
-          },
-          links: undefined,
-          meta: undefined
-        }
-      },
-      meta: undefined,
-      links: undefined
-    }],
-    included: [
-      {
-        type: 'user',
-        id: '123',
-        attributes: { name: 'amaury' },
-        relationships: undefined,
+  const serializer = new TestSerializer("test", registryMock as never);
+
+  function makeTestResource() {
+    const resource = new TestResource();
+    resource.id = "1";
+    resource.name = "Test";
+    return resource;
+  }
+
+  function makeDummyResource() {
+    const resource = new DummyResource();
+    resource.id = "1";
+    resource.name = "Test";
+    return resource;
+  }
+
+  describe("serializeOne", () => {
+    it("should serialize one resource", async () => {
+      const resource = makeTestResource();
+
+      const expectedResult = {
+        jsonapi: {
+          version: "1.0",
+        },
+        included: undefined,
+        links: undefined,
         meta: undefined,
-        links: undefined
-      }
-    ]
+        data: {
+          links: undefined,
+          meta: undefined,
+          relationships: undefined,
+          type: "test",
+          id: "1",
+          attributes: {
+            name: "Test",
+          },
+        },
+      };
+      const result = await serializer.serializeOne(resource);
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe("serializeMany", () => {
+    it("should serialize many resources", async () => {
+      const resource = makeTestResource();
+      const expectedResult = {
+        jsonapi: {
+          version: "1.0",
+        },
+        included: undefined,
+        links: undefined,
+        meta: undefined,
+        data: [
+          {
+            links: undefined,
+            meta: undefined,
+            relationships: undefined,
+            type: "test",
+            id: "1",
+            attributes: {
+              name: "Test",
+            },
+          },
+        ],
+      };
+      const result = await serializer.serializeMany([resource]);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should serialize many resources and relationships", async () => {
+      const resource = makeTestResource();
+      resource.relation = makeDummyResource();
+
+      const expectedResult = {
+        jsonapi: {
+          version: "1.0",
+        },
+        links: undefined,
+        meta: undefined,
+        data: [
+          {
+            links: undefined,
+            meta: undefined,
+            relationships: {
+              relation: {
+                data: {
+                  type: "dummy",
+                  id: "1",
+                },
+              },
+            },
+            type: "test",
+            id: "1",
+            attributes: {
+              name: "Test",
+            },
+          },
+        ],
+        included: [
+          {
+            attributes: {
+              name: "Test",
+            },
+            id: "1",
+            links: undefined,
+            meta: undefined,
+            relationships: undefined,
+            type: "dummy",
+          },
+        ],
+      };
+      const result = await serializer.serializeMany([resource]);
+      expect(result).toEqual(expectedResult);
+    });
   });
 });

@@ -11,12 +11,13 @@ export class SerializerGenerator {
 
   public generate<T extends ResourceSchema<any>> (schema: T): void {
     const jsonApiSchema: JSONAPISerializer.Options = {
-      relationships: {}
+      relationships: {},
+      whitelist: Object.keys(schema.attributes)
     };
 
     for (const [relationName, relationType] of Object.entries(schema.relationships)) {
       if (relationType) {
-        this.generateForRelation(jsonApiSchema, relationName, relationType);
+        this.generateForRelation(jsonApiSchema, relationName, relationType.type);
       }
     }
 
@@ -27,7 +28,7 @@ export class SerializerGenerator {
     const relationSchema = this.registry.getSchemaFor(relationType) as ResourceSchema<any>;
 
     schema.relationships![relationName] = {
-      type: relationSchema.type
+      type: relationSchema.type,
     };
 
     if (this.processedTypes.includes(relationSchema.type)) {

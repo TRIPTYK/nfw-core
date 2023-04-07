@@ -1,12 +1,11 @@
-import type { AbstractResource } from 'resources';
-import { AbstractResourceAdapter } from 'resources';
 import type { Promisable } from 'type-fest';
 import type { JsonApiQuery } from './query/query.js';
+import type { Resource, ResourceAdapter } from 'resources';
 
-export abstract class JsonApiResourceAdapter<T extends AbstractResource> extends AbstractResourceAdapter<T> {
-    abstract create(resource: T, query: JsonApiQuery): Promisable<void>;
-    abstract findAll(query: JsonApiQuery): Promisable<[T[], number]>;
-    abstract findById(id: string, query: JsonApiQuery): Promisable<T>;
-    abstract update(resource: T, query: JsonApiQuery): Promisable<void>;
-    abstract delete(resource: T, query: JsonApiQuery): Promisable<void>;
+export interface JsonApiResourceAdapter<T extends Resource> extends ResourceAdapter {
+    create(resource: T, query: JsonApiQuery): Promisable<void>,
+    findAll(query: JsonApiQuery): Promisable<[T[], number]>,
+    findById(id: string, query: JsonApiQuery): Promisable<T>,
+    update(resource: T, query: JsonApiQuery): Promisable<void>,
+    delete(resource: T, query: JsonApiQuery): Promisable<void>,
 }

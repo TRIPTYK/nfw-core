@@ -1,30 +1,43 @@
 
-import JSONAPISerializer from 'json-api-serializer';
-import type { AbstractResource } from 'resources';
-import { AbstractResourceDeserializer } from 'resources';
+import JSONAPISerializer, { RelationshipOptions } from 'json-api-serializer';
+import { Resource, ResourceDeserializer, ResourceProperties, ResourceSchema, SchemaRelationship, deserializationSchema } from 'resources';
+import { deserialize, ResourcesRegistry } from 'resources';
 
-export class JsonApiResourceDeserializer<T extends AbstractResource> extends AbstractResourceDeserializer<T> {
-  public async deserialize (payload: Record<string, unknown>): Promise<T> {
-    const serializer = this.createSerializerFromSchema();
-    const deserializedPayload = this.deserializeAndWrapRelations(serializer, payload);
-    return this.ownRegistry.factory.create(deserializedPayload);
+export class JsonApiResourceDeserializer<T extends Resource> implements ResourceDeserializer<T> {
+  public constructor (
+    public type: string,
+    public registry: ResourcesRegistry
+  ) {
+
   }
 
-  private deserializeAndWrapRelations (Serializer: JSONAPISerializer, payload: Record<string, unknown>) {
-    const deserialized = Serializer.deserialize(this.ownRegistry.schema.type, payload);
-    for (const relation in this.ownRegistry.schema.relationships) {
-      if (Object.hasOwn(deserialized, relation)) {
-        deserialized[relation] = {
-          id: deserialized[relation]
-        };
-      }
-    }
-    return deserialized;
+  get schema() {
+     return deserializationSchema(this.registry.getSchemaFor(this.type));
+  }
+
+  public async deserialize (payload: Record<string, unknown>): Promise<Partial<ResourceProperties<T>>> {
+    const serializer = this.createSerializerFromSchema();
+    const deserialized = serializer.deserialize(this.type, payload);
+    return deserialize(deserialized, this.schema as never);
   }
 
   private createSerializerFromSchema () {
+    const relationships = this.formatRelationships(this.schema);
+
     const Serializer = new JSONAPISerializer();
-    Serializer.register(this.ownRegistry.schema.type);
+    Serializer.register(this.type, {
+      whitelistOnDeserialize: Object.keys(this.schema.attributes),
+      relationships
+    });
     return Serializer;
+  }
+
+  private formatRelationships(schema: ResourceSchema<Resource>) {
+    return Object.entries(schema.relationships).reduce((c, [relationName, relationDescriptor], i) => {
+      c[relationName] = {
+        type: (relationDescriptor as SchemaRelationship).type
+      } as RelationshipOptions;
+      return c;
+    }, {} as Record<string, RelationshipOptions>);
   }
 }
