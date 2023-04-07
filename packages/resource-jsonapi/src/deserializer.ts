@@ -1,7 +1,8 @@
 
-import JSONAPISerializer, { RelationshipOptions } from 'json-api-serializer';
-import { Resource, ResourceDeserializer, ResourceProperties, ResourceSchema, SchemaRelationship, deserializationSchema } from 'resources';
-import { deserialize, ResourcesRegistry } from 'resources';
+import type { RelationshipOptions } from 'json-api-serializer';
+import JSONAPISerializer from 'json-api-serializer';
+import type { Resource, ResourceDeserializer, ResourceProperties, ResourceSchema, SchemaRelationship, ResourcesRegistry } from 'resources';
+import { deserializationSchema, deserialize } from 'resources';
 
 export class JsonApiResourceDeserializer<T extends Resource> implements ResourceDeserializer<T> {
   public constructor (
@@ -11,8 +12,8 @@ export class JsonApiResourceDeserializer<T extends Resource> implements Resource
 
   }
 
-  get schema() {
-     return deserializationSchema(this.registry.getSchemaFor(this.type));
+  get schema () {
+    return deserializationSchema(this.registry.getSchemaFor(this.type));
   }
 
   public async deserialize (payload: Record<string, unknown>): Promise<Partial<ResourceProperties<T>>> {
@@ -32,7 +33,7 @@ export class JsonApiResourceDeserializer<T extends Resource> implements Resource
     return Serializer;
   }
 
-  private formatRelationships(schema: ResourceSchema<Resource>) {
+  private formatRelationships (schema: ResourceSchema<Resource>) {
     return Object.entries(schema.relationships).reduce((c, [relationName, relationDescriptor], i) => {
       c[relationName] = {
         type: (relationDescriptor as SchemaRelationship).type

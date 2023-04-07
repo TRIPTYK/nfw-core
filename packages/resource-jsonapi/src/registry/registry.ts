@@ -13,20 +13,8 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     return container.resolve(`serializer:${type}`);
   }
 
-  getAdapterFor (type: string): object {
-    return container.resolve(`adapter:${type}`);
-  }
-
   getDeserializerFor<T extends Resource> (type: string): ResourceDeserializer<T> {
     return container.resolve(`deserializer:${type}`);
-  }
-
-  getValidatorFor<T extends Resource> (type: string): ResourceValidator<T> {
-    return container.resolve(`validator:${type}`);
-  }
-
-  getAuthorizerFor<T extends Resource> (type: string): ResourceAuthorizer<unknown, T, string, unknown> {
-    return container.resolve(`authorizer:${type}`);
   }
 
   getFactoryFor<T extends Resource> (type: string): ResourceFactory<T> {
@@ -44,7 +32,7 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     schema: Class<ResourceSchema<T>>,
   }): void {
     container.register(`serializer:${type}`, { useClass: classes.serializer });
-    container.register(`deserializer:${type}`,{ useClass: classes.deserializer });
+    container.register(`deserializer:${type}`, { useClass: classes.deserializer });
     container.register(`factory:${type}`, classes.factory);
     container.register(`adapter:${type}`, classes.adapter);
     container.register(`validator:${type}`, classes.validator);
