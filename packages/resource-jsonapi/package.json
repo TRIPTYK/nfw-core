@@ -43,7 +43,6 @@
     "@triptyk/nfw-core": "workspace:*"
   },
   "dependencies": {
-    "resources": "link:../../../resources",
     "json-api-query-parser": "link:../../../json-api-query-parser",
     "json-api-serializer": "^2.6.6",
     "pluralize": "~8.0.0"

@@ -1,18 +1,18 @@
+// eslint-disable-next-line max-classes-per-file
 import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
+import type { ResourceSchema } from "../../../src/index.js";
 import { JsonApiResourceSerializer } from "../../../src/serializer.js";
-import { Resource } from "resources";
-import type { ResourceSchema } from "resources";
-import { defaultAttribute, defaultRelation } from "./utils.js";
+import {defaultAttribute, defaultRelation} from "../test-utils/default-schema-parts.js";
 
-const schema: ResourceSchema<never> = {
+const schema: ResourceSchema<{}> = {
   type: "test",
   attributes: {
     name: defaultAttribute(),
   },
   relationships: {
     relation: defaultRelation("dummy", "belongs-to"),
-  },
+  }
 } as never;
 
 const schemaForRelationship: ResourceSchema<never> = {
@@ -25,6 +25,7 @@ const schemaForRelationship: ResourceSchema<never> = {
   },
 } as never;
 
+// eslint-disable-next-line max-statements
 describe("JsonApiResourceSerializer", () => {
   const registryMock = {
     getSchemaFor: vi.fn((type) => {
@@ -36,14 +37,15 @@ describe("JsonApiResourceSerializer", () => {
     }),
   };
 
-  class TestResource implements Resource {
+  class TestResource {
+		[key: string]: unknown;
     type: string = "test";
     id?: string;
     name!: string;
     relation!: DummyResource;
   }
 
-  class DummyResource implements Resource {
+  class DummyResource {
     type: string = "dummy";
     id?: string;
     declare name: string;

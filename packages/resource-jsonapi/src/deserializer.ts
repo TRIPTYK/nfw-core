@@ -1,10 +1,11 @@
 
 import type { RelationshipOptions } from 'json-api-serializer';
 import JSONAPISerializer from 'json-api-serializer';
-import type { Resource, ResourceDeserializer, ResourceProperties, ResourceSchema, SchemaRelationship, ResourcesRegistry } from 'resources';
-import { deserializationSchema, deserialize } from 'resources';
+import { ResourceSchema, SchemaRelationship } from './interfaces/schema';
+import { ResourcesRegistry } from './registry/registry';
+import { ResourceProperties } from './types/resource-properties';
 
-export class JsonApiResourceDeserializer<T extends Resource> implements ResourceDeserializer<T> {
+export class JsonApiResourceDeserializer<T> {
   public constructor (
     public type: string,
     public registry: ResourcesRegistry
@@ -13,17 +14,16 @@ export class JsonApiResourceDeserializer<T extends Resource> implements Resource
   }
 
   get schema () {
-    return deserializationSchema(this.registry.getSchemaFor(this.type));
+    return this.registry.getSchemaFor(this.type) as ResourceSchema<Record<string, unknown>>;
   }
 
-  public async deserialize (payload: Record<string, unknown>): Promise<Partial<ResourceProperties<T>>> {
+  public async deserialize (payload: Record<string, unknown>): Promise<Partial<T>> {
     const serializer = this.createSerializerFromSchema();
-    const deserialized = serializer.deserialize(this.type, payload);
-    return deserialize(deserialized, this.schema as never);
+    return serializer.deserialize(this.type, payload);
   }
 
   private createSerializerFromSchema () {
-    const relationships = this.formatRelationships(this.schema);
+    const relationships = this.formatRelationships();
 
     const Serializer = new JSONAPISerializer();
     Serializer.register(this.type, {
@@ -33,8 +33,8 @@ export class JsonApiResourceDeserializer<T extends Resource> implements Resource
     return Serializer;
   }
 
-  private formatRelationships (schema: ResourceSchema<Resource>) {
-    return Object.entries(schema.relationships).reduce((c, [relationName, relationDescriptor], i) => {
+  private formatRelationships () {
+    return Object.entries(this.schema.relationships).reduce((c, [relationName, relationDescriptor], i) => {
       c[relationName] = {
         type: (relationDescriptor as SchemaRelationship).type
       } as RelationshipOptions;

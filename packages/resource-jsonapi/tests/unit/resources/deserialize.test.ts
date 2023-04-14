@@ -1,24 +1,23 @@
 import 'reflect-metadata';
 import { assert, test } from "vitest";
-import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
-import { ResourceSchema } from 'resources';
-import { defaultAttribute, defaultRelation } from "./utils.js";
+import { JsonApiResourceDeserializer, JsonApiResourceSerializer, ResourceSchema } from '../../../src/index.js';
+import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
 
-const schema: ResourceSchema<never> = {
+const schema: ResourceSchema<Record<string, unknown>> = {
   type: 'article',
   attributes: {
     name: defaultAttribute(),
   },
   relationships: {
-    relation: defaultRelation('user','belongs-to')
+    relation: defaultRelation('user', 'belongs-to')
   }
 } as never;
 
-test("It deserializes a payload and ignores unknown",async () => {
+test('It deserializes a payload and ignores unknown', async () => {
   const deserializer = new JsonApiResourceDeserializer('article', {
-    getSchemaFor() {
+    getSchemaFor () {
       return schema;
-    },
+    }
   } as never);
 
   const deserialized = await deserializer.deserialize({
@@ -42,10 +41,10 @@ test("It deserializes a payload and ignores unknown",async () => {
         }
       }
     }
-  })
+  });
 
   assert.deepEqual<any>(deserialized, {
     name: 'hello',
     relation: '1'
   });
-})
+});
