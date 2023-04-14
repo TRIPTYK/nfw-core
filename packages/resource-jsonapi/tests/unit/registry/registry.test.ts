@@ -12,24 +12,20 @@ describe('ResourcesRegistryImpl', () => {
   class ExampleSerializer {}
   @singleton()
   class ExampleDeserializer {}
-    @singleton()
-  class ExampleFactory {}
-@singleton()
-class ExampleSchema {}
 
 beforeEach(() => {
   resourcesRegistry = container.resolve(ResourcesRegistryImpl);
   resourcesRegistry.register('example', {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
-    schema: ExampleSchema as never
+    schema: {} as never
   });
 });
 
 describe('getSchemaFor', () => {
   it('should resolve the schema for the given type', () => {
     const schema = resourcesRegistry.getSchemaFor('example');
-    expect(schema).toBeInstanceOf(ExampleSchema);
+    expect(schema).toStrictEqual({});
   });
 });
 
