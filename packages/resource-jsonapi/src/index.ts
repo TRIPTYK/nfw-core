@@ -9,11 +9,9 @@ export * from './factories/factory.js';
 
 export * from './interfaces/schema.js';
 
-export * from './utils/assign.js';
 
 export * from './serializer/serializer.js';
 
-export * from './deserializers/deserializer.js';
 
 export * from './errors/resource-type-not-registered.js';
 export * from './errors/unknown-field.js';

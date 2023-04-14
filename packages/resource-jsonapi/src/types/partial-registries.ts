@@ -1,3 +1,3 @@
-import { ResourcesRegistry } from "../main.js";
+import { ResourcesRegistry } from "../index.js";
 
 export type SchemaRegistries = Pick<ResourcesRegistry, 'getSchemaFor'>;

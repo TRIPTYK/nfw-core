@@ -3,9 +3,8 @@
 import JSONAPISerializer from 'json-api-serializer';
 import {ResourcesRegistry} from './registry/registry.js';
 import {ResourceSerializer} from './serializer/serializer.js';
-import { SerializerGenerator } from './utils/serializer-generator.js';
 
-export class JsonApiResourceSerializer<T> implements ResourceSerializer<T> {
+export class JsonApiResourceSerializer<T extends Record<string, unknown>> implements ResourceSerializer<T> {
   private serializer = new JSONAPISerializer();
 
   public constructor (
@@ -26,7 +25,7 @@ export class JsonApiResourceSerializer<T> implements ResourceSerializer<T> {
   }
 
   private generateSerializer () {
-    const generator = new SerializerGenerator(this.registry, this.serializer);
-    generator.generate(this.registry.getSchemaFor(this.type));
+    // const generator = new SerializerGenerator(this.registry, this.serializer);
+    // generator.generate(this.registry.getSchemaFor(this.type));
   }
 }

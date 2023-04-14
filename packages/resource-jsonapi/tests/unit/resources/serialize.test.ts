@@ -5,7 +5,7 @@ import type { ResourceSchema } from "../../../src/index.js";
 import { JsonApiResourceSerializer } from "../../../src/serializer.js";
 import {defaultAttribute, defaultRelation} from "../test-utils/default-schema-parts.js";
 
-const schema: ResourceSchema<never> = {
+const schema: ResourceSchema<{}> = {
   type: "test",
   attributes: {
     name: defaultAttribute(),
@@ -38,6 +38,7 @@ describe("JsonApiResourceSerializer", () => {
   };
 
   class TestResource {
+		[key: string]: unknown;
     type: string = "test";
     id?: string;
     name!: string;

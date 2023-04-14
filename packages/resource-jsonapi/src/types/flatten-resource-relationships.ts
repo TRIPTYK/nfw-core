@@ -1,9 +1,7 @@
-import { Resource } from "../resource/resource.js";
-
 export type FlattenResourceRelationships<T extends object> = {
-    [key in keyof T]: T[key] extends Resource[]
+    [key in keyof T]: T[key] extends Record<string, unknown>[]
     ? string[]
-    : T[key] extends Resource
+    : T[key] extends Record<string, unknown>
     ? string
     : T[key]
 };

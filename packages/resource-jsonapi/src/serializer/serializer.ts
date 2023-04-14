@@ -1,7 +1,6 @@
 import { Promisable } from "type-fest";
-import { Resource } from "../resource/resource.js";
 
-export interface ResourceSerializer<T extends Resource> {
+export interface ResourceSerializer<T extends Record<string, unknown>> {
     serializeOne(resource: T): Promisable<unknown>;
     serializeMany(resource: T[]): Promisable<unknown>;
 }

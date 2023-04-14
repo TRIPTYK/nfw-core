@@ -19,7 +19,7 @@ export class JsonApiResourceDeserializer<T> {
     return this.registry.getSchemaFor(this.type) as ResourceSchema<Record<string, unknown>>;
   }
 
-  public async deserialize (payload: Record<string, unknown>): Promise<Partial<ResourceProperties<T>>> {
+  public async deserialize (payload: Record<string, unknown>): Promise<Partial<T>> {
     const serializer = this.createSerializerFromSchema();
     return serializer.deserialize(this.type, payload);
   }
