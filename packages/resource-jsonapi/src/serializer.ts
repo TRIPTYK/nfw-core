@@ -2,7 +2,7 @@
 /* eslint-disable max-statements */
 import JSONAPISerializer from 'json-api-serializer';
 import {ResourcesRegistry} from './registry/registry.js';
-import {ResourceSerializer} from './serializer/serializer.js';
+import {ResourceSerializer} from './interfaces/serializer.js';
 
 export class JsonApiResourceSerializer<T extends Record<string, unknown>> implements ResourceSerializer<T> {
   private serializer = new JSONAPISerializer();

@@ -22,7 +22,6 @@ beforeEach(() => {
   resourcesRegistry.register('example', {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
-    factory: ExampleFactory as never,
     schema: ExampleSchema as never
   });
 });
@@ -45,13 +44,6 @@ describe('getDeserializerFor', () => {
   it('should resolve the deserializer for the given type', () => {
     const deserializer = resourcesRegistry.getDeserializerFor('example');
     expect(deserializer).toBeInstanceOf(ExampleDeserializer);
-  });
-});
-
-describe('getFactoryFor', () => {
-  it('should resolve the factory for the given type', () => {
-    const factory = resourcesRegistry.getFactoryFor('example');
-    expect(factory).toBeInstanceOf(ExampleFactory);
   });
 });
 });

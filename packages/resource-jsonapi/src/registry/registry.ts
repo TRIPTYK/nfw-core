@@ -1,42 +1,39 @@
 /* eslint-disable class-methods-use-this */
 import { container, singleton } from '@triptyk/nfw-core';
 import type { Class } from 'type-fest';
-
+import { ResourceDeserializer } from '../interfaces/deserializer.js';
+import { ResourceSchema } from '../interfaces/schema.js';
+import { ResourceSerializer } from '../interfaces/serializer.js';
 
 export interface ResourcesRegistry {
-    getSchemaFor<T>(type: string): T;
-    getSerializerFor<T>(type: string): T;
-    getDeserializerFor<T>(type: string): T;
-    getFactoryFor<T>(type: string): T;
+    getSchemaFor<T extends Record<string, unknown>>(type: string): ResourceSchema<T>;
+    getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T>;
+    getDeserializerFor<T extends Record<string, unknown>>(type: string): ResourceDeserializer<T>;
 }
 
 @singleton()
 export class ResourcesRegistryImpl implements ResourcesRegistry {
-  getSchemaFor<T> (type: string): T {
-    return container.resolve(`schema:${type}`);
+  getSchemaFor<T extends Record<string, unknown>> (type: string): ResourceSchema<T> {
+    return container.resolve(`schema:${type}`) as ResourceSchema<T>;
   }
 
-  getSerializerFor<T> (type: string): T {
+  getSerializerFor<T  extends Record<string, unknown>> (type: string): ResourceSerializer<T> {
     return container.resolve(`serializer:${type}`);
   }
 
-  getDeserializerFor<T> (type: string): T {
+  getDeserializerFor<T extends Record<string, unknown>> (type: string): ResourceDeserializer<T> {
     return container.resolve(`deserializer:${type}`);
   }
 
-  getFactoryFor<T> (type: string): T {
-    return container.resolve(`factory:${type}`);
-  }
-
-  register<T> (type: string, classes: {
-    serializer: Class<T>,
-    deserializer: Class<T>,
-    factory: Class<T>,
-    schema: Class<T>,
+  register<T extends  Record<string, unknown>> (type: string, classes: {
+    serializer: Class<ResourceSerializer<T>>,
+    deserializer: Class<ResourceDeserializer<T>>,
+    schema: ResourceSchema<T>,
   }): void {
     container.register(`serializer:${type}`, { useClass: classes.serializer });
     container.register(`deserializer:${type}`, { useClass: classes.deserializer });
-    container.register(`factory:${type}`, classes.factory);
-    container.register(`schema:${type}`, classes.schema);
+    container.register(`schema:${type}`, {
+      useValue: classes.schema
+    });
   }
 }

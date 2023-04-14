@@ -3,7 +3,6 @@ import type { RelationshipOptions } from 'json-api-serializer';
 import JSONAPISerializer from 'json-api-serializer';
 import { ResourceSchema, SchemaRelationship } from './interfaces/schema';
 import { ResourcesRegistry } from './registry/registry';
-import { ResourceProperties } from './types/resource-properties';
 
 export class JsonApiResourceDeserializer<T> {
   public constructor (
