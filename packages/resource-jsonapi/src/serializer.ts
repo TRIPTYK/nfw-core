@@ -2,12 +2,12 @@
 /* eslint-disable max-statements */
 import JSONAPISerializer from 'json-api-serializer';
 import { SerializerGenerator } from './utils/serializer-generator.js';
-import { ResourcesRegistry, serializationSchema } from 'resources';
-import type { Resource, ResourceSerializer } from 'resources';
+import { serializationSchema } from 'resources';
+import type { Resource, ResourceSerializer, ResourcesRegistry } from 'resources';
 
 export class JsonApiResourceSerializer<T extends Resource> implements ResourceSerializer<T> {
   private serializer = new JSONAPISerializer();
-  
+
   public constructor (
     public type: string,
     public registry: ResourcesRegistry

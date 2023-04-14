@@ -17,6 +17,6 @@ export interface MetadataStorageInterface {
     sortedParametersForTarget(target: unknown): UseParamsMetadataArgs[],
     getGuardsForEndpoint(target: unknown, propertyName: string): UseGuardMetadataArgs[],
     getClosestResponseHandlerForEndpoint(target: unknown, propertyName: string): UseResponseHandlerMetadataArgs | undefined,
-    getMiddlewaresForTarget(target: unknown, propertyName?: string): UseMiddlewareMetadataArgs[],
+    getBeforeMiddlewaresForTarget(target: unknown, propertyName?: string): UseMiddlewareMetadataArgs[],
     getEndpointsForTarget(target: unknown): HttpEndpointMetadataArgs[],
 }

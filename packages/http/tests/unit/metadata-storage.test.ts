@@ -7,7 +7,7 @@ import type { UseParamsMetadataArgs } from '../../src/storages/metadata/use-para
 import type { UseResponseHandlerMetadataArgs } from '../../src/storages/metadata/use-response-handler.js';
 import { describe, expect, beforeEach, it } from 'vitest';
 import { RouterMetadataNotFoundError } from '../../src/errors/router-metadata-not-found.js';
-import type { RouteMetadataArgs } from '../../src/index.js';
+import type { RouteMetadataArgs, UseMiddlewareMetadataArgs } from '../../src/index.js';
 import type { Class } from 'type-fest';
 
 describe('Metadata storage tests', () => {
@@ -27,7 +27,7 @@ describe('Metadata storage tests', () => {
   function makeGuardFor (target: unknown, propertyName?: string): UseGuardMetadataArgs {
     return {
       target,
-      guard: class {} as any,
+      guard: class {} as never,
       propertyName,
       args: []
     };
@@ -38,7 +38,7 @@ describe('Metadata storage tests', () => {
       args: [],
       target,
       propertyName,
-      responseHandler: class {} as any
+      responseHandler: class {} as never
     };
   }
 
@@ -47,8 +47,16 @@ describe('Metadata storage tests', () => {
       target,
       controllers: [],
       args: [],
-      builder: class {} as any
+      builder: class {} as never
     };
+  }
+
+  function makeMiddlewareUsageFor (target: Class<unknown>, type: 'before' | 'after'): UseMiddlewareMetadataArgs {
+    return {
+      target,
+      middleware: {} as never,
+      type
+    } satisfies UseMiddlewareMetadataArgs;
   }
 
   class TheTarget {
@@ -137,6 +145,20 @@ describe('Metadata storage tests', () => {
       const handler = makeRouterFor(TheTarget);
       metadataStorage.addRouter(handler);
       expect(metadataStorage.routes.some((r) => r === handler)).toStrictEqual(true);
+    });
+  });
+  describe('Middlewares', () => {
+    it('Gets before middlewares for target', () => {
+      makeMiddlewareUsageFor(TheTarget, 'after');
+      const middlewareMeta = makeMiddlewareUsageFor(TheTarget, 'before');
+      metadataStorage.useMiddlewares.push(middlewareMeta);
+      expect(metadataStorage.getBeforeMiddlewaresForTarget(TheTarget)).toStrictEqual([middlewareMeta]);
+    });
+    it('Gets after middlewares for target', () => {
+      makeMiddlewareUsageFor(TheTarget, 'before');
+      const middlewareMeta = makeMiddlewareUsageFor(TheTarget, 'after');
+      metadataStorage.useMiddlewares.push(middlewareMeta);
+      expect(metadataStorage.getAfterMiddlewaresForTarget(TheTarget)).toStrictEqual([middlewareMeta]);
     });
   });
 });

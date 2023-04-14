@@ -7,5 +7,6 @@
   "eslint.validate": ["javascript", "typescript"],
   "eslint.format.enable": true,
   "typescript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifier": "project-relative"
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

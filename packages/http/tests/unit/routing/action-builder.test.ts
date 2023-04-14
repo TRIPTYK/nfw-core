@@ -56,6 +56,7 @@ describe('Action builder', () => {
     expect(listFn).toBeCalledTimes(1);
     expect(next).toBeCalledTimes(0);
   });
+
   it('Triggers response handler when defined', async () => {
     const handle = vi.fn(async () => {});
 
