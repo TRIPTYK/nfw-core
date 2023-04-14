@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { assert, test } from "vitest";
-import { JsonApiResourceDeserializer, JsonApiResourceSerializer, ResourceSchema } from '../../../src/index.js';
+import { JsonApiResourceDeserializer, ResourceSchema } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
 
 const schema: ResourceSchema<Record<string, unknown>> = {
@@ -11,7 +11,7 @@ const schema: ResourceSchema<Record<string, unknown>> = {
   relationships: {
     relation: defaultRelation('user', 'belongs-to')
   }
-} as never;
+};
 
 test('It deserializes a payload and ignores unknown', async () => {
   const deserializer = new JsonApiResourceDeserializer('article', {
