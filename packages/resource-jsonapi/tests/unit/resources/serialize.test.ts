@@ -28,7 +28,7 @@ const schemaForRelationship: ResourceSchema<never> = {
 // eslint-disable-next-line max-statements
 describe("JsonApiResourceSerializer", () => {
   const registryMock = {
-    getSchemaFor: vi.fn((type) => {
+    getSchemaFor: vi.fn((type: string) => {
       if (type === "dummy") {
         return schemaForRelationship;
       } else {

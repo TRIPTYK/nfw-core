@@ -11,15 +11,12 @@ export class JsonApiQueryParserImpl implements JsonApiQueryParser {
   public parse (search: string): JsonApiQuery {
     const parsed = this.parser.parse(search);
 
-    const page = parsed.page as Record<string, string>;
+    const page = parsed.page;
 
     const parsedAsJsonApiQuery: JsonApiQuery = {
       ...parsed,
       include: parsed.include,
-      page: {
-        number: page?.number,
-        size: page?.size
-      },
+      page,
       filter: parsed.filter ? JSON.parse(parsed.filter as string) : undefined
     };
 

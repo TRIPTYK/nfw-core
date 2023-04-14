@@ -9,8 +9,8 @@ export type FilterQuery = {
 }
 
 export interface PageQuery {
-    number: string,
-    size: string,
+    number: number,
+    size: number,
 }
 
 export interface JsonApiQuery {
