@@ -1,13 +1,13 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable max-statements */
 import JSONAPISerializer from 'json-api-serializer';
+import {ResourcesRegistry} from './registry/registry.js';
+import {ResourceSerializer} from './serializer/serializer.js';
 import { SerializerGenerator } from './utils/serializer-generator.js';
-import { ResourcesRegistry, serializationSchema } from 'resources';
-import type { Resource, ResourceSerializer } from 'resources';
 
-export class JsonApiResourceSerializer<T extends Resource> implements ResourceSerializer<T> {
+export class JsonApiResourceSerializer<T> implements ResourceSerializer<T> {
   private serializer = new JSONAPISerializer();
-  
+
   public constructor (
     public type: string,
     public registry: ResourcesRegistry
@@ -27,6 +27,6 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
 
   private generateSerializer () {
     const generator = new SerializerGenerator(this.registry, this.serializer);
-    generator.generate(serializationSchema(this.registry.getSchemaFor(this.type)));
+    generator.generate(this.registry.getSchemaFor(this.type));
   }
 }

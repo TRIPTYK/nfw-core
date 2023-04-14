@@ -1,5 +1,7 @@
 import type JSONAPISerializer from 'json-api-serializer';
-import type { ResourcesRegistry, ResourceSchema } from 'resources';
+import type { ResourceSchema, SchemaRelationship } from '../interfaces/schema';
+import type { ResourcesRegistry } from '../registry/registry';
+import {filterForWhitelist} from './whitelist-filter';
 
 export class SerializerGenerator {
   private processedTypes: string[] = [];
@@ -9,15 +11,16 @@ export class SerializerGenerator {
     private serializer: JSONAPISerializer
   ) {}
 
-  public generate<T extends ResourceSchema<any>> (schema: T): void {
+  public generate<T extends ResourceSchema<Record<string, unknown>>> (schema: T): void {
     const jsonApiSchema: JSONAPISerializer.Options = {
       relationships: {},
-      whitelist: Object.keys(schema.attributes)
+      whitelist: filterForWhitelist(schema.attributes, "serialize"),
+      whitelistOnDeserialize: filterForWhitelist(schema.attributes, "deserialize"),
     };
 
-    for (const [relationName, relationType] of Object.entries(schema.relationships)) {
-      if (relationType) {
-        this.generateForRelation(jsonApiSchema, relationName, relationType.type);
+    for (const [relationName, relationObject] of Object.entries(schema.relationships)) {
+      if (relationObject) {
+        this.generateForRelation(jsonApiSchema, relationName, (relationObject as SchemaRelationship).type);
       }
     }
 
@@ -25,10 +28,10 @@ export class SerializerGenerator {
   }
 
   private generateForRelation (schema: JSONAPISerializer.Options, relationName: string, relationType: string) {
-    const relationSchema = this.registry.getSchemaFor(relationType) as ResourceSchema<any>;
+    const relationSchema = this.registry.getSchemaFor(relationType) as ResourceSchema<{type: string}>;
 
     schema.relationships![relationName] = {
-      type: relationSchema.type,
+      type: relationSchema.type
     };
 
     if (this.processedTypes.includes(relationSchema.type)) {

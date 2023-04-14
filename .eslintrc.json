@@ -34,6 +34,8 @@
     ],
     "no-return-assign": "off",
     "no-redeclare": "off",
+    "valid-typeof": "off",
+    "comma-dangle": "always",
     "no-use-before-define": "off",
     "no-useless-constructor": "off",
     "max-lines": ["error", 200],

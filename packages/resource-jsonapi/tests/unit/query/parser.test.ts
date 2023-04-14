@@ -18,8 +18,8 @@ it('Parses a jsonapi query string', () => {
       coucou: 1
     },
     page: {
-      size: undefined,
-      number: undefined
+      size: '1',
+      number: '2'
     }
   });
 });
