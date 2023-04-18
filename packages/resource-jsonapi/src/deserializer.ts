@@ -1,10 +1,7 @@
-import type { RelationshipOptions } from 'json-api-serializer';
-import JSONAPISerializer from 'json-api-serializer';
-import {filterForWhitelist} from '../dist/src/utils/whitelist-filter';
-import { ResourceSchema, SchemaRelationship } from './interfaces/schema';
+import { ResourceSchema } from './interfaces/schema';
 import { ResourcesRegistry } from './registry/registry';
 
-export class JsonApiResourceDeserializer<T> {
+export class JsonApiResourceDeserializer<T extends Record<string, unknown>> {
   public constructor (
     public type: string,
     public registry: ResourcesRegistry
@@ -17,7 +14,7 @@ export class JsonApiResourceDeserializer<T> {
   }
 
   public async deserialize (payload: Record<string, unknown>): Promise<Partial<T>> {
-    const serializer = this.registry.getDeserializerFor<JSONAPISerializer>(this.type);
+    const serializer = this.registry.getDeserializerFor<T>(this.type);
     return serializer.deserialize(this.type, payload);
   }
 

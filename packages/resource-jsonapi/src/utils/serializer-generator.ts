@@ -1,5 +1,6 @@
 import type JSONAPISerializer from 'json-api-serializer';
-import type { ResourceSchema, SchemaRelationship } from '../interfaces/schema';
+import type {  SchemaRelationship } from '../interfaces/schema.js';
+import { ResourceSchema } from '../interfaces/schema.js';
 import type { ResourcesRegistry } from '../registry/registry';
 import {filterForWhitelist} from './whitelist-filter';
 
@@ -28,7 +29,7 @@ export class SerializerGenerator {
   }
 
   private generateForRelation (schema: JSONAPISerializer.Options, relationName: string, relationType: string) {
-    const relationSchema = this.registry.getSchemaFor(relationType) as ResourceSchema<{type: string}>;
+    const relationSchema = this.registry.getSchemaFor(relationType);
 
     schema.relationships![relationName] = {
       type: relationSchema.type

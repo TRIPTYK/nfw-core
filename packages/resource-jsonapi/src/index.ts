@@ -6,7 +6,6 @@ export * from './serializer.js';
 export * from './utils/serializer-generator.js';
 export * from './registry/registry.js';
 export * from './query/query.js';
-export * from './factories/factory.js';
 export * from './interfaces/schema.js';
 export * from './interfaces/serializer.js';
 export * from './errors/resource-type-not-registered.js';
