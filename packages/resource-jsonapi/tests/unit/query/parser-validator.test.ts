@@ -5,6 +5,7 @@ import {  ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/
 import type { JsonApiQueryParser } from '../../../src/query/parser.js';
 import { JsonApiQueryParserImpl } from '../../../src/query/parser.js';
 import { UnknownRelationInSchemaError } from '../../../src/errors/unknown-relation.js';
+import {UnallowedSortFieldError} from '../../../src/errors/unallowed-sort-field.js';
 
 let queryParser: JsonApiQueryParser;
 let resourcesRegistry: ResourcesRegistryImpl;
@@ -24,6 +25,7 @@ beforeEach(() => {
       attributes: {
         banane: { 
           serialize: true,
+          sort:true,
           deserialize: true,
         }
       },
@@ -41,6 +43,7 @@ beforeEach(() => {
       attributes: {
         '123': { 
           serialize: true,
+          sort: false,
           deserialize: true,
         }
       },
@@ -88,6 +91,32 @@ describe('Include', () => {
     it('to resolve successfully if all include are in relations list', () => {
       queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
       expect(() => queryParser.parse('include=articles,articles.example', 'example')).not.toThrowError();
+    });
+  })
+})
+
+describe('Sort', () => {
+  const unallowedSortError = new UnallowedSortFieldError("123 are not allowed as sort field for articles", ['123']);
+
+  it('Throw an error when sort field is not true in schema', () => {
+    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+    expect(() => queryParser.parse('sort=123', 'articles')).toThrowError(unallowedSortError);
+  });
+
+  it('to resolve successfully if sort field is true in schema', () => {
+    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+    expect(() => queryParser.parse('sort=banane', 'example')).not.toThrowError();
+  });
+
+  describe('Nested', () => {
+    it('Throw an error when sort field is not true in schema', () => {
+      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+      expect(() => queryParser.parse('sort=articles.123', 'example')).toThrowError(unallowedSortError);
+    });
+
+    it('to resolve successfully if sort field is true in schema', () => {
+      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+      expect(() => queryParser.parse('sort=example.banane', 'articles')).not.toThrowError();
     });
   })
 })

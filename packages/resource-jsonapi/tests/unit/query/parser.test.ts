@@ -21,9 +21,10 @@ beforeEach(() => {
     schema: {
       type: 'example',
       attributes: {
-        banane: { 
+        id: { 
           serialize: true,
           deserialize: true,
+          sort: true
         }
       },
       relationships: {
