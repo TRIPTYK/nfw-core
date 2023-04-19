@@ -1,32 +1,56 @@
 import {UnknownFieldInSchemaError} from "../errors/unknown-field";
-import { ResourceSchema } from "../interfaces/schema";
-import { JsonApiQuery } from "./query";
+import {UnknownRelationInSchemaError} from "../errors/unknown-relation";
+import {ResourcesRegistry} from "../registry/registry";
+import { IncludeQuery, JsonApiQuery } from "./query";
 
-export class QueryValidator<T extends Record<string, unknown>> {
-	constructor(private  schema: ResourceSchema<T>) {}
+export class QueryValidator {
+	constructor(private  registry: ResourcesRegistry, private type: string) {}
 
   public validate(query: JsonApiQuery) {
-    this.validateFields(query);
+    this.validateFields(query.fields);
+    this.validateIncludes(query.include);
   }
 
-  private validateFields(query: JsonApiQuery) {
-    if (query.fields === undefined) {
+  private validateFields(fields: Record<string, string[]> | undefined) {
+    if (fields === undefined) {
       return;
     }
 
-    for (const type in query.fields) {
-      this.banane(query.fields, type)
+    for (const type in fields) {
+      this.validateFieldPresenceInSchema(fields, type)
     }
   }
 
-  private banane(fields: Record<string, string[]>, type: string) {
-      const keysArray = Object.keys(this.schema.attributes);
-      const areFieldsAllowed = fields[type].some(field =>  keysArray.includes(field))
+  private validateFieldPresenceInSchema(fields: Record<string, string[]>, type: string) {
+      const allowedFields = Object.keys(this.registry.getSchemaFor(type).attributes);
+      const unallowedFields = fields[type].filter(field => !allowedFields.includes(field));
 
-      if (!areFieldsAllowed) {
-        const unallowedFields = fields[type].filter(field => !keysArray.includes(field));
+      if (unallowedFields.length) {
         throw new UnknownFieldInSchemaError(`${unallowedFields.join(',')} are not allowed for ${type}`, unallowedFields);
       }
+  }
 
+  private validateIncludes(includes: IncludeQuery[] | undefined) {
+    if (includes === undefined) {
+      return;
+    }
+
+    this.validateRelationPresenceInSchema(includes, this.type)
+    this.validateNestedRelationPresenceInSchema(includes)
+  }
+
+  private validateNestedRelationPresenceInSchema(relations: IncludeQuery[]) {
+   for (const relation of relations) {
+    this.validateRelationPresenceInSchema(relation.nested, relation.relationName);
+   } 
+  }
+
+  private validateRelationPresenceInSchema(relations: IncludeQuery[], type: string) {
+      const allowedRelations = Object.keys(this.registry.getSchemaFor(type).relationships);
+      const unallowedRelations = relations.filter(relation => !allowedRelations.includes(relation.relationName));
+
+      if (unallowedRelations.length) {
+        throw new UnknownRelationInSchemaError(`${unallowedRelations.map(relation => relation.relationName).join(',')} are not allowed for ${type}`, unallowedRelations);
+      }
   }
 }

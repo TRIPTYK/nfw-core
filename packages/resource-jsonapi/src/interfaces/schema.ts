@@ -3,6 +3,8 @@ export type SchemaAttributeTypes = 'string' | 'number' | 'boolean' | 'bigint' | 
 export interface SchemaAttribute {
   serialize: boolean,
   deserialize: boolean,
+  sort?: boolean,
+  filter?: boolean,
   type: SchemaAttributeTypes,
 }
 
