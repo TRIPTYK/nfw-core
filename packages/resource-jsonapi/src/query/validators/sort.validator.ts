@@ -1,11 +1,12 @@
 import {UnallowedSortFieldError} from "../../errors/unallowed-sort-field";
+import {SchemaAttributes} from "../../interfaces/schema";
 import {ResourcesRegistry} from "../../registry/registry";
 import {SortQuery} from "../query";
 
 export class SortValidator {
   constructor(private registry: ResourcesRegistry) {}
 
-  private validate(sort: SortQuery | undefined, type: string) {
+  public validate(sort: SortQuery | undefined, type: string) {
     if (sort === undefined) {
       return;
     }
@@ -35,12 +36,14 @@ export class SortValidator {
 
   private getAllowedFieldAsSort(type: string) {
     const attributes = this.registry.getSchemaFor(type).attributes;
-    const allowedFieldAsSort = [];
-    for (const field in attributes) {
-      if (attributes[field] && attributes[field]?.sort === true) {
-        allowedFieldAsSort.push(field);
-      }
-    }
-    return allowedFieldAsSort;
+    return this.getAttributeWithSortTrue(attributes);
+  }
+
+  private getAttributeWithSortTrue(attributes: SchemaAttributes<Record<string, unknown>>) {
+    return Object.keys(attributes).filter(attribute => this.isSortTrue(attributes, attribute))
+  } 
+
+  private isSortTrue(attributes: SchemaAttributes<Record<string, unknown>>, field: string) {
+    return attributes[field] && attributes[field]?.sort === true
   }
 }

@@ -1,11 +1,9 @@
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it, describe } from 'vitest';
-import {  ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/index.js';
-import type { JsonApiQueryParser } from '../../../src/query/parser.js';
-import { JsonApiQueryParserImpl } from '../../../src/query/parser.js';
-import { UnknownRelationInSchemaError } from '../../../src/errors/unknown-relation.js';
-import {UnallowedSortFieldError} from '../../../src/errors/unallowed-sort-field.js';
+import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser';
+import { ResourcesRegistryImpl } from '../../../../src';
+import { UnallowedSortFieldError } from '../../../../src/errors/unallowed-sort-field';
 
 let queryParser: JsonApiQueryParser;
 let resourcesRegistry: ResourcesRegistryImpl;
@@ -55,47 +53,7 @@ beforeEach(() => {
   });
 });
 
-describe('Fields', () => {
-  it('Throw an error when field is not in attributes', () => {
-  const unknwonFieldError = new UnknownFieldInSchemaError("123 are not allowed for example", ["123"])
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-    expect(() => queryParser.parse('fields[example]=123', 'example')).toThrowError(unknwonFieldError);
-  });
-
-  it('To resolve successfully if all fields are in attributes', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-    expect(() => queryParser.parse('fields[articles]=123', 'example')).not.toThrowError();
-  });
-})
-
-
-describe('Include', () => {
-  const unknwownRelationError = new UnknownRelationInSchemaError("articles are not allowed for articles", [{ relationName: '', nested: []}]);
-
-  it('Throw an error when include is not in relations list', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-    expect(() => queryParser.parse('include=articles', 'articles')).toThrowError(unknwownRelationError);
-  });
-
-  it('to resolve successfully if all include are in relations list', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-    expect(() => queryParser.parse('include=articles', 'example')).not.toThrowError();
-  });
-
-  describe('Nested', () => {
-    it('Throw an error when include is not in relations list', () => {
-      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-      expect(() => queryParser.parse('include=articles,articles.articles', 'example')).toThrowError(unknwownRelationError);
-    });
-
-    it('to resolve successfully if all include are in relations list', () => {
-      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-      expect(() => queryParser.parse('include=articles,articles.example', 'example')).not.toThrowError();
-    });
-  })
-})
-
-describe('Sort', () => {
+describe('Sort Validator', () => {
   const unallowedSortError = new UnallowedSortFieldError("123 are not allowed as sort field for articles", ['123']);
 
   it('Throw an error when sort field is not true in schema', () => {

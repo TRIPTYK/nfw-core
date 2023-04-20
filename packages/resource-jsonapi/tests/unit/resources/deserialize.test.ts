@@ -1,7 +1,11 @@
 import 'reflect-metadata';
-import { assert, test } from "vitest";
-import { JsonApiResourceDeserializer, ResourceSchema } from '../../../src/index.js';
+import {container, singleton} from '@triptyk/nfw-core';
+import { assert, beforeEach, test } from "vitest";
+import { JsonApiResourceDeserializer, ResourceSchema, ResourcesRegistryImpl, SerializerGenerator } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
+
+@singleton()
+class ExampleSerializer {}
 
 const schema: ResourceSchema<Record<string, unknown>> = {
   type: 'article',
@@ -12,14 +16,20 @@ const schema: ResourceSchema<Record<string, unknown>> = {
     relation: defaultRelation('user', 'belongs-to')
   }
 };
+const resourcesRegistry = container.resolve(ResourcesRegistryImpl);
+const deserializer = new SerializerGenerator('article',  resourcesRegistry);
+
+resourcesRegistry.register('article', {
+  serializer: ExampleSerializer as never,
+  deserializer,
+  schema
+});
+
+
+beforeEach(() => {
+});
 
 test('It deserializes a payload and ignores unknown', async () => {
-  const deserializer = new JsonApiResourceDeserializer('article', {
-    getSchemaFor () {
-      return schema;
-    }
-  } as never);
-
   const deserialized = await deserializer.deserialize({
     data: {
       attributes: {

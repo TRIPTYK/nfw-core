@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
-import { beforeEach, expect, it } from 'vitest';
-import { ResourcesRegistryImpl } from '../../../src/index.js';
-import type { JsonApiQueryParser } from '../../../src/query/parser.js';
-import { JsonApiQueryParserImpl } from '../../../src/query/parser.js';
+import { beforeEach, expect, it, describe } from 'vitest';
+import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser';
+import { ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../../src';
 
 let queryParser: JsonApiQueryParser;
 let resourcesRegistry: ResourcesRegistryImpl;
@@ -21,13 +20,10 @@ beforeEach(() => {
     schema: {
       type: 'example',
       attributes: {
-        id: { 
+        banane: { 
           serialize: true,
+          sort:true,
           deserialize: true,
-          sort: true
-        },
-        coucou: {
-          filter: true
         }
       },
       relationships: {
@@ -44,6 +40,7 @@ beforeEach(() => {
       attributes: {
         '123': { 
           serialize: true,
+          sort: false,
           deserialize: true,
         }
       },
@@ -55,23 +52,16 @@ beforeEach(() => {
   });
 });
 
-
-it('Parses a jsonapi query string', () => {
-  queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
-  const parsed = queryParser.parse(`include=articles&fields[articles]=123&sort=-id&filter=${JSON.stringify({
-    coucou: 1
-  })}&page[size]=1&page[number]=2`, 'example');
-
-  expect(parsed).toStrictEqual({
-    fields: { articles: ['123'] },
-    include: [{ relationName: 'articles', nested: [] }],
-    sort: { id: 'DESC' },
-    filter: {
-      coucou: 1
-    },
-    page: {
-      size: '1',
-      number: '2'
-    }
+describe('Fields Validator', () => {
+  it('Throw an error when field is not in attributes', () => {
+  const unknwonFieldError = new UnknownFieldInSchemaError("123 are not allowed for example", ["123"])
+    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+    expect(() => queryParser.parse('fields[example]=123', 'example')).toThrowError(unknwonFieldError);
   });
-});
+
+  it('To resolve successfully if all fields are in attributes', () => {
+    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+    expect(() => queryParser.parse('fields[articles]=123', 'example')).not.toThrowError();
+  });
+})
+

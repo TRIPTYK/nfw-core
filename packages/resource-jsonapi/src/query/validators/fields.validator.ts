@@ -4,7 +4,7 @@ import {ResourcesRegistry} from "../../registry/registry";
 export class FieldsValidator {
   constructor(private registry: ResourcesRegistry) {}
 
-  public validate(fields: Record<string, string[]>) {
+  public validate(fields: Record<string, string[]> | undefined) {
     if (fields === undefined) {
       return;
     }

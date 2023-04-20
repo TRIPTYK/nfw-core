@@ -38,7 +38,6 @@ export class SerializerGenerator {
     if (this.processedTypes.includes(relationSchema.type)) {
       return;
     }
-
     this.processedTypes.push(relationSchema.type);
     this.generate(relationSchema);
   }

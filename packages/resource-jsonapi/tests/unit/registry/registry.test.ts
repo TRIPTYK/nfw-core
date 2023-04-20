@@ -4,7 +4,6 @@ import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ResourcesRegistryImpl } from '../../../src/registry/registry.js';
-import {log} from 'console';
 
 describe('ResourcesRegistryImpl', () => {
   let resourcesRegistry: ResourcesRegistryImpl;
@@ -13,8 +12,6 @@ describe('ResourcesRegistryImpl', () => {
   class ExampleSerializer {}
   @singleton()
   class ExampleDeserializer {}
-  @singleton()
-  class ExampleSchema {}
 
 beforeEach(() => {
   resourcesRegistry = container.resolve(ResourcesRegistryImpl);
