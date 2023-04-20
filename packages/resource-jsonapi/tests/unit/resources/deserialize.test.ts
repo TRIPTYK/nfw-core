@@ -1,13 +1,17 @@
 import 'reflect-metadata';
-import {container, singleton} from '@triptyk/nfw-core';
+import { container, inject, singleton } from '@triptyk/nfw-core';
 import { assert, beforeEach, test } from "vitest";
-import { JsonApiResourceDeserializer, ResourceSchema, ResourcesRegistryImpl, SerializerGenerator } from '../../../src/index.js';
+import { ResourceSchema, ResourcesRegistry, ResourcesRegistryImpl } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
+import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
+
+
+let resourcesRegistry: ResourcesRegistryImpl;
 
 @singleton()
 class ExampleSerializer {}
 
-const schema: ResourceSchema<Record<string, unknown>> = {
+const schemaArticle: ResourceSchema<Record<string, unknown>> = {
   type: 'article',
   attributes: {
     name: defaultAttribute(),
@@ -16,20 +20,47 @@ const schema: ResourceSchema<Record<string, unknown>> = {
     relation: defaultRelation('user', 'belongs-to')
   }
 };
-const resourcesRegistry = container.resolve(ResourcesRegistryImpl);
-const deserializer = new SerializerGenerator('article',  resourcesRegistry);
+
+const schemaUser: ResourceSchema<Record<string, unknown>> = {
+  type: 'user',
+  attributes: {
+    name: defaultAttribute(),
+  },
+  relationships: {
+    relation: defaultRelation('article', 'belongs-to')
+  }
+};
+
+
+@singleton()
+class ArticleDeserializer extends JsonApiResourceDeserializer<never> {
+  constructor(@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
+    super('article', registry)
+  }
+}
+
+@singleton()
+class UserDeserializer extends JsonApiResourceDeserializer<never> {
+  constructor(@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
+    super('article', registry)
+  }
+}
+resourcesRegistry = container.resolve(ResourcesRegistryImpl);
 
 resourcesRegistry.register('article', {
-  serializer: ExampleSerializer as never,
-  deserializer,
-  schema
-});
+  schema: schemaArticle,
+  deserializer:  ArticleDeserializer,
+  serializer: ExampleSerializer as never
+})
 
-
-beforeEach(() => {
-});
+resourcesRegistry.register('user', {
+  schema: schemaUser,
+  deserializer:  UserDeserializer,
+  serializer: ExampleSerializer as never
+})
 
 test('It deserializes a payload and ignores unknown', async () => {
+  const deserializer = resourcesRegistry.getDeserializerFor('article');
   const deserialized = await deserializer.deserialize({
     data: {
       attributes: {

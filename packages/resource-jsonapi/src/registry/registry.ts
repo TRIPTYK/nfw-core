@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
 import { container, singleton } from '@triptyk/nfw-core';
-import JSONAPISerializer from 'json-api-serializer';
 import type { Class } from 'type-fest';
 import { ResourceDeserializer } from '../interfaces/deserializer.js';
 import { ResourceSchema } from '../interfaces/schema.js';
@@ -8,8 +7,8 @@ import { ResourceSerializer } from '../interfaces/serializer.js';
 
 export interface ResourcesRegistry {
     getSchemaFor<T extends Record<string, unknown>>(type: string): ResourceSchema<T>;
-    getSerializerFor(type: string): JSONAPISerializer;
-    getDeserializerFor(type: string): JSONAPISerializer;
+    getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T>;
+    getDeserializerFor<T extends Record<string, unknown>>(type: string): ResourceDeserializer<T>;
 }
 
 @singleton()
@@ -18,11 +17,11 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     return container.resolve(`schema:${type}`) as ResourceSchema<T>;
   }
 
-  getSerializerFor(type: string): JSONAPISerializer {
+  getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T> {
     return container.resolve(`serializer:${type}`);
   }
 
-  getDeserializerFor(type: string): JSONAPISerializer {
+  getDeserializerFor<T extends Record<string, unknown>>(type: string): ResourceDeserializer<T> {
     return container.resolve(`deserializer:${type}`);
   }
 

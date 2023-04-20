@@ -1,17 +1,19 @@
+import { Cardinality, SchemaAttributeTypes } from "../../../src"
+
 export function defaultAttribute() {
     return {
       serialize: true,
       deserialize: true,
-      type: 'string'
-    } as const
+      type: 'string' as SchemaAttributeTypes
+    }
   }
   
-export function defaultRelation(type: string, target: string) {
+export function defaultRelation(type: string, cardinality: Cardinality) {
     return {
       serialize: true,
       deserialize: true,
       type,
-      target
-    } as const
+      cardinality
+    }
   }
   
