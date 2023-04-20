@@ -1,7 +1,7 @@
-import {UnallowedSortFieldError} from "../../errors/unallowed-sort-field";
-import {SchemaAttributes} from "../../interfaces/schema";
-import {ResourcesRegistry} from "../../registry/registry";
-import {SortQuery} from "../query";
+import {UnallowedSortFieldError} from "../../errors/unallowed-sort-field.js";
+import {SchemaAttributes} from "../../interfaces/schema.js";
+import {ResourcesRegistry} from "../../registry/registry.js";
+import {SortQuery} from "../query.js";
 
 export class SortValidator {
   constructor(private registry: ResourcesRegistry) {}

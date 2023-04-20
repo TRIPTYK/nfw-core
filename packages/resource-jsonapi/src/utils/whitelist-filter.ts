@@ -1,4 +1,4 @@
-import {SchemaAttributes, SchemaRelationships} from "../interfaces/schema";
+import {SchemaAttributes, SchemaRelationships} from "../interfaces/schema.js";
 
 type FilterableFor = 'deserialize' | 'serialize';
 

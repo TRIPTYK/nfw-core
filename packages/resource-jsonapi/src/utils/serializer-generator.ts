@@ -1,7 +1,7 @@
 import type JSONAPISerializer from 'json-api-serializer';
 import { ResourceSchema } from '../interfaces/schema.js';
-import type { ResourcesRegistry } from '../registry/registry';
-import { filterForWhitelist } from './whitelist-filter';
+import type { ResourcesRegistry } from '../registry/registry.js';
+import { filterForWhitelist } from './whitelist-filter.js';
 
 abstract class AbstractSerializerGenerator {
   protected processedTypes: string[] = [];
@@ -11,7 +11,14 @@ abstract class AbstractSerializerGenerator {
     protected serializer: JSONAPISerializer
   ) {}
 
-  abstract generate<T extends ResourceSchema<Record<string, unknown>>>(schema: T): void 
+  abstract getSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(schema: T): JSONAPISerializer.Options 
+
+  public generate<T extends ResourceSchema<Record<string, unknown>>>(schema: T): void {
+    const jsonApiSchema = this.getSchemaAndWhitelist(schema);
+
+    this.generateRelationships(jsonApiSchema, schema);
+    this.serializer.register(schema.type, jsonApiSchema);
+  }
 
   protected generateRelationships<T extends ResourceSchema<Record<string, unknown>>>(jsonApiSchema: JSONAPISerializer.Options, schema: T) {
     for (const [relationName, relationObject] of Object.entries(schema.relationships)) {
@@ -45,14 +52,11 @@ export class SerializerGenerator extends AbstractSerializerGenerator {
     super(registry, serializer);
   }
 
-  public generate<T extends ResourceSchema<Record<string, unknown>>>(schema: T): void {
-    const jsonApiSchema: JSONAPISerializer.Options = {
+  public getSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(schema: T): JSONAPISerializer.Options {
+    return {
       relationships: {},
       whitelist: filterForWhitelist(schema.attributes, "serialize"),
     };
-
-    this.generateRelationships(jsonApiSchema, schema);
-    this.serializer.register(schema.type, jsonApiSchema);
   }
 }
 
@@ -64,13 +68,10 @@ export class DeserializerGenerator extends AbstractSerializerGenerator {
     super(registry, serializer);
   }
 
-  public generate<T extends ResourceSchema<Record<string, unknown>>>(schema: T): void {
-    const jsonApiSchema: JSONAPISerializer.Options = {
+  public getSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(schema: T): JSONAPISerializer.Options {
+    return {
       relationships: {},
       whitelistOnDeserialize: filterForWhitelist(schema.attributes, "deserialize"),
     };
-
-    this.generateRelationships(jsonApiSchema, schema);
-    this.serializer.register(schema.type, jsonApiSchema);
   }
 }

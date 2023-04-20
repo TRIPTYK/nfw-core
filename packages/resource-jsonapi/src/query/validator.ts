@@ -1,5 +1,5 @@
-import { ResourcesRegistry } from "../registry/registry";
-import { JsonApiQuery } from "./query";
+import { ResourcesRegistry } from "../registry/registry.js";
+import { JsonApiQuery } from "./query.js";
 import { FilterValidator } from "./validators/filter.validator.js";
 import { FieldsValidator } from "./validators/fields.validator.js";
 import { IncludeValidator } from "./validators/include.validator.js";

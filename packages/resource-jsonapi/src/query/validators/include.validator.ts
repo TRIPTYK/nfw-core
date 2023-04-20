@@ -1,6 +1,6 @@
-import { UnknownRelationInSchemaError } from "../../errors/unknown-relation";
-import { ResourcesRegistry } from "../../registry/registry";
-import { IncludeQuery } from "../query";
+import { UnknownRelationInSchemaError } from "../../errors/unknown-relation.js";
+import { ResourcesRegistry } from "../../registry/registry.js"
+import { IncludeQuery } from "../query.js";
 
 export class IncludeValidator {
   constructor(private registry: ResourcesRegistry, private type: string) {}

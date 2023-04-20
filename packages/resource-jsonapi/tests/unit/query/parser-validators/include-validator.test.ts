@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it, describe } from 'vitest';
-import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser';
+import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
 import { ResourcesRegistryImpl } from '../../../../src/index.js';
-import { UnknownRelationInSchemaError } from '../../../../src/errors/unknown-relation';
+import { UnknownRelationInSchemaError } from '../../../../src/errors/unknown-relation.js';
 
 let queryParser: JsonApiQueryParser;
 let resourcesRegistry: ResourcesRegistryImpl;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SchemaAttributes } from "../../../src";
-import { filterForWhitelist } from "../../../src/utils/whitelist-filter";
-import { defaultAttribute } from "../test-utils/default-schema-parts";
+import { filterForWhitelist } from "../../../src/utils/whitelist-filter.js";
+import { defaultAttribute } from "../test-utils/default-schema-parts.js";
 
 
 const fakeSchemaForSerializeFilter: SchemaAttributes<{}> = {
