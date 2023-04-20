@@ -1,5 +1,5 @@
-import {UnknownFieldInSchemaError} from "../../errors/unknown-field";
-import {ResourcesRegistry} from "../../registry/registry";
+import {UnknownFieldInSchemaError} from "../../errors/unknown-field.js";
+import {ResourcesRegistry} from "../../registry/registry.js";
 
 export class FieldsValidator {
   constructor(private registry: ResourcesRegistry) {}
