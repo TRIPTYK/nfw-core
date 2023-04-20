@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import {removeKeyFromObjectNotInWhitelist} from "../../../src/utils/whitelist-apply";
+import {removeKeyFromObjectNotInWhitelist} from "../../../src/utils/whitelist-apply.js";
 
 
 const fakeObject = {

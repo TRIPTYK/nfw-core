@@ -1,7 +1,7 @@
-import { UnallowedFilterError } from "../../errors/unallowed-filter";
-import { SchemaAttributes } from "../../interfaces/schema";
-import { ResourcesRegistry } from "../../registry/registry";
-import { FilterQuery } from "../query";
+import { UnallowedFilterError } from "../../errors/unallowed-filter.js";
+import { SchemaAttributes } from "../../interfaces/schema.js";
+import { ResourcesRegistry } from "../../registry/registry.js";
+import { FilterQuery } from "../query.js";
 
 export class FilterValidator {
   constructor(private registry: ResourcesRegistry) {}

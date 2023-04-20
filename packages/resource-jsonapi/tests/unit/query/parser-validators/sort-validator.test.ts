@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it, describe } from 'vitest';
-import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser';
+import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
 import { ResourcesRegistryImpl } from '../../../../src';
-import { UnallowedSortFieldError } from '../../../../src/errors/unallowed-sort-field';
+import { UnallowedSortFieldError } from '../../../../src/errors/unallowed-sort-field.js';
 
 let queryParser: JsonApiQueryParser;
 let resourcesRegistry: ResourcesRegistryImpl;
