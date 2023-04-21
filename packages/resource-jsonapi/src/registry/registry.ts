@@ -5,8 +5,13 @@ import { ResourceDeserializer } from '../interfaces/deserializer.js';
 import { ResourceSchema } from '../interfaces/schema.js';
 import { ResourceSerializer } from '../interfaces/serializer.js';
 
+export interface BaseConfig {
+  host: string
+}
+
 export interface ResourcesRegistry {
     getSchemaFor<T extends Record<string, unknown>>(type: string): ResourceSchema<T>;
+    getConfig(type: string): BaseConfig;
     getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T>;
     getDeserializerFor<T extends Record<string, unknown>>(type: string): ResourceDeserializer<T>;
 }
@@ -15,6 +20,10 @@ export interface ResourcesRegistry {
 export class ResourcesRegistryImpl implements ResourcesRegistry {
   getSchemaFor<T extends Record<string, unknown>> (type: string): ResourceSchema<T> {
     return container.resolve(`schema:${type}`) as ResourceSchema<T>;
+  }
+
+  getConfig(): BaseConfig {
+    return container.resolve(`global:config`);
   }
 
   getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T> {
@@ -34,6 +43,12 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     container.register(`deserializer:${type}`, { useClass: classes.deserializer });
     container.register(`schema:${type}`, {
       useValue: classes.schema
+    });
+  }
+
+  setConfig(config: BaseConfig): void {
+    container.register(`global:config`, {
+      useValue: config
     });
   }
 }

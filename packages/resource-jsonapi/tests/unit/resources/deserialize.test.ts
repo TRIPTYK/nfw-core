@@ -45,6 +45,7 @@ class UserDeserializer extends JsonApiResourceDeserializer<never> {
     super('article', registry)
   }
 }
+
 resourcesRegistry = container.resolve(ResourcesRegistryImpl);
 
 resourcesRegistry.register('article', {
@@ -57,6 +58,10 @@ resourcesRegistry.register('user', {
   schema: schemaUser,
   deserializer:  UserDeserializer,
   serializer: ExampleSerializer as never
+})
+
+resourcesRegistry.setConfig({
+  host: 'http://localhost:8080'
 })
 
 test('It deserializes a payload and ignores unknown', async () => {
