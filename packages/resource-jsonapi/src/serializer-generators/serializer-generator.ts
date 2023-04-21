@@ -24,7 +24,8 @@ export class SerializerGenerator extends BaseSerializerGenerator {
           return this.topLevelLinksBuilder(schema.type, recordData);
         }
         return this.topLevelLinksBuilderWithPagination.call(this, schema.type, recordData, paginationData as PaginationData);
-      }
+      },
+      links: (data) => this.topLevelLinksBuilder(schema.type, data as { id?: string }) 
     };
   }
 

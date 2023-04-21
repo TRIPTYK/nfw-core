@@ -90,7 +90,9 @@ describe("JsonApiResourceSerializer", () => {
         },
         meta: undefined,
         data: {
-          links: undefined,
+          links: {  
+            self: "http://localhost:8080/test/1"
+          },
           meta: undefined,
           relationships: undefined,
           type: "test",
@@ -122,7 +124,9 @@ describe("JsonApiResourceSerializer", () => {
         meta: undefined,
         data: [
           {
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/test/1"
+            },
             meta: undefined,
             relationships: undefined,
             type: "test",
@@ -158,7 +162,9 @@ describe("JsonApiResourceSerializer", () => {
         meta: undefined,
         data: [
           {
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/test/1"
+            },
             meta: undefined,
             relationships: {
               relation: {
@@ -181,7 +187,9 @@ describe("JsonApiResourceSerializer", () => {
               name: "Test",
             },
             id: "1",
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/dummy/1"
+            },
             meta: undefined,
             relationships: undefined,
             type: "dummy",
