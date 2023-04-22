@@ -1,9 +1,13 @@
+import { singleton } from '@triptyk/nfw-core';
 import JSONAPISerializer from 'json-api-serializer';
-import { ResourceSchema } from './interfaces/schema.js';
+import {ResourceDeserializer} from './interfaces/deserializer.js';
 import { ResourcesRegistry } from './registry/registry.js';
 import { DeserializerGenerator } from './serializer-generators/deserializer-generator.js';
+import { removeKeyNotInWhitelist } from './utils/whitelist-apply.js';
+import { filterForWhitelist } from './utils/whitelist-filter.js';
 
-export class JsonApiResourceDeserializer<T extends Record<string, unknown>> {
+@singleton()
+export class JsonApiResourceDeserializer<T extends Record<string, unknown>> implements ResourceDeserializer<T> {
   private deserializer = new JSONAPISerializer();
  
   public constructor (
@@ -13,17 +17,29 @@ export class JsonApiResourceDeserializer<T extends Record<string, unknown>> {
     this.generateDeserializer();
   }
 
-  get schema () {
-    return this.registry.getSchemaFor(this.type) as ResourceSchema<Record<string, unknown>>;
-  }
-
-  public async deserialize (payload: T): Promise<Partial<T>> {
-    const serializer = this.registry.getDeserializerFor<T>(this.type);
-    return serializer.deserialize(payload);
-  }
-
   private generateDeserializer() {
     const generator = new DeserializerGenerator(this.registry, this.deserializer);
     generator.generate(this.registry.getSchemaFor(this.type));
+  }
+
+  public async deserialize(payload: T): Promise<T> {
+    const deserialized = this.deserializer.deserialize(this.type, payload);
+    this.removeUnknownFieldFromPayload(deserialized);
+    
+    return deserialized;
+  }
+
+  private removeUnknownFieldFromPayload(deserialized: Partial<T>): Partial<T> {
+    const whitelist = this.buildWhitelistForDeserialize();
+    removeKeyNotInWhitelist(deserialized, whitelist)
+    return deserialized;
+  }
+
+  private buildWhitelistForDeserialize() {
+    const schema = this.registry.getSchemaFor(this.type);
+    const whitelistAttributes = filterForWhitelist(schema.attributes, "deserialize");
+    const whitelistRelations = filterForWhitelist(schema.relationships, "deserialize");
+    
+    return [...whitelistRelations, ...whitelistAttributes];
   }
 }

@@ -1,4 +1,4 @@
-export function removeKeyFromObjectNotInWhitelist(object: Record<string, unknown>, whitelist: string[]) {
+export function removeKeyNotInWhitelist(object: Record<string, unknown>, whitelist: string[]) {
 	for (const key in object) {
 		removeIfKeyNotIncludedInWhitelist(object, whitelist, key);
 	}

@@ -8,7 +8,7 @@ export interface SchemaAttribute {
   type: SchemaAttributeTypes,
 }
 
-type Cardinality = 'has-many' | 'belongs-to';
+export type Cardinality = 'has-many' | 'belongs-to';
 
 export type SchemaAttributes<T extends Record<string, unknown>> = Partial<Record<keyof T, SchemaAttribute>>;
 

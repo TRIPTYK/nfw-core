@@ -1,7 +1,6 @@
 import JSONAPISerializer from "json-api-serializer";
 import { ResourceSchema } from "../interfaces/schema.js";
 import { ResourcesRegistry } from "../registry/registry.js";
-import { filterForWhitelist } from "../utils/whitelist-filter.js";
 import { BaseSerializerGenerator } from "./base.js";
 
 export class DeserializerGenerator extends BaseSerializerGenerator {
@@ -12,10 +11,9 @@ export class DeserializerGenerator extends BaseSerializerGenerator {
     super(registry, serializer);
   }
 
-  public baseSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(schema: T): JSONAPISerializer.Options {
+  public baseSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(_schema: T): JSONAPISerializer.Options {
     return {
       relationships: {},
-      whitelistOnDeserialize: filterForWhitelist(schema.attributes, "deserialize"),
     };
   }
 }
