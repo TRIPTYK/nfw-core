@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-// export * from './deserializer.js';
+export * from './deserializer.js';
 export * from './registry/registry.js';
 export * from './serializer.js';
 export * from './query/query.js';
