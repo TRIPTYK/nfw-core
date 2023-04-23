@@ -8,5 +8,5 @@ export interface PaginationData {
 
 export interface ResourceSerializer<T extends Record<string, unknown>> {
     serializeOne(resource: T): Promisable<unknown>;
-    serializeMany(resource: T[], pageQuery: PaginationData): Promisable<unknown>;
+    serializeMany(resource: T[], pageQuery?: PaginationData): Promisable<unknown>;
 }

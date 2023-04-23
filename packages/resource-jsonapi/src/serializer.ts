@@ -4,7 +4,6 @@ import JSONAPISerializer from 'json-api-serializer';
 import { ResourcesRegistry } from './registry/registry.js';
 import { PaginationData, ResourceSerializer } from './interfaces/serializer.js';
 import { SerializerGenerator } from './serializer-generators/serializer-generator.js';
-import {PageQuery} from './query/query.js';
 
 export class JsonApiResourceSerializer<T extends Record<string, unknown>> implements ResourceSerializer<T> {
   private serializer = new JSONAPISerializer();
@@ -16,7 +15,7 @@ export class JsonApiResourceSerializer<T extends Record<string, unknown>> implem
     this.generateSerializer();
   }
 
-  public async serializeMany (resources: T[], paginationData: PaginationData): Promise<unknown> {
+  public async serializeMany (resources: T[], paginationData?: PaginationData): Promise<unknown> {
     return this.serializer.serialize(this.type, resources, paginationData);
   }
 
