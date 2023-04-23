@@ -54,7 +54,7 @@ export class SerializerGenerator extends BaseSerializerGenerator {
     return baseTopLevelLinks;
   }
 
-  private isNotLastPage(pageNumber: string, total: string) {
-    return Number(pageNumber) < Number(total)
+  private isNotLastPage(pageNumber: number, total: number) {
+    return pageNumber < total
   }
 }

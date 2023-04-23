@@ -1,9 +1,9 @@
 import { Promisable } from "type-fest";
 
 export interface PaginationData {
-  number: string;
-  size: string;
-  total: string;
+  number: number;
+  size: number;
+  total: number;
 }
 
 export interface ResourceSerializer<T extends Record<string, unknown>> {

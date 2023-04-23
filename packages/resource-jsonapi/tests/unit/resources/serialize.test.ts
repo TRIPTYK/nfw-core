@@ -138,9 +138,9 @@ describe("JsonApiResourceSerializer", () => {
         ],
       };
       const result = await serializer.serializeMany([resource], {
-        number: '1',
-        size: '2',
-        total: '10'
+        number: 1,
+        size: 2,
+        total: 10
       });
       expect(result).toEqual(expectedResult);
     });
@@ -198,9 +198,9 @@ describe("JsonApiResourceSerializer", () => {
       };
 
       const result = await serializer.serializeMany([resource], {
-        number: '1',
-        size: '2',
-        total: '10'
+        number: 1,
+        size: 2,
+        total: 10
       });
       expect(result).toEqual(expectedResult);
     });
