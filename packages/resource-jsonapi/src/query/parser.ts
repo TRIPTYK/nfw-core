@@ -1,4 +1,4 @@
-import { Parser } from 'json-api-query-parser';
+import { Parser } from '@triptyk/json-api-query-parser';
 import {ResourcesRegistry} from '../registry/registry.js';
 import type { JsonApiQuery, PageQuery } from './query.js';
 import { QueryValidator } from './validator.js';

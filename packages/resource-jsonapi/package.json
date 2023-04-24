@@ -30,6 +30,7 @@
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
     "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http":"workspace:*",
     "@types/chai": "^4.3.4",
     "@types/json-api-serializer": "^2.6.3",
     "@types/node": "^18.13.0",
@@ -40,10 +41,11 @@
     "vitest": "^0.29.7"
   },
   "peerDependencies": {
-    "@triptyk/nfw-core": "workspace:*"
+    "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http":"workspace:*"
   },
   "dependencies": {
-    "json-api-query-parser": "link:../../../json-api-query-parser",
+    "@triptyk/json-api-query-parser": "0.0.0",
     "json-api-serializer": "^2.6.6",
     "pluralize": "~8.0.0"
   }
