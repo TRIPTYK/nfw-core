@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { container, inject, singleton } from '@triptyk/nfw-core';
-import { assert, beforeEach, test } from "vitest";
-import { ResourceSchema, ResourcesRegistry, ResourcesRegistryImpl } from '../../../src/index.js';
+import { assert, beforeEach, expect, test } from "vitest";
+import { ResourceSchema, ResourcesRegistry, ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
 import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
 
@@ -64,13 +64,32 @@ resourcesRegistry.setConfig({
   host: 'http://localhost:8080'
 })
 
-test('It deserializes a payload and ignores unknown', async () => {
+test('It throw error on unknown field', async () => {
   const deserializer = resourcesRegistry.getDeserializerFor('article');
-  const deserialized = await deserializer.deserialize({
+  expect(deserializer.deserialize({
     data: {
       attributes: {
         name: 'hello',
         unknown_field: 'treuc'
+      },
+      relationships: {
+        relation: {
+          data: {
+            type: 'user',
+            id: '1'
+          }
+        },
+      }
+    }
+  })).rejects.toThrowError(new UnknownFieldInSchemaError('unknown_field are not allowed for article', ["unknown_field"]));
+});
+
+test('It throw error on unknown relation', async () => {
+  const deserializer = resourcesRegistry.getDeserializerFor('article');
+  expect(deserializer.deserialize({
+    data: {
+      attributes: {
+        name: 'hello',
       },
       relationships: {
         relation: {
@@ -87,10 +106,29 @@ test('It deserializes a payload and ignores unknown', async () => {
         }
       }
     }
-  });
+  })).rejects.toThrowError(new UnknownFieldInSchemaError('relation2 are not allowed for article', ["relation2"]));
+});
 
-  assert.deepEqual<any>(deserialized, {
+test('It deserialize payload', async () => {
+  const deserializer = resourcesRegistry.getDeserializerFor('article');
+  const deserialized = await deserializer.deserialize({
+    data: {
+      attributes: {
+        name: 'hello',
+      },
+      relationships: {
+        relation: {
+          data: {
+            type: 'user',
+            id: '1'
+          }
+        },
+      }
+    }
+  });
+  
+  expect(deserialized).toStrictEqual({
     name: 'hello',
     relation: '1'
-  });
+  })
 });

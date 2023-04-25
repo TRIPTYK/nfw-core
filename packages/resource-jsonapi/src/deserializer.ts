@@ -3,7 +3,7 @@ import JSONAPISerializer from 'json-api-serializer';
 import {ResourceDeserializer} from './interfaces/deserializer.js';
 import { ResourcesRegistry } from './registry/registry.js';
 import { DeserializerGenerator } from './serializer-generators/deserializer-generator.js';
-import { removeKeyNotInWhitelist } from './utils/whitelist-apply.js';
+import { ThrowOnKeyNotInWhitelist } from './utils/whitelist-apply.js';
 import { filterForWhitelist } from './utils/whitelist-filter.js';
 
 @singleton()
@@ -31,7 +31,7 @@ export class JsonApiResourceDeserializer<T extends Record<string, unknown>> impl
 
   private removeUnknownFieldFromPayload(deserialized: Partial<T>): Partial<T> {
     const whitelist = this.buildWhitelistForDeserialize();
-    removeKeyNotInWhitelist(deserialized, whitelist)
+    ThrowOnKeyNotInWhitelist(deserialized, whitelist, this.type)
     return deserialized;
   }
 

@@ -1,12 +1,12 @@
-export function removeKeyNotInWhitelist(object: Record<string, unknown>, whitelist: string[]) {
-	for (const key in object) {
-		removeKeysNotInWhitelist(object, whitelist, key);
-	}
+import { UnknownFieldInSchemaError } from "../errors/unknown-field.js";
+
+export function ThrowOnKeyNotInWhitelist(object: Record<string, unknown>, whitelist: string[], type: string) {
+  const unallowed = Object.keys(object).filter((key) => !whitelist.includes(key));
+	throwErrorOnUnallowedNotEmpty(unallowed, type);
 }
 
-function removeKeysNotInWhitelist(object: Record<string, unknown>, whitelist: string [], key: string) {
-	if (whitelist.includes(key))  {
-		return;
-	}
-	delete object[key];
+function throwErrorOnUnallowedNotEmpty(unallowed: string [], type: string) {
+  if (unallowed.length) {
+    throw new UnknownFieldInSchemaError(`${unallowed.join(',')} are not allowed for ${type}`, unallowed);
+  }
 }
