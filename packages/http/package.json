@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-http",
-  "version": "4.0.0-alpha.31",
+  "version": "5.0.0-alpha.0",
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -39,7 +39,7 @@
     "node-mocks-http": "^1.12.2",
     "reflect-metadata": "^0.1.13",
     "type-fest": "^3.6.1",
-    "typescript": "5.0.2",
+    "typescript": "~4.9.2",
     "vitest": "^0.29.7"
   },
   "peerDependencies": {
