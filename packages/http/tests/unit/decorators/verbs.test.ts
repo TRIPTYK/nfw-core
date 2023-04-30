@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { container } from '@triptyk/nfw-core';
 import { ALL, DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT } from '../../../src/decorators/verbs.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
-import { beforeEach, describe, expect, test } from '@jest/globals';
+import { describe, expect, beforeEach, test } from 'vitest';
 
 describe('Decorators | verbs', () => {
   let metadataStorage: MetadataStorage;

@@ -4,7 +4,7 @@
 import 'reflect-metadata';
 import type { UseParamsMetadataArgs } from '../../../src/index.js';
 import { ExecutableParam, ParamResolver } from '../../../src/index.js';
-import { jest, describe, expect, it } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('ResolveParam', () => {
   class Controller {}
@@ -15,7 +15,7 @@ describe('ResolveParam', () => {
   }
 
   it('Resolves returns an instance of Executable Param', async () => {
-    const handle = jest.fn(() => true);
+    const handle = vi.fn(() => true);
     const resolver = constructParamResolver(handle);
     const result = resolver.resolve([]);
 

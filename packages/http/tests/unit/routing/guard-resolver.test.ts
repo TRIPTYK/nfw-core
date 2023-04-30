@@ -6,7 +6,7 @@ import type { Class } from 'type-fest';
 import { ExecutableGuard } from '../../../src/executables/executable-guard.js';
 import type { GuardInterface } from '../../../src/interfaces/guard.js';
 import { GuardResolver } from '../../../src/resolvers/guard-resolver.js';
-
+import { describe, expect, test } from 'vitest';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
 
 describe('Guard builder', () => {

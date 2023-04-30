@@ -81,8 +81,12 @@ export class MetadataStorage implements MetadataStorageInterface {
     });
   }
 
-  public getMiddlewaresForTarget (target: unknown, propertyName?: string) {
-    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target).reverse();
+  public getBeforeMiddlewaresForTarget (target: unknown, propertyName?: string) {
+    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target && middlewareMeta.type === 'before').reverse();
+  }
+
+  public getAfterMiddlewaresForTarget (target: unknown, propertyName?: string) {
+    return this.useMiddlewares.filter((middlewareMeta) => middlewareMeta.propertyName === propertyName && middlewareMeta.target === target && middlewareMeta.type === 'after').reverse();
   }
 
   public getEndpointsForTarget (target: unknown) {

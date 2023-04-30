@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import Router from '@koa/router';
 import { injectable, inject } from '@triptyk/nfw-core';
 import type { ControllerMetaArgs } from '../decorators/controller.js';
@@ -5,7 +6,7 @@ import { ControllerActionBuilder } from './controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
-import { middlewaresInstancesForTarget } from '../utils/middlewares.js';
+import { afterMiddlewaresInstancesForTarget, beforeMiddlewaresInstancesForTarget } from '../utils/middlewares.js';
 import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 import { ControllerActionResolver } from '../resolvers/controller-action-resolver.js';
@@ -27,11 +28,12 @@ export class HttpBuilder implements RouterBuilderInterface {
       prefix: (this.context.meta.args as ControllerMetaArgs).routeName
     });
     const endpointsMeta = this.metadataStorage.getEndpointsForTarget(this.context.meta.target);
-    const applyMiddlewares = middlewaresInstancesForTarget(this.context.meta.target);
 
-    controllerRouter.use(...applyMiddlewares);
+    controllerRouter.use(...beforeMiddlewaresInstancesForTarget(this.context.meta.target));
 
     this.setupEndpoints(endpointsMeta, controllerRouter);
+
+    controllerRouter.use(...afterMiddlewaresInstancesForTarget(this.context.meta.target));
 
     return controllerRouter;
   }
@@ -44,12 +46,13 @@ export class HttpBuilder implements RouterBuilderInterface {
   }
 
   protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
-    const endpointMiddlewares = middlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+    const beforeMiddlewares = beforeMiddlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+    const afterMiddlewares = afterMiddlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
 
     const controllerContext = this.createControllerContext(endPointMeta);
     const controllerActionBuilder = this.createActionBuilder(controllerContext);
 
-    router[endPointMeta.method](endPointMeta.args.routeName, ...endpointMiddlewares, controllerActionBuilder.build());
+    router[endPointMeta.method](endPointMeta.args.routeName, ...beforeMiddlewares, controllerActionBuilder.build(), ...afterMiddlewares);
   }
 
   private createControllerContext (endPointMeta: HttpEndpointMetadataArgs): ControllerContextType<any> {

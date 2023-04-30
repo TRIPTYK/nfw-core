@@ -7,6 +7,7 @@ import { ExecutableResponseHandler } from '../../../src/executables/executable-r
 import type { MetadataStorageInterface, ResponseHandlerInterface } from '../../../src/index.js';
 import { ResponseHandlerResolver } from '../../../src/resolvers/response-handler-resolver.js';
 import { MetadataStorage } from '../../../src/storages/metadata-storage.js';
+import { describe, expect, beforeEach, test } from 'vitest';
 
 describe('Response handler resolver', () => {
   let storage: MetadataStorageInterface;

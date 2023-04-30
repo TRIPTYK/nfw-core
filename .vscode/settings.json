@@ -8,5 +8,5 @@
   "eslint.format.enable": true,
   "typescript.preferences.importModuleSpecifierEnding": "js",
   "typescript.preferences.importModuleSpecifier": "project-relative",
-  "jest.jestCommandLine": "pnpm test --"
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,4 +1,3 @@
-
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
 import { MetadataStorage } from '../storages/metadata-storage.js';
@@ -13,8 +12,14 @@ export function resolveMiddlewareInstance (middleware: AnyMiddlewareType) {
   return instance.use.bind(instance);
 }
 
-export function middlewaresInstancesForTarget (target: Class<unknown>, propertyName?: string) {
+export function beforeMiddlewaresInstancesForTarget (target: Class<unknown>, propertyName?: string) {
   return container.resolve(MetadataStorage)
-    .getMiddlewaresForTarget(target, propertyName)
+    .getBeforeMiddlewaresForTarget(target, propertyName)
+    .map((m) => resolveMiddlewareInstance(m.middleware));
+}
+
+export function afterMiddlewaresInstancesForTarget (target: Class<unknown>, propertyName?: string) {
+  return container.resolve(MetadataStorage)
+    .getAfterMiddlewaresForTarget(target, propertyName)
     .map((m) => resolveMiddlewareInstance(m.middleware));
 }

@@ -1,11 +1,8 @@
-/* eslint-disable import/first */
 import 'reflect-metadata';
 import { EntitySchema, MikroORM } from '@mikro-orm/core';
 import { container } from '@triptyk/nfw-core';
 import { init } from '../../src/index.js';
-import { jest } from '@jest/globals';
-
-jest.useFakeTimers();
+import { test, expect } from 'vitest';
 
 interface Book {
     id: string,

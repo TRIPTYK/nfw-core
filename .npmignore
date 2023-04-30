@@ -12,4 +12,3 @@ mkdocs.yml
 pnpm-lock.yaml
 .eslintrc.json
 .eslintignore
-jest.config.js

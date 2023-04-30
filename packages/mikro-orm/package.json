@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-mikro-orm",
-  "version": "4.0.0-alpha.31",
+  "version": "5.0.0-alpha.0",
   "description": "Mikro-ORM module for NFW-CORE",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -29,18 +29,20 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "~5.6.5",
-    "@mikro-orm/sqlite": "~5.6.5",
+    "@mikro-orm/core": "~5.6.15",
+    "@mikro-orm/sqlite": "~5.6.15",
     "@triptyk/nfw-core": "workspace:*",
+    "@types/chai": "^4.3.4",
     "@types/koa": "^2.13.5",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.15.5",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "4.7.0",
-    "type-fest": "^3.5.1",
-    "typescript": "~4.9.4"
+    "type-fest": "^3.6.1",
+    "typescript": "~4.9.2",
+    "vitest": "^0.29.7"
   },
   "peerDependencies": {
-    "@mikro-orm/core": "~5.6.5",
+    "@mikro-orm/core": "~5.6.15",
     "@triptyk/nfw-core": "workspace:*"
   }
 }

@@ -2,15 +2,15 @@
 import 'reflect-metadata';
 import { container, injectable } from '@triptyk/nfw-core';
 import { init, injectRepository } from '../../src/index.js';
-import { jest } from '@jest/globals';
 import { Entity, PrimaryKey, EntityRepository } from '@mikro-orm/core';
-
-jest.useFakeTimers();
+import { test, expect } from 'vitest';
 
 test('repository is injected properly in class', async () => {
     @Entity()
   class Model {
-      @PrimaryKey()
+      @PrimaryKey({
+        type: 'string'
+      })
       public declare name: string;
     }
 

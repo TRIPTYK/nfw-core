@@ -1,10 +1,10 @@
 /* eslint-disable max-statements */
 /* eslint-disable max-classes-per-file */
 import type { RouterContext } from '@koa/router';
-import { jest } from '@jest/globals';
 import type { ResponseHandlerInterface } from '../../../src/interfaces/response-handler.js';
 import { ExecutableParam } from '../../../src/executables/executable-param.js';
 import { ExecutableResponseHandler } from '../../../src/executables/executable-response-handler.js';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('Executable response handler', () => {
   class RH implements ResponseHandlerInterface {
@@ -19,7 +19,7 @@ describe('Executable response handler', () => {
       controllerAction: 'list',
       controllerInstance: new class {}()
     };
-    const spy = jest.spyOn(responseHandlerInstance, 'handle');
+    const spy = vi.spyOn(responseHandlerInstance, 'handle');
     const firstParam = new ExecutableParam(controllerContext, () => 'param2');
 
     const executableResponseHandler = new ExecutableResponseHandler(

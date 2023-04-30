@@ -1,10 +1,10 @@
-/* eslint-disable max-statements */
+import 'reflect-metadata';
 import type { RouterContext } from '@koa/router';
 import type { ControllerContextType } from '../../../src/types/controller-context.js';
-import { jest } from '@jest/globals';
 import type { ControllerParamsContext } from '../../../src/index.js';
 import { ExecutableParam } from '../../../src/index.js';
 import type { ResolvedParamType } from '../../../src/types/resolved-param.js';
+import { describe, expect, it, vi, test } from 'vitest';
 
 describe('Executable param', () => {
   const context: ControllerContextType = {
@@ -30,7 +30,7 @@ describe('Executable param', () => {
   });
 
   test('Controller context is passed in handle function', () => {
-    const paramFunction = jest.fn((ctx: ControllerParamsContext<unknown>) => ctx);
+    const paramFunction = vi.fn((ctx: ControllerParamsContext<unknown>) => ctx);
     const executableParam = new ExecutableParam(context, paramFunction);
     const expectedContext = {
       ...context,
