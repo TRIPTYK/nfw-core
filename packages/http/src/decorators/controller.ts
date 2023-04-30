@@ -9,7 +9,7 @@ interface ControllerOptions {
 }
 
 
-export function HttpController (options: ControllerOptions) {
+export function Controller (options: ControllerOptions) {
   return function (target: Class<unknown>) {
     injectable()(target);
     container.resolve(MetadataStorage).addRouter<DefaultBuilderArgs>({

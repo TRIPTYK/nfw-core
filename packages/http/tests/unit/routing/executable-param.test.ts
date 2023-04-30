@@ -5,6 +5,7 @@ import type { ControllerParamsContext } from '../../../src/index.js';
 import { ExecutableParam } from '../../../src/index.js';
 import type { ResolvedParamType } from '../../../src/types/resolved-param.js';
 import { describe, expect, it, vi, test } from 'vitest';
+import { ParamInterface } from '../../../src/interfaces/param.js';
 
 describe('Executable param', () => {
   const context: ControllerContextType = {
@@ -27,6 +28,16 @@ describe('Executable param', () => {
 
   it('Returns controller context', () => {
     executeParamAndCheckResult(context, context, context);
+  });
+
+  it('Calls decorator handle when class instance is passed', () => {
+    class  ParamHandler implements  ParamInterface<unknown> {
+      handle = vi.fn()
+    }
+    const instance = new ParamHandler();
+    const executableParam = new ExecutableParam(context, instance);
+    executableParam.execute({} as never);
+    expect(instance.handle).toBeCalledTimes(1);
   });
 
   test('Controller context is passed in handle function', () => {

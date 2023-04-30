@@ -15,6 +15,7 @@ export * from './types/resolved-param.js';
 
 export * from './interfaces/middleware.js';
 export * from './interfaces/response-handler.js';
+export * from './interfaces/param.js';
 export * from './interfaces/guard.js';
 export * from './interfaces/router-builder.js';
 export * from './interfaces/metadata-storage.js';

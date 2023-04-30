@@ -13,7 +13,6 @@ export class ExecutableControllerAction implements ExecutableInterface {
   public async execute (ctx: RouterContext) {
     const controllerMethod = (this.controllerContext.controllerInstance as any)[this.controllerContext.controllerAction] as Function;
     const params = await executeParams(this.params, ctx);
-
     return controllerMethod.call(this.controllerContext.controllerInstance, ...params);
   }
 }

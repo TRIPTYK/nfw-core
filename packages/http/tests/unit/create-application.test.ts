@@ -7,14 +7,14 @@ import { singleton } from '@triptyk/nfw-core';
 import Application from 'koa';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { createApplication } from '../../src/factories/create-application.js';
-import { HttpController, GET } from '../../src/index.js';
+import { Controller, GET } from '../../src/index.js';
 import { describe, expect, it, vi } from 'vitest';
 import { setTimeout } from 'node:timers/promises';
 
 describe('Create application', () => {
   const spy = vi.fn();
 
-  @HttpController({
+  @Controller({
     routeName: '/hello'
   })
   @singleton()
@@ -25,7 +25,7 @@ describe('Create application', () => {
     }
   }
 
-  @HttpController({
+  @Controller({
     routeName: '/api/v1',
     controllers: [Troller]
   })
