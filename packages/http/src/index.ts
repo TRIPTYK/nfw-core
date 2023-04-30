@@ -1,5 +1,5 @@
 
-export * from './routing/builder.js';
+export * from './builders/default.js';
 export * from './decorators/verbs.js';
 export * from './decorators/controller.js';
 export * from './decorators/use-guard.js';

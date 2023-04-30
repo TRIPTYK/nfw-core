@@ -1,13 +1,12 @@
 /* eslint-disable max-statements */
 import Router from '@koa/router';
 import { injectable, inject } from '@triptyk/nfw-core';
-import type { ControllerMetaArgs } from '../decorators/controller.js';
-import { ControllerActionBuilder } from './controller-action.js';
+import { ControllerActionBuilder } from '../routing/controller-action.js';
 import type { HttpEndpointMetadataArgs } from '../storages/metadata/endpoint.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
 import { afterMiddlewaresInstancesForTarget, beforeMiddlewaresInstancesForTarget } from '../utils/middlewares.js';
-import type { RouterBuilderInterface } from '../interfaces/router-builder.js';
+import type { RouterBuilderArguments, RouterBuilderInterface } from '../interfaces/router-builder.js';
 import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 import { ControllerActionResolver } from '../resolvers/controller-action-resolver.js';
 
@@ -15,25 +14,27 @@ import type { ControllerContextType } from '../types/controller-context.js';
 import { GuardResolver } from '../resolvers/guard-resolver.js';
 import { ResponseHandlerResolver } from '../resolvers/response-handler-resolver.js';
 
-@injectable()
-export class HttpBuilder implements RouterBuilderInterface {
-  public declare context: { instance: unknown; meta: RouteMetadataArgs<unknown> };
+export interface DefaultBuilderArgs {
+  routeName: string,
+}
 
+@injectable()
+export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs> {
   public constructor (
     @inject(MetadataStorage) public metadataStorage: MetadataStorage
   ) {}
 
-  public async build (): Promise<Router> {
+  public async build (context: RouterBuilderArguments<DefaultBuilderArgs>): Promise<Router> {
     const controllerRouter = new Router({
-      prefix: (this.context.meta.args as ControllerMetaArgs).routeName
+      prefix: context.args.routeName
     });
-    const endpointsMeta = this.metadataStorage.getEndpointsForTarget(this.context.meta.target);
+    const endpointsMeta = this.metadataStorage.getEndpointsForTarget(context.controllerInstance.constructor);
 
-    controllerRouter.use(...beforeMiddlewaresInstancesForTarget(this.context.meta.target));
+    controllerRouter.use(...beforeMiddlewaresInstancesForTarget(context.controllerInstance.constructor));
 
-    this.setupEndpoints(endpointsMeta, controllerRouter);
+    this.setupEndpoints(endpointsMeta, controllerRouter, context);
 
-    controllerRouter.use(...afterMiddlewaresInstancesForTarget(this.context.meta.target));
+    controllerRouter.use(...afterMiddlewaresInstancesForTarget(context.controllerInstance.constructor));
 
     return controllerRouter;
   }
@@ -45,19 +46,23 @@ export class HttpBuilder implements RouterBuilderInterface {
       .use(allowedMethods(router));
   }
 
-  protected setupEndpoint (router:Router, endPointMeta: HttpEndpointMetadataArgs) {
-    const beforeMiddlewares = beforeMiddlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
-    const afterMiddlewares = afterMiddlewaresInstancesForTarget(this.context.meta.target.prototype, endPointMeta.propertyName);
+  protected setupEndpoint (
+    router:Router, 
+    endPointMeta: HttpEndpointMetadataArgs,
+    { controllerInstance }: RouterBuilderArguments<DefaultBuilderArgs>
+  ) {
+    const beforeMiddlewares = beforeMiddlewaresInstancesForTarget(controllerInstance, endPointMeta.propertyName);
+    const afterMiddlewares = afterMiddlewaresInstancesForTarget(controllerInstance, endPointMeta.propertyName);
 
-    const controllerContext = this.createControllerContext(endPointMeta);
+    const controllerContext = this.createControllerContext(endPointMeta, controllerInstance);
     const controllerActionBuilder = this.createActionBuilder(controllerContext);
 
     router[endPointMeta.method](endPointMeta.args.routeName, ...beforeMiddlewares, controllerActionBuilder.build(), ...afterMiddlewares);
   }
 
-  private createControllerContext (endPointMeta: HttpEndpointMetadataArgs): ControllerContextType<any> {
+  private createControllerContext (endPointMeta: HttpEndpointMetadataArgs,controllerInstance: InstanceType<any>): ControllerContextType<any> {
     return {
-      controllerInstance: this.context.instance,
+      controllerInstance,
       controllerAction: endPointMeta.propertyName
     };
   }
@@ -74,9 +79,9 @@ export class HttpBuilder implements RouterBuilderInterface {
     );
   }
 
-  private setupEndpoints (endpointsMeta: HttpEndpointMetadataArgs[], controllerRouter: Router) {
+  private setupEndpoints (endpointsMeta: HttpEndpointMetadataArgs[], controllerRouter: Router, context: RouterBuilderArguments<DefaultBuilderArgs>) {
     for (const endPointMeta of endpointsMeta) {
-      this.setupEndpoint(controllerRouter, endPointMeta);
+      this.setupEndpoint(controllerRouter, endPointMeta,  context);
     }
   }
 }

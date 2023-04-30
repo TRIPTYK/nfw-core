@@ -19,7 +19,7 @@ export class MetadataStorage implements MetadataStorageInterface {
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
-  public addRouter (...routerMeta: RouteMetadataArgs<unknown>[]) {
+  public addRouter<T> (...routerMeta: RouteMetadataArgs<T>[]) {
     this.routes.push(...routerMeta);
   }
 

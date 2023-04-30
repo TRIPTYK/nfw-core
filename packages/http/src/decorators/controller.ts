@@ -1,6 +1,6 @@
 import type { Class } from 'type-fest';
 import { container, injectable } from '@triptyk/nfw-core';
-import { HttpBuilder } from '../routing/builder.js';
+import { DefaultBuilder, DefaultBuilderArgs } from '../builders/default.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
 interface ControllerOptions {
@@ -8,20 +8,17 @@ interface ControllerOptions {
   controllers?: Class<unknown>[],
 }
 
-export interface ControllerMetaArgs {
-  routeName: string,
-}
 
-export function Controller (options:ControllerOptions) {
+export function HttpController (options: ControllerOptions) {
   return function (target: Class<unknown>) {
     injectable()(target);
-    container.resolve(MetadataStorage).addRouter({
+    container.resolve(MetadataStorage).addRouter<DefaultBuilderArgs>({
       target,
-      builder: HttpBuilder,
+      builder: DefaultBuilder,
       controllers: options.controllers ?? [],
       args: {
         routeName: options.routeName
-      } as ControllerMetaArgs
+      }
     });
   };
 }

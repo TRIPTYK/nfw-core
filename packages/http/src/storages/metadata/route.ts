@@ -5,5 +5,5 @@ export interface RouteMetadataArgs<T> {
     target: Class<unknown>,
     controllers?: Class<unknown>[],
     args: T,
-    builder: Class<RouterBuilderInterface>,
+    builder: Class<RouterBuilderInterface<T>>,
 }
