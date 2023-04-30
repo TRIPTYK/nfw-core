@@ -1,44 +1,45 @@
-
-import type { RelationshipOptions } from 'json-api-serializer';
+import { singleton } from '@triptyk/nfw-core';
 import JSONAPISerializer from 'json-api-serializer';
-import type { Resource, ResourceDeserializer, ResourceProperties, ResourceSchema, SchemaRelationship, ResourcesRegistry } from 'resources';
-import { deserializationSchema, deserialize } from 'resources';
+import {ResourceDeserializer} from './interfaces/deserializer.js';
+import { ResourcesRegistry } from './registry/registry.js';
+import { DeserializerGenerator } from './serializer-generators/deserializer-generator.js';
+import { ThrowOnKeyNotInWhitelist } from './utils/whitelist-apply.js';
+import { filterForWhitelist } from './utils/whitelist-filter.js';
 
-export class JsonApiResourceDeserializer<T extends Resource> implements ResourceDeserializer<T> {
+@singleton()
+export class JsonApiResourceDeserializer<T extends Record<string, unknown>> implements ResourceDeserializer<T> {
+  private deserializer = new JSONAPISerializer();
+ 
   public constructor (
     public type: string,
     public registry: ResourcesRegistry
   ) {
-
+    this.generateDeserializer();
   }
 
-  get schema () {
-    return deserializationSchema(this.registry.getSchemaFor(this.type));
+  private generateDeserializer() {
+    const generator = new DeserializerGenerator(this.registry, this.deserializer);
+    generator.generate(this.registry.getSchemaFor(this.type));
   }
 
-  public async deserialize (payload: Record<string, unknown>): Promise<Partial<ResourceProperties<T>>> {
-    const serializer = this.createSerializerFromSchema();
-    const deserialized = serializer.deserialize(this.type, payload);
-    return deserialize(deserialized, this.schema as never);
+  public async deserialize(payload: T): Promise<T> {
+    const deserialized = this.deserializer.deserialize(this.type, payload);
+    this.removeUnknownFieldFromPayload(deserialized);
+    
+    return deserialized;
   }
 
-  private createSerializerFromSchema () {
-    const relationships = this.formatRelationships(this.schema);
-
-    const Serializer = new JSONAPISerializer();
-    Serializer.register(this.type, {
-      whitelistOnDeserialize: Object.keys(this.schema.attributes),
-      relationships
-    });
-    return Serializer;
+  private removeUnknownFieldFromPayload(deserialized: Partial<T>): Partial<T> {
+    const whitelist = this.buildWhitelistForDeserialize();
+    ThrowOnKeyNotInWhitelist(deserialized, whitelist, this.type)
+    return deserialized;
   }
 
-  private formatRelationships (schema: ResourceSchema<Resource>) {
-    return Object.entries(schema.relationships).reduce((c, [relationName, relationDescriptor], i) => {
-      c[relationName] = {
-        type: (relationDescriptor as SchemaRelationship).type
-      } as RelationshipOptions;
-      return c;
-    }, {} as Record<string, RelationshipOptions>);
+  private buildWhitelistForDeserialize() {
+    const schema = this.registry.getSchemaFor(this.type);
+    const whitelistAttributes = filterForWhitelist(schema.attributes, "deserialize");
+    const whitelistRelations = filterForWhitelist(schema.relationships, "deserialize");
+    
+    return [...whitelistRelations, ...whitelistAttributes];
   }
 }

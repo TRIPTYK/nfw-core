@@ -1,18 +1,18 @@
+// eslint-disable-next-line max-classes-per-file
 import "reflect-metadata";
 import { describe, it, expect, vi } from "vitest";
+import type { ResourceSchema } from "../../../src/index.js";
 import { JsonApiResourceSerializer } from "../../../src/serializer.js";
-import { Resource } from "resources";
-import type { ResourceSchema } from "resources";
-import { defaultAttribute, defaultRelation } from "./utils.js";
+import {defaultAttribute, defaultRelation} from "../test-utils/default-schema-parts.js";
 
-const schema: ResourceSchema<never> = {
+const schema: ResourceSchema<{}> = {
   type: "test",
   attributes: {
     name: defaultAttribute(),
   },
   relationships: {
     relation: defaultRelation("dummy", "belongs-to"),
-  },
+  }
 } as never;
 
 const schemaForRelationship: ResourceSchema<never> = {
@@ -25,25 +25,32 @@ const schemaForRelationship: ResourceSchema<never> = {
   },
 } as never;
 
+// eslint-disable-next-line max-statements
 describe("JsonApiResourceSerializer", () => {
   const registryMock = {
-    getSchemaFor: vi.fn((type) => {
+    getSchemaFor: vi.fn((type: string) => {
       if (type === "dummy") {
         return schemaForRelationship;
       } else {
         return schema;
       }
     }),
+    getConfig: vi.fn(() => { 
+      return { 
+        host: 'http://localhost:8080'
+      }
+    }),
   };
 
-  class TestResource implements Resource {
+  class TestResource {
+		[key: string]: unknown;
     type: string = "test";
     id?: string;
     name!: string;
     relation!: DummyResource;
   }
 
-  class DummyResource implements Resource {
+  class DummyResource {
     type: string = "dummy";
     id?: string;
     declare name: string;
@@ -78,10 +85,14 @@ describe("JsonApiResourceSerializer", () => {
           version: "1.0",
         },
         included: undefined,
-        links: undefined,
+        links: {
+          self: "http://localhost:8080/test/1"
+        },
         meta: undefined,
         data: {
-          links: undefined,
+          links: {  
+            self: "http://localhost:8080/test/1"
+          },
           meta: undefined,
           relationships: undefined,
           type: "test",
@@ -104,11 +115,18 @@ describe("JsonApiResourceSerializer", () => {
           version: "1.0",
         },
         included: undefined,
-        links: undefined,
+        links: {
+          "first": "http://localhost:8080/test?page[number]=1&page[size]=2",
+          "last": "http://localhost:8080/test?page[number]=10&page[size]=2",
+          "next": "http://localhost:8080/test?page[number]=2&page[size]=2",
+          "self": "http://localhost:8080/test",
+        },
         meta: undefined,
         data: [
           {
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/test/1"
+            },
             meta: undefined,
             relationships: undefined,
             type: "test",
@@ -119,7 +137,11 @@ describe("JsonApiResourceSerializer", () => {
           },
         ],
       };
-      const result = await serializer.serializeMany([resource]);
+      const result = await serializer.serializeMany([resource], {
+        number: 1,
+        size: 2,
+        total: 10
+      });
       expect(result).toEqual(expectedResult);
     });
 
@@ -131,11 +153,18 @@ describe("JsonApiResourceSerializer", () => {
         jsonapi: {
           version: "1.0",
         },
-        links: undefined,
+        links: {
+          "first": "http://localhost:8080/test?page[number]=1&page[size]=2",
+          "last": "http://localhost:8080/test?page[number]=10&page[size]=2",
+          "next": "http://localhost:8080/test?page[number]=2&page[size]=2",
+          "self": "http://localhost:8080/test",
+        },
         meta: undefined,
         data: [
           {
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/test/1"
+            },
             meta: undefined,
             relationships: {
               relation: {
@@ -158,14 +187,21 @@ describe("JsonApiResourceSerializer", () => {
               name: "Test",
             },
             id: "1",
-            links: undefined,
+            links: {  
+              self: "http://localhost:8080/dummy/1"
+            },
             meta: undefined,
             relationships: undefined,
             type: "dummy",
           },
         ],
       };
-      const result = await serializer.serializeMany([resource]);
+
+      const result = await serializer.serializeMany([resource], {
+        number: 1,
+        size: 2,
+        total: 10
+      });
       expect(result).toEqual(expectedResult);
     });
   });

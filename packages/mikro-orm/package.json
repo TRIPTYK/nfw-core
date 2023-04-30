@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-mikro-orm",
-  "version": "4.0.0-alpha.31",
+  "version": "5.0.0-alpha.0",
   "description": "Mikro-ORM module for NFW-CORE",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -38,7 +38,7 @@
     "reflect-metadata": "^0.1.13",
     "tsyringe": "4.7.0",
     "type-fest": "^3.6.1",
-    "typescript": "~5.0.2",
+    "typescript": "~4.9.2",
     "vitest": "^0.29.7"
   },
   "peerDependencies": {

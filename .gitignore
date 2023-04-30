@@ -5,3 +5,5 @@ site/
 *.tsbuildinfo
 coverage
 jsonapi-new
+*.swp
+*.swo
