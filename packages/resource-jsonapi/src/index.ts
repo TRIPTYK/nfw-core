@@ -4,6 +4,7 @@ export * from './deserializer.js';
 export * from './registry/registry.js';
 export * from './query/parser.js';
 export * from './serializer.js';
+export * from './decorators/routes.js';
 export * from './query/query.js';
 export * from './interfaces/schema.js';
 export * from './interfaces/serializer.js';
