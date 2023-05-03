@@ -11,11 +11,11 @@ import isClass from 'is-class';
 
 export class ParamResolver implements ResolverInterface {
   public constructor (
-      public handle: UseParamsMetadataArgs['handle'],
+      public handle: UseParamsMetadataArgs<unknown>['handle'],
       public controllerContext: ControllerContextType
   ) {}
 
-  public resolve (contextArgs: unknown[]) : ExecutableParam {
+  public resolve (contextArgs: unknown) : ExecutableParam {
     if (this.isSpecialHandle()) {
       return new ExecutableParam(this.controllerContext, this.resolveSpecialContext(contextArgs));
     }
@@ -30,7 +30,7 @@ export class ParamResolver implements ResolverInterface {
     return this.handle === 'args' || this.handle === 'controller-context';
   }
 
-  private resolveSpecialContext (args: unknown[]) {
+  private resolveSpecialContext (args: unknown) {
     if (this.handle === 'args') {
       return args;
     }

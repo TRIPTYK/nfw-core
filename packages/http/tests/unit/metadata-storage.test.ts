@@ -13,7 +13,7 @@ import type { Class } from 'type-fest';
 describe('Metadata storage tests', () => {
   let metadataStorage: MetadataStorage;
 
-  function makeParamFor (target: unknown, propertyName: string, index: number): UseParamsMetadataArgs {
+  function makeParamFor (target: unknown, propertyName: string, index: number): UseParamsMetadataArgs<unknown> {
     return {
       index,
       decoratorName: '',

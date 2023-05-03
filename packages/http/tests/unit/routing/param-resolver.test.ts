@@ -13,7 +13,7 @@ describe('ResolveParam', () => {
   const controllerInstance = new Controller();
   const args = { controllerAction: 'thing', controllerInstance };
 
-  function constructParamResolver (handle : UseParamsMetadataArgs['handle']) {
+  function constructParamResolver (handle : UseParamsMetadataArgs<unknown>['handle']) {
     return new ParamResolver(handle,args );
   }
 

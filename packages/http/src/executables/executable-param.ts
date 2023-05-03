@@ -22,7 +22,7 @@ export class ExecutableParam implements ExecutableInterface {
     return this.param;
   }
 
-  private makeContext(ctx: RouterContext): ControllerParamsContext<any> {
+  private makeContext(ctx: RouterContext): ControllerParamsContext<unknown> {
     return {
       ctx,
       ...this.controllerContext

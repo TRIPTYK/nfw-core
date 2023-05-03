@@ -15,7 +15,7 @@ export class MetadataStorage implements MetadataStorageInterface {
   public routes: RouteMetadataArgs<unknown>[] = [];
   public endpoints: HttpEndpointMetadataArgs[] = [];
   public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
-  public useParams: UseParamsMetadataArgs[] = [];
+  public useParams: UseParamsMetadataArgs<unknown>[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
@@ -23,7 +23,7 @@ export class MetadataStorage implements MetadataStorageInterface {
     this.routes.push(...routerMeta);
   }
 
-  public addParamUsage (...paramMeta: UseParamsMetadataArgs[]) {
+  public addParamUsage (...paramMeta: UseParamsMetadataArgs<unknown>[]) {
     this.useParams.push(...paramMeta);
   }
 
