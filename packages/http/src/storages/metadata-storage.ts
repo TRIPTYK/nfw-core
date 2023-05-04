@@ -54,7 +54,11 @@ export class MetadataStorage implements MetadataStorageInterface {
   }
 
   public sortedParametersForEndpoint (target: unknown, propertyName: string) {
-    return this.sortedParametersForTarget(target).filter((paramMeta) => paramMeta.propertyName === propertyName);
+    const params = this.sortedParametersForTarget(target).filter((paramMeta) => paramMeta.propertyName === propertyName);
+    if  (Math.max(0,...params.map((p) => p.index)) < params.length - 1) {
+      throw new Error(`A decorator is missing for a parameter in ${target}.${propertyName}`);
+    }
+    return params;
   }
 
   public sortedParametersForTarget (target: unknown) {

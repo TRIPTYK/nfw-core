@@ -77,6 +77,14 @@ describe('Metadata storage tests', () => {
 
       expect(metadataStorage.sortedParametersForEndpoint(TheTarget, 'cmonDoSomething')).toStrictEqual([firstParam, secondParam]);
     });
+    it('throws when a property is not decorated in the param chain', () => {
+      const firstParam = makeParamFor(TheTarget.prototype, 'cmonDoSomething', 0);
+      const secondParam = makeParamFor(TheTarget.prototype, 'cmonDoSomething', 2);
+
+      metadataStorage.useParams.push(secondParam, firstParam);
+
+      expect(metadataStorage.sortedParametersForEndpoint(TheTarget, 'cmonDoSomething')).toThrowError(Error);
+    });
     it('gets sorted params for target', () => {
       const firstParam = makeParamFor(TheTarget.prototype, 'aaa', 0);
       const secondParam = makeParamFor(TheTarget.prototype, 'bbb', 1);
