@@ -40,6 +40,6 @@ export class JsonApiResourceDeserializer<T extends Record<string, unknown>> impl
     const whitelistAttributes = filterForWhitelist(schema.attributes, "deserialize");
     const whitelistRelations = filterForWhitelist(schema.relationships, "deserialize");
     
-    return [...whitelistRelations, ...whitelistAttributes];
+    return ['id', ...whitelistRelations, ...whitelistAttributes];
   }
 }
