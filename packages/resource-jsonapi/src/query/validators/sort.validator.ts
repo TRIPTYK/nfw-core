@@ -1,11 +1,15 @@
+import { inject, injectable } from "@triptyk/nfw-core";
 import {UnallowedSortFieldError} from "../../errors/unallowed-sort-field.js";
 import {SchemaAttributes} from "../../interfaces/schema.js";
-import {ResourcesRegistry} from "../../registry/registry.js";
+import {ResourcesRegistry, ResourcesRegistryImpl} from "../../registry/registry.js";
 import {SortQuery} from "../query.js";
 
+@injectable()
 export class SortValidator {
-  constructor(private registry: ResourcesRegistry) {}
-
+  constructor(
+    @inject(ResourcesRegistryImpl) private registry: ResourcesRegistry
+  ) {}
+  
   public validate(sort: SortQuery | undefined, type: string) {
     if (sort === undefined) {
       return;

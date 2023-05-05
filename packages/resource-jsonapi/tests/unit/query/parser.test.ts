@@ -57,7 +57,7 @@ beforeEach(() => {
 
 
 it('Parses a jsonapi query string', () => {
-  queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+  queryParser = container.resolve(JsonApiQueryParserImpl);
   const parsed = queryParser.parse(`include=articles&fields[articles]=123&sort=-id&filter=${JSON.stringify({
     coucou: 1
   })}&page[size]=1&page[number]=2`, 'example');

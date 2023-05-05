@@ -54,26 +54,26 @@ beforeEach(() => {
 });
 
 describe('Include Validator', () => {
+  beforeEach(() =>  {
+    queryParser = container.resolve(JsonApiQueryParserImpl);
+  })
+
   const unknwownRelationError = new UnknownRelationInSchemaError("articles are not allowed for articles", [{ relationName: '', nested: []}]);
 
   it('Throw an error when include is not in relations list', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
     expect(() => queryParser.parse('include=articles', 'articles')).toThrowError(unknwownRelationError);
   });
 
   it('to resolve successfully if all include are in relations list', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
     expect(() => queryParser.parse('include=articles', 'example')).not.toThrowError();
   });
 
   describe('Nested', () => {
     it('Throw an error when include is not in relations list', () => {
-      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
       expect(() => queryParser.parse('include=articles,articles.articles', 'example')).toThrowError(unknwownRelationError);
     });
 
     it('to resolve successfully if all include are in relations list', () => {
-      queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
       expect(() => queryParser.parse('include=articles,articles.example', 'example')).not.toThrowError();
     });
   })

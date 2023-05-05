@@ -35,8 +35,6 @@ test("It builds a router from the meta storage", async () => {
     const controllerInstance = new  Controller();
     const routeName =  '/';
 
-    const spy = vi.spyOn(controllerInstance,'truc');
-
     const router = await defaultBuilder.build({
         controllerInstance,
         args: {
@@ -46,7 +44,7 @@ test("It builds a router from the meta storage", async () => {
 
     expect(router.opts.prefix).toStrictEqual('/');
 
-    const ret = await router.stack.at(0)?.stack[0]({
+    await router.stack.at(0)?.stack[0]({
         response: {
             body: undefined
         }

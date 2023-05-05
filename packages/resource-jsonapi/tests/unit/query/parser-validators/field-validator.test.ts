@@ -53,14 +53,16 @@ beforeEach(() => {
 });
 
 describe('Fields Validator', () => {
+  beforeEach(() =>  {
+    queryParser = container.resolve(JsonApiQueryParserImpl);
+  })
+
   it('Throw an error when field is not in attributes', () => {
   const unknwonFieldError = new UnknownFieldInSchemaError("123 are not allowed for example", ["123"])
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
     expect(() => queryParser.parse('fields[example]=123', 'example')).toThrowError(unknwonFieldError);
   });
 
   it('To resolve successfully if all fields are in attributes', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
     expect(() => queryParser.parse('fields[articles]=123', 'example')).not.toThrowError();
   });
 })

@@ -1,14 +1,14 @@
+import { inject, injectable } from "@triptyk/nfw-core";
 import {UnknownFieldInSchemaError} from "../../errors/unknown-field.js";
-import {ResourcesRegistry} from "../../registry/registry.js";
+import {ResourcesRegistry, ResourcesRegistryImpl} from "../../registry/registry.js";
 
+@injectable()
 export class FieldsValidator {
-  constructor(private registry: ResourcesRegistry) {}
+  constructor(
+    @inject(ResourcesRegistryImpl) private registry: ResourcesRegistry
+  ) {}
 
   public validate(fields: Record<string, string[]> | undefined) {
-    if (fields === undefined) {
-      return;
-    }
-
     for (const type in fields) {
       this.throwErrorOnFieldNotInAttributes(fields, type);
     }

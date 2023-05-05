@@ -56,14 +56,17 @@ beforeEach(() => {
 });
 
 describe('Filter Validator', () => {
+  beforeEach(() =>  {
+    queryParser = container.resolve(JsonApiQueryParserImpl);
+  })
+
   it('Throw an error when filter is not true in schema', () => {
     const unallowedFilterError = new UnallowedFilterError("banane are not allowed as filter for articles", ['banane']);
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
+    
     expect(() => queryParser.parse(`filter=${JSON.stringify({ banane : 1 })}`, 'articles')).toThrowError(unallowedFilterError);
   });
 
   it('to resolve successfully if filter is true in schema', () => {
-    queryParser = new JsonApiQueryParserImpl(resourcesRegistry);
     expect(() => queryParser.parse(`filter=${JSON.stringify({ banane : 1 })}`, 'example')).not.toThrowError();
   });
 })

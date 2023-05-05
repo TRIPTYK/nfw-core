@@ -1,10 +1,14 @@
+import { inject, injectable } from "@triptyk/nfw-core";
 import { UnallowedFilterError } from "../../errors/unallowed-filter.js";
 import { SchemaAttributes } from "../../interfaces/schema.js";
-import { ResourcesRegistry } from "../../registry/registry.js";
+import { ResourcesRegistry, ResourcesRegistryImpl } from "../../registry/registry.js";
 import { FilterQuery } from "../query.js";
 
+@injectable()
 export class FilterValidator {
-  constructor(private registry: ResourcesRegistry) {}
+  constructor(
+    @inject(ResourcesRegistryImpl) private registry: ResourcesRegistry
+  ) {}
 
   public validate(filter: FilterQuery | undefined, type: string) {
     if (filter === undefined) {

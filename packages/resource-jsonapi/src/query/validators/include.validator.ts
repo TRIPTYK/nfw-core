@@ -1,16 +1,20 @@
+import { inject, injectable } from "@triptyk/nfw-core";
 import { UnknownRelationInSchemaError } from "../../errors/unknown-relation.js";
-import { ResourcesRegistry } from "../../registry/registry.js"
+import { ResourcesRegistry, ResourcesRegistryImpl } from "../../registry/registry.js"
 import { IncludeQuery } from "../query.js";
 
+@injectable()
 export class IncludeValidator {
-  constructor(private registry: ResourcesRegistry, private type: string) {}
-
-  public validate(includes: IncludeQuery[] | undefined) {
+  constructor(
+    @inject(ResourcesRegistryImpl) private registry: ResourcesRegistry
+  ) {}
+  
+  public validate(includes: IncludeQuery[] | undefined,  type: string) {
     if (includes === undefined) {
       return;
     }
 
-    this.throwErrorOnRelationNotInSchema(includes, this.type)
+    this.throwErrorOnRelationNotInSchema(includes, type)
     this.validateNestedRelationPresenceInSchema(includes)
   }
 
