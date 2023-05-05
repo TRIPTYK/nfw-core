@@ -30,11 +30,11 @@ export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs
     });
     const endpointsMeta = this.metadataStorage.getEndpointsForTarget(context.controllerInstance.constructor);
 
-    controllerRouter.use(...beforeMiddlewaresInstancesForTarget(context.controllerInstance.constructor));
+    controllerRouter.use(...beforeMiddlewaresInstancesForTarget(this.metadataStorage,context.controllerInstance.constructor));
 
     this.setupEndpoints(endpointsMeta, controllerRouter, context);
 
-    controllerRouter.use(...afterMiddlewaresInstancesForTarget(context.controllerInstance.constructor));
+    controllerRouter.use(...afterMiddlewaresInstancesForTarget(this.metadataStorage,context.controllerInstance.constructor));
 
     return controllerRouter;
   }
@@ -51,8 +51,8 @@ export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs
     endPointMeta: HttpEndpointMetadataArgs,
     { controllerInstance }: RouterBuilderArguments<DefaultBuilderArgs>
   ) {
-    const beforeMiddlewares = beforeMiddlewaresInstancesForTarget(controllerInstance, endPointMeta.propertyName);
-    const afterMiddlewares = afterMiddlewaresInstancesForTarget(controllerInstance, endPointMeta.propertyName);
+    const beforeMiddlewares = beforeMiddlewaresInstancesForTarget(this.metadataStorage,controllerInstance.constructor.prototype, endPointMeta.propertyName);
+    const afterMiddlewares = afterMiddlewaresInstancesForTarget(this.metadataStorage,controllerInstance.constructor.prototype, endPointMeta.propertyName);
 
     const controllerContext = this.createControllerContext(endPointMeta, controllerInstance);
     const controllerActionBuilder = this.createActionBuilder(controllerContext);
