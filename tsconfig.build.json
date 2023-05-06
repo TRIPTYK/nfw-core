@@ -7,7 +7,6 @@
     "module": "ES2022",
     "noEmitOnError": true,
     "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,

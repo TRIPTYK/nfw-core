@@ -8,7 +8,7 @@ import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
 export class RouterBuilder {
   public constructor (
-    public metadataStorage: MetadataStorageInterface,
+    private metadataStorage: MetadataStorageInterface,
     private parentRoute: Router | Application,
     private controller: Class<unknown>
   ) {}

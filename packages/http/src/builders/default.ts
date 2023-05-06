@@ -7,9 +7,7 @@ import { MetadataStorage } from '../storages/metadata-storage.js';
 import { allowedMethods } from '../utils/allowed-methods.js';
 import { afterMiddlewaresInstancesForTarget, beforeMiddlewaresInstancesForTarget } from '../utils/middlewares.js';
 import type { RouterBuilderArguments, RouterBuilderInterface } from '../interfaces/router-builder.js';
-import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 import { ControllerActionResolver } from '../resolvers/controller-action-resolver.js';
-
 import type { ControllerContextType } from '../types/controller-context.js';
 import { GuardResolver } from '../resolvers/guard-resolver.js';
 import { ResponseHandlerResolver } from '../resolvers/response-handler-resolver.js';
