@@ -197,21 +197,16 @@ describe("JsonApiResourceSerializer", () => {
           ],
           "included": [
             {
-              "data": {
-                "attributes": {
-                  "name": "Test",
-                },
-                "id": "1",
-                "links": {
-                  "self": "http://localhost:8080/dummy/1",
-                },
-                "meta": undefined,
-                "relationships": undefined,
-                "type": "dummy",
+              "attributes": {
+                "name": "Test",
               },
-              "included": Map {
-                "1" => [Circular],
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/dummy/1",
               },
+              "meta": undefined,
+              "relationships": undefined,
+              "type": "dummy",
             },
           ],
           "jsonapi": {

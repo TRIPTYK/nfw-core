@@ -15,7 +15,7 @@ export class DocumentSerializer  {
     }
   
     private addDocumentToIncluded(resource: Resource, schema: ResourceSchema) {
-      const document = this.serializeTopLevelDocuments(resource, schema);
+      const document = this.serializeOneTopDocument(resource, schema);
   
       if (resource.id && !this.included.has(resource.id)) {
        this.included.set(resource.id, document);
@@ -27,17 +27,17 @@ export class DocumentSerializer  {
     public serializeTopLevelDocuments(resource: Resource | Resource[], schema: ResourceSchema<Resource>) {
       if (Array.isArray(resource)) {
         return {
-          data: resource.map((r) => this.serializeOneTopLevelDocument(r, schema)),
+          data: resource.map((r) => this.serializeOneTopDocument(r, schema)),
           included:  this.included,
         }
       } 
       return {
-        data: this.serializeOneTopLevelDocument(resource, schema),
+        data: this.serializeOneTopDocument(resource, schema),
         included:  this.included,
       }
     }
   
-  private serializeOneTopLevelDocument(resource: Resource, schema: ResourceSchema<Resource>) {
+  private serializeOneTopDocument(resource: Resource, schema: ResourceSchema<Resource>) {
     const doc: JsonApiResourceObject<Resource> = {
       id: resource.id,
       type: schema.type,
