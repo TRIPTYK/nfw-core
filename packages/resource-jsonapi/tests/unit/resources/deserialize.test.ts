@@ -3,7 +3,7 @@ import { container, inject, singleton } from '@triptyk/nfw-core';
 import { assert, beforeEach, expect, test } from "vitest";
 import { ResourceSchema, ResourcesRegistry, ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
-import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
+import { JsonApiResourceDeserializer } from '../../../src/serialization/deserializer.js';
 
 
 let resourcesRegistry: ResourcesRegistryImpl;

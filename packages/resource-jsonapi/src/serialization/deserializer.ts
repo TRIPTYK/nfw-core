@@ -1,13 +1,14 @@
 import { singleton } from '@triptyk/nfw-core';
 import JSONAPISerializer from 'json-api-serializer';
-import {ResourceDeserializer} from './interfaces/deserializer.js';
-import { ResourcesRegistry } from './registry/registry.js';
-import { DeserializerGenerator } from './serializer-generators/deserializer-generator.js';
-import { ThrowOnKeyNotInWhitelist } from './utils/whitelist-apply.js';
-import { filterForWhitelist } from './utils/whitelist-filter.js';
+import {ResourceDeserializer} from '../interfaces/deserializer.js';
+import { ResourcesRegistry } from '../registry/registry.js';
+import { DeserializerGenerator } from './generator/deserializer.js';
+import { ThrowOnKeyNotInWhitelist } from '../utils/whitelist-apply.js';
+import { filterForWhitelist } from '../utils/whitelist-filter.js';
+import { Resource } from '../interfaces/resource.js';
 
 @singleton()
-export class JsonApiResourceDeserializer<T extends Record<string, unknown>> implements ResourceDeserializer<T> {
+export class JsonApiResourceDeserializer<T extends Resource> implements ResourceDeserializer<T> {
   private deserializer = new JSONAPISerializer();
  
   public constructor (

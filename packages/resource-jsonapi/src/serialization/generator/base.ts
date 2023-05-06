@@ -1,6 +1,6 @@
 import JSONAPISerializer from "json-api-serializer";
-import { ResourceSchema } from "../interfaces/schema.js";
-import { ResourcesRegistry } from "../registry/registry.js";
+import { ResourceSchema } from "../../interfaces/schema.js";
+import { ResourcesRegistry } from "../../registry/registry.js";
 
 export abstract class BaseSerializerGenerator {
   protected processedTypes: string[] = [];
@@ -10,16 +10,16 @@ export abstract class BaseSerializerGenerator {
     protected serializer: JSONAPISerializer
   ) {}
 
-  abstract baseSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>>(schema: T): JSONAPISerializer.Options 
+  abstract baseSchemaAndWhitelist<T extends ResourceSchema>(schema: T): JSONAPISerializer.Options 
 
-  public generate<T extends ResourceSchema<Record<string, unknown>>>(schema: T): void {
+  public generate<T extends ResourceSchema>(schema: T): void {
     const jsonApiSchema = this.baseSchemaAndWhitelist(schema);
 
     this.generateRelationships(jsonApiSchema, schema);
     this.serializer.register(schema.type, jsonApiSchema);
   }
 
-  protected generateRelationships<T extends ResourceSchema<Record<string, unknown>>>(jsonApiSchema: JSONAPISerializer.Options, schema: T) {
+  protected generateRelationships<T extends ResourceSchema>(jsonApiSchema: JSONAPISerializer.Options, schema: T) {
     for (const [relationName, relationObject] of Object.entries(schema.relationships)) {
       if (relationObject !== undefined) {
         this.generateForRelation(jsonApiSchema, relationName, relationObject.type);

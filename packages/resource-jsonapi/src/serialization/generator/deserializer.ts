@@ -1,6 +1,6 @@
 import JSONAPISerializer from "json-api-serializer";
-import { ResourceSchema } from "../interfaces/schema.js";
-import { ResourcesRegistry } from "../registry/registry.js";
+import { ResourceSchema } from "../../interfaces/schema.js";
+import { ResourcesRegistry } from "../../registry/registry.js";
 import { BaseSerializerGenerator } from "./base.js";
 
 export class DeserializerGenerator extends BaseSerializerGenerator {
