@@ -24,7 +24,7 @@ export class DocumentSerializer  {
       return document;
     }
   
-    public serializeTopLevelDocuments(resource: Resource | Resource[], schema: ResourceSchema<Resource>) {
+    public serializeTopLevelDocuments(resource: Resource | Resource[] | null, schema: ResourceSchema<Resource>) {
       if (Array.isArray(resource)) {
         return {
           data: resource.map((r) => this.serializeOneTopDocument(r, schema)),
@@ -32,7 +32,7 @@ export class DocumentSerializer  {
         }
       } 
       return {
-        data: this.serializeOneTopDocument(resource, schema),
+        data: resource === null ? null : this.serializeOneTopDocument(resource, schema),
         included:  this.included,
       }
     }
@@ -60,7 +60,7 @@ export class DocumentSerializer  {
       let relationships: Relationships = {};
   
       for (const [relationshipName, relationDescriptor] of Object.entries(serializableRelationships(schema))) {
-        const relationshipValue = resource[relationshipName] as Resource | Resource[] | undefined;
+        const relationshipValue = resource[relationshipName] as Resource | Resource[] | undefined | null;
         if (relationshipValue !== undefined) {
             relationships[relationshipName] = Array.isArray(relationshipValue) ? 
               this.serializeManyRelationships(relationshipValue, relationDescriptor!): 
@@ -70,10 +70,12 @@ export class DocumentSerializer  {
       return relationships;
     }
   
-    private serializeSingleRelationship(relationshipValue: Resource, relationDescriptor: SchemaRelationship) {
-      this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type));
+    private serializeSingleRelationship(relationshipValue: Resource | null, relationDescriptor: SchemaRelationship) {
+      if (relationshipValue) {
+        this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type));
+      }
       return {
-        data: relationshipValue.id ? {
+        data: relationshipValue?.id ? {
           type: relationDescriptor.type,
           id: relationshipValue.id
         }: null,

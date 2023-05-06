@@ -49,7 +49,7 @@ describe("JsonApiResourceSerializer", () => {
     type: string = "test";
     id?: string;
     name!: string;
-    relation!: DummyResource;
+    relation!: DummyResource | null;
   }
 
   class DummyResource {
@@ -142,6 +142,46 @@ describe("JsonApiResourceSerializer", () => {
             "first": "http://localhost:8080/test?page[number]=1&page[size]=2",
             "last": "http://localhost:8080/test?page[number]=10&page[size]=2",
             "next": "http://localhost:8080/test?page[number]=2&page[size]=2",
+            "self": "http://localhost:8080/test",
+          },
+          "meta": undefined,
+        }
+      `);
+    });
+
+    it("should serialize null relationships", async () => {
+      const resource = makeTestResource();
+      resource.relation = null;
+
+      const result = await serializer.serializeMany([resource],{});
+
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "attributes": {
+                "name": "Test",
+              },
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/test/1",
+              },
+              "meta": undefined,
+              "relationships": {
+                "relation": {
+                  "data": null,
+                  "links": undefined,
+                  "meta": undefined,
+                },
+              },
+              "type": "test",
+            },
+          ],
+          "included": undefined,
+          "jsonapi": {
+            "version": "1.0",
+          },
+          "links": {
             "self": "http://localhost:8080/test",
           },
           "meta": undefined,
