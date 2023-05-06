@@ -24,7 +24,7 @@ export class JsonApiResourceDeserializer<T extends Resource> implements Resource
   }
 
   public async deserialize(payload: T): Promise<T> {
-    const deserialized = this.deserializer.deserialize(this.type, payload);
+    const deserialized = this.deserializer.deserialize(this.type, payload as never);
     this.removeUnknownFieldFromPayload(deserialized);
     
     return deserialized;

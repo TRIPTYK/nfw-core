@@ -1,6 +1,6 @@
 import { Resource } from "../interfaces/resource.js";
 import { ResourceSchema, SchemaAttribute, SchemaRelationship } from "../interfaces/schema.js";
-import { JsonApiQuery } from "../query/query.js";
+import { IncludeQuery, JsonApiQuery } from "../query/query.js";
 import { ResourcesRegistry } from "../registry/registry.js";
 import { JsonApiResourceObject, Relationships } from "../types/jsonapi-spec.js";
 import { extractSerializableAttributes } from "../utils/attributes-from-schema.js";
@@ -20,17 +20,17 @@ export class DocumentSerializer  {
     public serializeTopLevelDocuments(resource: Resource | Resource[] | null, schema: ResourceSchema<Resource>) {
       if (Array.isArray(resource)) {
         return {
-          data: resource.map((r) => this.serializeOneTopDocument(r, schema)),
+          data: resource.map((r) => this.serializeOneTopDocument(r, schema, this.query.include ?? [])),
           included:  this.included,
         }
       } 
       return {
-        data: resource === null ? null : this.serializeOneTopDocument(resource, schema),
+        data: resource === null ? null : this.serializeOneTopDocument(resource, schema,  this.query.include ?? []),
         included:  this.included,
       }
     }
   
-  private serializeOneTopDocument(resource: Resource, schema: ResourceSchema<Resource>) {
+  private serializeOneTopDocument(resource: Resource, schema: ResourceSchema<Resource>, include: IncludeQuery[]) {
     const doc: JsonApiResourceObject<Resource> = {
       id: resource.id,
       type: schema.type,
@@ -40,7 +40,7 @@ export class DocumentSerializer  {
       relationships: undefined
     };
 
-    let relationships: Relationships = this.makeRelationships(schema, resource);
+    let relationships: Relationships = this.makeRelationships(schema, resource, include);
 
     if (Object.keys(relationships).length > 0) {
       doc.relationships = relationships;
@@ -49,23 +49,26 @@ export class DocumentSerializer  {
     return doc;
   }
 
-    private makeRelationships(schema: ResourceSchema<Resource>, resource: Resource) {
+    private makeRelationships(schema: ResourceSchema<Resource>, resource: Resource, includeLevel: IncludeQuery[]) {
       let relationships: Relationships = {};
-  
-      for (const [relationshipName, relationDescriptor] of Object.entries(serializableRelationships(schema))) {
-        const relationshipValue = resource[relationshipName] as Resource | Resource[] | undefined | null;
-        if (relationshipValue !== undefined) {
-            relationships[relationshipName] = Array.isArray(relationshipValue) ? 
-              this.serializeManyRelationships(relationshipValue, relationDescriptor!): 
-              this.serializeSingleRelationship(relationshipValue, relationDescriptor!);
+      const serializableRelationshipsArray = serializableRelationships(schema);
+
+      for (const include of includeLevel) {
+        const relationName = include.relationName;
+        const relationshipValue = resource[relationName] as Resource | Resource[] | undefined | null;
+        const relationDescriptor = serializableRelationshipsArray[relationName];
+        if (relationshipValue !== undefined && relationDescriptor) {
+          relationships[relationName] = Array.isArray(relationshipValue) ? 
+            this.serializeManyRelationships(relationshipValue, relationDescriptor, include.nested): 
+            this.serializeSingleRelationship(relationshipValue, relationDescriptor, include.nested);
         }
       }
       return relationships;
     }
   
-    private serializeSingleRelationship(relationshipValue: Resource | null, relationDescriptor: SchemaRelationship) {
+    private serializeSingleRelationship(relationshipValue: Resource | null, relationDescriptor: SchemaRelationship, include: IncludeQuery[]) {
       if (relationshipValue) {
-        this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type));
+        this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type), include);
       }
       return {
         data: relationshipValue?.id ? {
@@ -77,9 +80,9 @@ export class DocumentSerializer  {
       };
     }
   
-    private serializeManyRelationships(relationshipValues: Resource[], relationDescriptor: SchemaRelationship) {
+    private serializeManyRelationships(relationshipValues: Resource[], relationDescriptor: SchemaRelationship, include: IncludeQuery[]) {
       for (const relationshipValue of relationshipValues) {
-        this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type));
+        this.addDocumentToIncluded(relationshipValue, this.registry.getSchemaFor(relationDescriptor!.type), include);
       }
       return {
         data: relationshipValues.filter((r) => r.id).map((relationshipValue) => ({
@@ -92,8 +95,8 @@ export class DocumentSerializer  {
     }
 
       
-    private addDocumentToIncluded(resource: Resource, schema: ResourceSchema) {
-      const document = this.serializeOneTopDocument(resource, schema);
+    private addDocumentToIncluded(resource: Resource, schema: ResourceSchema,include: IncludeQuery[]) {
+      const document = this.serializeOneTopDocument(resource, schema,include);
   
       if (resource.id && !this.included.has(resource.id)) {
        this.included.set(resource.id, document);

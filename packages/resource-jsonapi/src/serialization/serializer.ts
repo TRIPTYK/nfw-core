@@ -5,6 +5,7 @@ import { Resource } from '../interfaces/resource.js';
 import { ResourceSchema, } from '../interfaces/schema.js';
 import { DocumentSerializer } from './document.js';
 import { arrayWithElementsOrUndefined } from '../utils/array-with-elements-or-undefined.js';
+import { JsonApiTopLevelDocument } from '../types/jsonapi-spec.js';
 
 const JSONAPI_HEADER = {
   jsonapi: {
@@ -23,7 +24,7 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
     return this.registry.getConfig();
   }
 
-  public async serializeMany (resources: T[], query: JsonApiQuery, paginationData?: PaginationData): Promise<unknown> {
+  public async serializeMany (resources: T[], query: JsonApiQuery, paginationData?: PaginationData): Promise<JsonApiTopLevelDocument> {
     const schema = this.registry.getSchemaFor(this.type);
     const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resources, schema);
 
@@ -36,7 +37,7 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
     }
   }
 
-  public async serializeOne (resource: T,query: JsonApiQuery): Promise<unknown> {
+  public async serializeOne (resource: T,query: JsonApiQuery): Promise<JsonApiTopLevelDocument> {
     const schema = this.registry.getSchemaFor(this.type);
     const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resource, schema);
 

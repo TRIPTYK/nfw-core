@@ -117,7 +117,9 @@ describe("JsonApiResourceSerializer", () => {
     it("should serialize many resources", async () => {
       const resource = makeTestResource();
 
-      const result = await serializer.serializeMany([resource],{}, {
+      const result = await serializer.serializeMany([resource],{
+
+      }, {
         number: 1,
         size: 2,
         total: 10
@@ -158,7 +160,14 @@ describe("JsonApiResourceSerializer", () => {
       const resource = makeTestResource();
       resource.relation = null;
 
-      const result = await serializer.serializeMany([resource],{});
+      const result = await serializer.serializeMany([resource],{
+        include: [
+          {
+            relationName: 'relation',
+            nested: []
+          }
+        ]
+      });
 
       expect(result).toMatchInlineSnapshot(`
         {
@@ -200,7 +209,15 @@ describe("JsonApiResourceSerializer", () => {
       resource.relation = makeDummyResource();
       resource.relations = [makeDummyResource()];
 
-      const result = await serializer.serializeMany([resource],{}, {
+      const result = await serializer.serializeMany([resource],{
+        include: [{
+          relationName: 'relation',
+          nested: []
+        },{
+          relationName: 'relations',
+          nested: []
+        }]
+      }, {
         number: 1,
         size: 2,
         total: 10
@@ -270,10 +287,6 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it("Serializer should only serialize attributes that have been asked in sparse-fields", async () => {
-
-    });
-
     it("If a sparse-fields is asked, return only asked", async () => {
       const resource = makeTestResource();
       const result = await serializer.serializeMany([resource],{
@@ -311,7 +324,7 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it.skip("Serializer should only serialize relationships that have been asked in includes", async () => {
+    it("Serializer should only serialize relationships that have been asked in includes", async () => {
       const resource = makeTestResource();
       resource.relation = makeDummyResource();
 
@@ -319,22 +332,33 @@ describe("JsonApiResourceSerializer", () => {
         include: []
       });
 
-      expect(result).toStrictEqual({
-        jsonapi: { version: '1.0' },
-        meta: undefined,
-        links: { self: 'http://localhost:8080/test' },
-        data: [
-          {
-            type: 'test',
-            id: '1',
-            attributes: { name: 'Test' },
-            relationships: undefined,
-            meta: undefined,
-            links: { self: 'http://localhost:8080/test/1' }
-          }
-        ],
-        included: []
-      });
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "attributes": {
+                "age": 1,
+                "name": "Test",
+              },
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/test/1",
+              },
+              "meta": undefined,
+              "relationships": undefined,
+              "type": "test",
+            },
+          ],
+          "included": undefined,
+          "jsonapi": {
+            "version": "1.0",
+          },
+          "links": {
+            "self": "http://localhost:8080/test",
+          },
+          "meta": undefined,
+        }
+      `);
     });
   });
 });
