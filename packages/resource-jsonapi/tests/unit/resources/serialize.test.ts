@@ -10,6 +10,7 @@ const schema: ResourceSchema<{}> = {
   type: "test",
   attributes: {
     name: defaultAttribute(),
+    age:  defaultAttribute(),
   },
   relationships: {
     relation: defaultRelation("dummy", "belongs-to"),
@@ -49,6 +50,7 @@ describe("JsonApiResourceSerializer", () => {
     type: string = "test";
     id?: string;
     name!: string;
+    age!: number;
     relation!: DummyResource | null;
   }
 
@@ -67,6 +69,7 @@ describe("JsonApiResourceSerializer", () => {
   function makeTestResource() {
     const resource = new TestResource();
     resource.id = "1";
+    resource.age = 1;
     resource.name = "Test";
     return resource;
   }
@@ -81,31 +84,32 @@ describe("JsonApiResourceSerializer", () => {
   describe("serializeOne", () => {
     it("should serialize one resource", async () => {
       const resource = makeTestResource();
-
-      const expectedResult = {
-        jsonapi: {
-          version: "1.0",
-        },
-        included: undefined,
-        links: {
-          self: "http://localhost:8080/test/1"
-        },
-        meta: undefined,
-        data: {
-          links: {  
-            self: "http://localhost:8080/test/1"
+      const result = await serializer.serializeOne(resource, {});
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": {
+            "attributes": {
+              "age": 1,
+              "name": "Test",
+            },
+            "id": "1",
+            "links": {
+              "self": "http://localhost:8080/test/1",
+            },
+            "meta": undefined,
+            "relationships": undefined,
+            "type": "test",
           },
-          meta: undefined,
-          relationships: undefined,
-          type: "test",
-          id: "1",
-          attributes: {
-            name: "Test",
+          "included": undefined,
+          "jsonapi": {
+            "version": "1.0",
           },
-        },
-      };
-      const result = await serializer.serializeOne(resource);
-      expect(result).toEqual(expectedResult);
+          "links": {
+            "self": "http://localhost:8080/test/1",
+          },
+          "meta": undefined,
+        }
+      `);
     });
   });
 
@@ -123,6 +127,7 @@ describe("JsonApiResourceSerializer", () => {
           "data": [
             {
               "attributes": {
+                "age": 1,
                 "name": "Test",
               },
               "id": "1",
@@ -160,6 +165,7 @@ describe("JsonApiResourceSerializer", () => {
           "data": [
             {
               "attributes": {
+                "age": 1,
                 "name": "Test",
               },
               "id": "1",
@@ -205,6 +211,7 @@ describe("JsonApiResourceSerializer", () => {
           "data": [
             {
               "attributes": {
+                "age": 1,
                 "name": "Test",
               },
               "id": "1",
@@ -267,8 +274,41 @@ describe("JsonApiResourceSerializer", () => {
 
     });
 
-    it("If no sparse-fields is asked, return all", async () => {
-      
+    it("If a sparse-fields is asked, return only asked", async () => {
+      const resource = makeTestResource();
+      const result = await serializer.serializeMany([resource],{
+        include: [],
+        fields: {
+          test: ['name']
+        }
+      });
+
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "attributes": {
+                "name": "Test",
+              },
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/test/1",
+              },
+              "meta": undefined,
+              "relationships": undefined,
+              "type": "test",
+            },
+          ],
+          "included": undefined,
+          "jsonapi": {
+            "version": "1.0",
+          },
+          "links": {
+            "self": "http://localhost:8080/test",
+          },
+          "meta": undefined,
+        }
+      `);
     });
 
     it.skip("Serializer should only serialize relationships that have been asked in includes", async () => {

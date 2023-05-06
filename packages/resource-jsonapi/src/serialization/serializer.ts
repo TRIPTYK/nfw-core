@@ -1,11 +1,8 @@
 import { ResourcesRegistry } from '../registry/registry.js';
 import { PaginationData, ResourceSerializer } from '../interfaces/serializer.js';
-import { IncludeQuery, JsonApiQuery } from '../query/query.js';
+import { JsonApiQuery } from '../query/query.js';
 import { Resource } from '../interfaces/resource.js';
-import { ResourceSchema, SchemaRelationship, SchemaRelationships } from '../interfaces/schema.js';
-import { extractSerializableAttributes } from '../utils/attributes-from-schema.js';
-import { JsonApiRelationshipObject, JsonApiResourceObject, JsonApiTopLevelDocument, Relationships } from '../types/jsonapi-spec.js';
-import { serializableRelationships } from '../utils/serializable-relationships.js';
+import { ResourceSchema, } from '../interfaces/schema.js';
 import { DocumentSerializer } from './document.js';
 import { arrayWithElementsOrUndefined } from '../utils/array-with-elements-or-undefined.js';
 
@@ -28,7 +25,7 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
 
   public async serializeMany (resources: T[], query: JsonApiQuery, paginationData?: PaginationData): Promise<unknown> {
     const schema = this.registry.getSchemaFor(this.type);
-    const { data, included } = new DocumentSerializer(this.registry).serializeTopLevelDocuments(resources, schema);
+    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resources, schema);
 
     return {
       ...JSONAPI_HEADER,
@@ -39,9 +36,9 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
     }
   }
 
-  public async serializeOne (resource: T): Promise<unknown> {
+  public async serializeOne (resource: T,query: JsonApiQuery): Promise<unknown> {
     const schema = this.registry.getSchemaFor(this.type);
-    const { data, included } = new DocumentSerializer(this.registry).serializeTopLevelDocuments(resource, schema);
+    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resource, schema);
 
     return {
       ...JSONAPI_HEADER,

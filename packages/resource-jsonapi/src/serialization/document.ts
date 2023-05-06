@@ -1,27 +1,20 @@
 import { Resource } from "../interfaces/resource.js";
-import { ResourceSchema, SchemaRelationship } from "../interfaces/schema.js";
+import { ResourceSchema, SchemaAttribute, SchemaRelationship } from "../interfaces/schema.js";
+import { JsonApiQuery } from "../query/query.js";
 import { ResourcesRegistry } from "../registry/registry.js";
 import { JsonApiResourceObject, Relationships } from "../types/jsonapi-spec.js";
 import { extractSerializableAttributes } from "../utils/attributes-from-schema.js";
+import { attributesFromSparseFields } from "../utils/attributes-from-sparse-fields.js";
 import { serializableRelationships } from "../utils/serializable-relationships.js";
 
 export class DocumentSerializer  {
     private included = new Map();
 
     public constructor(
-      private registry: ResourcesRegistry
+      private registry: ResourcesRegistry,
+      private query: JsonApiQuery
     ) {
   
-    }
-  
-    private addDocumentToIncluded(resource: Resource, schema: ResourceSchema) {
-      const document = this.serializeOneTopDocument(resource, schema);
-  
-      if (resource.id && !this.included.has(resource.id)) {
-       this.included.set(resource.id, document);
-      }
-  
-      return document;
     }
   
     public serializeTopLevelDocuments(resource: Resource | Resource[] | null, schema: ResourceSchema<Resource>) {
@@ -41,7 +34,7 @@ export class DocumentSerializer  {
     const doc: JsonApiResourceObject<Resource> = {
       id: resource.id,
       type: schema.type,
-      attributes: extractSerializableAttributes(resource, schema.attributes),
+      attributes: extractSerializableAttributes(resource, attributesFromSparseFields(schema, this.query.fields ?? {})),
       links: this.makeDocumentLinks(schema, resource),
       meta: undefined,
       relationships: undefined
@@ -96,6 +89,17 @@ export class DocumentSerializer  {
         links: undefined,
         meta: undefined
       };
+    }
+
+      
+    private addDocumentToIncluded(resource: Resource, schema: ResourceSchema) {
+      const document = this.serializeOneTopDocument(resource, schema);
+  
+      if (resource.id && !this.included.has(resource.id)) {
+       this.included.set(resource.id, document);
+      }
+  
+      return document;
     }
   
     private makeDocumentLinks(schema: ResourceSchema<Resource>, resource: Resource) {
