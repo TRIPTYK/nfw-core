@@ -39,5 +39,6 @@
   },
   "dependencies": {
     "tsyringe": "~4.7.0"
-  }
+  },
+  "gitHead": "8c22ed7bbb488d043cc1c8c3a6f1dfbdc361540d"
 }

@@ -31,7 +31,7 @@
   "devDependencies": {
     "@mikro-orm/core": "~5.7.4",
     "@mikro-orm/sqlite": "~5.7.4",
-    "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-core": "5.0.0-alpha.1",
     "@types/chai": "^4.3.5",
     "@types/koa": "^2.13.6",
     "@types/node": "^18.16.3",
@@ -44,5 +44,6 @@
   "peerDependencies": {
     "@mikro-orm/core": "~5.7.3",
     "@triptyk/nfw-core": "workspace:*"
-  }
+  },
+  "gitHead": "8c22ed7bbb488d043cc1c8c3a6f1dfbdc361540d"
 }
