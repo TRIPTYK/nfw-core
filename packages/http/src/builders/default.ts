@@ -34,6 +34,8 @@ export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs
 
     controllerRouter.use(...afterMiddlewaresInstancesForTarget(this.metadataStorage,context.controllerInstance.constructor));
 
+    controllerRouter.use(...afterMiddlewaresInstancesForTarget(this.context.meta.target));
+
     return controllerRouter;
   }
 

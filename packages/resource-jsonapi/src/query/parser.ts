@@ -20,7 +20,6 @@ export class JsonApiQueryParserImpl implements JsonApiQueryParser {
   public parse (search: string, type: string): JsonApiQuery {
     const parsed = this.parser.parse(search);
 
-
     const parsedAsJsonApiQuery: JsonApiQuery = {
       ...parsed,
       include: parsed.include,
