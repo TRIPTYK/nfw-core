@@ -13,7 +13,7 @@ describe('Executable Guard', () => {
 
   const context = {
     controllerInstance: new class {}(),
-    controllerAction: 'list'
+    controllerAction: 'list',
   };
 
   beforeEach(() => {

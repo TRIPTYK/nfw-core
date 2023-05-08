@@ -17,7 +17,7 @@ describe('Executable response handler', () => {
     const routerContext = {} as RouterContext;
     const controllerContext = {
       controllerAction: 'list',
-      controllerInstance: new class {}()
+      controllerInstance: new class {}(),
     };
     const spy = vi.spyOn(responseHandlerInstance, 'handle');
     const firstParam = new ExecutableParam(controllerContext, () => 'param2');
@@ -25,7 +25,7 @@ describe('Executable response handler', () => {
     const executableResponseHandler = new ExecutableResponseHandler(
       responseHandlerInstance,
       controllerContext,
-      [firstParam]
+      [firstParam],
     );
 
     await executableResponseHandler.execute('hello', routerContext);

@@ -10,7 +10,7 @@ export function UseResponseHandler (responseHandler: Class<ResponseHandlerInterf
       target,
       propertyName,
       responseHandler,
-      args
+      args,
     });
     /* jscpd:ignore-end */
   };

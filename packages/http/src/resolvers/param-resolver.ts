@@ -4,15 +4,15 @@ import type { ParamsHandleFunction, UseParamsMetadataArgs } from '../storages/me
 import type { ResolverInterface } from '../interfaces/resolver.js';
 import { UnknownSpecialContextError } from '../errors/unknown-special-context.js';
 import { ExecutableParam } from '../executables/executable-param.js';
-import { ParamInterface } from '../interfaces/param.js';
+import type { ParamInterface } from '../interfaces/param.js';
 import { container } from '@triptyk/nfw-core';
-import { Constructor } from 'type-fest';
+import type { Constructor } from 'type-fest';
 import isClass from 'is-class';
 
 export class ParamResolver implements ResolverInterface {
   public constructor (
       public handle: UseParamsMetadataArgs<unknown>['handle'],
-      public controllerContext: ControllerContextType
+      public controllerContext: ControllerContextType,
   ) {}
 
   public resolve (contextArgs: unknown) : ExecutableParam {
@@ -20,7 +20,7 @@ export class ParamResolver implements ResolverInterface {
       return new ExecutableParam(this.controllerContext, this.resolveSpecialContext(contextArgs));
     }
 
-    if  (isClass(this.handle)) {
+    if (isClass(this.handle)) {
       return new ExecutableParam(this.controllerContext, container.resolve(this.handle as Constructor<ParamInterface<unknown>>));
     }
     return new ExecutableParam(this.controllerContext, this.handle as ParamsHandleFunction<unknown>);

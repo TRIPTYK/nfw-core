@@ -1,10 +1,10 @@
-import {IncludeQuery} from "../query/query";
+import type { IncludeQuery } from '../query/query';
 
 export class UnknownRelationInSchemaError extends Error {
-    public constructor(
+  public constructor (
         public message: string,
-        public relations: IncludeQuery[]
-    ) {
-        super(message);
-    }
+        public relations: IncludeQuery[],
+  ) {
+    super(message);
+  }
 }

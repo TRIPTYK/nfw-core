@@ -1,13 +1,13 @@
 import type { Class } from 'type-fest';
 import { container, injectable } from '@triptyk/nfw-core';
-import { DefaultBuilder, DefaultBuilderArgs } from '../builders/default.js';
+import type { DefaultBuilderArgs } from '../builders/default.js';
+import { DefaultBuilder } from '../builders/default.js';
 import { MetadataStorage } from '../storages/metadata-storage.js';
 
 interface ControllerOptions {
   routeName: string,
   controllers?: Class<unknown>[],
 }
-
 
 export function Controller (options: ControllerOptions) {
   return function (target: Class<unknown>) {
@@ -17,8 +17,8 @@ export function Controller (options: ControllerOptions) {
       builder: DefaultBuilder,
       controllers: options.controllers ?? [],
       args: {
-        routeName: options.routeName
-      }
+        routeName: options.routeName,
+      },
     });
   };
 }

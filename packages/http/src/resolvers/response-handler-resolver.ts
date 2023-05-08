@@ -9,7 +9,7 @@ import { resolveParams } from '../utils/resolve-params.js';
 export class ResponseHandlerResolver implements ResolverInterface {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
-    public controllerContext: ControllerContextType
+    public controllerContext: ControllerContextType,
   ) {}
 
   public resolve (): ExecutableResponseHandler | undefined {

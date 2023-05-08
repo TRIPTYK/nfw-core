@@ -10,7 +10,7 @@ export class ExecutableGuard implements ExecutableInterface {
   public constructor (
     public instance: GuardInterface,
     public controllerContext: ControllerContextType,
-    public params: ExecutableParam[]
+    public params: ExecutableParam[],
   ) {}
 
   public async execute (ctx: RouterContext) {

@@ -1,5 +1,5 @@
-import { ParamsHandleFunction } from "../storages/metadata/use-param.js";
+import type { ParamsHandleFunction } from '../storages/metadata/use-param.js';
 
 export interface ParamInterface<T> {
-    handle: ParamsHandleFunction<T>
+    handle: ParamsHandleFunction<T>,
 }

@@ -20,7 +20,7 @@ describe('Metadata storage tests', () => {
       target,
       propertyName,
       handle: () => {},
-      args: []
+      args: [],
     };
   }
 
@@ -29,7 +29,7 @@ describe('Metadata storage tests', () => {
       target,
       guard: class {} as never,
       propertyName,
-      args: []
+      args: [],
     };
   }
 
@@ -38,7 +38,7 @@ describe('Metadata storage tests', () => {
       args: [],
       target,
       propertyName,
-      responseHandler: class {} as never
+      responseHandler: class {} as never,
     };
   }
 
@@ -47,7 +47,7 @@ describe('Metadata storage tests', () => {
       target,
       controllers: [],
       args: [],
-      builder: class {} as never
+      builder: class {} as never,
     };
   }
 
@@ -55,7 +55,7 @@ describe('Metadata storage tests', () => {
     return {
       target,
       middleware: {} as never,
-      type
+      type,
     } satisfies UseMiddlewareMetadataArgs;
   }
 

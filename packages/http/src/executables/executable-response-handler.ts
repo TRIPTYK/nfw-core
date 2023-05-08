@@ -9,7 +9,7 @@ export class ExecutableResponseHandler implements ExecutableInterface {
   public constructor (
         public instance: ResponseHandlerInterface,
         public controllerContext: ControllerContextType,
-        public params: ExecutableParam[]
+        public params: ExecutableParam[],
   ) {}
 
   public async execute (previousResponse: unknown, ctx: RouterContext) {

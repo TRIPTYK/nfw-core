@@ -22,7 +22,7 @@ describe('Guard builder', () => {
     const meta = {
       target: Controller,
       guard: Guard,
-      args: ['blah']
+      args: ['blah'],
     };
 
     storage.useGuards.push(meta);
@@ -37,8 +37,8 @@ describe('Guard builder', () => {
       storage,
       {
         controllerAction: 'nona',
-        controllerInstance: new Controller()
-      }
+        controllerInstance: new Controller(),
+      },
     );
     const resolved = guardBuilder.resolve();
 

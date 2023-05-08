@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it } from 'vitest';
@@ -21,20 +22,20 @@ beforeEach(() => {
     schema: {
       type: 'example',
       attributes: {
-        id: { 
+        id: {
           serialize: true,
           deserialize: true,
-          sort: true
+          sort: true,
         },
         coucou: {
-          filter: true
-        }
+          filter: true,
+        },
       },
       relationships: {
         articles: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
   resourcesRegistry.register('articles', {
     serializer: ExampleSerializer as never,
@@ -42,34 +43,33 @@ beforeEach(() => {
     schema: {
       type: 'articles',
       attributes: {
-        '123': { 
+        123: {
           serialize: true,
           deserialize: true,
-        }
+        },
       },
       relationships: {
         example: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
 });
 
-
 it('Parses a jsonapi query string', () => {
   queryParser = container.resolve(JsonApiQueryParserImpl);
-  const parsed = queryParser.parse(`include=articles&fields[articles]=123&sort=-id&filter[truc]=1&page[size]=1&page[number]=2`, 'example');
+  const parsed = queryParser.parse('include=articles&fields[articles]=123&sort=-id&filter[truc]=1&page[size]=1&page[number]=2', 'example');
 
   expect(parsed).toStrictEqual({
     fields: { articles: ['123'] },
     include: [{ relationName: 'articles', nested: [] }],
     sort: { id: 'DESC' },
     filter: {
-      truc: '1'
+      truc: '1',
     },
     page: {
       size: 1,
-      number: 2
-    }
+      number: 2,
+    },
   });
 });

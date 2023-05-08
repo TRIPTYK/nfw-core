@@ -22,7 +22,7 @@ describe('Response handler resolver', () => {
     const meta = {
       target: Controller,
       responseHandler,
-      args: ['blah']
+      args: ['blah'],
     };
 
     storage.addResponseHandlerUsage(meta);
@@ -34,8 +34,8 @@ describe('Response handler resolver', () => {
       storage,
       {
         controllerAction: 'nona',
-        controllerInstance: new Controller()
-      }
+        controllerInstance: new Controller(),
+      },
     );
   }
 

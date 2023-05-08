@@ -1,7 +1,9 @@
+/* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it, describe } from 'vitest';
-import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
+import type { JsonApiQueryParser } from '../../../../src/query/parser.js';
+import { JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
 import { ResourcesRegistryImpl } from '../../../../src/index.js';
 import { UnknownRelationInSchemaError } from '../../../../src/errors/unknown-relation.js';
 
@@ -21,17 +23,17 @@ beforeEach(() => {
     schema: {
       type: 'example',
       attributes: {
-        banane: { 
+        banane: {
           serialize: true,
-          sort:true,
+          sort: true,
           deserialize: true,
-        }
+        },
       },
       relationships: {
         articles: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
   resourcesRegistry.register('articles', {
     serializer: ExampleSerializer as never,
@@ -39,26 +41,26 @@ beforeEach(() => {
     schema: {
       type: 'articles',
       attributes: {
-        '123': { 
+        123: {
           serialize: true,
           sort: false,
           deserialize: true,
-        }
+        },
       },
       relationships: {
         example: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
 });
 
 describe('Include Validator', () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     queryParser = container.resolve(JsonApiQueryParserImpl);
-  })
+  });
 
-  const unknwownRelationError = new UnknownRelationInSchemaError("articles are not allowed for articles", [{ relationName: '', nested: []}]);
+  const unknwownRelationError = new UnknownRelationInSchemaError('articles are not allowed for articles', [{ relationName: '', nested: [] }]);
 
   it('Throw an error when include is not in relations list', () => {
     expect(() => queryParser.parse('include=articles', 'articles')).toThrowError(unknwownRelationError);
@@ -76,5 +78,5 @@ describe('Include Validator', () => {
     it('to resolve successfully if all include are in relations list', () => {
       expect(() => queryParser.parse('include=articles,articles.example', 'example')).not.toThrowError();
     });
-  })
-})
+  });
+});

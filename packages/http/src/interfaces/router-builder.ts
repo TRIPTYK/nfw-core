@@ -3,7 +3,7 @@ import type Application from 'koa';
 
 export interface RouterBuilderArguments<T> {
     controllerInstance: InstanceType<any>,
-    args: T
+    args: T,
 }
 
 export interface RouterBuilderInterface<T> {

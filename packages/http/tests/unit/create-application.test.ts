@@ -15,7 +15,7 @@ describe('Create application', () => {
   const spy = vi.fn();
 
   @Controller({
-    routeName: '/hello'
+    routeName: '/hello',
   })
   @singleton()
   class Troller {
@@ -27,7 +27,7 @@ describe('Create application', () => {
 
   @Controller({
     routeName: '/api/v1',
-    controllers: [Troller]
+    controllers: [Troller],
   })
   @singleton()
   class Area {}
@@ -38,8 +38,8 @@ describe('Create application', () => {
     await createApplication(
       {
         controllers: [Area],
-        server: app
-      }
+        server: app,
+      },
     );
 
     app.callback()(
@@ -47,9 +47,9 @@ describe('Create application', () => {
         url: '/api/v1/hello/index',
         method: 'GET',
         originalUrl: '/api/v1/hello/index',
-        baseUrl: '/api/v1/hello/index'
+        baseUrl: '/api/v1/hello/index',
       }),
-      createResponse()
+      createResponse(),
     );
 
     await setTimeout(100);

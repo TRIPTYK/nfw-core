@@ -10,7 +10,7 @@ export function createCustomDecorator<T> (handle: CustomParams<T>, name: string,
       index,
       decoratorName: name,
       handle: handle as any,
-      args
+      args,
     });
   };
 }

@@ -10,7 +10,7 @@ export class RouterBuilder {
   public constructor (
     private metadataStorage: MetadataStorageInterface,
     private parentRoute: Router | Application,
-    private controller: Class<unknown>
+    private controller: Class<unknown>,
   ) {}
 
   public async createRoute () {
@@ -24,7 +24,7 @@ export class RouterBuilder {
   private async callBuilder (builder: RouterBuilderInterface<unknown>, controllerInstance: unknown, controllerMetadata: RouteMetadataArgs<unknown>) {
     const controllerRouter = await builder.build({
       controllerInstance,
-      args: controllerMetadata.args
+      args: controllerMetadata.args,
     });
 
     await this.createNestedRouters(controllerMetadata, controllerRouter);

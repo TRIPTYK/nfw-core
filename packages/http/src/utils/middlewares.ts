@@ -1,9 +1,8 @@
 import isClass from 'is-class';
 import type { Class } from 'type-fest';
-import { MetadataStorage } from '../storages/metadata-storage.js';
 import { container } from '@triptyk/nfw-core';
 import type { AnyMiddlewareType } from '../types/any-middleware.js';
-import { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
+import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
 
 export function resolveMiddlewareInstance (middleware: AnyMiddlewareType) {
   if (!isClass(middleware)) {
@@ -19,7 +18,7 @@ export function beforeMiddlewaresInstancesForTarget (metadataStorage: MetadataSt
     .map((m) => resolveMiddlewareInstance(m.middleware));
 }
 
-export function afterMiddlewaresInstancesForTarget (metadataStorage: MetadataStorageInterface,target: Class<unknown>, propertyName?: string) {
+export function afterMiddlewaresInstancesForTarget (metadataStorage: MetadataStorageInterface, target: Class<unknown>, propertyName?: string) {
   return metadataStorage
     .getAfterMiddlewaresForTarget(target, propertyName)
     .map((m) => resolveMiddlewareInstance(m.middleware));

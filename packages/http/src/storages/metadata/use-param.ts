@@ -1,6 +1,6 @@
 import type { RouterContext } from '@koa/router';
-import { Constructor } from 'type-fest';
-import { ParamInterface } from '../../interfaces/param.js';
+import type { Constructor } from 'type-fest';
+import type { ParamInterface } from '../../interfaces/param.js';
 import type { ControllerContextType } from '../../types/controller-context.js';
 
 export interface ControllerParamsContext<TArgs, I = any> extends ControllerContextType<I> {

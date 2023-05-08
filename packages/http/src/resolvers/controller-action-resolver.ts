@@ -8,7 +8,7 @@ import { ExecutableControllerAction } from '../executables/executable-controller
 export class ControllerActionResolver implements ResolverInterface {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
-    public controllerContext: ControllerContextType
+    public controllerContext: ControllerContextType,
   ) {}
 
   public resolve (): ExecutableControllerAction {

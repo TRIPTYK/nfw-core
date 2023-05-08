@@ -17,14 +17,14 @@ export class ControllerActionBuilder {
   public constructor (
     public guardResolver: GuardResolver,
     public responseHandlerResolver: ResponseHandlerResolver,
-    public controllerActionResolver: ControllerActionResolver
+    public controllerActionResolver: ControllerActionResolver,
   ) {}
 
   public build () {
     return this.controllerActionMiddleware(
       this.controllerActionResolver.resolve(),
       this.guardResolver.resolve(),
-      this.responseHandlerResolver.resolve()
+      this.responseHandlerResolver.resolve(),
     );
   }
 
@@ -32,7 +32,7 @@ export class ControllerActionBuilder {
   private controllerActionMiddleware (
     executableControllerAction: ExecutableControllerAction,
     executableGuards: ExecutableGuard[],
-    executableResponseHandler: ExecutableResponseHandler | undefined
+    executableResponseHandler: ExecutableResponseHandler | undefined,
   ) {
     return async (ctx: RouterContext, _next: Next) => {
       await executeGuards(executableGuards, ctx);

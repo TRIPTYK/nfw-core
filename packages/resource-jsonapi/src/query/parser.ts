@@ -1,6 +1,7 @@
 import { Parser } from '@triptyk/json-api-query-parser';
 import { inject, injectable } from '@triptyk/nfw-core';
-import {ResourcesRegistry, ResourcesRegistryImpl} from '../registry/registry.js';
+import type { ResourcesRegistry } from '../registry/registry.js';
+import { ResourcesRegistryImpl } from '../registry/registry.js';
 import type { JsonApiQuery, PageQuery } from './query.js';
 import { QueryValidator } from './validator.js';
 
@@ -13,8 +14,8 @@ export class JsonApiQueryParserImpl implements JsonApiQueryParser {
   private parser = new Parser();
 
   public constructor (
-    @inject(ResourcesRegistryImpl) public  registry: ResourcesRegistry,
-    @inject(QueryValidator) public validator: QueryValidator
+    @inject(ResourcesRegistryImpl) public registry: ResourcesRegistry,
+    @inject(QueryValidator) public validator: QueryValidator,
   ) {}
 
   public parse (search: string, type: string): JsonApiQuery {
@@ -24,13 +25,13 @@ export class JsonApiQueryParserImpl implements JsonApiQueryParser {
       ...parsed,
       include: parsed.include,
       page: parsed.page as PageQuery | undefined,
-      filter: ((parsed.filter ?? []) as any).reduce((p: any,c: any) => {
-        p[c.key.replace(/\[|\]/g, "")] = c.value;
+      filter: ((parsed.filter ?? []) as any).reduce((p: any, c: any) => {
+        p[c.key.replace(/\[|\]/g, '')] = c.value;
         return p;
-      }, {})
+      }, {}),
     };
 
-    this.validator.validate(type,parsedAsJsonApiQuery);
+    this.validator.validate(type, parsedAsJsonApiQuery);
 
     return parsedAsJsonApiQuery;
   }

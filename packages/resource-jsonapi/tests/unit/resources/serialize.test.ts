@@ -1,53 +1,53 @@
+/* eslint-disable max-lines */
 // eslint-disable-next-line max-classes-per-file
-import "reflect-metadata";
-import { inspect } from "util";
-import { describe, it, expect, vi } from "vitest";
-import type { ResourceSchema } from "../../../src/index.js";
-import { JsonApiResourceSerializer } from "../../../src/serialization/serializer.js";
-import {defaultAttribute, defaultRelation} from "../test-utils/default-schema-parts.js";
+import 'reflect-metadata';
+import { describe, it, expect, vi } from 'vitest';
+import type { ResourceSchema } from '../../../src/index.js';
+import { JsonApiResourceSerializer } from '../../../src/serialization/serializer.js';
+import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
 
 const schema: ResourceSchema<{}> = {
-  type: "test",
+  type: 'test',
   attributes: {
     name: defaultAttribute(),
-    age:  defaultAttribute(),
+    age: defaultAttribute(),
   },
   relationships: {
-    relation: defaultRelation("dummy", "belongs-to"),
-    relations: defaultRelation("dummy", "has-many"),
-  }
+    relation: defaultRelation('dummy', 'belongs-to'),
+    relations: defaultRelation('dummy', 'has-many'),
+  },
 } as never;
 
 const schemaForRelationship: ResourceSchema<never> = {
-  type: "dummy",
+  type: 'dummy',
   attributes: {
     name: defaultAttribute(),
   },
   relationships: {
-    test: defaultRelation("test", "belongs-to"),
+    test: defaultRelation('test', 'belongs-to'),
   },
 } as never;
 
 // eslint-disable-next-line max-statements
-describe("JsonApiResourceSerializer", () => {
+describe('JsonApiResourceSerializer', () => {
   const registryMock = {
     getSchemaFor: vi.fn((type: string) => {
-      if (type === "dummy") {
+      if (type === 'dummy') {
         return schemaForRelationship;
       } else {
         return schema;
       }
     }),
-    getConfig: vi.fn(() => { 
-      return { 
-        host: 'http://localhost:8080'
-      }
+    getConfig: vi.fn(() => {
+      return {
+        host: 'http://localhost:8080',
+      };
     }),
   };
 
   class TestResource {
-		[key: string]: unknown;
-    type: string = "test";
+    [key: string]: unknown;
+    type: string = 'test';
     id?: string;
     name!: string;
     age!: number;
@@ -55,34 +55,34 @@ describe("JsonApiResourceSerializer", () => {
   }
 
   class DummyResource {
-    type: string = "dummy";
+    type: string = 'dummy';
     id?: string;
     declare name: string;
   }
 
   class TestSerializer extends JsonApiResourceSerializer<TestResource> {
-    type: string = "test";
+    type: string = 'test';
   }
 
-  const serializer = new TestSerializer("test", registryMock as never);
+  const serializer = new TestSerializer('test', registryMock as never);
 
-  function makeTestResource() {
+  function makeTestResource () {
     const resource = new TestResource();
-    resource.id = "1";
+    resource.id = '1';
     resource.age = 1;
-    resource.name = "Test";
+    resource.name = 'Test';
     return resource;
   }
 
-  function makeDummyResource() {
+  function makeDummyResource () {
     const resource = new DummyResource();
-    resource.id = "1";
-    resource.name = "Test";
+    resource.id = '1';
+    resource.name = 'Test';
     return resource;
   }
 
-  describe("serializeOne", () => {
-    it("should serialize one resource", async () => {
+  describe('serializeOne', () => {
+    it('should serialize one resource', async () => {
       const resource = makeTestResource();
       const result = await serializer.serializeOne(resource, {});
       expect(result).toMatchInlineSnapshot(`
@@ -113,16 +113,16 @@ describe("JsonApiResourceSerializer", () => {
     });
   });
 
-  describe("serializeMany", () => {
-    it("should serialize many resources", async () => {
+  describe('serializeMany', () => {
+    it('should serialize many resources', async () => {
       const resource = makeTestResource();
 
-      const result = await serializer.serializeMany([resource],{
+      const result = await serializer.serializeMany([resource], {
 
       }, {
         number: 1,
         size: 2,
-        total: 10
+        total: 10,
       });
       expect(result).toMatchInlineSnapshot(`
         {
@@ -156,17 +156,18 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it("should serialize null relationships", async () => {
+    it('should serialize null relationships', async () => {
       const resource = makeTestResource();
+      // eslint-disable-next-line unicorn/no-null
       resource.relation = null;
 
-      const result = await serializer.serializeMany([resource],{
+      const result = await serializer.serializeMany([resource], {
         include: [
           {
             relationName: 'relation',
-            nested: []
-          }
-        ]
+            nested: [],
+          },
+        ],
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -204,23 +205,23 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it("should serialize many resources and relationships", async () => {
+    it('should serialize many resources and relationships', async () => {
       const resource = makeTestResource();
       resource.relation = makeDummyResource();
       resource.relations = [makeDummyResource()];
 
-      const result = await serializer.serializeMany([resource],{
+      const result = await serializer.serializeMany([resource], {
         include: [{
           relationName: 'relation',
-          nested: []
-        },{
+          nested: [],
+        }, {
           relationName: 'relations',
-          nested: []
-        }]
+          nested: [],
+        }],
       }, {
         number: 1,
         size: 2,
-        total: 10
+        total: 10,
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -287,13 +288,13 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it("If a sparse-fields is asked, return only asked", async () => {
+    it('If a sparse-fields is asked, return only asked', async () => {
       const resource = makeTestResource();
-      const result = await serializer.serializeMany([resource],{
+      const result = await serializer.serializeMany([resource], {
         include: [],
         fields: {
-          test: ['name']
-        }
+          test: ['name'],
+        },
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -324,12 +325,12 @@ describe("JsonApiResourceSerializer", () => {
       `);
     });
 
-    it("Serializer should only serialize relationships that have been asked in includes", async () => {
+    it('Serializer should only serialize relationships that have been asked in includes', async () => {
       const resource = makeTestResource();
       resource.relation = makeDummyResource();
 
-      const result = await serializer.serializeMany([resource],{
-        include: []
+      const result = await serializer.serializeMany([resource], {
+        include: [],
       });
 
       expect(result).toMatchInlineSnapshot(`

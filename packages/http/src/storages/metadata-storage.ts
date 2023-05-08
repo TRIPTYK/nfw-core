@@ -55,9 +55,9 @@ export class MetadataStorage implements MetadataStorageInterface {
 
   public sortedParametersForEndpoint (target: unknown, propertyName: string) {
     const params = this.sortedParametersForTarget(target).filter((paramMeta) => paramMeta.propertyName === propertyName);
-    const maxParamIndex = Math.max(-1,...params.map((p) => p.index)) + 1;
-    
-    if  (maxParamIndex !== params.length) {
+    const maxParamIndex = Math.max(-1, ...params.map((p) => p.index)) + 1;
+
+    if (maxParamIndex !== params.length) {
       throw new Error(`A decorator is missing for a parameter in ${(target as InstanceType<any>).prototype.constructor.name}.${propertyName}`);
     }
     return params;
@@ -65,7 +65,7 @@ export class MetadataStorage implements MetadataStorageInterface {
 
   public sortedParametersForTarget (target: unknown) {
     return numericalSortOnKeyASC(
-      this.useParams.filter((paramMeta) => paramMeta.target.constructor === target), 'index'
+      this.useParams.filter((paramMeta) => paramMeta.target.constructor === target), 'index',
     );
   }
 

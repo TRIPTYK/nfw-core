@@ -11,7 +11,7 @@ export function UseMiddleware (...middlewares: AnyMiddlewareType[]) {
         target,
         propertyName,
         middleware,
-        type: 'before'
+        type: 'before',
       });
     }
   };
@@ -24,7 +24,7 @@ export function AfterMiddleware (...middlewares: AnyMiddlewareType[]) {
         target,
         propertyName,
         middleware,
-        type: 'after'
+        type: 'after',
       });
     }
   };

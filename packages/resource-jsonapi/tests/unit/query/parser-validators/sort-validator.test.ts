@@ -1,7 +1,9 @@
+/* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { container, singleton } from '@triptyk/nfw-core';
 import { beforeEach, expect, it, describe } from 'vitest';
-import { JsonApiQueryParser, JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
+import type { JsonApiQueryParser } from '../../../../src/query/parser.js';
+import { JsonApiQueryParserImpl } from '../../../../src/query/parser.js';
 import { ResourcesRegistryImpl } from '../../../../src';
 import { UnallowedSortFieldError } from '../../../../src/errors/unallowed-sort-field.js';
 
@@ -21,17 +23,17 @@ beforeEach(() => {
     schema: {
       type: 'example',
       attributes: {
-        banane: { 
+        banane: {
           serialize: true,
-          sort:true,
+          sort: true,
           deserialize: true,
-        }
+        },
       },
       relationships: {
         articles: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
   resourcesRegistry.register('articles', {
     serializer: ExampleSerializer as never,
@@ -39,26 +41,26 @@ beforeEach(() => {
     schema: {
       type: 'articles',
       attributes: {
-        '123': { 
+        123: {
           serialize: true,
           sort: false,
           deserialize: true,
-        }
+        },
       },
       relationships: {
         example: {
-        }
-      }
-    } as never
+        },
+      },
+    } as never,
   });
 });
 
 describe('Sort Validator', () => {
-  const unallowedSortError = new UnallowedSortFieldError("123 are not allowed as sort field for articles", ['123']);
+  const unallowedSortError = new UnallowedSortFieldError('123 are not allowed as sort field for articles', ['123']);
 
-  beforeEach(() =>  {
+  beforeEach(() => {
     queryParser = container.resolve(JsonApiQueryParserImpl);
-  })
+  });
 
   it('Throw an error when sort field is not true in schema', () => {
     expect(() => queryParser.parse('sort=123', 'articles')).toThrowError(unallowedSortError);
@@ -76,5 +78,5 @@ describe('Sort Validator', () => {
     it('to resolve successfully if sort field is true in schema', () => {
       expect(() => queryParser.parse('sort=example.banane', 'articles')).not.toThrowError();
     });
-  })
-})
+  });
+});

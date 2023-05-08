@@ -7,7 +7,7 @@ import type { ExecutableParam } from './executable-param.js';
 export class ExecutableControllerAction implements ExecutableInterface {
   public constructor (
     public controllerContext: ControllerContextType,
-    public params: ExecutableParam[]
+    public params: ExecutableParam[],
   ) {}
 
   public async execute (ctx: RouterContext) {
