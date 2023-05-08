@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@triptyk/nfw-core": "5.0.0-alpha.1",
+    "@triptyk/nfw-core":  "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/koa": "^2.13.6",
     "@types/koa__router": "^12.0.0",
