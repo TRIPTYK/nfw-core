@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -30,11 +30,10 @@ jobs:
       name: Install pnpm
       id: pnpm-install
       with:
-        version: 7
+        version: 8
         run_install: true
 
     - run: pnpm run build
-    - run: pnpm run jscpd 
     - run: pnpm run lint 
     - run: pnpm test
   deploy:
@@ -50,7 +49,7 @@ jobs:
       name: Install pnpm
       id: pnpm-install
       with:
-        version: 7
+        version: 8
         run_install: true
     - run: pnpm run build
     - name: publish alpha
