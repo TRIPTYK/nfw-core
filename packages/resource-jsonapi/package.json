@@ -1,7 +1,7 @@
 {
   "name": "@triptyk/nfw-resources",
   "version": "5.0.0-alpha.1",
-  "private":false,
+  "private": false,
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -28,10 +28,13 @@
   "bugs": {
     "url": "https://github.com/TRIPTYK/nfw-core/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@triptyk/nfw-core": "workspace:*",
-    "@triptyk/nfw-http":  "workspace:*",
+    "@triptyk/nfw-core": "5.0.0-alpha.1",
+    "@triptyk/nfw-http": "5.0.0-alpha.1",
     "@types/chai": "^4.3.5",
     "@types/json-api-serializer": "^2.6.3",
     "@types/node": "^18.16.3",
@@ -50,5 +53,5 @@
     "json-api-serializer": "^2.6.6",
     "pluralize": "~8.0.0"
   },
-  "gitHead": "8c22ed7bbb488d043cc1c8c3a6f1dfbdc361540d"
+  "gitHead": "17a487938df9886d84e195cbaf9f82128d29e598"
 }
