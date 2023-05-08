@@ -1,8 +1,8 @@
 export class UnknownFieldInSchemaError extends Error {
-    public constructor(
+  public constructor (
         public message: string,
-        public fields: string[]
-    ) {
-        super(message);
-    }
+        public fields: string[],
+  ) {
+    super(message);
+  }
 }

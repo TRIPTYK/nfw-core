@@ -1,10 +1,11 @@
+/* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { container, inject, singleton } from '@triptyk/nfw-core';
-import { assert, beforeEach, expect, test } from "vitest";
-import { ResourceSchema, ResourcesRegistry, ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/index.js';
+import { beforeEach, expect, test } from 'vitest';
+import type { ResourceSchema, ResourcesRegistry } from '../../../src/index.js';
+import { ResourcesRegistryImpl, UnknownFieldInSchemaError } from '../../../src/index.js';
 import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
-import { JsonApiResourceDeserializer } from '../../../src/deserializer.js';
-
+import { JsonApiResourceDeserializer } from '../../../src/serialization/deserializer.js';
 
 let resourcesRegistry: ResourcesRegistryImpl;
 
@@ -17,8 +18,8 @@ const schemaArticle: ResourceSchema<Record<string, unknown>> = {
     name: defaultAttribute(),
   },
   relationships: {
-    relation: defaultRelation('user', 'belongs-to')
-  }
+    relation: defaultRelation('user', 'belongs-to'),
+  },
 };
 
 const schemaUser: ResourceSchema<Record<string, unknown>> = {
@@ -27,42 +28,43 @@ const schemaUser: ResourceSchema<Record<string, unknown>> = {
     name: defaultAttribute(),
   },
   relationships: {
-    relation: defaultRelation('article', 'belongs-to')
-  }
+    relation: defaultRelation('article', 'belongs-to'),
+  },
 };
-
 
 @singleton()
 class ArticleDeserializer extends JsonApiResourceDeserializer<never> {
-  constructor(@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
-    super('article', registry)
+  constructor (@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
+    super('article', registry);
   }
 }
 
 @singleton()
 class UserDeserializer extends JsonApiResourceDeserializer<never> {
-  constructor(@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
-    super('article', registry)
+  constructor (@inject(ResourcesRegistryImpl) registry: ResourcesRegistry) {
+    super('article', registry);
   }
 }
 
-resourcesRegistry = container.resolve(ResourcesRegistryImpl);
+beforeEach(() => {
+  resourcesRegistry = container.resolve(ResourcesRegistryImpl);
 
-resourcesRegistry.register('article', {
-  schema: schemaArticle,
-  deserializer:  ArticleDeserializer,
-  serializer: ExampleSerializer as never
-})
+  resourcesRegistry.register('article', {
+    schema: schemaArticle,
+    deserializer: ArticleDeserializer,
+    serializer: ExampleSerializer as never,
+  });
 
-resourcesRegistry.register('user', {
-  schema: schemaUser,
-  deserializer:  UserDeserializer,
-  serializer: ExampleSerializer as never
-})
+  resourcesRegistry.register('user', {
+    schema: schemaUser,
+    deserializer: UserDeserializer,
+    serializer: ExampleSerializer as never,
+  });
 
-resourcesRegistry.setConfig({
-  host: 'http://localhost:8080'
-})
+  resourcesRegistry.setConfig({
+    host: 'http://localhost:8080',
+  });
+});
 
 test('It throw error on unknown field', async () => {
   const deserializer = resourcesRegistry.getDeserializerFor('article');
@@ -70,18 +72,18 @@ test('It throw error on unknown field', async () => {
     data: {
       attributes: {
         name: 'hello',
-        unknown_field: 'treuc'
+        unknown_field: 'treuc',
       },
       relationships: {
         relation: {
           data: {
             type: 'user',
-            id: '1'
-          }
+            id: '1',
+          },
         },
-      }
-    }
-  })).rejects.toThrowError(new UnknownFieldInSchemaError('unknown_field are not allowed for article', ["unknown_field"]));
+      },
+    },
+  })).rejects.toThrowError(new UnknownFieldInSchemaError('unknown_field are not allowed for article', ['unknown_field']));
 });
 
 test('It throw error on unknown relation', async () => {
@@ -95,18 +97,18 @@ test('It throw error on unknown relation', async () => {
         relation: {
           data: {
             type: 'user',
-            id: '1'
-          }
+            id: '1',
+          },
         },
         relation2: {
           data: {
             type: 'user',
-            id: '1'
-          }
-        }
-      }
-    }
-  })).rejects.toThrowError(new UnknownFieldInSchemaError('relation2 are not allowed for article', ["relation2"]));
+            id: '1',
+          },
+        },
+      },
+    },
+  })).rejects.toThrowError(new UnknownFieldInSchemaError('relation2 are not allowed for article', ['relation2']));
 });
 
 test('It deserialize payload', async () => {
@@ -120,15 +122,15 @@ test('It deserialize payload', async () => {
         relation: {
           data: {
             type: 'user',
-            id: '1'
-          }
+            id: '1',
+          },
         },
-      }
-    }
+      },
+    },
   });
-  
+
   expect(deserialized).toStrictEqual({
     name: 'hello',
-    relation: '1'
-  })
+    relation: '1',
+  });
 });

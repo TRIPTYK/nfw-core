@@ -12,6 +12,6 @@ export function createKoaContext (): RouterContext {
     params: {},
     body: undefined,
     originalUrl: '',
-    cookies: {} as any
+    cookies: {} as any,
   } as unknown as RouterContext;
 }

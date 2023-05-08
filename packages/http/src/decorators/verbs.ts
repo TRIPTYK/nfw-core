@@ -8,9 +8,9 @@ export function createHttpVerbDecorator (routeName: string, verb: HttpMethod) {
       target,
       propertyName: propertyKey,
       args: {
-        routeName
+        routeName,
       },
-      method: verb
+      method: verb,
     });
   };
 }

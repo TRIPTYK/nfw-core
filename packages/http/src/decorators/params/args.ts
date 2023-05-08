@@ -10,7 +10,7 @@ export function Args (this: unknown) {
       index,
       handle: 'args',
       decoratorName: 'args',
-      args: []
+      args: [],
     });
     /* jscpd:ignore-end */
   };

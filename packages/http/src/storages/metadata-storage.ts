@@ -15,15 +15,15 @@ export class MetadataStorage implements MetadataStorageInterface {
   public routes: RouteMetadataArgs<unknown>[] = [];
   public endpoints: HttpEndpointMetadataArgs[] = [];
   public useMiddlewares: UseMiddlewareMetadataArgs[] = [];
-  public useParams: UseParamsMetadataArgs[] = [];
+  public useParams: UseParamsMetadataArgs<unknown>[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
 
-  public addRouter (...routerMeta: RouteMetadataArgs<unknown>[]) {
+  public addRouter<T> (...routerMeta: RouteMetadataArgs<T>[]) {
     this.routes.push(...routerMeta);
   }
 
-  public addParamUsage (...paramMeta: UseParamsMetadataArgs[]) {
+  public addParamUsage (...paramMeta: UseParamsMetadataArgs<unknown>[]) {
     this.useParams.push(...paramMeta);
   }
 
@@ -55,15 +55,17 @@ export class MetadataStorage implements MetadataStorageInterface {
 
   public sortedParametersForEndpoint (target: unknown, propertyName: string) {
     const params = this.sortedParametersForTarget(target).filter((paramMeta) => paramMeta.propertyName === propertyName);
-    if  (Math.max(0,...params.map((p) => p.index)) < params.length - 1) {
-      throw new Error(`A decorator is missing for a parameter in ${target}.${propertyName}`);
+    const maxParamIndex = Math.max(-1, ...params.map((p) => p.index)) + 1;
+
+    if (maxParamIndex !== params.length) {
+      throw new Error(`A decorator is missing for a parameter in ${(target as InstanceType<any>).prototype.constructor.name}.${propertyName}`);
     }
     return params;
   }
 
   public sortedParametersForTarget (target: unknown) {
     return numericalSortOnKeyASC(
-      this.useParams.filter((paramMeta) => paramMeta.target.constructor === target), 'index'
+      this.useParams.filter((paramMeta) => paramMeta.target.constructor === target), 'index',
     );
   }
 

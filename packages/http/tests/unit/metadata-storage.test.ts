@@ -13,14 +13,14 @@ import type { Class } from 'type-fest';
 describe('Metadata storage tests', () => {
   let metadataStorage: MetadataStorage;
 
-  function makeParamFor (target: unknown, propertyName: string, index: number): UseParamsMetadataArgs {
+  function makeParamFor (target: unknown, propertyName: string, index: number): UseParamsMetadataArgs<unknown> {
     return {
       index,
       decoratorName: '',
       target,
       propertyName,
       handle: () => {},
-      args: []
+      args: [],
     };
   }
 
@@ -29,7 +29,7 @@ describe('Metadata storage tests', () => {
       target,
       guard: class {} as never,
       propertyName,
-      args: []
+      args: [],
     };
   }
 
@@ -38,7 +38,7 @@ describe('Metadata storage tests', () => {
       args: [],
       target,
       propertyName,
-      responseHandler: class {} as never
+      responseHandler: class {} as never,
     };
   }
 
@@ -47,7 +47,7 @@ describe('Metadata storage tests', () => {
       target,
       controllers: [],
       args: [],
-      builder: class {} as never
+      builder: class {} as never,
     };
   }
 
@@ -55,7 +55,7 @@ describe('Metadata storage tests', () => {
     return {
       target,
       middleware: {} as never,
-      type
+      type,
     } satisfies UseMiddlewareMetadataArgs;
   }
 
@@ -83,7 +83,7 @@ describe('Metadata storage tests', () => {
 
       metadataStorage.useParams.push(secondParam, firstParam);
 
-      expect(metadataStorage.sortedParametersForEndpoint(TheTarget, 'cmonDoSomething')).toThrowError(Error);
+      expect(() => metadataStorage.sortedParametersForEndpoint(TheTarget, 'cmonDoSomething')).toThrowError(Error);
     });
     it('gets sorted params for target', () => {
       const firstParam = makeParamFor(TheTarget.prototype, 'aaa', 0);

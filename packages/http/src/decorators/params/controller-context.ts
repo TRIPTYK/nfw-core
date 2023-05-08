@@ -9,7 +9,7 @@ export function ControllerContext (this : unknown) {
       index,
       decoratorName: 'ControllerContext',
       handle: 'controller-context',
-      args: []
+      args: [],
     });
   };
 }

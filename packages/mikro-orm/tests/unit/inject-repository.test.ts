@@ -9,7 +9,7 @@ test('repository is injected properly in class', async () => {
     @Entity()
   class Model {
       @PrimaryKey({
-        type: 'string'
+        type: 'string',
       })
       public declare name: string;
     }
@@ -22,7 +22,7 @@ test('repository is injected properly in class', async () => {
     await init({
       dbName: ':memory:',
       type: 'sqlite',
-      entities: [Model]
+      entities: [Model],
     });
 
     expect(container.resolve(InjectMe).repository).toBeInstanceOf(EntityRepository);

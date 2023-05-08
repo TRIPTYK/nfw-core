@@ -10,7 +10,7 @@ import { resolveParams } from '../utils/resolve-params.js';
 export class GuardResolver implements ResolverInterface {
   public constructor (
     public metadataStorage: MetadataStorageInterface,
-    public controllerContext: ControllerContextType
+    public controllerContext: ControllerContextType,
   ) {}
 
   public resolve (): ExecutableGuard[] {

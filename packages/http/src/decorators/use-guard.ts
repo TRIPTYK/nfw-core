@@ -10,7 +10,7 @@ export function UseGuard (guard: Class<GuardInterface>, ...args: unknown[]) {
       target,
       propertyName,
       guard,
-      args
+      args,
     });
   };
 }

@@ -6,7 +6,7 @@ import { container } from '@triptyk/nfw-core';
 export async function init<D extends IDatabaseDriver = IDatabaseDriver> (options?: Options<D> | Configuration<D>, connect?: boolean) {
   const connection = await MikroORM.init(options, connect);
   container.register(MikroORM, {
-    useValue: connection
+    useValue: connection,
   });
   return connection;
 }

@@ -25,7 +25,7 @@ describe('Action builder', () => {
   function createControllerContext () {
     return {
       controllerAction: 'list',
-      controllerInstance: instance
+      controllerInstance: instance,
     };
   }
 
@@ -37,7 +37,7 @@ describe('Action builder', () => {
     return new ControllerActionBuilder(
       guardResolver,
       responseHandlerResolver,
-      actionResolver
+      actionResolver,
     );
   }
 
@@ -68,7 +68,7 @@ describe('Action builder', () => {
       target: Controller.prototype,
       propertyName: 'list',
       args: [],
-      responseHandler: ResponseHandler
+      responseHandler: ResponseHandler,
     });
 
     const actionMiddleware = actionBuilder.build();
@@ -93,7 +93,7 @@ describe('Action builder', () => {
         target: Controller.prototype,
         propertyName: 'list',
         args: [],
-        guard: Guard
+        guard: Guard,
       });
 
       const actionMiddleware = actionBuilder.build();
@@ -108,7 +108,7 @@ describe('Action builder', () => {
         target: Controller.prototype,
         propertyName: 'list',
         args: [],
-        guard: Guard
+        guard: Guard,
       });
 
       const actionMiddleware = actionBuilder.build();

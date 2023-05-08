@@ -8,9 +8,9 @@ import type { RouteMetadataArgs } from '../storages/metadata/route.js';
 
 export class RouterBuilder {
   public constructor (
-    public metadataStorage: MetadataStorageInterface,
+    private metadataStorage: MetadataStorageInterface,
     private parentRoute: Router | Application,
-    private controller: Class<unknown>
+    private controller: Class<unknown>,
   ) {}
 
   public async createRoute () {
@@ -21,13 +21,11 @@ export class RouterBuilder {
     await this.callBuilder(builder, controllerInstance, controllerMetadata);
   }
 
-  private async callBuilder (builder: RouterBuilderInterface, controllerInstance: unknown, controllerMetadata: RouteMetadataArgs<unknown>) {
-    builder.context = {
-      instance: controllerInstance,
-      meta: controllerMetadata
-    };
-
-    const controllerRouter = await builder.build();
+  private async callBuilder (builder: RouterBuilderInterface<unknown>, controllerInstance: unknown, controllerMetadata: RouteMetadataArgs<unknown>) {
+    const controllerRouter = await builder.build({
+      controllerInstance,
+      args: controllerMetadata.args,
+    });
 
     await this.createNestedRouters(controllerMetadata, controllerRouter);
 

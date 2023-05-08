@@ -7,16 +7,17 @@ import type { UseResponseHandlerMetadataArgs } from '../storages/metadata/use-re
 
 export interface MetadataStorageInterface {
     addRouter(...routerMeta: RouteMetadataArgs<unknown>[]): void,
-    addParamUsage(...paramMeta: UseParamsMetadataArgs[]): void,
+    addParamUsage(...paramMeta: UseParamsMetadataArgs<unknown>[]): void,
     addEndpoint(...endpointMeta: HttpEndpointMetadataArgs[]): void,
     addMiddlewareUsage(...middlewareMeta: UseMiddlewareMetadataArgs[]): void,
     addGuardUsage(...guardMeta: UseGuardMetadataArgs[]): void,
     addResponseHandlerUsage(...responseHandlerMeta: UseResponseHandlerMetadataArgs[]): void,
     findRouteForTarget(target: unknown): RouteMetadataArgs<unknown>,
-    sortedParametersForEndpoint(target: unknown, propertyName: string): UseParamsMetadataArgs[],
-    sortedParametersForTarget(target: unknown): UseParamsMetadataArgs[],
+    sortedParametersForEndpoint(target: unknown, propertyName: string): UseParamsMetadataArgs<unknown>[],
+    sortedParametersForTarget(target: unknown): UseParamsMetadataArgs<unknown>[],
     getGuardsForEndpoint(target: unknown, propertyName: string): UseGuardMetadataArgs[],
     getClosestResponseHandlerForEndpoint(target: unknown, propertyName: string): UseResponseHandlerMetadataArgs | undefined,
     getBeforeMiddlewaresForTarget(target: unknown, propertyName?: string): UseMiddlewareMetadataArgs[],
+    getAfterMiddlewaresForTarget(target: unknown, propertyName?: string): UseMiddlewareMetadataArgs[],
     getEndpointsForTarget(target: unknown): HttpEndpointMetadataArgs[],
 }

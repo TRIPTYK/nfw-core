@@ -1,5 +1,5 @@
-import { Promisable } from "type-fest";
+import type { Promisable } from 'type-fest';
 
 export interface ResourceDeserializer<T extends Record<string, unknown>> {
-    deserialize(payload: T): Promisable<T>;
+    deserialize(payload: T): Promisable<T>,
 }

@@ -13,33 +13,33 @@ describe('ResourcesRegistryImpl', () => {
   @singleton()
   class ExampleDeserializer {}
 
-beforeEach(() => {
-  resourcesRegistry = container.resolve(ResourcesRegistryImpl);
-  resourcesRegistry.register('example', {
-    serializer: ExampleSerializer as never,
-    deserializer: ExampleDeserializer as never,
-    schema: {} as never
+  beforeEach(() => {
+    resourcesRegistry = container.resolve(ResourcesRegistryImpl);
+    resourcesRegistry.register('example', {
+      serializer: ExampleSerializer as never,
+      deserializer: ExampleDeserializer as never,
+      schema: {} as never,
+    });
   });
-});
 
-describe('getSchemaFor', () => {
-  it('should resolve the schema for the given type', () => {
-    const schema = resourcesRegistry.getSchemaFor('example');
-    expect(schema).toStrictEqual({});
+  describe('getSchemaFor', () => {
+    it('should resolve the schema for the given type', () => {
+      const schema = resourcesRegistry.getSchemaFor('example');
+      expect(schema).toStrictEqual({});
+    });
   });
-});
 
-describe('getSerializerFor', () => {
-  it('should resolve the serializer for the given type', () => {
-    const serializer = resourcesRegistry.getSerializerFor('example');
-    expect(serializer).toBeInstanceOf(ExampleSerializer);
+  describe('getSerializerFor', () => {
+    it('should resolve the serializer for the given type', () => {
+      const serializer = resourcesRegistry.getSerializerFor('example');
+      expect(serializer).toBeInstanceOf(ExampleSerializer);
+    });
   });
-});
 
-describe('getDeserializerFor', () => {
-  it('should resolve the deserializer for the given type', () => {
-    const deserializer = resourcesRegistry.getDeserializerFor('example');
-    expect(deserializer).toBeInstanceOf(ExampleDeserializer);
+  describe('getDeserializerFor', () => {
+    it('should resolve the deserializer for the given type', () => {
+      const deserializer = resourcesRegistry.getDeserializerFor('example');
+      expect(deserializer).toBeInstanceOf(ExampleDeserializer);
+    });
   });
-});
 });

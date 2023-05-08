@@ -1,5 +1,5 @@
 
-export * from './routing/builder.js';
+export * from './builders/default.js';
 export * from './decorators/verbs.js';
 export * from './decorators/controller.js';
 export * from './decorators/use-guard.js';
@@ -15,6 +15,7 @@ export * from './types/resolved-param.js';
 
 export * from './interfaces/middleware.js';
 export * from './interfaces/response-handler.js';
+export * from './interfaces/param.js';
 export * from './interfaces/guard.js';
 export * from './interfaces/router-builder.js';
 export * from './interfaces/metadata-storage.js';

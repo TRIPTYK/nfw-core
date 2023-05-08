@@ -6,10 +6,10 @@ describe('Numerical sort test', () => {
 
   beforeEach(() => {
     const first = {
-      index: 5
+      index: 5,
     };
     const second = {
-      index: 1
+      index: 1,
     };
     array = [first, second];
   });
