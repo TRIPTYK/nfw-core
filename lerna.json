@@ -1,5 +1,6 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
+  "npmClient": "pnpm",
   "version": "5.0.0-alpha.1"
 }
