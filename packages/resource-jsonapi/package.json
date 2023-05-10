@@ -33,8 +33,8 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@triptyk/nfw-core": "5.0.0-alpha.1",
-    "@triptyk/nfw-http": "5.0.0-alpha.1",
+    "@triptyk/nfw-core": "workspace:*",
+    "@triptyk/nfw-http": "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/json-api-serializer": "^2.6.3",
     "@types/node": "^18.16.3",
