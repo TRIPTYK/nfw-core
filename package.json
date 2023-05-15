@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint 'packages/*/{src,tests}/**/*.ts'",
     "lint:fix": "eslint 'packages/*/{src,tests}/**/*.ts' --fix",
+    "prepublish": "pnpm run build:clean && pnpm run build",
     "test": "pnpm vitest",
     "jscpd": "jscpd --exitCode 1",
     "build": "pnpm  recursive run build",
