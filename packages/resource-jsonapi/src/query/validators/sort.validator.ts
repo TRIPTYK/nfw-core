@@ -44,12 +44,12 @@ export class SortValidator {
     return this.getAttributeWithSortTrue(attributes);
   }
 
-  private getAttributeWithSortTrue (attributes: SchemaAttributes<Record<string, unknown>>) {
+  private getAttributeWithSortTrue (attributes: SchemaAttributes) {
     return Object.keys(attributes).filter(attribute => this.isSortTrue(attributes, attribute));
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private isSortTrue (attributes: SchemaAttributes<Record<string, unknown>>, field: string) {
+  private isSortTrue (attributes: SchemaAttributes, field: string) {
     return attributes[field] && attributes[field]?.sort === true;
   }
 }

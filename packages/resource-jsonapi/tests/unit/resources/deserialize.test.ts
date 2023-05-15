@@ -12,7 +12,7 @@ let resourcesRegistry: ResourcesRegistryImpl;
 @singleton()
 class ExampleSerializer {}
 
-const schemaArticle: ResourceSchema<Record<string, unknown>> = {
+const schemaArticle: ResourceSchema = {
   type: 'article',
   attributes: {
     name: defaultAttribute(),
@@ -22,7 +22,7 @@ const schemaArticle: ResourceSchema<Record<string, unknown>> = {
   },
 };
 
-const schemaUser: ResourceSchema<Record<string, unknown>> = {
+const schemaUser: ResourceSchema = {
   type: 'user',
   attributes: {
     name: defaultAttribute(),

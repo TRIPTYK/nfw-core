@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "~5.7.4",
-    "@mikro-orm/sqlite": "~5.7.4",
-    "@triptyk/nfw-core":  "workspace:*",
+    "@mikro-orm/core": "~5.7.5",
+    "@mikro-orm/sqlite": "~5.7.5",
+    "@triptyk/nfw-core": "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/koa": "^2.13.6",
     "@types/node": "^18.16.3",

@@ -12,7 +12,7 @@ export class DeserializerGenerator extends BaseSerializerGenerator {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public baseSchemaAndWhitelist<T extends ResourceSchema<Record<string, unknown>>> (_schema: T): JSONAPISerializer.Options {
+  public baseSchemaAndWhitelist<T extends ResourceSchema> (_schema: T): JSONAPISerializer.Options {
     return {
       relationships: {},
     };

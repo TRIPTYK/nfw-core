@@ -1,13 +1,20 @@
 import type { Promisable } from 'type-fest';
 import type { JsonApiQuery } from '../query/query.js';
+import type { Resource } from './resource.js';
 
-export interface PaginationData {
-  number: number,
-  size: number,
-  total: number,
+export interface ContextData {
+  pagination? : {
+    number: number,
+    size: number,
+    total: number,
+  },
+  /**
+   * Endpoint URL relative to config host
+   */
+  endpointURL: string,
 }
 
-export interface ResourceSerializer<T extends Record<string, unknown>> {
-    serializeOne(resource: T, query: JsonApiQuery): Promisable<unknown>,
-    serializeMany(resource: T[], query: JsonApiQuery, pageQuery?: PaginationData): Promisable<unknown>,
+export interface ResourceSerializer {
+    serializeOne(resource: Resource, query: JsonApiQuery, contextData: ContextData): Promisable<unknown>,
+    serializeMany(resource: Resource[], query: JsonApiQuery, contextData: ContextData): Promisable<unknown>,
 }

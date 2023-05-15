@@ -2,6 +2,7 @@
 import { container, singleton } from '@triptyk/nfw-core';
 import type { Class } from 'type-fest';
 import type { ResourceDeserializer } from '../interfaces/deserializer.js';
+import type { Resource } from '../interfaces/resource.js';
 import type { ResourceSchema } from '../interfaces/schema.js';
 import type { ResourceSerializer } from '../interfaces/serializer.js';
 
@@ -10,15 +11,15 @@ export interface BaseConfig {
 }
 
 export interface ResourcesRegistry {
-    getSchemaFor<T extends Record<string, unknown>>(type: string): ResourceSchema<T>,
+    getSchemaFor<T extends Resource>(type: string): ResourceSchema<T>,
     getConfig(): BaseConfig,
-    getSerializerFor<T extends Record<string, unknown>>(type: string): ResourceSerializer<T>,
+    getSerializerFor(type: string): ResourceSerializer,
     getDeserializerFor<T extends Record<string, unknown>>(type: string): ResourceDeserializer<T>,
 }
 
 @singleton()
 export class ResourcesRegistryImpl implements ResourcesRegistry {
-  getSchemaFor<T extends Record<string, unknown>> (type: string): ResourceSchema<T> {
+  getSchemaFor<T extends Resource> (type: string): ResourceSchema<T> {
     return container.resolve(`schema:${type}`) as ResourceSchema<T>;
   }
 
@@ -26,7 +27,7 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     return container.resolve('global:config');
   }
 
-  getSerializerFor<T extends Record<string, unknown>> (type: string): ResourceSerializer<T> {
+  getSerializerFor (type: string): ResourceSerializer {
     return container.resolve(`serializer:${type}`);
   }
 
@@ -34,8 +35,8 @@ export class ResourcesRegistryImpl implements ResourcesRegistry {
     return container.resolve(`deserializer:${type}`);
   }
 
-  register<T extends Record<string, unknown>> (type: string, classes: {
-    serializer: Class<ResourceSerializer<T>>,
+  register<T extends Resource> (type: string, classes: {
+    serializer: Class<ResourceSerializer>,
     deserializer: Class<ResourceDeserializer<T>>,
     schema: ResourceSchema<T>,
   }): void {

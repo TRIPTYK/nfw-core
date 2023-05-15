@@ -1,11 +1,13 @@
 import type { ResourcesRegistry } from '../registry/registry.js';
-import type { PaginationData, ResourceSerializer } from '../interfaces/serializer.js';
+import { ResourcesRegistryImpl } from '../registry/registry.js';
+import type { ContextData, ResourceSerializer } from '../interfaces/serializer.js';
 import type { JsonApiQuery } from '../query/query.js';
-import type { Resource } from '../interfaces/resource.js';
-import type { ResourceSchema } from '../interfaces/schema.js';
 import { DocumentSerializer } from './document.js';
 import { arrayWithElementsOrUndefined } from '../utils/array-with-elements-or-undefined.js';
 import type { JsonApiTopLevelDocument } from '../types/jsonapi-spec.js';
+import type { Resource } from '../interfaces/resource.js';
+import type { SetRequired } from 'type-fest';
+import { inject, singleton } from '@triptyk/nfw-core';
 
 const JSONAPI_HEADER = {
   jsonapi: {
@@ -13,10 +15,10 @@ const JSONAPI_HEADER = {
   },
 };
 
-export class JsonApiResourceSerializer<T extends Resource> implements ResourceSerializer<T> {
+@singleton()
+export class JsonApiResourceSerializer implements ResourceSerializer {
   public constructor (
-    public type: string,
-    public registry: ResourcesRegistry,
+    @inject(ResourcesRegistryImpl) public registry: ResourcesRegistry,
   ) {
   }
 
@@ -24,48 +26,46 @@ export class JsonApiResourceSerializer<T extends Resource> implements ResourceSe
     return this.registry.getConfig();
   }
 
-  public async serializeMany (resources: T[], query: JsonApiQuery, paginationData?: PaginationData): Promise<JsonApiTopLevelDocument> {
-    const schema = this.registry.getSchemaFor(this.type);
-    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resources, schema);
+  public async serializeMany (resources: Resource[], query: JsonApiQuery, contextData: ContextData): Promise<JsonApiTopLevelDocument> {
+    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resources);
 
     return {
       ...JSONAPI_HEADER,
       data,
       meta: undefined,
       included: arrayWithElementsOrUndefined(included),
-      links: this.makeTopLevelLinks(schema, undefined, paginationData),
+      links: this.makeTopLevelLinks(contextData),
     };
   }
 
-  public async serializeOne (resource: T, query: JsonApiQuery): Promise<JsonApiTopLevelDocument> {
-    const schema = this.registry.getSchemaFor(this.type);
-    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resource, schema);
+  public async serializeOne (resource: Resource, query: JsonApiQuery, contextData: ContextData): Promise<JsonApiTopLevelDocument> {
+    const { data, included } = new DocumentSerializer(this.registry, query).serializeTopLevelDocuments(resource);
 
     return {
       ...JSONAPI_HEADER,
       data,
       meta: undefined,
       included: arrayWithElementsOrUndefined(included),
-      links: this.makeTopLevelLinks(schema, resource, undefined),
+      links: this.makeTopLevelLinks(contextData),
     };
   }
 
-  private makeTopLevelLinks (schema: ResourceSchema<Record<string, unknown>>, resource: T | undefined, paginationData: PaginationData | undefined) {
+  private makeTopLevelLinks (contextData: ContextData) {
     return {
-      self: `${this.registry.getConfig().host}/${schema.type}${resource ? `/${resource.id}` : ''}`,
-      ...paginationData ? this.makePaginationLinks(paginationData) : undefined,
+      self: `${this.config.host}/${contextData.endpointURL}`,
+      ...contextData.pagination ? this.makePaginationLinks(contextData as SetRequired<ContextData, 'pagination'>) : undefined,
     };
   }
 
-  private makePaginationLinks (paginationData: PaginationData) {
+  private makePaginationLinks (contextData: SetRequired<ContextData, 'pagination'>) {
     const baseTopLevelLinks = {
-      first: `${this.config.host}/${this.type}?page[number]=1&page[size]=${paginationData.size}`,
-      last: `${this.config.host}/${this.type}?page[number]=${paginationData.total}&page[size]=${paginationData.size}`,
+      first: `${this.config.host}/${contextData.endpointURL}?page[number]=1&page[size]=${contextData.pagination.size}`,
+      last: `${this.config.host}/${contextData.endpointURL}?page[number]=${contextData.pagination.total}&page[size]=${contextData.pagination.size}`,
     };
-    if (this.isNotLastPage(paginationData.number, paginationData.total)) {
+    if (this.isNotLastPage(contextData.pagination.number, contextData.pagination.total)) {
       return {
         ...baseTopLevelLinks,
-        next: `${this.config.host}/${this.type}?page[number]=${paginationData.number + 1}&page[size]=${paginationData.size}`,
+        next: `${this.config.host}/${contextData.endpointURL}?page[number]=${contextData.pagination.number + 1}&page[size]=${contextData.pagination.size}`,
       };
     }
     return baseTopLevelLinks;

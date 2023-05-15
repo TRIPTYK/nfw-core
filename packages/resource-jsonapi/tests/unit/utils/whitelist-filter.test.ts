@@ -3,7 +3,7 @@ import type { SchemaAttributes } from '../../../src';
 import { filterForWhitelist } from '../../../src/utils/whitelist-filter.js';
 import { defaultAttribute } from '../test-utils/default-schema-parts.js';
 
-const fakeSchemaForSerializeFilter: SchemaAttributes<{}> = {
+const fakeSchemaForSerializeFilter: SchemaAttributes = {
   serializable: defaultAttribute(),
   unserializable: {
     ...defaultAttribute(),
@@ -11,7 +11,7 @@ const fakeSchemaForSerializeFilter: SchemaAttributes<{}> = {
   },
 };
 
-const fakeSchemaForDeserializeFilter: SchemaAttributes<{}> = {
+const fakeSchemaForDeserializeFilter: SchemaAttributes = {
   deserializable: defaultAttribute(),
   undeserializable: {
     ...defaultAttribute(),

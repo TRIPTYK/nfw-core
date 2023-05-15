@@ -1,4 +1,5 @@
-import type { SchemaAttributes, SchemaRelationships } from '../interfaces/schema.js';
+import type { Resource } from '../interfaces/resource.js';
+import type { SchemaAttribute, SchemaAttributes, SchemaRelationship, SchemaRelationships } from '../interfaces/schema.js';
 
 type FilterableFor = 'deserialize' | 'serialize';
 
@@ -9,11 +10,11 @@ function addToWhiteListIfAllowed (whitelist: string[], isAllowed: boolean | unde
   }
 }
 
-export function filterForWhitelist<T extends Record<string, unknown>> (unfilteredList: SchemaAttributes<T> | SchemaRelationships<T>, filterFor: FilterableFor) {
+export function filterForWhitelist<T extends Resource> (unfilteredList: SchemaAttributes<T> | SchemaRelationships<T>, filterFor: FilterableFor) {
   const whitelist: string[] = [];
 
-  for (const key in unfilteredList) {
-    addToWhiteListIfAllowed(whitelist, unfilteredList[key]?.[filterFor], key);
+  for (const [key, value] of Object.entries<SchemaAttribute | SchemaRelationship | undefined>(unfilteredList)) {
+    addToWhiteListIfAllowed(whitelist, value?.[filterFor], key);
   }
 
   return whitelist;

@@ -13,3 +13,5 @@ export * from './errors/unknown-field.js';
 export * from './types/flatten-resource-relationships.js';
 export * from './types/resource-properties.js';
 export * from './types/partial-registries.js';
+
+export * from './utils/add-types-from-schema.js';

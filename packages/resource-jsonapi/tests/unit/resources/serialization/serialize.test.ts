@@ -2,11 +2,11 @@
 // eslint-disable-next-line max-classes-per-file
 import 'reflect-metadata';
 import { describe, it, expect, vi } from 'vitest';
-import type { ResourceSchema } from '../../../src/index.js';
-import { JsonApiResourceSerializer } from '../../../src/serialization/serializer.js';
-import { defaultAttribute, defaultRelation } from '../test-utils/default-schema-parts.js';
+import type { ResourceSchema } from '../../../../src/index.js';
+import { JsonApiResourceSerializer } from '../../../../src/serialization/serializer.js';
+import { defaultAttribute, defaultRelation } from '../../test-utils/default-schema-parts.js';
 
-const schema: ResourceSchema<{}> = {
+const schema: ResourceSchema = {
   type: 'test',
   attributes: {
     name: defaultAttribute(),
@@ -55,16 +55,17 @@ describe('JsonApiResourceSerializer', () => {
   }
 
   class DummyResource {
+    [key: string]: unknown;
     type: string = 'dummy';
     id?: string;
     declare name: string;
   }
 
-  class TestSerializer extends JsonApiResourceSerializer<TestResource> {
+  class TestSerializer extends JsonApiResourceSerializer {
     type: string = 'test';
   }
 
-  const serializer = new TestSerializer('test', registryMock as never);
+  const serializer = new TestSerializer(registryMock as never);
 
   function makeTestResource () {
     const resource = new TestResource();
@@ -84,7 +85,9 @@ describe('JsonApiResourceSerializer', () => {
   describe('serializeOne', () => {
     it('should serialize one resource', async () => {
       const resource = makeTestResource();
-      const result = await serializer.serializeOne(resource, {});
+      const result = await serializer.serializeOne(resource, {}, {
+        endpointURL: 'test/1',
+      });
       expect(result).toMatchInlineSnapshot(`
         {
           "data": {
@@ -117,13 +120,15 @@ describe('JsonApiResourceSerializer', () => {
     it('should serialize many resources', async () => {
       const resource = makeTestResource();
 
-      const result = await serializer.serializeMany([resource], {
-
-      }, {
-        number: 1,
-        size: 2,
-        total: 10,
+      const result = await serializer.serializeMany([resource], {}, {
+        pagination: {
+          number: 1,
+          size: 2,
+          total: 10,
+        },
+        endpointURL: 'test',
       });
+
       expect(result).toMatchInlineSnapshot(`
         {
           "data": [
@@ -168,6 +173,8 @@ describe('JsonApiResourceSerializer', () => {
             nested: [],
           },
         ],
+      }, {
+        endpointURL: 'test',
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -219,9 +226,12 @@ describe('JsonApiResourceSerializer', () => {
           nested: [],
         }],
       }, {
-        number: 1,
-        size: 2,
-        total: 10,
+        endpointURL: 'test',
+        pagination: {
+          number: 1,
+          size: 2,
+          total: 10,
+        },
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -295,6 +305,8 @@ describe('JsonApiResourceSerializer', () => {
         fields: {
           test: ['name'],
         },
+      }, {
+        endpointURL: 'test',
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -331,6 +343,8 @@ describe('JsonApiResourceSerializer', () => {
 
       const result = await serializer.serializeMany([resource], {
         include: [],
+      }, {
+        endpointURL: 'test',
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -356,6 +370,54 @@ describe('JsonApiResourceSerializer', () => {
           },
           "links": {
             "self": "http://localhost:8080/test",
+          },
+          "meta": undefined,
+        }
+      `);
+    });
+
+    it('Serialize mixed resources', async () => {
+      const result = await serializer.serializeMany([makeTestResource(), makeDummyResource()], {
+        include: [],
+      }, {
+        endpointURL: 'dummy/1',
+      });
+
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "data": [
+            {
+              "attributes": {
+                "age": 1,
+                "name": "Test",
+              },
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/test/1",
+              },
+              "meta": undefined,
+              "relationships": undefined,
+              "type": "test",
+            },
+            {
+              "attributes": {
+                "name": "Test",
+              },
+              "id": "1",
+              "links": {
+                "self": "http://localhost:8080/dummy/1",
+              },
+              "meta": undefined,
+              "relationships": undefined,
+              "type": "dummy",
+            },
+          ],
+          "included": undefined,
+          "jsonapi": {
+            "version": "1.0",
+          },
+          "links": {
+            "self": "http://localhost:8080/dummy/1",
           },
           "meta": undefined,
         }
