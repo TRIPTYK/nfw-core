@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-http",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@triptyk/nfw-core":  "workspace:*",
+    "@triptyk/nfw-core": "workspace:*",
     "@types/chai": "^4.3.5",
     "@types/koa": "^2.13.6",
     "@types/koa__router": "^12.0.0",
