@@ -32,7 +32,7 @@ export class JsonApiResourceSerializer implements ResourceSerializer {
     return {
       ...JSONAPI_HEADER,
       data,
-      meta: undefined,
+      meta: this.buildMeta(contextData),
       included: arrayWithElementsOrUndefined(included),
       links: this.makeTopLevelLinks(contextData),
     };
@@ -50,6 +50,19 @@ export class JsonApiResourceSerializer implements ResourceSerializer {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private buildMeta (contextData: ContextData | undefined) {
+    if (!contextData?.pagination) {
+      return;
+    }
+
+    return {
+      total: contextData.pagination.total,
+      size: contextData.pagination.size,
+      pageTotal: Math.ceil(contextData.pagination.total / contextData.pagination.size),
+    };
+  }
+
   private makeTopLevelLinks (contextData: ContextData) {
     return {
       self: `${this.config.host}/${contextData.endpointURL}`,
@@ -60,7 +73,7 @@ export class JsonApiResourceSerializer implements ResourceSerializer {
   private makePaginationLinks (contextData: SetRequired<ContextData, 'pagination'>) {
     const baseTopLevelLinks = {
       first: `${this.config.host}/${contextData.endpointURL}?page[number]=1&page[size]=${contextData.pagination.size}`,
-      last: `${this.config.host}/${contextData.endpointURL}?page[number]=${contextData.pagination.total}&page[size]=${contextData.pagination.size}`,
+      last: `${this.config.host}/${contextData.endpointURL}?page[number]=${Math.ceil(contextData.pagination.total / contextData.pagination.size)}&page[size]=${contextData.pagination.size}`,
     };
     if (this.isNotLastPage(contextData.pagination.number, contextData.pagination.total)) {
       return {

@@ -152,11 +152,15 @@ describe('JsonApiResourceSerializer', () => {
           },
           "links": {
             "first": "http://localhost:8080/test?page[number]=1&page[size]=2",
-            "last": "http://localhost:8080/test?page[number]=10&page[size]=2",
+            "last": "http://localhost:8080/test?page[number]=5&page[size]=2",
             "next": "http://localhost:8080/test?page[number]=2&page[size]=2",
             "self": "http://localhost:8080/test",
           },
-          "meta": undefined,
+          "meta": {
+            "pageTotal": 5,
+            "size": 2,
+            "total": 10,
+          },
         }
       `);
     });
@@ -289,11 +293,15 @@ describe('JsonApiResourceSerializer', () => {
           },
           "links": {
             "first": "http://localhost:8080/test?page[number]=1&page[size]=2",
-            "last": "http://localhost:8080/test?page[number]=10&page[size]=2",
+            "last": "http://localhost:8080/test?page[number]=5&page[size]=2",
             "next": "http://localhost:8080/test?page[number]=2&page[size]=2",
             "self": "http://localhost:8080/test",
           },
-          "meta": undefined,
+          "meta": {
+            "pageTotal": 5,
+            "size": 2,
+            "total": 10,
+          },
         }
       `);
     });
