@@ -12,7 +12,7 @@ export interface SchemaAttribute {
 
 export type Cardinality = 'has-many' | 'belongs-to';
 
-export type WithoutIdAndType<T extends Resource = Resource> = Except<T, 'type' | 'id'>;
+export type WithoutIdAndType<T extends Resource = Resource> = Except<T, 'resourceType' | 'id'>;
 
 export type SchemaAttributes<T extends Resource = Resource> = Partial<Record<StringKeyOf<WithoutIdAndType<T>>, SchemaAttribute>>;
 
@@ -26,7 +26,7 @@ export interface SchemaRelationship {
 export type SchemaRelationships<T extends Resource = Resource> = Partial<Record<StringKeyOf<WithoutIdAndType<T>>, SchemaRelationship>>;
 
 export interface ResourceSchema<T extends Resource = Resource> {
-  type: Resource['type'],
+  resourceType: Resource['resourceType'],
   attributes: SchemaAttributes<T>,
   relationships: SchemaRelationships<T>,
 }

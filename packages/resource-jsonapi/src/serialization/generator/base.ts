@@ -14,7 +14,7 @@ export abstract class BaseSerializerGenerator {
     const jsonApiSchema = this.baseSchemaAndWhitelist(schema);
 
     this.generateRelationships(jsonApiSchema, schema);
-    this.serializer.register(schema.type, jsonApiSchema);
+    this.serializer.register(schema.resourceType, jsonApiSchema);
   }
 
   protected generateRelationships<T extends ResourceSchema> (jsonApiSchema: JSONAPISerializer.Options, schema: T) {
@@ -29,14 +29,14 @@ export abstract class BaseSerializerGenerator {
     const relationSchema = this.registry.getSchemaFor(relationType);
 
     schema.relationships![relationName] = {
-      type: relationSchema.type,
+      type: relationSchema.resourceType,
     };
 
-    if (this.processedTypes.includes(relationSchema.type)) {
+    if (this.processedTypes.includes(relationSchema.resourceType)) {
       return;
     }
 
-    this.processedTypes.push(relationSchema.type);
+    this.processedTypes.push(relationSchema.resourceType);
     this.generate(relationSchema);
   }
 

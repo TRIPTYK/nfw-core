@@ -1,5 +1,5 @@
 export type Resource = {
     [key: string]: unknown,
-    type: string,
+    resourceType: string,
     id?: string,
 }

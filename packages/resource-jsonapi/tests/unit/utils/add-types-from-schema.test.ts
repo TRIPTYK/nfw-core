@@ -16,7 +16,7 @@ class DummyModel {
 }
 
 const fooSchema = {
-  type: 'foo',
+  resourceType: 'foo',
   relationships: {
     dummy: {
       type: 'dummy',
@@ -25,7 +25,7 @@ const fooSchema = {
 };
 
 const dummySchema = {
-  type: 'dummy',
+  resourceType: 'dummy',
   relationships: {
     foo: {
       type: 'foo',
