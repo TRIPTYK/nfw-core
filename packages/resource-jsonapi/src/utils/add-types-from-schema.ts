@@ -23,7 +23,7 @@ export function addResourceTypes<T extends Resource> (resources: ResourceWithout
 
 function addResourceType<T extends Resource> (resource: ResourceWithoutType<T>, discriminatorMap: DiscriminatorMap, registry: SchemaRegistries) {
   const schema = getSchemaTypeOrRejectIfUnknown(resource, discriminatorMap, registry);
-  (resource as any).type = schema.type;
+  (resource as any).type = schema.resourceType;
   for (const name of Object.keys(schema.relationships)) {
     if (resource[name] !== undefined) {
       addResourceTypes(resource[name] as T[], discriminatorMap, registry);

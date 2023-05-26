@@ -13,7 +13,7 @@ let resourcesRegistry: ResourcesRegistryImpl;
 class ExampleSerializer {}
 
 const schemaArticle: ResourceSchema = {
-  type: 'article',
+  resourceType: 'article',
   attributes: {
     name: defaultAttribute(),
   },
@@ -23,7 +23,7 @@ const schemaArticle: ResourceSchema = {
 };
 
 const schemaUser: ResourceSchema = {
-  type: 'user',
+  resourceType: 'user',
   attributes: {
     name: defaultAttribute(),
   },

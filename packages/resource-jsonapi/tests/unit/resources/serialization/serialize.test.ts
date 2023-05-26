@@ -7,7 +7,7 @@ import { JsonApiResourceSerializer } from '../../../../src/serialization/seriali
 import { defaultAttribute, defaultRelation } from '../../test-utils/default-schema-parts.js';
 
 const schema: ResourceSchema = {
-  type: 'test',
+  resourceType: 'test',
   attributes: {
     name: defaultAttribute(),
     age: defaultAttribute(),
@@ -19,7 +19,7 @@ const schema: ResourceSchema = {
 } as never;
 
 const schemaForRelationship: ResourceSchema<never> = {
-  type: 'dummy',
+  resourceType: 'dummy',
   attributes: {
     name: defaultAttribute(),
   },
@@ -47,7 +47,7 @@ describe('JsonApiResourceSerializer', () => {
 
   class TestResource {
     [key: string]: unknown;
-    type: string = 'test';
+    resourceType: string = 'test';
     id?: string;
     name!: string;
     age!: number;
@@ -56,7 +56,7 @@ describe('JsonApiResourceSerializer', () => {
 
   class DummyResource {
     [key: string]: unknown;
-    type: string = 'dummy';
+    resourceType: string = 'dummy';
     id?: string;
     declare name: string;
   }

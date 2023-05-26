@@ -32,11 +32,11 @@ export class DocumentSerializer {
   }
 
   private serializeOneTopDocument (resource: Resource, include: IncludeQuery[]) {
-    const schema = this.registry.getSchemaFor(resource.type);
+    const schema = this.registry.getSchemaFor(resource.resourceType);
 
     const doc: JsonApiResourceObject<WithoutIdAndType<Resource>> = {
       id: resource.id,
-      type: resource.type,
+      type: resource.resourceType,
       attributes: extractSerializableAttributes(resource, attributesFromSparseFields(schema, this.query.fields ?? {})),
       links: this.makeDocumentLinks(schema, resource),
       meta: undefined,
@@ -113,7 +113,7 @@ export class DocumentSerializer {
 
   private makeDocumentLinks (schema: ResourceSchema<Resource>, resource: Resource) {
     return {
-      self: `${this.registry.getConfig().host}/${schema.type}/${resource.id}`,
+      self: `${this.registry.getConfig().host}/${schema.resourceType}/${resource.id}`,
     };
   }
 }
