@@ -33,6 +33,8 @@ beforeEach(() => {
       },
       relationships: {
         articles: {
+          serialize: true,
+          type: 'articles',
         },
       },
     } as never,
@@ -50,6 +52,8 @@ beforeEach(() => {
       },
       relationships: {
         example: {
+          serialize: true,
+          type: 'example',
         },
       },
     } as never,
