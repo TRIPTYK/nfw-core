@@ -30,7 +30,11 @@ beforeEach(() => {
         },
       },
       relationships: {
-        articles: {
+        article: {
+          serialize: true,
+          deserialize: false,
+          type: 'articles',
+          cardinality: 'belongs-to',
         },
       },
     } as never,
@@ -49,6 +53,10 @@ beforeEach(() => {
       },
       relationships: {
         example: {
+          serialize: true,
+          deserialize: false,
+          type: 'articles',
+          cardinality: 'belongs-to',
         },
       },
     } as never,
@@ -67,16 +75,16 @@ describe('Include Validator', () => {
   });
 
   it('to resolve successfully if all include are in relations list', () => {
-    expect(() => queryParser.parse('include=articles', 'example')).not.toThrowError();
+    expect(() => queryParser.parse('include=article', 'example')).not.toThrowError();
   });
 
   describe('Nested', () => {
     it('Throw an error when include is not in relations list', () => {
-      expect(() => queryParser.parse('include=articles,articles.articles', 'example')).toThrowError(unknwownRelationError);
+      expect(() => queryParser.parse('include=article,article.articles', 'example')).toThrowError(unknwownRelationError);
     });
 
     it('to resolve successfully if all include are in relations list', () => {
-      expect(() => queryParser.parse('include=articles,articles.example', 'example')).not.toThrowError();
+      expect(() => queryParser.parse('include=article,article.example', 'example')).not.toThrowError();
     });
   });
 });

@@ -16,8 +16,10 @@ export class FieldsValidator {
   }
 
   private throwErrorOnFieldNotInAttributes (fields: Record<string, string[]>, type: string) {
-    const allowedFields = Object.keys(this.registry.getSchemaFor(type).attributes);
+    const schema = this.registry.getSchemaFor(type);
+    const allowedFields = Object.keys(schema.attributes).filter(key => schema.attributes[key]?.serialize);
     const unallowedFields = fields[type].filter(field => !allowedFields.includes(field));
+
     if (unallowedFields.length) {
       throw new UnknownFieldInSchemaError(`${unallowedFields.join(',')} are not allowed for ${type}`, unallowedFields);
     }
