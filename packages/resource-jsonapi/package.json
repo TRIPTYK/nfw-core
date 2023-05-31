@@ -1,6 +1,6 @@
 {
   "name": "@triptyk/nfw-resources",
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "private": false,
   "description": "A NodeJS Typescript framework using Koa !",
   "main": "dist/src/index.js",
