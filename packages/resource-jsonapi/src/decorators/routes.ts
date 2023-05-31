@@ -31,5 +31,5 @@ export function JsonApiUpdate (): MethodDecorator {
 }
 
 export function JsonApiCreate (): MethodDecorator {
-  return addRoute(HttpMethod.POST, '/:id');
+  return addRoute(HttpMethod.POST, '/');
 }
