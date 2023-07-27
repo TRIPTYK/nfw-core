@@ -8,7 +8,7 @@ export * from './decorators/routes.js';
 export * from './query/query.js';
 export * from './interfaces/schema.js';
 export * from './interfaces/serializer.js';
-export * from './interfaces/resource';
+export * from './interfaces/resource.js';
 export * from './errors/resource-type-not-registered.js';
 export * from './errors/unknown-field.js';
 export * from './types/flatten-resource-relationships.js';
