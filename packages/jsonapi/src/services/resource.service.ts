@@ -155,7 +155,7 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       const filterObj = {};
       const expanded = this.expandObject(filterObj, iterator.path);
       expanded[iterator.operator] = iterator.value;
-      filter = (merge as any).default(filter, filterObj);
+      filter = merge(filter, filterObj);
     }
     parentFilter[filters.logical].push(filter);
     if (filters.nested.size) {
