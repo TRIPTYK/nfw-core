@@ -55,7 +55,11 @@ export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs
     const controllerContext = this.createControllerContext(endPointMeta, controllerInstance);
     const controllerActionBuilder = this.createActionBuilder(controllerContext);
 
-    router[endPointMeta.method](endPointMeta.args.routeName, ...beforeMiddlewares, controllerActionBuilder.build(), ...afterMiddlewares);
+    const builtAction = controllerActionBuilder.build();
+
+    this.metadataStorage.registerControllerAction(controllerInstance.constructor, endPointMeta.propertyName as never, builtAction as never);
+
+    router[endPointMeta.method](endPointMeta.args.routeName, ...beforeMiddlewares, builtAction, ...afterMiddlewares);
   }
 
   // eslint-disable-next-line class-methods-use-this

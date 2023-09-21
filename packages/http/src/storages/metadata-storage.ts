@@ -1,5 +1,5 @@
 import { singleton } from '@triptyk/nfw-core';
-import type { Class } from 'type-fest';
+import type { Class, ConditionalKeys } from 'type-fest';
 import type { HttpEndpointMetadataArgs } from './metadata/endpoint.js';
 import { numericalSortOnKeyASC } from '../utils/numerical-sort.js';
 import type { UseGuardMetadataArgs } from './metadata/use-guard.js';
@@ -18,6 +18,32 @@ export class MetadataStorage implements MetadataStorageInterface {
   public useParams: UseParamsMetadataArgs<unknown>[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
+  public controllerActions: Map<Class<unknown>, Map<string, Function>> = new Map();
+
+  // eslint-disable-next-line max-statements
+  public getControllerActionForEndpoint<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K): T[K] {
+    const controllerActions = this.controllerActions.get(target);
+
+    if (!controllerActions) {
+      throw new Error(`No controller actions found for ${target.name}`);
+    }
+
+    const action = controllerActions.get(propertyName);
+
+    if (!action) {
+      throw new Error(`No controller action found for ${target.name}.${propertyName}`);
+    }
+
+    return action as T[K];
+  }
+
+  public registerControllerAction<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K, action: T[K]) {
+    if (!this.controllerActions.has(target)) {
+      this.controllerActions.set(target, new Map());
+    }
+
+    this.controllerActions.get(target)?.set(propertyName.toString(), action as Function);
+  }
 
   public addRouter<T> (...routerMeta: RouteMetadataArgs<T>[]) {
     this.routes.push(...routerMeta);

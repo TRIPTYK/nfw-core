@@ -16,7 +16,7 @@
   "type": "module",
   "author": "TRIPTYK",
   "engines": {
-    "node": ">=16.3.1"
+    "node": ">=18.3.1"
   },
   "contributors": [
     "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
