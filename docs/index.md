@@ -1,4 +1,4 @@
-# NFW-CORE
+# Home
 
 A NodeJS Typescript framework using [Koa](https://koajs.com/) for routing with a lot of decorators.
 
@@ -7,12 +7,8 @@ A NodeJS Typescript framework using [Koa](https://koajs.com/) for routing with a
 - NodeJS >= 16.x
 - ESM Modules enabled
 
-## Features
+## Modules
 
-- Controller based routing
-- Parameters decorators
-- Easy custom decorators
-- Smart decorators
-- [MikroORM](https://mikro-orm.io) support
-- Dependency injections using [tsyringe](https://github.com/microsoft/tsyringe)
-- Fully in Typescript
+- Core
+- HTTP
+- JSONAPI

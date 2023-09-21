@@ -1,65 +1,54 @@
 {
-  "name": "@triptyk/nfw-core",
-  "version": "3.0.0-beta.0",
-  "description": "A NodeJS Typescript framework using Koa !",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "name": "nfw-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "prepublishOnly": "npm exec tsc",
-    "lint": "eslint ./src/**/*.ts",
-    "postpublish": "rm -rf dist",
-    "test": "tsc && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "lint": "eslint 'packages/*/{src,tests}/**/*.ts'",
+    "lint:fix": "eslint 'packages/*/{src,tests}/**/*.ts' --fix",
+    "prepublish": "pnpm run build:clean && pnpm run build",
+    "test": "pnpm vitest",
+    "jscpd": "jscpd --exitCode 1",
+    "build": "pnpm  recursive run build",
+    "build:clean": "pnpm recursive run build:clean",
     "docs:deploy": "mkdocs gh-deploy --ignore-version",
     "docs:serve": "mkdocs serve"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/TRIPTYK/nfw-core.git"
-  },
   "type": "module",
-  "author": "TRIPTYK",
-  "engines": {
-    "node": ">=16.3.1"
-  },
-  "contributors": [
-    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
-    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
-    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/TRIPTYK/nfw-core/issues"
-  },
-  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "^5.0.0-rc.2",
-    "@types/http-errors": "^1.8.2",
-    "@types/jest": "^27.4.0",
-    "@types/koa": "^2.13.4",
-    "@types/koa__router": "^8.0.11",
-    "@types/node": "^16.11.12",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "eslint": "^8.7.0",
-    "eslint-config-standard": "17.0.0-0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-n": "^14.0.0",
+    "@foxglove/eslint-plugin": "^1.0.0",
+    "@jscpd/finder": "^3.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "@vitest/coverage-c8": "^0.33.0",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard": "17.1.0",
+    "eslint-plugin-custom-elements": "^0.0.8",
+    "eslint-plugin-es": "^4.1.0",
+    "eslint-plugin-filenames": "^1.3.2",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "jest": "^27.4.7",
-    "node-fetch": "^3.2.0",
-    "reflect-metadata": "^0.1.13",
-    "typescript": "~4.5.5"
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-unicorn": "^48.0.1",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "jscpd": "~3.5.10",
+    "lerna": "^7.3.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.3",
+    "typescript": "~5.2.2",
+    "vitest": "^0.34.5"
   },
-  "optionalDependencies": {
-    "@mikro-orm/core": "^5.0.0-rc.2"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "volta": {
+    "node": "18.12.0"
   },
-  "dependencies": {
-    "@koa/router": "^10.1.1",
-    "http-errors": "^2.0.0",
-    "is-class": "^0.0.9",
-    "koa": "^2.13.4",
-    "tsyringe": "^4.6.0"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

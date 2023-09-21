@@ -1,0 +1,5 @@
+src/
+tests/
+dist/tests/
+dist/coverage/
+tsconfig.build.tsbuildinfo

@@ -3,27 +3,55 @@
 
 name: Tests
 
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [16.x]
-
+        node-version: [18.x]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i --legacy-peer-deps
-    - run: npm run lint 
-    - run: npm test
+
+    - uses: pnpm/action-setup@v2.2.4
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 8
+        run_install: true
+
+    - run: pnpm run build
+    - run: pnpm run lint 
+    - run: pnpm test
+  deploy:
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+    - uses: pnpm/action-setup@v2.2.4
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 8
+        run_install: true
+    - run: pnpm run build
+    - name: publish alpha
+      run: pnpm recursive publish --tag alpha --no-git-checks
+      if : contains(github.ref_name, 'develop')

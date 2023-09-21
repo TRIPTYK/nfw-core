@@ -1,0 +1,48 @@
+{
+  "name": "@triptyk/nfw-mikro-orm",
+  "version": "5.0.0",
+  "description": "Mikro-ORM module for NFW-CORE",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "pnpm run build",
+    "build": "tsc -p tsconfig.build.json",
+    "build:clean": "rm -f tsconfig.tsbuildinfo && rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TRIPTYK/nfw-core.git"
+  },
+  "type": "module",
+  "author": "TRIPTYK",
+  "engines": {
+    "node": ">=16.3.1"
+  },
+  "contributors": [
+    "Amaury Deflorenne <deflorenne.amaury@gmail.com> (https://github.com/AmauryD)",
+    "Gilles Bertrand <gilles@triptyk.eu> (https://github.com/gilles-bertrand)",
+    "Romain Verliefden <romain@triptyk.eu> (https://github.com/DramixDW)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TRIPTYK/nfw-core/issues"
+  },
+  "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
+  "devDependencies": {
+    "@mikro-orm/core": "~5.8.2",
+    "@mikro-orm/sqlite": "~5.8.2",
+    "@triptyk/nfw-core": "workspace:*",
+    "@types/chai": "^4.3.6",
+    "@types/koa": "^2.13.9",
+    "@types/node": "^20.6.3",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "4.8.0",
+    "type-fest": "^4.3.1",
+    "typescript": "~5.2.2",
+    "vitest": "^0.34.5"
+  },
+  "peerDependencies": {
+    "@mikro-orm/core": "~5.7.3",
+    "@triptyk/nfw-core": "workspace:*"
+  }
+}

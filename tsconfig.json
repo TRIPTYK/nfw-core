@@ -1,17 +1,13 @@
 {
+  "extends": "./tsconfig.build.json",
+  "exclude": ["dist"],
   "compilerOptions": {
-    "lib": ["ES2020"],
-    "target": "ES2020",
-    "strict": true,
-    "moduleResolution": "node",
-    "module": "ES2020",
-    "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true
-  },
-  "exclude": [ "dist" , "examples"]
+    "paths": {
+      "@triptyk/nfw-core/*": ["./packages/core/src"],
+      "@triptyk/nfw-http/*": ["./packages/http/src"],
+      "@triptyk/nfw-jsonapi-new/*": ["./packages/jsonapi-new/tests/src"],
+      "@triptyk/nfw-mikro-orm/*": ["./packages/mikro-orm/src"]
+    },
+    "noEmit": true
+  }
 }

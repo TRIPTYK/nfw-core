@@ -1,6 +1,7 @@
 src/
 tests/
 dist/tests/
+dist/coverage/
 .vscode/
 pnpm-lock.yaml
 examples/
@@ -11,4 +12,3 @@ mkdocs.yml
 pnpm-lock.yaml
 .eslintrc.json
 .eslintignore
-jest.config.js
