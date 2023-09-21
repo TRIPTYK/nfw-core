@@ -35,14 +35,14 @@
   "devDependencies": {
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
-    "@types/chai": "^4.3.5",
-    "@types/json-api-serializer": "^2.6.3",
-    "@types/node": "^18.16.3",
-    "@types/pluralize": "^0.0.29",
+    "@types/chai": "^4.3.6",
+    "@types/json-api-serializer": "^2.6.4",
+    "@types/node": "^20.6.3",
+    "@types/pluralize": "^0.0.30",
     "reflect-metadata": "^0.1.13",
-    "type-fest": "^3.10.0",
+    "type-fest": "^4.3.1",
     "typescript": "~5.2.2",
-    "vitest": "^0.31.0"
+    "vitest": "^0.34.5"
   },
   "peerDependencies": {
     "@triptyk/nfw-core": "workspace:*",
