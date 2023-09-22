@@ -57,7 +57,7 @@ export class DefaultBuilder implements RouterBuilderInterface<DefaultBuilderArgs
 
     const builtAction = controllerActionBuilder.build();
 
-    this.metadataStorage.registerControllerAction(controllerInstance.constructor, endPointMeta.propertyName as never, builtAction as never);
+    this.metadataStorage.registerControllerAction(controllerInstance.constructor, endPointMeta.propertyName as never, builtAction);
 
     router[endPointMeta.method](endPointMeta.args.routeName, ...beforeMiddlewares, builtAction, ...afterMiddlewares);
   }
