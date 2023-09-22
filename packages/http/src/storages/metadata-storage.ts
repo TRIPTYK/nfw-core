@@ -9,6 +9,7 @@ import type { UseResponseHandlerMetadataArgs } from './metadata/use-response-han
 import { RouterMetadataNotFoundError } from '../errors/router-metadata-not-found.js';
 import type { RouteMetadataArgs } from './metadata/route.js';
 import type { MetadataStorageInterface } from '../interfaces/metadata-storage.js';
+import type { Middleware } from '@koa/router';
 
 @singleton()
 export class MetadataStorage implements MetadataStorageInterface {
@@ -18,10 +19,10 @@ export class MetadataStorage implements MetadataStorageInterface {
   public useParams: UseParamsMetadataArgs<unknown>[] = [];
   public useGuards: UseGuardMetadataArgs[] = [];
   public useResponseHandlers: UseResponseHandlerMetadataArgs[] = [];
-  public controllerActions: Map<Class<unknown>, Map<string, Function>> = new Map();
+  public controllerActions: Map<Class<unknown>, Map<string, Middleware>> = new Map();
 
   // eslint-disable-next-line max-statements
-  public getControllerActionForEndpoint<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K): T[K] {
+  public getControllerActionForEndpoint<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K): Middleware {
     const controllerActions = this.controllerActions.get(target);
 
     if (!controllerActions) {
@@ -34,15 +35,15 @@ export class MetadataStorage implements MetadataStorageInterface {
       throw new Error(`No controller action found for ${target.name}.${propertyName}`);
     }
 
-    return action as T[K];
+    return action;
   }
 
-  public registerControllerAction<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K, action: T[K]) {
+  public registerControllerAction<T, K extends Extract<ConditionalKeys<T, Function>, string>> (target: Class<T>, propertyName: K, action: Middleware) {
     if (!this.controllerActions.has(target)) {
       this.controllerActions.set(target, new Map());
     }
 
-    this.controllerActions.get(target)?.set(propertyName.toString(), action as Function);
+    this.controllerActions.get(target)?.set(propertyName.toString(), action);
   }
 
   public addRouter<T> (...routerMeta: RouteMetadataArgs<T>[]) {

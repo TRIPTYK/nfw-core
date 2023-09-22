@@ -29,5 +29,5 @@ test('gets registered actions', async () => {
 
   const action = container.resolve(MetadataStorage).getControllerActionForEndpoint(C, 'test');
 
-  expect(action('')).rejects.toThrowError('test');
+  expect(action({} as never, {} as never)).rejects.toThrowError('test');
 });
