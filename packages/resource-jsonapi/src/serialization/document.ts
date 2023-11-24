@@ -32,7 +32,7 @@ export class DocumentSerializer {
   }
 
   private serializeOneTopDocument (resource: Resource, include: IncludeQuery[]) {
-    const schema = this.registry.getSchemaFor(resource.resourceType);
+    const schema = this.getSchemaFor(resource);
 
     const doc: JsonApiResourceObject<WithoutIdAndType<Resource>> = {
       id: resource.id,
@@ -50,6 +50,18 @@ export class DocumentSerializer {
     }
 
     return doc;
+  }
+
+  private getSchemaFor(resource: Resource) {
+    if (!resource.resourceType) {
+      throw new Error(`Resource ${resource} has no resourceType assigned`);
+    }
+
+    try {
+     return this.registry.getSchemaFor(resource.resourceType);
+    } catch (e) {
+      throw new Error(`No schema found for resource type ${resource.resourceType}`);
+    }
   }
 
   // eslint-disable-next-line max-statements, complexity
