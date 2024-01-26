@@ -49,7 +49,7 @@ describe('Create application', () => {
         originalUrl: '/api/v1/hello/index',
         baseUrl: '/api/v1/hello/index',
       }),
-      createResponse(),
+      createResponse() as never,
     );
 
     await setTimeout(100);

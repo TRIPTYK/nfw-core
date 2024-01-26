@@ -20,7 +20,7 @@ beforeEach(() => {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
     schema: {
-      type: 'example',
+      resourceType: 'example',
       attributes: {
         id: {
           serialize: true,
@@ -43,7 +43,7 @@ beforeEach(() => {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
     schema: {
-      type: 'articles',
+      resourceType: 'articles',
       attributes: {
         123: {
           serialize: true,
