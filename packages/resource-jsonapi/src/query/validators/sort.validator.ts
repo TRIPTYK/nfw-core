@@ -1,9 +1,10 @@
 import { inject, injectable } from '@triptyk/nfw-core';
 import { UnallowedSortFieldError } from '../../errors/unallowed-sort-field.js';
-import type { SchemaAttributes } from '../../interfaces/schema.js';
+import type { ResourceSchema, SchemaAttributes } from '../../interfaces/schema.js';
 import type { ResourcesRegistry } from '../../registry/registry.js';
 import { ResourcesRegistryImpl } from '../../registry/registry.js';
 import type { SortQuery } from '../query.js';
+import type { Resource } from '../../interfaces/resource.js';
 
 @injectable()
 export class SortValidator {
@@ -16,31 +17,44 @@ export class SortValidator {
       return;
     }
 
+    const rootSchema = this.registry.getSchemaFor(type);
+
     for (const field in sort) {
-      this.recursiveSortValidation(sort, field, type);
+      this.recursiveSortValidation(sort, field, rootSchema);
     }
   }
 
-  private recursiveSortValidation (sort: SortQuery, field: string, type: string) {
+  private recursiveSortValidation (sort: SortQuery, field: string, schema: ResourceSchema<Resource>) {
     const directionOrSortQuery = sort[field];
 
-    if (directionOrSortQuery === 'ASC' || directionOrSortQuery === 'DESC') {
-      return this.throwErrorOnFieldNotAllowedAsSort(type, sort);
+    if (schema.relationships[field] && !schema.relationships[field]?.type) {
+      throw new Error(`No type defined for relationship ${field}`);
     }
-    return this.validate(directionOrSortQuery, field);
+
+    const type = schema.relationships[field]?.type ?? schema.resourceType;
+
+    const subSchema = this.registry.getSchemaFor(type);
+
+    if (directionOrSortQuery === 'ASC' || directionOrSortQuery === 'DESC') {
+      return this.throwErrorOnFieldNotAllowedAsSort(subSchema, sort);
+    }
+
+    return this.validate(directionOrSortQuery, type);
   }
 
-  private throwErrorOnFieldNotAllowedAsSort (type: string, sort: SortQuery) {
-    const allowedFieldAsSort = this.getAllowedFieldAsSort(type);
+  private throwErrorOnFieldNotAllowedAsSort (schema: ResourceSchema<Resource>, sort: SortQuery) {
+    const allowedFieldAsSort = this.getAllowedFieldAsSort(schema);
+    const schemaFields = Object.keys(schema.attributes).concat(Object.keys(schema.relationships));
     const unallowedSortField = Object.keys(sort).filter(sortField => !allowedFieldAsSort.includes(sortField));
+    const unknownFields = Object.keys(sort).filter(sortField => !schemaFields.includes(sortField));
 
     if (unallowedSortField.length) {
-      throw new UnallowedSortFieldError(`${unallowedSortField.join(',')} are not allowed as sort field for ${type}`, unallowedSortField);
+      throw new UnallowedSortFieldError(`${unallowedSortField.join(',')} are not allowed as sort field for ${schema.resourceType}${unknownFields.length ? ` | Unknown fields: ${unknownFields}` : ''}`, unallowedSortField);
     }
   }
 
-  private getAllowedFieldAsSort (type: string) {
-    const attributes = this.registry.getSchemaFor(type).attributes;
+  private getAllowedFieldAsSort (schema: ResourceSchema<Resource>) {
+    const attributes = schema.attributes;
     return this.getAttributeWithSortTrue(attributes);
   }
 

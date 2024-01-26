@@ -21,7 +21,7 @@ beforeEach(() => {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
     schema: {
-      type: 'example',
+      resourceType: 'example',
       attributes: {
         banane: {
           serialize: true,
@@ -31,6 +31,7 @@ beforeEach(() => {
       },
       relationships: {
         articles: {
+          type: 'articles',
         },
       },
     } as never,
@@ -39,7 +40,7 @@ beforeEach(() => {
     serializer: ExampleSerializer as never,
     deserializer: ExampleDeserializer as never,
     schema: {
-      type: 'articles',
+      resourceType: 'articles',
       attributes: {
         123: {
           serialize: true,
@@ -48,7 +49,11 @@ beforeEach(() => {
         },
       },
       relationships: {
-        example: {
+        patientCertificate: {
+          type: 'example',
+          cardinality: 'belongs-to',
+          serialize: true,
+          deserialize: true,
         },
       },
     } as never,
@@ -75,8 +80,12 @@ describe('Sort Validator', () => {
       expect(() => queryParser.parse('sort=articles.123', 'example')).toThrowError(unallowedSortError);
     });
 
-    it('to resolve successfully if sort field is true in schema', () => {
-      expect(() => queryParser.parse('sort=example.banane', 'articles')).not.toThrowError();
+    it('handle nested relationships', () => {
+      expect(() => queryParser.parse('sort=patientCertificate.banane', 'articles')).not.toThrowError();
+    });
+
+    it('throws when encountering an unknown field', () => {
+      expect(() => queryParser.parse('sort=example.banane', 'articles')).toThrowError('banane are not allowed as sort field for articles | Unknown fields: banane');
     });
   });
 });
