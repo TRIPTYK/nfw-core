@@ -32,13 +32,13 @@
     "@mikro-orm/core": "~5.8.2",
     "@mikro-orm/sqlite": "~5.8.2",
     "@triptyk/nfw-core": "workspace:*",
-    "@types/chai": "^4.3.6",
+    "@types/chai": "^4.3.11",
     "@types/koa": "^2.13.9",
-    "@types/node": "^20.6.3",
-    "reflect-metadata": "^0.1.13",
+    "@types/node": "^20.11.7",
+    "reflect-metadata": "^0.2.1",
     "tsyringe": "4.8.0",
-    "type-fest": "^4.3.1",
-    "typescript": "~5.2.2",
+    "type-fest": "^4.10.1",
+    "typescript": "~5.3.3",
     "vitest": "^0.34.5"
   },
   "peerDependencies": {
