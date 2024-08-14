@@ -18,9 +18,8 @@ test('database instance is registered and resolved correctly', async () => {
 
   const mikro = await init({
     dbName: ':memory:',
-    type: 'sqlite',
     entities: [schema],
-  });
+  }, 'sqlite');
 
   expect(mikro).toStrictEqual(container.resolve(MikroORM));
 });
