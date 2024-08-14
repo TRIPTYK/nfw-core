@@ -1,4 +1,3 @@
-
 import { ParamResolver } from '../resolvers/param-resolver.js';
 import type { UseParamsMetadataArgs } from '../storages/metadata/use-param.js';
 import type { ControllerContextType } from '../types/controller-context.js';

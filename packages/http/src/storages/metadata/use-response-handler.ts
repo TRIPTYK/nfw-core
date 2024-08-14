@@ -1,4 +1,3 @@
-
 import type { Class } from 'type-fest';
 import type { ResponseHandlerInterface } from '../../interfaces/response-handler.js';
 

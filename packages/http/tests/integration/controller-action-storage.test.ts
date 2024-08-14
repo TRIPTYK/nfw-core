@@ -12,7 +12,7 @@ const rejects = createCustomDecorator(() => Promise.reject(new Error('test')), '
 })
 class C {
   @POST('/')
-  public test (@rejects reject: string) {
+  public test (@rejects _reject: string) {
     return 'test';
   };
 }
