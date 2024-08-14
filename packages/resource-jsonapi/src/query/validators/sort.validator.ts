@@ -24,7 +24,7 @@ export class SortValidator {
     }
   }
 
-  // eslint-disable-next-line max-statements
+  // eslint-disable-next-line max-statements, complexity
   private recursiveSortValidation (sort: SortQuery, field: string, schema: ResourceSchema<Resource>) {
     const directionOrSortQuery = sort[field];
 

@@ -52,13 +52,13 @@ export class DocumentSerializer {
     return doc;
   }
 
-  private getSchemaFor(resource: Resource) {
+  private getSchemaFor (resource: Resource) {
     if (!resource.resourceType) {
       throw new Error(`Resource ${resource} has no resourceType assigned`);
     }
 
     try {
-     return this.registry.getSchemaFor(resource.resourceType);
+      return this.registry.getSchemaFor(resource.resourceType);
     } catch (e) {
       throw new Error(`No schema found for resource type ${resource.resourceType}`);
     }

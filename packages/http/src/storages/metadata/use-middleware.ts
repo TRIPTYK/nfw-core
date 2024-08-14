@@ -1,4 +1,3 @@
-
 import type { Class } from 'type-fest';
 import type { AnyMiddlewareType } from '../../types/any-middleware.js';
 
