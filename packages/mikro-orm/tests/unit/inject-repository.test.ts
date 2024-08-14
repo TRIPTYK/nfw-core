@@ -21,9 +21,8 @@ test('repository is injected properly in class', async () => {
 
     await init({
       dbName: ':memory:',
-      type: 'sqlite',
       entities: [Model],
-    });
+    }, 'sqlite');
 
     expect(container.resolve(InjectMe).repository).toBeInstanceOf(EntityRepository);
 });

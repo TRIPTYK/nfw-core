@@ -35,13 +35,13 @@
   "devDependencies": {
     "@triptyk/nfw-core": "workspace:*",
     "@triptyk/nfw-http": "workspace:*",
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^4.3.17",
     "@types/json-api-serializer": "^2.6.6",
-    "@types/node": "^20.11.7",
+    "@types/node": "^22.3.0",
     "@types/pluralize": "^0.0.33",
-    "reflect-metadata": "^0.2.1",
-    "type-fest": "^4.10.1",
-    "typescript": "~5.3.3",
+    "reflect-metadata": "^0.2.2",
+    "type-fest": "^4.24.0",
+    "typescript": "~5.5.4",
     "vitest": "^0.34.5"
   },
   "peerDependencies": {

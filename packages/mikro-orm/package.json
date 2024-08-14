@@ -29,20 +29,20 @@
   },
   "homepage": "https://github.com/TRIPTYK/nfw-core#readme",
   "devDependencies": {
-    "@mikro-orm/core": "~5.8.2",
-    "@mikro-orm/sqlite": "~5.8.2",
+    "@mikro-orm/core": "~6.3.5",
+    "@mikro-orm/sqlite": "~6.3.5",
     "@triptyk/nfw-core": "workspace:*",
-    "@types/chai": "^4.3.11",
-    "@types/koa": "^2.13.9",
-    "@types/node": "^20.11.7",
-    "reflect-metadata": "^0.2.1",
+    "@types/chai": "^4.3.17",
+    "@types/koa": "^2.15.0",
+    "@types/node": "^22.3.0",
+    "reflect-metadata": "^0.2.2",
     "tsyringe": "4.8.0",
-    "type-fest": "^4.10.1",
-    "typescript": "~5.3.3",
+    "type-fest": "^4.24.0",
+    "typescript": "~5.5.4",
     "vitest": "^0.34.5"
   },
   "peerDependencies": {
-    "@mikro-orm/core": "^5.7.3",
+    "@mikro-orm/core": "^6.0.0",
     "@triptyk/nfw-core": "workspace:*"
   }
 }
