@@ -47,8 +47,5 @@
   "license": "ISC",
   "volta": {
     "node": "18.12.0"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
