@@ -8,7 +8,6 @@ import { instanceCachingFactory, container, inject, singleton } from '@triptyk/n
 import { ResourceDeserializer } from './deserializers/resource.deserializer.js';
 import type { Resource } from './resource/base.resource.js';
 import { ResourceSerializer } from './serializers/resource.serializer.js';
-import { ResourceService } from './services/resource.service.js';
 import { MetadataStorage } from './storage/metadata-storage.js';
 import type { LinksObject } from './serializers/spec.interface.js';
 
@@ -153,7 +152,7 @@ export class JsonApiRegistry {
       // register service
       container.register(`service:${resource.options.entityName}`, {
         useFactory: instanceCachingFactory(c => {
-          const instance = c.resolve(resource.options.service ?? ResourceService);
+          const instance = c.resolve(resource.options.service);
           instance.resourceMeta = resourceRef;
           return instance;
         })

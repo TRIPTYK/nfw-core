@@ -11,7 +11,7 @@ export interface ResourceOptions<T extends BaseEntity<any, 'id'>> {
   entityName : string,
   serializer?: Class<ResourceSerializer<T>>,
   deserializer?: Class<ResourceDeserializer<T>>,
-  service?: Class<ResourceService<T>>,
+  service: Class<ResourceService<T>>,
 }
 
 export function JsonApiResource (options: ResourceOptions<any>) {

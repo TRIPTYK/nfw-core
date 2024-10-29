@@ -5,9 +5,9 @@ import type { ResourceService } from '../../src/index.js';
 import { RelationshipEntityNotFoundError } from '../../src/index.js';
 import type { ArticleModel } from './dummy-app/models/article.model.js';
 import type { CommentModel } from './dummy-app/models/comment.model.js';
+import { initApp } from './dummy-app/init.js';
 
 beforeEach(async () => {
-  const { initApp } = await import('./dummy-app/init.js');
   await initApp();
 });
 

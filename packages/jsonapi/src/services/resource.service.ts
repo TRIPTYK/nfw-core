@@ -4,7 +4,6 @@
 /* eslint-disable max-statements */
 import { Collection, MikroORM, ReferenceType, wrap } from '@mikro-orm/core';
 import type { BaseEntity, QueryOrderMap, ObjectQuery, RequiredEntityData, EntityRepository, FilterQuery } from '@mikro-orm/core';
-import { inject, injectable } from '@triptyk/nfw-core';
 import type { AttributeMeta, ResourceMeta } from '../jsonapi.registry.js';
 import type { JsonApiContext } from '../interfaces/json-api-context.js';
 import type { Resource } from '../resource/base.resource.js';
@@ -18,11 +17,14 @@ function failHandler (entityName: string, where: any) {
   return new ResourceNotFoundError(`Resource ${entityName} with ${where} not found`);
 }
 
-@injectable()
-export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
+export abstract class ResourceService<TModel extends BaseEntity<any, 'id'>> {
   public declare resourceMeta: ResourceMeta<TModel>;
 
-  public constructor (@inject(MikroORM) private orm: MikroORM) {}
+
+  public constructor (
+    private orm: MikroORM
+  ) {
+  }
 
   /**
    * Get the current repository for the service
@@ -180,7 +182,6 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
       if (Object.hasOwn(pojo, relationship.name)) {
         const relationshipValue = pojo[relationship.name as keyof RequiredEntityData<TModel>] as string[] | string;
         const relationRepository = this.orm.em.getRepository(relationship.resource.mikroEntity.class) as EntityRepository<any>;
-
         let relatedEntitiesExists : boolean;
         const isOneToOneRelation = relationship.mikroMeta.reference === ReferenceType.ONE_TO_ONE;
 
@@ -261,11 +262,10 @@ export class ResourceService<TModel extends BaseEntity<any, 'id'>> {
     fields.push(joinPath);
 
     this.addToFields(parentInclude.relationMeta.resource, queryFields, fields, joinPath);
-
-    parentsPath.push(parentInclude.relationMeta.name);
-
+  
     for (const include of parentInclude.includes.values()) {
-      this.applyIncludes(populate, fields, queryFields, include, parentsPath);
+      //  dont push on parentsPath. Mutates the array
+      this.applyIncludes(populate, fields, queryFields, include, [...parentsPath, parentInclude.relationMeta.name]);
     }
   }
 
