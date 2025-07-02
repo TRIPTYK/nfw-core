@@ -1,0 +1,1946 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`JsonApiResourceSerializer > Serialize resources with the same ids 1`] = `
+{
+  "data": [
+    {
+      "attributes": {},
+      "id": "1d2c9802-c7d3-44f7-ba16-15bf12515afd",
+      "links": {
+        "self": "http://localhost:3000/certificates/1d2c9802-c7d3-44f7-ba16-15bf12515afd",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "7967a8db-c960-4d1e-a088-c89a8918d909",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "71e641d1-f903-4afb-98b8-c0f0587a8b69",
+      "links": {
+        "self": "http://localhost:3000/certificates/71e641d1-f903-4afb-98b8-c0f0587a8b69",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "96cb35f6-a980-4737-9256-2d2bfd7501fd",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "3e0aacb7-f533-478d-b2a8-01cd4ff10b72",
+      "links": {
+        "self": "http://localhost:3000/certificates/3e0aacb7-f533-478d-b2a8-01cd4ff10b72",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "25a342cb-4674-4c08-90fe-379cea76ed8b",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "2cf6a7c7-2598-4519-b363-0a614450bc92",
+      "links": {
+        "self": "http://localhost:3000/certificates/2cf6a7c7-2598-4519-b363-0a614450bc92",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "c46417cf-6c64-4715-aab6-7c5f0955c4c9",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "58ea594e-c487-43fa-819f-2cd3d3cb37c2",
+      "links": {
+        "self": "http://localhost:3000/certificates/58ea594e-c487-43fa-819f-2cd3d3cb37c2",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "ea9027d4-cb08-4bfd-8ffd-f7db5209f105",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "70c0a79a-811b-4767-aac1-64d3fa07d9f5",
+      "links": {
+        "self": "http://localhost:3000/certificates/70c0a79a-811b-4767-aac1-64d3fa07d9f5",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "98e8500d-1283-4e3b-92b1-85ef1a36bcce",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "b381af2b-ca47-4403-99cb-3cb9866db159",
+      "links": {
+        "self": "http://localhost:3000/certificates/b381af2b-ca47-4403-99cb-3cb9866db159",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "9c56c6bb-33c0-4eae-9e95-816578b7cbb9",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "c2aa47a0-3d1b-4c1e-8399-c249a017ee34",
+      "links": {
+        "self": "http://localhost:3000/certificates/c2aa47a0-3d1b-4c1e-8399-c249a017ee34",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "d87fd511-c7bb-4031-b4f4-57995b72f39f",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "7a4fcd07-ad96-4913-b863-8cba7c8396d9",
+      "links": {
+        "self": "http://localhost:3000/certificates/7a4fcd07-ad96-4913-b863-8cba7c8396d9",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "48d1562b-7b4a-4fd1-ac43-98652a66ac6c",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "666c964c-9d91-4e03-b845-229651106a56",
+      "links": {
+        "self": "http://localhost:3000/certificates/666c964c-9d91-4e03-b845-229651106a56",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "93fab776-1657-409a-a245-53c020613395",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "8605c872-4e78-49bb-aecd-a95e9cc98ce0",
+      "links": {
+        "self": "http://localhost:3000/certificates/8605c872-4e78-49bb-aecd-a95e9cc98ce0",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "353f7702-e6ef-4e2b-a6b8-8f2f2e0194ba",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "751e7519-01a0-44d2-bf44-9e05920c169b",
+      "links": {
+        "self": "http://localhost:3000/certificates/751e7519-01a0-44d2-bf44-9e05920c169b",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "4f6ef213-3e02-44e3-afb0-7a1b7cadee6f",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "8c0c5bc9-b244-4ffa-a9c6-f8a65cd63a1f",
+      "links": {
+        "self": "http://localhost:3000/certificates/8c0c5bc9-b244-4ffa-a9c6-f8a65cd63a1f",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "45afec92-c068-4661-b588-156064de9e0c",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "393c5818-ffbd-480d-b802-ac3051e5bd03",
+      "links": {
+        "self": "http://localhost:3000/certificates/393c5818-ffbd-480d-b802-ac3051e5bd03",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "56c89206-4121-41e4-9f1c-8ab29aabf48e",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "acc557f7-917c-423c-82af-6bb1bfbad34f",
+      "links": {
+        "self": "http://localhost:3000/certificates/acc557f7-917c-423c-82af-6bb1bfbad34f",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "6d670741-3a6e-4f86-af64-c46a682ac745",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "a4488eee-a349-4408-b0f8-c684606b8263",
+      "links": {
+        "self": "http://localhost:3000/certificates/a4488eee-a349-4408-b0f8-c684606b8263",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "af1ee8ea-d119-462d-81e3-7a3f2d5e5019",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "78483d8d-740e-4750-bd1f-7a9bf8a5c4f1",
+      "links": {
+        "self": "http://localhost:3000/certificates/78483d8d-740e-4750-bd1f-7a9bf8a5c4f1",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "790761f9-4f0a-4825-ae1f-9e2acc38265f",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "34974215-0ed2-4eb4-bcb1-23feb4de96a6",
+      "links": {
+        "self": "http://localhost:3000/certificates/34974215-0ed2-4eb4-bcb1-23feb4de96a6",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "0c486488-d5f9-4520-ae3e-5c64f4244c09",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "2a5b0646-d992-4247-b359-87f3a5cc5d1b",
+      "links": {
+        "self": "http://localhost:3000/certificates/2a5b0646-d992-4247-b359-87f3a5cc5d1b",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "1988f031-110e-4544-8233-757b6ea62de0",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "30d48fe7-e247-4eac-9f0c-12aacbae4821",
+      "links": {
+        "self": "http://localhost:3000/certificates/30d48fe7-e247-4eac-9f0c-12aacbae4821",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "535e772c-4997-4aa5-914a-130a454be8fb",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "c55e279a-f5ae-4c69-9244-5537edb2de10",
+      "links": {
+        "self": "http://localhost:3000/certificates/c55e279a-f5ae-4c69-9244-5537edb2de10",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "9d921395-6289-4e34-860b-ac458d99c5ec",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "7b51cec2-6afb-4bef-9156-8df8adc49bd1",
+      "links": {
+        "self": "http://localhost:3000/certificates/7b51cec2-6afb-4bef-9156-8df8adc49bd1",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "4957c139-1b49-498f-a528-7c9fd8b1f5f8",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "4a23a727-4fcb-4973-b505-5bdbc41a45e7",
+      "links": {
+        "self": "http://localhost:3000/certificates/4a23a727-4fcb-4973-b505-5bdbc41a45e7",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "1723affd-2200-4ffb-868d-25338fbbd0bd",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "9af94f12-e79e-45de-9a77-323f20749558",
+      "links": {
+        "self": "http://localhost:3000/certificates/9af94f12-e79e-45de-9a77-323f20749558",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "8b1c8183-37c5-43e2-8eac-1894f80b6eca",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+    {
+      "attributes": {},
+      "id": "75e32d83-9a98-4a66-95f5-d3cd10a38c5e",
+      "links": {
+        "self": "http://localhost:3000/certificates/75e32d83-9a98-4a66-95f5-d3cd10a38c5e",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patientCertificate": {
+          "data": {
+            "id": "6d44200a-c7a3-43fd-a6f4-5ea45fa41883",
+            "type": "patient-certificates",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "certificates",
+    },
+  ],
+  "included": [
+    {
+      "attributes": {
+        "name": "OPÉRATEUR DE TRANSPORT DE WALLONIE (TEC CHARLEROI)",
+      },
+      "id": "351",
+      "links": {
+        "self": "http://localhost:3000/companies/351",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "JEAN PAUL",
+      },
+      "id": "99999999",
+      "links": {
+        "self": "http://localhost:3000/patients/99999999",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "351",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DU CHATEAU, 160",
+          "town": "ANDERLUES",
+          "zip": "6150",
+        },
+      },
+      "id": "7967a8db-c960-4d1e-a088-c89a8918d909",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/7967a8db-c960-4d1e-a088-c89a8918d909",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "99999999",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "IMAJE",
+      },
+      "id": "7204",
+      "links": {
+        "self": "http://localhost:3000/companies/7204",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "MAURINE",
+      },
+      "id": "221363",
+      "links": {
+        "self": "http://localhost:3000/patients/221363",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "7204",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "1",
+          "complement": "",
+          "country": "Belgique",
+          "number": "23",
+          "street": "GRAND'RUE",
+          "town": "CARLSBOURG",
+          "zip": "6850",
+        },
+      },
+      "id": "96cb35f6-a980-4737-9256-2d2bfd7501fd",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/96cb35f6-a980-4737-9256-2d2bfd7501fd",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "221363",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "AISIN EUROPE SA",
+      },
+      "id": "6822",
+      "links": {
+        "self": "http://localhost:3000/companies/6822",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "ARNAUD",
+      },
+      "id": "221106",
+      "links": {
+        "self": "http://localhost:3000/patients/221106",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "6822",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "France",
+          "number": "",
+          "street": "RÉSIDENCE GALIBOTS, 1",
+          "town": "THIVENCELLE",
+          "zip": "59163",
+        },
+      },
+      "id": "25a342cb-4674-4c08-90fe-379cea76ed8b",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/25a342cb-4674-4c08-90fe-379cea76ed8b",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "221106",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "JESSICA",
+      },
+      "id": "221343",
+      "links": {
+        "self": "http://localhost:3000/patients/221343",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "7204",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE FROIDE 38/38",
+          "town": "BERZEE",
+          "zip": "5651",
+        },
+      },
+      "id": "c46417cf-6c64-4715-aab6-7c5f0955c4c9",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/c46417cf-6c64-4715-aab6-7c5f0955c4c9",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "221343",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "HELORA (JOLIMONT)",
+      },
+      "id": "7250",
+      "links": {
+        "self": "http://localhost:3000/companies/7250",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "OPHELIE",
+      },
+      "id": "61aa533f-a722-46d8-8421-66542789c1e5",
+      "links": {
+        "self": "http://localhost:3000/patients/61aa533f-a722-46d8-8421-66542789c1e5",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "7250",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "133",
+          "street": "RUE WAUTERS ",
+          "town": "Chapelle-Lez-Herlaimont",
+          "zip": "7160",
+        },
+      },
+      "id": "ea9027d4-cb08-4bfd-8ffd-f7db5209f105",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/ea9027d4-cb08-4bfd-8ffd-f7db5209f105",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "61aa533f-a722-46d8-8421-66542789c1e5",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "SONIA",
+      },
+      "id": "221583",
+      "links": {
+        "self": "http://localhost:3000/patients/221583",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "7204",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "16",
+          "street": "RUE M-A PIETQUIN",
+          "town": "SAMBREVILLE",
+          "zip": "5060",
+        },
+      },
+      "id": "98e8500d-1283-4e3b-92b1-85ef1a36bcce",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/98e8500d-1283-4e3b-92b1-85ef1a36bcce",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "221583",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "GHDC",
+      },
+      "id": "241",
+      "links": {
+        "self": "http://localhost:3000/companies/241",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "NATHALIE",
+      },
+      "id": "37403",
+      "links": {
+        "self": "http://localhost:3000/patients/37403",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "241",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE COUTURELLE, 43",
+          "town": "NEUVILLE",
+          "zip": "5600",
+        },
+      },
+      "id": "9c56c6bb-33c0-4eae-9e95-816578b7cbb9",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/9c56c6bb-33c0-4eae-9e95-816578b7cbb9",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "37403",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "RYANAIR DAC",
+      },
+      "id": "6658",
+      "links": {
+        "self": "http://localhost:3000/companies/6658",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "TIZIANO",
+      },
+      "id": "224218",
+      "links": {
+        "self": "http://localhost:3000/patients/224218",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "6658",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE PETIT PIGE 122/46",
+          "town": "CHARLEROI",
+          "zip": "6000",
+        },
+      },
+      "id": "d87fd511-c7bb-4031-b4f4-57995b72f39f",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/d87fd511-c7bb-4031-b4f4-57995b72f39f",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "224218",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "LIANET",
+      },
+      "id": "bfc5a212-5a50-4f6a-9992-96cce16b54a5",
+      "links": {
+        "self": "http://localhost:3000/patients/bfc5a212-5a50-4f6a-9992-96cce16b54a5",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "6658",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "INCONNU",
+          "town": "Charleroi",
+          "zip": "6000",
+        },
+      },
+      "id": "48d1562b-7b4a-4fd1-ac43-98652a66ac6c",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/48d1562b-7b4a-4fd1-ac43-98652a66ac6c",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "bfc5a212-5a50-4f6a-9992-96cce16b54a5",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "LEYRE",
+      },
+      "id": "230393",
+      "links": {
+        "self": "http://localhost:3000/patients/230393",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "6658",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE JOSEPH DEWERPE 26",
+          "town": "JUMET (CHARLEROI)",
+          "zip": "6040",
+        },
+      },
+      "id": "93fab776-1657-409a-a245-53c020613395",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/93fab776-1657-409a-a245-53c020613395",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "230393",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "CPAS NAMUR",
+      },
+      "id": "4828",
+      "links": {
+        "self": "http://localhost:3000/companies/4828",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "VANESSA",
+      },
+      "id": "217133",
+      "links": {
+        "self": "http://localhost:3000/patients/217133",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "4828",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DE L'HOTEL DE VILLE 17",
+          "town": "MORNIMONT",
+          "zip": "5190",
+        },
+      },
+      "id": "353f7702-e6ef-4e2b-a6b8-8f2f2e0194ba",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/353f7702-e6ef-4e2b-a6b8-8f2f2e0194ba",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "217133",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "LE GERMOIR",
+      },
+      "id": "2396",
+      "links": {
+        "self": "http://localhost:3000/companies/2396",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "NADIA",
+      },
+      "id": "216904",
+      "links": {
+        "self": "http://localhost:3000/patients/216904",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "2396",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DU MOULIN DU PETIT BOIS 1A",
+          "town": "THY-LE-BAUDUIN",
+          "zip": "5621",
+        },
+      },
+      "id": "4f6ef213-3e02-44e3-afb0-7a1b7cadee6f",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/4f6ef213-3e02-44e3-afb0-7a1b7cadee6f",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "216904",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "ADM COM GERPINNES",
+      },
+      "id": "99999999",
+      "links": {
+        "self": "http://localhost:3000/companies/99999999",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "VALERIE",
+      },
+      "id": "66872",
+      "links": {
+        "self": "http://localhost:3000/patients/66872",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "99999999",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE E.GENARD 18",
+          "town": "GERPINNES",
+          "zip": "6280",
+        },
+      },
+      "id": "45afec92-c068-4661-b588-156064de9e0c",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/45afec92-c068-4661-b588-156064de9e0c",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "66872",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "CPAS FLEURUS",
+      },
+      "id": "83",
+      "links": {
+        "self": "http://localhost:3000/companies/83",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": " ANTONELLA",
+      },
+      "id": "222351",
+      "links": {
+        "self": "http://localhost:3000/patients/222351",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "83",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DU BOIS 95",
+          "town": "MOUSTIER SUR SAMBRE",
+          "zip": "5190",
+        },
+      },
+      "id": "56c89206-4121-41e4-9f1c-8ab29aabf48e",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/56c89206-4121-41e4-9f1c-8ab29aabf48e",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "222351",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "ATELIER SOMVILLE",
+      },
+      "id": "660",
+      "links": {
+        "self": "http://localhost:3000/companies/660",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "ANTHONY",
+      },
+      "id": "35f9ca16-7e36-4d10-9b7d-d9c537ca5773",
+      "links": {
+        "self": "http://localhost:3000/patients/35f9ca16-7e36-4d10-9b7d-d9c537ca5773",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "660",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": null,
+          "country": "Belgique",
+          "number": "148",
+          "street": "CHAUSSEE ",
+          "town": "Viesville",
+          "zip": "6230",
+        },
+      },
+      "id": "6d670741-3a6e-4f86-af64-c46a682ac745",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/6d670741-3a6e-4f86-af64-c46a682ac745",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "35f9ca16-7e36-4d10-9b7d-d9c537ca5773",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "ARNAUD",
+      },
+      "id": "129473",
+      "links": {
+        "self": "http://localhost:3000/patients/129473",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "241",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DE SOMTET, 31",
+          "town": "METTET",
+          "zip": "5640",
+        },
+      },
+      "id": "af1ee8ea-d119-462d-81e3-7a3f2d5e5019",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/af1ee8ea-d119-462d-81e3-7a3f2d5e5019",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "129473",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "CHRYSTELLE",
+      },
+      "id": "193231",
+      "links": {
+        "self": "http://localhost:3000/patients/193231",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "241",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DE NAMUR, 26",
+          "town": "SPY",
+          "zip": "5190",
+        },
+      },
+      "id": "790761f9-4f0a-4825-ae1f-9e2acc38265f",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/790761f9-4f0a-4825-ae1f-9e2acc38265f",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "193231",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "MUHTEREM SPRL  AD LEUZE",
+      },
+      "id": "5576",
+      "links": {
+        "self": "http://localhost:3000/companies/5576",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "ALEXANDRE",
+      },
+      "id": "212006",
+      "links": {
+        "self": "http://localhost:3000/patients/212006",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "5576",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "CHEMIN DE LA GIVRONDE 30/13",
+          "town": "GEMBLOUX",
+          "zip": "5030",
+        },
+      },
+      "id": "0c486488-d5f9-4520-ae3e-5c64f4244c09",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/0c486488-d5f9-4520-ae3e-5c64f4244c09",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "212006",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "CPAS AISEAU",
+      },
+      "id": "62",
+      "links": {
+        "self": "http://localhost:3000/companies/62",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "MELANIE",
+      },
+      "id": "210435",
+      "links": {
+        "self": "http://localhost:3000/patients/210435",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "62",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "CHAUSSEE DE CHARLEROI 174",
+          "town": "VITRIVAL",
+          "zip": "5070",
+        },
+      },
+      "id": "1988f031-110e-4544-8233-757b6ea62de0",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/1988f031-110e-4544-8233-757b6ea62de0",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "210435",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "INTERMARCHE BY MESTDAGH SA",
+      },
+      "id": "10",
+      "links": {
+        "self": "http://localhost:3000/companies/10",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "JOELLE",
+      },
+      "id": "26128",
+      "links": {
+        "self": "http://localhost:3000/patients/26128",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "10",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE BABOTTERIE     31",
+          "town": "MARCINELLE",
+          "zip": "6001",
+        },
+      },
+      "id": "535e772c-4997-4aa5-914a-130a454be8fb",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/535e772c-4997-4aa5-914a-130a454be8fb",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "26128",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "CHR SAMBRE & MEUSE - SITE MEUSE",
+      },
+      "id": "3965",
+      "links": {
+        "self": "http://localhost:3000/companies/3965",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "DEDE ABLA",
+      },
+      "id": "226358",
+      "links": {
+        "self": "http://localhost:3000/patients/226358",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "3965",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DAMPREMY 90",
+          "town": "JUMET",
+          "zip": "6040",
+        },
+      },
+      "id": "9d921395-6289-4e34-860b-ac458d99c5ec",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/9d921395-6289-4e34-860b-ac458d99c5ec",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "226358",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "AURELIE",
+      },
+      "id": "70755",
+      "links": {
+        "self": "http://localhost:3000/patients/70755",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "83",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE DE L'ABREUVOIR 17",
+          "town": "CHASTRES",
+          "zip": "5650",
+        },
+      },
+      "id": "4957c139-1b49-498f-a528-7c9fd8b1f5f8",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/4957c139-1b49-498f-a528-7c9fd8b1f5f8",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "70755",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "CPAS JEMEPPE",
+      },
+      "id": "878",
+      "links": {
+        "self": "http://localhost:3000/companies/878",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "SARAH",
+      },
+      "id": "122929",
+      "links": {
+        "self": "http://localhost:3000/patients/122929",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "878",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": null,
+          "complement": null,
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE BIOT 23",
+          "town": "ROSELIES",
+          "zip": "6250",
+        },
+      },
+      "id": "1723affd-2200-4ffb-868d-25338fbbd0bd",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/1723affd-2200-4ffb-868d-25338fbbd0bd",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "122929",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "name": "TARTEMPION",
+      },
+      "id": "3734",
+      "links": {
+        "self": "http://localhost:3000/companies/3734",
+      },
+      "meta": undefined,
+      "relationships": undefined,
+      "type": "companies",
+    },
+    {
+      "attributes": {
+        "firstname": "ISABELLE",
+      },
+      "id": "198096",
+      "links": {
+        "self": "http://localhost:3000/patients/198096",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "3734",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "INCONNU",
+          "town": "INCONNU",
+          "zip": "0000",
+        },
+      },
+      "id": "8b1c8183-37c5-43e2-8eac-1894f80b6eca",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/8b1c8183-37c5-43e2-8eac-1894f80b6eca",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "198096",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+    {
+      "attributes": {
+        "firstname": "LAURANE",
+      },
+      "id": "221665",
+      "links": {
+        "self": "http://localhost:3000/patients/221665",
+      },
+      "meta": undefined,
+      "relationships": {
+        "company": {
+          "data": {
+            "id": "7204",
+            "type": "companies",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patients",
+    },
+    {
+      "attributes": {
+        "address": {
+          "box": "",
+          "complement": "",
+          "country": "Belgique",
+          "number": "",
+          "street": "RUE FOND DE BOLOGNE/2",
+          "town": "OHEY",
+          "zip": "5350",
+        },
+      },
+      "id": "6d44200a-c7a3-43fd-a6f4-5ea45fa41883",
+      "links": {
+        "self": "http://localhost:3000/patient-certificates/6d44200a-c7a3-43fd-a6f4-5ea45fa41883",
+      },
+      "meta": undefined,
+      "relationships": {
+        "patient": {
+          "data": {
+            "id": "221665",
+            "type": "patients",
+          },
+          "links": undefined,
+          "meta": undefined,
+        },
+      },
+      "type": "patient-certificates",
+    },
+  ],
+  "jsonapi": {
+    "version": "1.0",
+  },
+  "links": {
+    "self": "http://localhost:3000//test",
+  },
+  "meta": undefined,
+}
+`;
