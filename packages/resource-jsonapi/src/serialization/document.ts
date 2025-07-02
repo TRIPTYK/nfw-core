@@ -116,8 +116,9 @@ export class DocumentSerializer {
   private addDocumentToIncluded (resource: Resource, include: IncludeQuery[]) {
     const document = this.serializeOneTopDocument(resource, include);
 
-    if (resource.id && !this.included.has(this.makeUniqueIncludedIdForResource(resource))) {
-      this.included.set(this.makeUniqueIncludedIdForResource(resource), document);
+    const uniqueId = this.makeUniqueIncludedIdForResource(resource);
+    if (resource.id && !this.included.has(uniqueId)) {
+      this.included.set(uniqueId, document);
     }
 
     return document;
@@ -129,7 +130,8 @@ export class DocumentSerializer {
     };
   }
 
-  private makeUniqueIncludedIdForResource(r: Resource) {
+  // eslint-disable-next-line class-methods-use-this
+  private makeUniqueIncludedIdForResource (r: Resource) {
     return `${r.resourceType}_${r.id}`;
   }
 }
