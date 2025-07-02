@@ -116,8 +116,8 @@ export class DocumentSerializer {
   private addDocumentToIncluded (resource: Resource, include: IncludeQuery[]) {
     const document = this.serializeOneTopDocument(resource, include);
 
-    if (resource.id && !this.included.has(resource.id)) {
-      this.included.set(resource.id, document);
+    if (resource.id && !this.included.has(this.makeUniqueIncludedIdForResource(resource))) {
+      this.included.set(this.makeUniqueIncludedIdForResource(resource), document);
     }
 
     return document;
@@ -127,5 +127,9 @@ export class DocumentSerializer {
     return {
       self: `${this.registry.getConfig().host}/${schema.resourceType}/${resource.id}`,
     };
+  }
+
+  private makeUniqueIncludedIdForResource(r: Resource) {
+    return `${r.resourceType}_${r.id}`;
   }
 }
